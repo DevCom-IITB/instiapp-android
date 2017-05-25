@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/IITBApp.iml" filepath="$PROJECT_DIR$/IITBApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IITB-App.iml" filepath="$PROJECT_DIR$/IITB-App.iml" />
+      <module fileurl="file://C:\Users\divya\Desktop\IITB-App\IITB-App-master.iml" filepath="C:\Users\divya\Desktop\IITB-App\IITB-App-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
