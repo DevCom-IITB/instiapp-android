@@ -3,22 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools" tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_camera" android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item android:id="@+id/nav_gallery" android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item android:id="@+id/nav_slideshow" android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item android:id="@+id/nav_manage" android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+        <item android:id="@+id/nav_feed" android:icon="@drawable/ic_iitb_feed"
+            android:title="Feed" />
+        <item android:id="@+id/nav_my_events" android:icon="@drawable/ic_event_black_24dp"
+            android:title="My Events" />
+        <item android:id="@+id/nav_pt_cell" android:icon="@drawable/ic_pt"
+            android:title="PT Cell" />
+
+        <item android:id="@+id/nav_mess_menu" android:icon="@drawable/ic_mess_menu"
+            android:title="Mess Menu" />
+        <item android:id="@+id/nav_gc_rankings" android:icon="@drawable/ic_poll_black_24dp"
+            android:title="GC Rankings" />
+        <item android:id="@+id/nav_calendar" android:icon="@drawable/ic_calendar"
+            android:title="Calendar" />
+        <item android:id="@+id/nav_timetable" android:icon="@drawable/ic_timetable"
+            android:title="Timetable" />
+        <item android:id="@+id/nav_cms" android:icon="@drawable/ic_contacts_black_24dp"
+            android:title="CMS" />
+        <item android:id="@+id/nav_map" android:icon="@drawable/ic_map"
+            android:title="Map" />
     </group>
 
     <item android:title="Communicate">
         <menu>
-            <item android:id="@+id/nav_share" android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item android:id="@+id/nav_send" android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+            <item android:id="@+id/nav_contacts" android:icon="@drawable/ic_phone"
+                android:title="Contacts" />
+            <item android:id="@+id/nav_about" android:icon="@drawable/ic_about"
+                android:title="About" />
         </menu>
     </item>
 
