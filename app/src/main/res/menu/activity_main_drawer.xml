@@ -3,22 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools" tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_feed" android:icon="@drawable/ic_iitb_feed"
+        <item android:id="@+id/nav_feed" android:icon="@drawable/ic_feed"
             android:title="Feed" />
-        <item android:id="@+id/nav_my_events" android:icon="@drawable/ic_event_black_24dp"
+        <item android:id="@+id/nav_my_events" android:icon="@drawable/ic_event"
             android:title="My Events" />
         <item android:id="@+id/nav_pt_cell" android:icon="@drawable/ic_pt"
             android:title="PT Cell" />
 
         <item android:id="@+id/nav_mess_menu" android:icon="@drawable/ic_mess_menu"
             android:title="Mess Menu" />
-        <item android:id="@+id/nav_gc_rankings" android:icon="@drawable/ic_poll_black_24dp"
+        <item android:id="@+id/nav_gc_rankings" android:icon="@drawable/ic_poll"
             android:title="GC Rankings" />
         <item android:id="@+id/nav_calendar" android:icon="@drawable/ic_calendar"
             android:title="Calendar" />
         <item android:id="@+id/nav_timetable" android:icon="@drawable/ic_timetable"
             android:title="Timetable" />
-        <item android:id="@+id/nav_cms" android:icon="@drawable/ic_contacts_black_24dp"
+        <item android:id="@+id/nav_cms" android:icon="@drawable/ic_contacts"
             android:title="CMS" />
         <item android:id="@+id/nav_map" android:icon="@drawable/ic_map"
             android:title="Map" />
