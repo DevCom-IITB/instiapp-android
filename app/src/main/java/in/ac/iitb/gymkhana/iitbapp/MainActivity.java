@@ -2,9 +2,11 @@ package in.ac.iitb.gymkhana.iitbapp;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,6 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import in.ac.iitb.gymkhana.iitbapp.fragments.CalendarFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -91,17 +96,25 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gc_rankings) {
 
         } else if (id == R.id.nav_calendar) {
+            CalendarFragment calendarFragment = new CalendarFragment();
+            updateFragment(calendarFragment);
+        } else if (id == R.id.nav_cms) {
 
-        }else if (id == R.id.nav_cms) {
+        } else if (id == R.id.nav_timetable) {
 
-        }else if (id == R.id.nav_timetable) {
-
-        }else if (id == R.id.nav_map) {
+        } else if (id == R.id.nav_map) {
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void updateFragment(Fragment fragment) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.constraintlayout_for_fragment, fragment, fragment.getTag());
+        transaction.commit();
     }
 }
