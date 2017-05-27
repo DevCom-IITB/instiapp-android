@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IITB-App.iml" filepath="$PROJECT_DIR$/IITB-App.iml" />
       <module fileurl="file://$PROJECT_DIR$/IITBApp.iml" filepath="$PROJECT_DIR$/IITBApp.iml" />
+      <module fileurl="file://D:\IITB-App\IITBApp.iml" filepath="D:\IITB-App\IITBApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
