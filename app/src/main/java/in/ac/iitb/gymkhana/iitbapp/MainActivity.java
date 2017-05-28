@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import in.ac.iitb.gymkhana.iitbapp.fragments.CalendarFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragments.MapFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -103,6 +104,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_timetable) {
 
         } else if (id == R.id.nav_map) {
+            MapFragment mapFragment = new MapFragment();
+            updateFragment(mapFragment);
 
         } else if (id == R.id.nav_contacts) {
 
