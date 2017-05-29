@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import in.ac.iitb.gymkhana.iitbapp.R;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
