@@ -1,13 +1,43 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="in.ac.iitb.gymkhana.iitbapp.fragments.CalendarFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/CalendarTheme"
+    android:background="#E0E0E0">
+
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="60dp"
+        android:background="#00BCD4"/>
+    <CalendarView
 
-</FrameLayout>
+        android:id="@+id/simpleCalendarView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:focusedMonthDateColor="#000000"
+        android:unfocusedMonthDateColor="#FFFFFF"
+        android:maxDate="01/01/2019"
+        android:minDate="01/01/2017"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="19.5dp"
+        android:layout_marginBottom="19.5dp"
+        android:layout_below="@id/simpleCalendarView"/>
+
+    <TextView
+        android:layout_width="120dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="40dp"
+        android:text="# Events Today"
+        android:gravity="center"
+        android:layout_below="@id/simpleCalendarView"
+        android:background="@drawable/round_text_box"/>
+
+
+</RelativeLayout>

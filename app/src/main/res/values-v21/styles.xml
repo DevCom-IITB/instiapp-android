@@ -4,4 +4,15 @@
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="CalendarTheme" parent="@style/AppTheme.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">#FFEB3B</item>
+        <item name="android:colorBackground">?attr/colorButtonNormal</item>
+        <item name="android:textColorPrimaryInverse">@android:color/darker_gray</item>
+        <item name="android:windowBackground">?android:attr/colorButtonNormal</item>
+    </style>
+
 </resources>
