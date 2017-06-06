@@ -16,18 +16,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import in.ac.iitb.gymkhana.iitbapp.fragments.CalendarFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.MapFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.FeedFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.PTCellFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.MyEventsFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.MessMenuFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.GCRankingsFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.CMSFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.ContactsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragments.AboutFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragments.CMSFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragments.CalendarFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragments.ContactsFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragments.FeedFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragments.GCRankingsFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragments.MapFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragments.MessMenuFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragments.MyEventsFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragments.PTCellFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragments.TimetableFragment;
-
 
 
 public class MainActivity extends AppCompatActivity
@@ -39,15 +38,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -97,40 +87,51 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_feed) {
-            FeedFragment feedFragment = new FeedFragment();
-            updateFragment(feedFragment);
-        } else if (id == R.id.nav_my_events) {
-            MyEventsFragment myeventsFragment = new MyEventsFragment();
-            updateFragment(myeventsFragment);
-        } else if (id == R.id.nav_pt_cell) {
-            PTCellFragment ptcellFragment = new PTCellFragment();
-            updateFragment(ptcellFragment);
-        } else if (id == R.id.nav_mess_menu) {
-            MessMenuFragment messmenuFragment = new MessMenuFragment();
-            updateFragment(messmenuFragment);
-        } else if (id == R.id.nav_gc_rankings) {
-            GCRankingsFragment gcrankingsFragment = new GCRankingsFragment();
-            updateFragment(gcrankingsFragment);
-        } else if (id == R.id.nav_calendar) {
-            CalendarFragment calendarFragment = new CalendarFragment();
-            updateFragment(calendarFragment);
-        } else if (id == R.id.nav_cms) {
-            CMSFragment cmsFragment = new CMSFragment();
-            updateFragment(cmsFragment);
-        } else if (id == R.id.nav_timetable) {
-            TimetableFragment timetableFragment = new TimetableFragment();
-            updateFragment(timetableFragment);
-        } else if (id == R.id.nav_map) {
-            MapFragment mapFragment = new MapFragment();
-            updateFragment(mapFragment);
-
-        } else if (id == R.id.nav_contacts) {
-            ContactsFragment contactsFragment = new ContactsFragment();
-            updateFragment(contactsFragment);
-        } else if (id == R.id.nav_about) {
-            AboutFragment aboutFragment = new AboutFragment();
-            updateFragment(aboutFragment);
+        switch (id) {
+            case R.id.nav_feed:
+                FeedFragment feedFragment = new FeedFragment();
+                updateFragment(feedFragment);
+                break;
+            case R.id.nav_my_events:
+                MyEventsFragment myeventsFragment = new MyEventsFragment();
+                updateFragment(myeventsFragment);
+                break;
+            case R.id.nav_pt_cell:
+                PTCellFragment ptcellFragment = new PTCellFragment();
+                updateFragment(ptcellFragment);
+                break;
+            case R.id.nav_mess_menu:
+                MessMenuFragment messmenuFragment = new MessMenuFragment();
+                updateFragment(messmenuFragment);
+                break;
+            case R.id.nav_gc_rankings:
+                GCRankingsFragment gcrankingsFragment = new GCRankingsFragment();
+                updateFragment(gcrankingsFragment);
+                break;
+            case R.id.nav_calendar:
+                CalendarFragment calendarFragment = new CalendarFragment();
+                updateFragment(calendarFragment);
+                break;
+            case R.id.nav_cms:
+                CMSFragment cmsFragment = new CMSFragment();
+                updateFragment(cmsFragment);
+                break;
+            case R.id.nav_timetable:
+                TimetableFragment timetableFragment = new TimetableFragment();
+                updateFragment(timetableFragment);
+                break;
+            case R.id.nav_map:
+                MapFragment mapFragment = new MapFragment();
+                updateFragment(mapFragment);
+                break;
+            case R.id.nav_contacts:
+                ContactsFragment contactsFragment = new ContactsFragment();
+                updateFragment(contactsFragment);
+                break;
+            case R.id.nav_about:
+                AboutFragment aboutFragment = new AboutFragment();
+                updateFragment(aboutFragment);
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

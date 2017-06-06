@@ -1,35 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" tools:showIn="navigation_view">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
 
     <!--TODO Update icons-->
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_feed" android:icon="@drawable/ic_feed"
+        <item
+            android:id="@+id/nav_feed"
+            android:icon="@drawable/ic_feed"
             android:title="Feed" />
-        <item android:id="@+id/nav_my_events" android:icon="@drawable/ic_event"
+        <item
+            android:id="@+id/nav_my_events"
+            android:icon="@drawable/ic_event"
             android:title="My Events" />
-        <item android:id="@+id/nav_pt_cell" android:icon="@drawable/ic_pt"
+        <item
+            android:id="@+id/nav_pt_cell"
+            android:icon="@drawable/ic_pt"
             android:title="PT Cell" />
 
-        <item android:id="@+id/nav_mess_menu" android:icon="@drawable/ic_mess_menu"
+        <item
+            android:id="@+id/nav_mess_menu"
+            android:icon="@drawable/ic_mess_menu"
             android:title="Mess Menu" />
-        <item android:id="@+id/nav_gc_rankings" android:icon="@drawable/ic_poll"
+        <item
+            android:id="@+id/nav_gc_rankings"
+            android:icon="@drawable/ic_poll"
             android:title="GC Rankings" />
-        <item android:id="@+id/nav_calendar" android:icon="@drawable/ic_calendar"
+        <item
+            android:id="@+id/nav_calendar"
+            android:icon="@drawable/ic_calendar"
             android:title="Calendar" />
-        <item android:id="@+id/nav_timetable" android:icon="@drawable/ic_timetable"
+        <item
+            android:id="@+id/nav_timetable"
+            android:icon="@drawable/ic_timetable"
             android:title="Timetable" />
-        <item android:id="@+id/nav_cms" android:icon="@drawable/ic_contacts"
+        <item
+            android:id="@+id/nav_cms"
+            android:icon="@drawable/ic_contacts"
             android:title="CMS" />
-        <item android:id="@+id/nav_map" android:icon="@drawable/ic_map"
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@drawable/ic_map"
             android:title="Map" />
     </group>
 
     <item android:title="Communicate">
         <menu>
-            <item android:id="@+id/nav_contacts" android:icon="@drawable/ic_phone"
+            <item
+                android:id="@+id/nav_contacts"
+                android:icon="@drawable/ic_phone"
                 android:title="Contacts" />
-            <item android:id="@+id/nav_about" android:icon="@drawable/ic_about"
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_about"
                 android:title="About" />
         </menu>
     </item>
