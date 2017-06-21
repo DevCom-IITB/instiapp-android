@@ -55,6 +55,11 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="in.ac.iitb.gymkhana.iitbapp.data.IITBAppContentProvider"
+            android:authorities="in.ac.iitb.gymkhana.iitbapp"
+            android:exported="false" />
     </application>
 
 </manifest>
