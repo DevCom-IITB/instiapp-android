@@ -1,16 +1,21 @@
 package in.ac.iitb.gymkhana.iitbapp.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import in.ac.iitb.gymkhana.iitbapp.R;
@@ -18,7 +23,7 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     SupportMapFragment gMapFragment;
-    GoogleMap gMap = null;
+    GoogleMap googleMap ;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -32,12 +37,43 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap gMap) {
 
+        googleMap=gMap;
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+           googleMap.setMyLocationEnabled(true);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            googleMap.getUiSettings().setZoomGesturesEnabled(true);
+        } else {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        }
+
+
+        LatLngBounds iitbBounds=new LatLngBounds(new LatLng(19.1249000, 72.9046000),new LatLng(19.143522, 72.920000));
+        googleMap.setLatLngBoundsForCameraTarget(iitbBounds);
+        googleMap.setMaxZoomPreference(30);
+        googleMap.setMinZoomPreference((float) 14.5);
         // Position the map's camera near Mumbai
         LatLng iitb = new LatLng(19.1334, 72.9133);
         googleMap.addMarker(new MarkerOptions().position(iitb)
                 .title("Marker in IITB"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(iitb));
     }
-}
+    public void onRequestPermissionsResult (int requestCode,
+                                          String[] permissions,
+                                          int[] grantResults)
+{
+    if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
+    {
+        googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        googleMap.getUiSettings().setZoomGesturesEnabled(true);
+    }
+    else
+    {
+        Toast toast = Toast.makeText(getActivity(), "Need Permission", Toast.LENGTH_SHORT);
+        toast.show();
+    }
+}}
