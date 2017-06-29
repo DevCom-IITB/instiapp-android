@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E0E0E0"
+    android:id="@+id/calendar_layout"
     android:theme="@style/CalendarTheme">
 
 
@@ -37,6 +38,15 @@
         android:background="@drawable/round_text_box"
         android:gravity="center"
         android:text="# Events Today" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/fab"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_input_add"/>
 
 
 </RelativeLayout>

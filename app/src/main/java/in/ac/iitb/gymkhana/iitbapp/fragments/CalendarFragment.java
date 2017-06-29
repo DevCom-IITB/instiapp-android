@@ -2,7 +2,9 @@ package in.ac.iitb.gymkhana.iitbapp.fragments;
 
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ public class CalendarFragment extends Fragment {
 
     private View view;
     private Toast toast;
+    FloatingActionButton fab;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -28,7 +31,9 @@ public class CalendarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         view = inflater.inflate(R.layout.fragment_calendar, container, false);
+        fab=(FloatingActionButton) view.findViewById(R.id.fab);
         final CalendarView simpleCalendarView = (CalendarView) view.findViewById(R.id.simpleCalendarView); // get the reference of CalendarView
         simpleCalendarView.setFirstDayOfWeek(1); // set Sunday as the first day of the week
 
@@ -45,6 +50,18 @@ public class CalendarFragment extends Fragment {
                 toast.show();
 
 
+            }
+        });
+        fab.setOnClickListener(new View.OnClickListener(){
+
+
+            @Override
+            public void onClick(View v) {
+                AddEventFragment addEventFragment=new AddEventFragment();
+                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                ft.replace(R.id.calendar_layout,addEventFragment);
+                ft.addToBackStack("addEvent");
+                ft.commit();
             }
         });
         return view;
