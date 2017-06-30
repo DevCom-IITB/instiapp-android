@@ -1,5 +1,7 @@
 package in.ac.iitb.gymkhana.iitbapp.fragments;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,10 +19,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
+
+import java.sql.Time;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,10 +46,10 @@ public class AddEventFragment extends Fragment {
     Button createEvent;
     @BindView(R.id.cb_public)
     CheckBox publicCheckBox;
-    @BindView(R.id.et_date)
-    EditText date;
-    @BindView(R.id.et_time)
-    EditText time;
+    @BindView(R.id.tv_date)
+    TextView date;
+    @BindView(R.id.tv_time)
+    TextView time;
     @BindView(R.id.et_venue)
     EditText venue;
     @BindView(R.id.et_eventDetails)
@@ -64,6 +74,44 @@ public class AddEventFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_add_event, container, false);
         ButterKnife.bind(this,view);
 
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar=Calendar.getInstance();
+                int mYear=calendar.get(Calendar.YEAR);
+                int mMonth=calendar.get(Calendar.MONTH);
+                int mDay=calendar.get(Calendar.DAY_OF_MONTH);
+                
+                DatePickerDialog datePickerDialog=new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                  
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        date.setText(dayOfMonth + "/" + month + "/" + year);
+                    }
+                } ,mYear,mMonth,mDay);
+            datePickerDialog.show();
+            }
+
+        });
+
+        time.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Calendar calendar=Calendar.getInstance();
+                int mHour=calendar.get(Calendar.HOUR_OF_DAY);
+                int mMin=calendar.get(Calendar.MINUTE);
+
+                TimePickerDialog timePickerDialog=new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        time.setText(hourOfDay+":"+minute);
+                    }
+                },mHour,mMin,true);
+                timePickerDialog.show();
+
+            }
+        });
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
