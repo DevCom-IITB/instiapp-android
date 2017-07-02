@@ -127,9 +127,16 @@ public class MainActivity extends AppCompatActivity
                 updateFragment(timetableFragment);
                 break;
             case R.id.nav_map:
-                MapFragment mapFragment = new MapFragment();
-                updateFragment(mapFragment);
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+
+
+                } else
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+
                 break;
+
             case R.id.nav_contacts:
                 ContactsFragment contactsFragment = new ContactsFragment();
                 updateFragment(contactsFragment);
@@ -151,4 +158,21 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.constraintlayout_for_fragment, fragment, fragment.getTag());
         transaction.commit();
     }
+    public void onRequestPermissionsResult (int requestCode,
+                                            String[] permissions,
+                                            int[] grantResults)
+    {
+        if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
+        {
+            MapFragment mapFragment = new MapFragment();
+            updateFragment(mapFragment);
+           }
+        else
+        {
+            Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+
 }
