@@ -47,7 +47,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
             googleMap.getUiSettings().setZoomGesturesEnabled(true);
         } else {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+            Toast toast = Toast.makeText(getActivity(), "Need Permission", Toast.LENGTH_SHORT);
+            toast.show();
         }
 
 
@@ -61,19 +62,4 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 .title("Marker in IITB"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(iitb));
     }
-    public void onRequestPermissionsResult (int requestCode,
-                                          String[] permissions,
-                                          int[] grantResults)
-{
-    if(grantResults[0]==PackageManager.PERMISSION_GRANTED)
-    {
-        googleMap.setMyLocationEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        googleMap.getUiSettings().setZoomGesturesEnabled(true);
-    }
-    else
-    {
-        Toast toast = Toast.makeText(getActivity(), "Need Permission", Toast.LENGTH_SHORT);
-        toast.show();
-    }
-}}
+   }
