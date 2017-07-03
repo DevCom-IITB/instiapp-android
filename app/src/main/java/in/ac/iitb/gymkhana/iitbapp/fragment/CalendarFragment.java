@@ -1,4 +1,4 @@
-package in.ac.iitb.gymkhana.iitbapp.fragments;
+package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 
 import android.os.Bundle;

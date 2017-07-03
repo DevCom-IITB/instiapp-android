@@ -1,4 +1,4 @@
-package in.ac.iitb.gymkhana.iitbapp.fragments;
+package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PTCellFragment extends Fragment {
+public class AboutFragment extends Fragment {
 
 
-    public PTCellFragment() {
+    public AboutFragment() {
         // Required empty public constructor
     }
 
@@ -24,7 +24,7 @@ public class PTCellFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pt_cell, container, false);
+        return inflater.inflate(R.layout.fragment_about, container, false);
     }
 
 }

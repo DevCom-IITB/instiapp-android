@@ -1,4 +1,4 @@
-package in.ac.iitb.gymkhana.iitbapp.fragments;
+package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AboutFragment extends Fragment {
+public class GCRankingsFragment extends Fragment {
 
 
-    public AboutFragment() {
+    public GCRankingsFragment() {
         // Required empty public constructor
     }
 
@@ -24,7 +24,7 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_about, container, false);
+        return inflater.inflate(R.layout.fragment_gc_rankings, container, false);
     }
 
 }

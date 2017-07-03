@@ -15,11 +15,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.gson.annotations.SerializedName;
+
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationRequest;
 import net.openid.appauth.AuthorizationResponse;
 import net.openid.appauth.AuthorizationService;
 import net.openid.appauth.AuthorizationServiceConfiguration;
+
+import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
+import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
+import in.ac.iitb.gymkhana.iitbapp.api.model.LoginRequest;
+import in.ac.iitb.gymkhana.iitbapp.api.model.LoginResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -110,6 +121,8 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this,
                     "AuthCode: " + response.authorizationCode, Toast.LENGTH_SHORT)
                     .show();
+
+            login(response.authorizationCode, "xyz");
         } else {
             Log.i(TAG, "Authorization failed: " + error.getMessage());
             Toast.makeText(this,
@@ -154,6 +167,23 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void login(String authorizationCode, String gcmId) {
+        LoginRequest loginRequest = new LoginRequest(authorizationCode, gcmId);
+        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        retrofitInterface.login(loginRequest).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful()) {
+                    //Go to MainActivity
+                }
+                //Server error
+            }
 
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                //Network Error
+            }
+        });
+    }
 }
 

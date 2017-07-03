@@ -1,20 +1,10 @@
-package in.ac.iitb.gymkhana.iitbapp.fragments;
+package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.PopupMenu;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,18 +17,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.sql.Time;
 import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.ac.iitb.gymkhana.iitbapp.R;
-
-import static android.app.Activity.RESULT_OK;
-import static android.content.ContentValues.TAG;
-import static android.view.View.VISIBLE;
 
 
 public class AddEventFragment extends Fragment {

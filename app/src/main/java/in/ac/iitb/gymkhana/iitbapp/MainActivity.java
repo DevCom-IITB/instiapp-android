@@ -1,16 +1,10 @@
 package in.ac.iitb.gymkhana.iitbapp;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,20 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
-import in.ac.iitb.gymkhana.iitbapp.fragments.AboutFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.CMSFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.CalendarFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.ContactsFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.FeedFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.GCRankingsFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.MapFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.MessMenuFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.MyEventsFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.PTCellFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragments.TimetableFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.AboutFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.CMSFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.CalendarFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.ContactsFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.FeedFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.GCRankingsFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.MapFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.MessMenuFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.MyEventsFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.PTCellFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.TimetableFragment;
 
 
 public class MainActivity extends AppCompatActivity
