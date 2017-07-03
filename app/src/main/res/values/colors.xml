@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#44C0CA</color>
     <color name="colorAccent">#ECF833</color>
     <color name="colorCalendarWeek">#000000</color>
+    <color name="colorGray">#757575</color>
 </resources>
