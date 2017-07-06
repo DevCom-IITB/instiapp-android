@@ -42,6 +42,9 @@
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_map"
             android:title="Map" />
+        <item
+            android:id="@+id/nav_people"
+            android:title="People" />
     </group>
 
     <item android:title="Communicate">
