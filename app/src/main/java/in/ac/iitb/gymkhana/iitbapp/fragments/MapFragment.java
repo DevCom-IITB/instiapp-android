@@ -40,16 +40,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap gMap) {
 
         googleMap=gMap;
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+       
            googleMap.setMyLocationEnabled(true);
             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
             googleMap.getUiSettings().setZoomGesturesEnabled(true);
-        } else {
-            Toast toast = Toast.makeText(getActivity(), "Need Permission", Toast.LENGTH_SHORT);
-            toast.show();
-        }
+        
 
 
         LatLngBounds iitbBounds=new LatLngBounds(new LatLng(19.1249000, 72.9046000),new LatLng(19.143522, 72.920000));
