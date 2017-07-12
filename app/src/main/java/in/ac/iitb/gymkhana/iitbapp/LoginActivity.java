@@ -122,6 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                     "AuthCode: " + response.authorizationCode, Toast.LENGTH_SHORT)
                     .show();
 
+//            TODO: Replace gcmId
             login(response.authorizationCode, "xyz");
         } else {
             Log.i(TAG, "Authorization failed: " + error.getMessage());
@@ -174,6 +175,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
+                    //Save credentials in AccountManager to keep user logged in
                     //Go to MainActivity
                 }
                 //Server error
