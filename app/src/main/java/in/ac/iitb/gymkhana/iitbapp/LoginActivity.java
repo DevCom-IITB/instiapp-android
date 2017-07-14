@@ -3,19 +3,26 @@ package in.ac.iitb.gymkhana.iitbapp;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.gson.annotations.SerializedName;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationRequest;
@@ -27,25 +34,66 @@ import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.api.model.LoginRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.LoginResponse;
+import in.ac.iitb.gymkhana.iitbapp.gcm.RegistrationIntentService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
+
 
 public class LoginActivity extends AppCompatActivity {
+    public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
+    public static final String REGISTRATION_COMPLETE = "registrationComplete";
     private static final String TAG = "LoginActivity";
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private final String clientId = "pFcDDWtUUfzlAX2ibriV25lm1J2m92O5ynfT4SYk";
     private final String clientSecret = "k56GXiN1qB4Dt7CnTVWjuwLJyWntNulitWOkL7Wddr6JHPiHqIZgSfgUplO6neTqumVr32zA14XgQmkuoC8y6y9jnaQT9tKDsq4jQklRb8MQNQglQ1H4YrmqOwPfaNyO";
     private final Uri redirectUri = Uri.parse("https://redirecturi");
     private final Uri mAuthEndpoint = Uri.parse("http://gymkhana.iitb.ac.in/sso/oauth/authorize/");
     private final Uri mTokenEndpoint = Uri.parse("http://gymkhana.iitb.ac.in/sso/oauth/token/");
+    public String authCode = null;
+    SessionManager session;
+    Context mContext = this;
     private AuthorizationService mAuthService;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private boolean isReceiverRegistered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        session = new SessionManager(mContext);
         setContentView(R.layout.activity_login);
         mAuthService = new AuthorizationService(this);
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                SharedPreferences sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences
+                        .getBoolean(SENT_TOKEN_TO_SERVER, false);
+                if (sentToken) {
+                    String token = intent.getStringExtra("Token");
+
+                    Log.d(TAG, "Going to login with :" + authCode + "\n" + token);
+                    //************
+                    //TODO Remove following 6 lines after the server is hosted
+                    String gcmRegId = token;
+                    session.createLoginSession(gcmRegId);
+                    Intent i = new Intent(mContext, MainActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+
+
+                    //**************
+                    login(authCode, token);
+
+                } else {
+
+                }
+            }
+        };
+        registerReceiver();
 
         Button ldapLogin = (Button) findViewById(R.id.ldap_login);
         ldapLogin.setOnClickListener(new View.OnClickListener() {
@@ -81,15 +129,17 @@ public class LoginActivity extends AppCompatActivity {
         if (intent != null) {
             Log.d(TAG, "Intent Received");
             String action = intent.getAction();
-            switch (action) {
-                case "HANDLE_AUTHORIZATION_RESPONSE": {
-                    handleAuthorizationResponse(intent);
+            if (action != null) {
+                switch (action) {
+                    case "HANDLE_AUTHORIZATION_RESPONSE": {
+                        handleAuthorizationResponse(intent);
+
+                    }
+                    break;
+                    default:
+                        Log.d(TAG, intent.getAction());
 
                 }
-                break;
-                default:
-                    Log.d(TAG, intent.getAction());
-
             }
         }
     }
@@ -103,7 +153,15 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        registerReceiver();
         Log.d(TAG, "In Resume");
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        isReceiverRegistered = false;
+        super.onPause();
     }
 
     @Override
@@ -117,13 +175,19 @@ public class LoginActivity extends AppCompatActivity {
         AuthorizationException error = AuthorizationException.fromIntent(intent);
 
         if (response != null) {
-            Log.d(TAG, "Received AuthorizationResponse: " + "AuthCode: " + response.authorizationCode);
+            authCode = response.authorizationCode;
+            Log.d(TAG, "Received AuthorizationResponse: " + "AuthCode: " + authCode);
             Toast.makeText(this,
-                    "AuthCode: " + response.authorizationCode, Toast.LENGTH_SHORT)
+                    "AuthCode: " + authCode, Toast.LENGTH_SHORT)
                     .show();
+            if (checkPlayServices()) {
 
-//            TODO: Replace gcmId
-            login(response.authorizationCode, "xyz");
+                Intent registerIntent = new Intent(this, RegistrationIntentService.class);
+                startService(registerIntent);
+            }
+
+//
+
         } else {
             Log.i(TAG, "Authorization failed: " + error.getMessage());
             Toast.makeText(this,
@@ -169,12 +233,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(String authorizationCode, String gcmId) {
+        final String gcmRegId = gcmId;
         LoginRequest loginRequest = new LoginRequest(authorizationCode, gcmId);
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
         retrofitInterface.login(loginRequest).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
+                    Log.d(TAG, "Login request successful");
+                    session.createLoginSession(gcmRegId);
+                    Intent i = new Intent(mContext, MainActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+
                     //Save credentials in AccountManager to keep user logged in
                     //Go to MainActivity
                 }
@@ -187,5 +259,31 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void registerReceiver() {
+        if (!isReceiverRegistered) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                    new IntentFilter(REGISTRATION_COMPLETE));
+            isReceiverRegistered = true;
+        }
+    }
+
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
 }
 

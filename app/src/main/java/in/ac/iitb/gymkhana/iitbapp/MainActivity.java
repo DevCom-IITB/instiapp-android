@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import in.ac.iitb.gymkhana.iitbapp.fragment.AboutFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.CMSFragment;
@@ -29,10 +30,17 @@ import in.ac.iitb.gymkhana.iitbapp.fragment.TimetableFragment;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
+    private static final String TAG = "MainActivity";
+    SessionManager session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        session = new SessionManager(getApplicationContext());
+        Toast.makeText(getApplicationContext(), "User Login Status: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
+        session.checkLogin();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -44,6 +52,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
 
     }
 
@@ -63,6 +72,7 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -143,4 +153,6 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());
         transaction.commit();
     }
+
+
 }
