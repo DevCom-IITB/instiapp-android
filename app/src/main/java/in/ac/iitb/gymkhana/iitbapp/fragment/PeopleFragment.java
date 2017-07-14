@@ -1,10 +1,15 @@
 package in.ac.iitb.gymkhana.iitbapp.fragment;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -32,6 +37,7 @@ public class PeopleFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view=inflater.inflate(R.layout.fragment_people, container, false);
+        setHasOptionsMenu(true);
 
         suggestionList.add("Web and Coding Club");
         suggestionList.add("Electronics and Robotics Club");
@@ -59,14 +65,37 @@ public class PeopleFragment extends Fragment {
         listView= (ListView) view.findViewById(R.id.list_view);
         listView.setVisibility(View.GONE);
 
-        searchView=(SearchView) view.findViewById(R.id.search);
+
 
         adapter=new PeopleSuggestionAdapter(suggestionList);
         listView.setAdapter(adapter);
 
+
+        //TODO SuggestionClickListener
+
+
+
+
+        return  view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.search_view_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchManager searchManager =
+                (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+        searchView =
+                (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
                 listView.setVisibility(View.GONE);
                 return false;
             }
@@ -80,11 +109,5 @@ public class PeopleFragment extends Fragment {
                 return false;
             }
         });
-        //TODO SuggestionClickListener
-
-
-
-
-        return  view;
     }
 }

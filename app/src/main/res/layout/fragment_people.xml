@@ -6,12 +6,12 @@
     tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.PeopleFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <android.support.v7.widget.SearchView
-        android:id="@+id/search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:defaultQueryHint="Search"
-        android:clickable="true"/>
+    <!--<android.support.v7.widget.SearchView-->
+        <!--android:id="@+id/search"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:defaultQueryHint="Search"-->
+        <!--android:clickable="true"/>-->
 
     <ListView
         android:id="@+id/list_view"
