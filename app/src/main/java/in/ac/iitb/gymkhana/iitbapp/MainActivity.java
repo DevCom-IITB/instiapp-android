@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity
     private void updateFragment(Fragment fragment) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.constraintlayout_for_fragment, fragment, fragment.getTag());
+        transaction.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());
         transaction.commit();
     }
 }
