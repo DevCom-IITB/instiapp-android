@@ -43,7 +43,7 @@ dependencies {
     compile "com.google.android.gms:play-services-maps:${playServicesVersion}"
     compile "com.android.support:support-v4:${supportLibVersion}"
     compile "com.jakewharton:butterknife:${butterKnifeVersion}"
-    compile "com.google.android.gms:play-services-gcm:11.0.2"
+    compile "com.google.android.gms:play-services-gcm:${playServicesVersion}"
     annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
     compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
