@@ -1,10 +1,14 @@
 package in.ac.iitb.gymkhana.iitbapp;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -129,9 +133,16 @@ public class MainActivity extends AppCompatActivity
                 updateFragment(timetableFragment);
                 break;
             case R.id.nav_map:
-                MapFragment mapFragment = new MapFragment();
-                updateFragment(mapFragment);
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+
+
+                } else
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+
                 break;
+
             case R.id.nav_contacts:
                 ContactsFragment contactsFragment = new ContactsFragment();
                 updateFragment(contactsFragment);
@@ -153,6 +164,16 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());
         transaction.commit();
     }
-
-
+    
+public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            MapFragment mapFragment = new MapFragment();
+            updateFragment(mapFragment);
+        } else {
+            Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
 }
