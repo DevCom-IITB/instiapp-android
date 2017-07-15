@@ -1,5 +1,6 @@
 package in.ac.iitb.gymkhana.iitbapp.api.model;
 
+import android.media.Image;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
@@ -28,7 +29,8 @@ public class EventCreateRequest {
     @SerializedName("public_status")
     private int publicStatus;
 
-    public EventCreateRequest(String eventName, String eventDescription,String eventVenue,Timestamp eventTimingFrom,Timestamp eventTimingTo,int publicStatus,@Nullable int eventVenueID,@Nullable int eventMapLocationId ) {
+
+    public EventCreateRequest(String eventName, String eventDescription,String eventVenue,Timestamp eventTimingFrom,Timestamp eventTimingTo,int publicStatus,@Nullable int eventVenueID,@Nullable int eventMapLocationId) {
         this.eventName=eventName;
         this.eventDescription=eventDescription;
         this.eventTimingFrom=eventTimingFrom;
@@ -104,4 +106,6 @@ public class EventCreateRequest {
     public void setPublicStatus(int publicStatus) {
         this.publicStatus = publicStatus;
     }
+
+
 }

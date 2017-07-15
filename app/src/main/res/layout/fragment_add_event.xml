@@ -42,45 +42,47 @@
         android:layout_height="40dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:paddingRight="6dp"
-            android:paddingLeft="6dp"
+            android:gravity="bottom"
+            android:paddingBottom="5dp"
             android:layout_height="match_parent"
-            android:id="@+id/tv_date"
-            android:hint="  Date    "
+            android:id="@+id/tv_start"
+            android:textSize="20sp"
+            android:hint="  From  "
             android:paddingTop="8dp"/>
         <View
             android:layout_width="3dp"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/common_google_signin_btn_text_dark_disabled"/>
+            android:layout_marginBottom="5dp"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:paddingRight="6dp"
             android:paddingLeft="6dp"
+            android:gravity="bottom"
+            android:paddingBottom="5dp"
             android:layout_height="match_parent"
-            android:id="@+id/tv_time"
-            android:hint="  Time  "
+            android:id="@+id/tv_end"
+            android:textSize="20sp"
+            android:hint="  To  "
             android:paddingTop="8dp"/>
-        <View
-            android:layout_width="3dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/common_google_signin_btn_text_dark_disabled"/>
 
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:paddingRight="6dp"
-            android:paddingLeft="6dp"
-            android:layout_height="match_parent"
-            android:id="@+id/et_venue"
-            android:hint="Venue"/>
+
 
     </LinearLayout>
+    <EditText
+        android:layout_width="wrap_content"
+        android:paddingRight="6dp"
+        android:paddingLeft="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_height="40dp"
+        android:id="@+id/et_venue"
+        android:hint="Venue"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -93,35 +95,21 @@
         android:paddingRight="6dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-        android:background="#E0E0E0"
-        />
-    <RelativeLayout
+        android:layout_marginTop="8dp"/>
+
+    <TextView android:layout_height="30dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        >
+        android:text="Advanced Options"
+        android:id="@+id/advanced_menu"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Public"
-            android:textSize="18sp"
-            android:layout_marginLeft="8dp"
-            android:paddingLeft="8dp"/>
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:id="@+id/cb_public"
-            android:layout_marginRight="10dp"/>
-    </RelativeLayout>
     <Button
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/colorAccent"
+        android:layout_height="40dp"
         android:text="Create"
+        android:layout_margin="8dp"
+        android:background="@drawable/round_text_box"
         android:id="@+id/button_createEvent"
         android:gravity="center"/>
 </LinearLayout>
