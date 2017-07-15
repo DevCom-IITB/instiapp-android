@@ -38,6 +38,7 @@ import in.ac.iitb.gymkhana.iitbapp.fragment.MessMenuFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MyEventsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.NotificationsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.PTCellFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.PeopleFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.TimetableFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -189,6 +190,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_about:
                 AboutFragment aboutFragment = new AboutFragment();
                 updateFragment(aboutFragment);
+                break;
+
+            case R.id.nav_people:
+                PeopleFragment peopleFragment = new PeopleFragment();
+                updateFragment(peopleFragment);
                 break;
         }
 
