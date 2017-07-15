@@ -18,6 +18,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.util.List;
+
+import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
+import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
+import in.ac.iitb.gymkhana.iitbapp.api.model.AppNotification;
+import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsRequest;
+import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsResponse;
 import in.ac.iitb.gymkhana.iitbapp.fragment.AboutFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.CMSFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.CalendarFragment;
@@ -27,8 +36,12 @@ import in.ac.iitb.gymkhana.iitbapp.fragment.GCRankingsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MapFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MessMenuFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MyEventsFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.NotificationsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.PTCellFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.TimetableFragment;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity
@@ -57,7 +70,33 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        fetchNotifications();
+    }
 
+    private void fetchNotifications() {
+        NotificationsRequest notificationsRequest = new NotificationsRequest(0, 20);
+        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        retrofitInterface.getNotifications(notificationsRequest).enqueue(new Callback<NotificationsResponse>() {
+            @Override
+            public void onResponse(Call<NotificationsResponse> call, Response<NotificationsResponse> response) {
+                if (response.isSuccessful()) {
+                    NotificationsResponse notificationsResponse = response.body();
+                    String notificationsResponseJson = new Gson().toJson(notificationsResponse);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.NOTIFICATIONS_RESPONSE_JSON, notificationsResponseJson);
+                    NotificationsFragment notificationsFragment = new NotificationsFragment();
+                    notificationsFragment.setArguments(bundle);
+                    updateFragment(notificationsFragment);
+
+                }
+                //Server Error
+            }
+
+            @Override
+            public void onFailure(Call<NotificationsResponse> call, Throwable t) {
+                //Network Error
+            }
+        });
     }
 
     @Override
@@ -164,8 +203,8 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());
         transaction.commit();
     }
-    
-public void onRequestPermissionsResult(int requestCode,
+
+    public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions,
                                            int[] grantResults) {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {

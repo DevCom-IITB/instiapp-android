@@ -4,16 +4,19 @@ import in.ac.iitb.gymkhana.iitbapp.api.model.LoginRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.LoginResponse;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedResponse;
+import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsRequest;
+import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 
 public interface RetrofitInterface {
     @POST("login/")
     Call<LoginResponse> login(@Body LoginRequest loginRequest);
 
-    @GET("getNewsFeed/")
+    @POST("getNewsFeed/")
     Call<NewsFeedResponse> getNewsFeed(@Body NewsFeedRequest newsFeedRequest);
+
+    @POST("getNotifications/")
+    Call<NotificationsResponse> getNotifications(@Body NotificationsRequest notificationsRequest);
 }
