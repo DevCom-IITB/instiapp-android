@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.FeedFragment">
+    tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.NotificationsFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/feed_recycler_view"
+        android:id="@+id/notifications_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

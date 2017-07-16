@@ -18,6 +18,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.util.List;
+
+import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
+import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
+import in.ac.iitb.gymkhana.iitbapp.api.model.AppNotification;
+import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsRequest;
+import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsResponse;
 import in.ac.iitb.gymkhana.iitbapp.fragment.AboutFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.CMSFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.CalendarFragment;
@@ -27,8 +36,13 @@ import in.ac.iitb.gymkhana.iitbapp.fragment.GCRankingsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MapFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MessMenuFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MyEventsFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.NotificationsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.PTCellFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.PeopleFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.TimetableFragment;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity
@@ -37,6 +51,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
     SessionManager session;
+    NotificationsResponse notificationsResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +72,35 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        fetchNotifications();
+    }
 
+    private void fetchNotifications() {
+        NotificationsRequest notificationsRequest = new NotificationsRequest(0, 20);
+        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        retrofitInterface.getNotifications(notificationsRequest).enqueue(new Callback<NotificationsResponse>() {
+            @Override
+            public void onResponse(Call<NotificationsResponse> call, Response<NotificationsResponse> response) {
+                if (response.isSuccessful()) {
+                    notificationsResponse = response.body();
+                }
+                //Server Error
+            }
+
+            @Override
+            public void onFailure(Call<NotificationsResponse> call, Throwable t) {
+                //Network Error
+            }
+        });
+    }
+
+    public void showNotifications() {
+        String notificationsResponseJson = new Gson().toJson(notificationsResponse);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.NOTIFICATIONS_RESPONSE_JSON, notificationsResponseJson);
+        NotificationsFragment notificationsFragment = new NotificationsFragment();
+        notificationsFragment.setArguments(bundle);
+        updateFragment(notificationsFragment);
     }
 
     @Override
@@ -86,7 +129,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_notifications) {
+            fetchNotifications();
+            showNotifications();
             return true;
         }
 
@@ -136,11 +181,8 @@ public class MainActivity extends AppCompatActivity
                 if (ContextCompat.checkSelfPermission(MainActivity.this,
                         Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
-
-
                 } else
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-
                 break;
 
             case R.id.nav_contacts:
@@ -150,6 +192,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_about:
                 AboutFragment aboutFragment = new AboutFragment();
                 updateFragment(aboutFragment);
+                break;
+
+            case R.id.nav_people:
+                PeopleFragment peopleFragment = new PeopleFragment();
+                updateFragment(peopleFragment);
                 break;
         }
 
@@ -164,8 +211,8 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());
         transaction.commit();
     }
-    
-public void onRequestPermissionsResult(int requestCode,
+
+    public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions,
                                            int[] grantResults) {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {

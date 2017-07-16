@@ -28,6 +28,7 @@ ext {
     appAuthVersion = '0.2.0'
     retrofitVersion = '2.1.0'
     okhttpVersion = '3.4.1'
+    picassoVersion = '2.5.0'
 
 }
 
@@ -43,11 +44,13 @@ dependencies {
     compile "com.google.android.gms:play-services-maps:${playServicesVersion}"
     compile "com.android.support:support-v4:${supportLibVersion}"
     compile "com.jakewharton:butterknife:${butterKnifeVersion}"
-    compile "com.google.android.gms:play-services-gcm:11.0.2"
+    compile "com.google.android.gms:play-services-gcm:${playServicesVersion}"
     annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
     compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
     compile "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     compile "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}"
+    compile "com.squareup.picasso:picasso:${picassoVersion}"
+    implementation 'com.android.support:support-v4:25.4.0'
 }
 apply plugin: 'com.google.gms.google-services'
