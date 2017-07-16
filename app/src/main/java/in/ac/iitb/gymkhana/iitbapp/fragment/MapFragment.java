@@ -36,14 +36,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap gMap) {
         googleMap = gMap;
         googleMap.setMyLocationEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         googleMap.getUiSettings().setZoomGesturesEnabled(true);
 
 
         LatLngBounds iitbBounds = new LatLngBounds(new LatLng(19.1249000, 72.9046000), new LatLng(19.143522, 72.920000));
         googleMap.setLatLngBoundsForCameraTarget(iitbBounds);
         googleMap.setMaxZoomPreference(30);
-        googleMap.setMinZoomPreference((float) 14.5);
+        googleMap.setMinZoomPreference(14.5f);
         // Position the map's camera near Mumbai
         LatLng iitb = new LatLng(19.1334, 72.9133);
         googleMap.addMarker(new MarkerOptions().position(iitb)
