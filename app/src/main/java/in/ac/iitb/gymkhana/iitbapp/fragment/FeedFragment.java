@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +17,9 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 
+
 import java.util.ArrayList;
+
 import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
@@ -38,7 +41,8 @@ import retrofit2.Response;
  */
 public class FeedFragment extends Fragment {
 
-    RecyclerView feedRecyclerView;
+    private RecyclerView feedRecyclerView;
+    private SwipeRefreshLayout feedSwipeRefreshLayout;
 
     public FeedFragment() {
         // Required empty public constructor
@@ -87,9 +91,21 @@ public class FeedFragment extends Fragment {
 
         }
 
+        updateFeed();
+
+        feedSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.feed_swipe_refresh_layout);
+        feedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateFeed();
+            }
+        });
+    }
+
+    private void updateFeed() {
         NewsFeedRequest newsFeedRequest = new NewsFeedRequest(NewsFeedRequest.FOLLOWED, 0, 20);
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getNewsFeed(newsFeedRequest).enqueue(new Callback<NewsFeedResponse>() {
+        retrofitInterface.getNewsFeed().enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
@@ -131,11 +147,13 @@ public class FeedFragment extends Fragment {
                     Log.d("FeedFragment", Integer.toString(insertCount) + " elements inserted");
                 }
                 //Server Error
+                feedSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<NewsFeedResponse> call, Throwable t) {
                 //Network Error
+                feedSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }

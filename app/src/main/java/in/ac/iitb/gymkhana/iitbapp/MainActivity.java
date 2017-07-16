@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
     SessionManager session;
+    NotificationsResponse notificationsResponse;
+    private boolean showNotifications = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,14 +83,11 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<NotificationsResponse> call, Response<NotificationsResponse> response) {
                 if (response.isSuccessful()) {
-                    NotificationsResponse notificationsResponse = response.body();
-                    String notificationsResponseJson = new Gson().toJson(notificationsResponse);
-                    Bundle bundle = new Bundle();
-                    bundle.putString(Constants.NOTIFICATIONS_RESPONSE_JSON, notificationsResponseJson);
-                    NotificationsFragment notificationsFragment = new NotificationsFragment();
-                    notificationsFragment.setArguments(bundle);
-                    updateFragment(notificationsFragment);
-
+                    notificationsResponse = response.body();
+                    if (showNotifications) {
+                        showNotifications();
+                        showNotifications = false;
+                    }
                 }
                 //Server Error
             }
@@ -98,6 +97,15 @@ public class MainActivity extends AppCompatActivity
                 //Network Error
             }
         });
+    }
+
+    public void showNotifications() {
+        String notificationsResponseJson = new Gson().toJson(notificationsResponse);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.NOTIFICATIONS_RESPONSE_JSON, notificationsResponseJson);
+        NotificationsFragment notificationsFragment = new NotificationsFragment();
+        notificationsFragment.setArguments(bundle);
+        updateFragment(notificationsFragment);
     }
 
     @Override
@@ -126,10 +134,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_notifications) {
+            showNotifications = true;
+            fetchNotifications();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -176,11 +185,8 @@ public class MainActivity extends AppCompatActivity
                 if (ContextCompat.checkSelfPermission(MainActivity.this,
                         Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
-
-
                 } else
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-
                 break;
 
             case R.id.nav_contacts:
