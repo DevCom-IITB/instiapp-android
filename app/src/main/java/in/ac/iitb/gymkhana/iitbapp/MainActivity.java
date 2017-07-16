@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     SessionManager session;
     NotificationsResponse notificationsResponse;
+    private boolean showNotifications = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +84,10 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<NotificationsResponse> call, Response<NotificationsResponse> response) {
                 if (response.isSuccessful()) {
                     notificationsResponse = response.body();
+                    if (showNotifications) {
+                        showNotifications();
+                        showNotifications = false;
+                    }
                 }
                 //Server Error
             }
@@ -130,11 +135,10 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_notifications) {
+            showNotifications = true;
             fetchNotifications();
-            showNotifications();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
