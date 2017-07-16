@@ -7,10 +7,4 @@
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="Notifications"
         app:showAsAction="always" />
-
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
 </menu>
