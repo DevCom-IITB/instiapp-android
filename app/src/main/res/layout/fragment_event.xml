@@ -6,9 +6,10 @@
     tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.EventFragment">
 
     <ImageView
+        android:scaleType="centerCrop"
         android:id="@+id/event_picture_2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="360dp" />
 
     <TextView
         android:id="@+id/event_title_2"
@@ -21,24 +22,28 @@
         android:layout_height="wrap_content" />
 
     <LinearLayout
+        android:background="@color/colorPrimary"
         style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
+            android:text="Going"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <Button
+            android:text="Interested"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <Button
+            android:text="Not Going"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

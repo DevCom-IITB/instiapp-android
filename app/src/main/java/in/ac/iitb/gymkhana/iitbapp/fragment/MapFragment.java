@@ -39,7 +39,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         googleMap.getUiSettings().setZoomGesturesEnabled(true);
 
-
         LatLngBounds iitbBounds = new LatLngBounds(new LatLng(19.1249000, 72.9046000), new LatLng(19.143522, 72.920000));
         googleMap.setLatLngBoundsForCameraTarget(iitbBounds);
         googleMap.setMaxZoomPreference(30);
