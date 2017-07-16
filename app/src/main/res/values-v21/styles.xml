@@ -10,7 +10,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">#FFEB3B</item>
+        <item name="colorAccent">#ecf833</item>
         <item name="android:colorBackground">?attr/colorButtonNormal</item>
         <item name="android:textColorPrimaryInverse">@android:color/darker_gray</item>
         <item name="android:windowBackground">?android:attr/colorButtonNormal</item>
