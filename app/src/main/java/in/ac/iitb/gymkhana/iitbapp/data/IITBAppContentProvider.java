@@ -22,6 +22,8 @@ public class IITBAppContentProvider extends ContentProvider {
     public static final int USER_FOLLOWER_WITH_ID = 301;
     public static final int USER_FOLLOWS = 400;
     public static final int USER_FOLLOWS_WITH_ID = 401;
+    public static final int NEWS_FEED = 500;
+    public static final int NEWS_FEED_WITH_ID = 501;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private DatabaseHelper databaseHelper;
 
@@ -35,6 +37,8 @@ public class IITBAppContentProvider extends ContentProvider {
         matcher.addURI(DatabaseContract.CONTENT_AUTHORITY, DatabaseContract.PATH_USER_FOLLOWERS + "/#", USER_FOLLOWER_WITH_ID);
         matcher.addURI(DatabaseContract.CONTENT_AUTHORITY, DatabaseContract.PATH_USER_FOLLOWS, USER_FOLLOWS);
         matcher.addURI(DatabaseContract.CONTENT_AUTHORITY, DatabaseContract.PATH_USER_FOLLOWS + "/#", USER_FOLLOWS_WITH_ID);
+        matcher.addURI(DatabaseContract.CONTENT_AUTHORITY, DatabaseContract.PATH_NEWS_FEED, NEWS_FEED);
+        matcher.addURI(DatabaseContract.CONTENT_AUTHORITY, DatabaseContract.PATH_NEWS_FEED + "/#", NEWS_FEED_WITH_ID);
         return matcher;
 
     }
@@ -135,6 +139,26 @@ public class IITBAppContentProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
+            case NEWS_FEED:
+                cursor = db.query(DatabaseContract.NewsFeedEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case NEWS_FEED_WITH_ID:
+                id = uri.getPathSegments().get(1);
+                selectionArguments = new String[]{id};
+                cursor = db.query(DatabaseContract.NewsFeedEntry.TABLE_NAME,
+                        projection,
+                        "_id=?",
+                        selectionArguments,
+                        null,
+                        null,
+                        sortOrder);
+                break;
             default:
                 throw new SQLException("Wrong Uri: " + uri);
 
@@ -165,6 +189,12 @@ public class IITBAppContentProvider extends ContentProvider {
                 return "vnd.android.cursor.dir" + "/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_USER_FOLLOWS;
             case USER_FOLLOWS_WITH_ID:
                 return "vnd.android.cursor.item" + "/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_USER_FOLLOWS;
+            case NEWS_FEED:
+                return "vnd.android.cursor.dir" + "/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_NEWS_FEED;
+            case NEWS_FEED_WITH_ID:
+                return "vnd.android.cursor.item" + "/" + DatabaseContract.CONTENT_AUTHORITY + "/" + DatabaseContract.PATH_NEWS_FEED;
+
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -207,6 +237,14 @@ public class IITBAppContentProvider extends ContentProvider {
                 } else
                     throw new SQLException("Failed to insert row into " + uri);
                 break;
+            case NEWS_FEED:
+                id = db.insert(DatabaseContract.NewsFeedEntry.TABLE_NAME, null, values);
+                if (id > 0) {
+                    returnUri = ContentUris.withAppendedId(DatabaseContract.NewsFeedEntry.CONTENT_URI, id);
+                } else
+                    throw new SQLException("Failed to insert row into " + uri);
+                break;
+
             default:
                 throw new SQLException("Wrong uri: " + uri);
 
@@ -305,10 +343,32 @@ public class IITBAppContentProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(uri, null);
                 }
                 return rowsInserted;
+            case NEWS_FEED:
+                db.beginTransaction();
+                rowsInserted = 0;
+                try {
+                    for (ContentValues value : values) {
+
+
+                        long _id = db.insert(DatabaseContract.NewsFeedEntry.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            rowsInserted++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                if (rowsInserted > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
+                return rowsInserted;
 
             default:
                 return super.bulkInsert(uri, values);
         }
+
     }
 
     @Override
@@ -347,6 +407,13 @@ public class IITBAppContentProvider extends ContentProvider {
                         selectionArgs);
 
                 break;
+            case NEWS_FEED:
+                numRowsDeleted = databaseHelper.getWritableDatabase().delete(
+                        DatabaseContract.NewsFeedEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
+
+                break;
 
             case LOC_WITH_ID:
 
@@ -371,6 +438,12 @@ public class IITBAppContentProvider extends ContentProvider {
                 id = uri.getPathSegments().get(1);
 
                 numRowsDeleted = databaseHelper.getWritableDatabase().delete(DatabaseContract.UserFollowsEntry.TABLE_NAME, "_id=?", new String[]{id});
+                break;
+            case NEWS_FEED_WITH_ID:
+
+                id = uri.getPathSegments().get(1);
+
+                numRowsDeleted = databaseHelper.getWritableDatabase().delete(DatabaseContract.NewsFeedEntry.TABLE_NAME, "_id=?", new String[]{id});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -417,6 +490,12 @@ public class IITBAppContentProvider extends ContentProvider {
                 id = uri.getPathSegments().get(1);
 
                 itemsUpdated = databaseHelper.getWritableDatabase().update(DatabaseContract.UserFollowsEntry.TABLE_NAME, values, "_id=?", new String[]{id});
+                break;
+            case NEWS_FEED_WITH_ID:
+
+                id = uri.getPathSegments().get(1);
+
+                itemsUpdated = databaseHelper.getWritableDatabase().update(DatabaseContract.NewsFeedEntry.TABLE_NAME, values, "_id=?", new String[]{id});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
