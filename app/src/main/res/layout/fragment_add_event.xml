@@ -4,6 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.AddEventFragment">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -96,13 +105,59 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/advanced_menu">
+
 
     <TextView android:layout_height="30dp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:text="Advanced Options"
-        android:id="@+id/advanced_menu"
         android:paddingLeft="16dp"
+        android:textSize="20sp"
         android:paddingRight="16dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/close"
+            android:src="@mipmap/advanced_menu_close"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:id="@+id/open"
+            android:layout_alignParentEnd="true"
+            android:src="@mipmap/advanced_menu_open"/>
+    </RelativeLayout>
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cb_public"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:text="Outsiders Allowed "/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/map_location"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:hint="Map Location"/>
+
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Request User Info"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:id="@+id/cb_permission"/>
+
+    </LinearLayout>
+    </ScrollView>
 
     <Button
         android:layout_width="match_parent"

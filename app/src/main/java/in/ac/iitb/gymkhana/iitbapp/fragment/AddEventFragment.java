@@ -15,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -25,7 +26,6 @@ import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import in.ac.iitb.gymkhana.iitbapp.AddEventAdapter;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
@@ -56,13 +56,21 @@ public class AddEventFragment extends Fragment {
     ImageButton imageButton;
     Timestamp timestamp_start;
     Timestamp timestamp_end;
-    Image image;
+
     @BindView(R.id.advanced_menu)
-    TextView advancedMenu;
+    RelativeLayout advancedMenu;
+    @BindView(R.id.cb_public)
+    CheckBox cb_public;
+    @BindView(R.id.cb_permission)
+    CheckBox cb_permission;
+    @BindView(R.id.map_location)
+    EditText et_mapLocation;
+    @BindView(R.id.open)
+            ImageView open;
+    @BindView(R.id.close)
+            ImageView close;
     int publicStatus;
     View view;
-    ListPopupWindow popupWindow;
-    AddEventAdapter addEventAdapter;
 
 
     public AddEventFragment() {
@@ -78,8 +86,17 @@ public class AddEventFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_add_event, container, false);
         ButterKnife.bind(this, view);
 
-        popupWindow=new ListPopupWindow(getContext());
-        addEventAdapter=new AddEventAdapter();
+
+
+        cb_permission.setVisibility(View.GONE);
+        cb_public.setVisibility(View.GONE);
+        et_mapLocation.setVisibility(View.GONE);
+
+
+        close.setVisibility(View.GONE);
+        open.setVisibility(View.VISIBLE);
+
+
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,12 +162,26 @@ public class AddEventFragment extends Fragment {
 
             }
         });
+        if (cb_permission.isChecked()) {
+            publicStatus = 1;
+        } else publicStatus = 0;
 
         advancedMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                createPopup();
+                if (cb_public.getVisibility() == View.VISIBLE) {
+                    open.setVisibility(View.VISIBLE);
+                    close.setVisibility(View.GONE);
+                    cb_permission.setVisibility(View.GONE);
+                    cb_public.setVisibility(View.GONE);
+                    et_mapLocation.setVisibility(View.GONE);
+                } else {
+                    close.setVisibility(View.VISIBLE);
+                    open.setVisibility(View.GONE);
+                    cb_permission.setVisibility(View.VISIBLE);
+                    cb_public.setVisibility(View.VISIBLE);
+                    et_mapLocation.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -164,7 +195,7 @@ public class AddEventFragment extends Fragment {
         createEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addEvent();
+                //addEvent();
             }
         });
 
@@ -173,7 +204,7 @@ public class AddEventFragment extends Fragment {
     }
 
     public void addEvent() {
-        EventCreateRequest eventCreateRequest = new EventCreateRequest(eventName.getText().toString(), details.getText().toString(), venue.getText().toString(), timestamp_start, timestamp_end, addEventAdapter.publicStatus, 0, 0);
+        EventCreateRequest eventCreateRequest = new EventCreateRequest(eventName.getText().toString(), details.getText().toString(), venue.getText().toString(), timestamp_start, timestamp_end, publicStatus, 0, 0);
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
         retrofitInterface.eventCreate(eventCreateRequest).enqueue(new Callback<EventCreateResponse>() {
             @Override
@@ -186,19 +217,6 @@ public class AddEventFragment extends Fragment {
                 Toast.makeText(getContext(), "Event Creation Failed", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public void createPopup() {
-
-        popupWindow.setAdapter(addEventAdapter);
-        popupWindow.setAnchorView(advancedMenu);
-
-        popupWindow.setHeight(android.widget.LinearLayout.LayoutParams.WRAP_CONTENT);
-        popupWindow.setWidth(advancedMenu.getRight() - advancedMenu.getLeft());
-
-
-        popupWindow.show();
-
     }
 
 }
