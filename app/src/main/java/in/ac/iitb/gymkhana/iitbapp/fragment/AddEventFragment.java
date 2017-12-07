@@ -55,24 +55,24 @@ public class AddEventFragment extends Fragment {
         container.removeAllViews();
 
         view = inflater.inflate(R.layout.fragment_add_event, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar calendar=Calendar.getInstance();
-                int mYear=calendar.get(Calendar.YEAR);
-                int mMonth=calendar.get(Calendar.MONTH);
-                int mDay=calendar.get(Calendar.DAY_OF_MONTH);
-                
-                DatePickerDialog datePickerDialog=new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                  
+                Calendar calendar = Calendar.getInstance();
+                int mYear = calendar.get(Calendar.YEAR);
+                int mMonth = calendar.get(Calendar.MONTH);
+                int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         date.setText(dayOfMonth + "/" + month + "/" + year);
                     }
-                } ,mYear,mMonth,mDay);
-            datePickerDialog.show();
+                }, mYear, mMonth, mDay);
+                datePickerDialog.show();
             }
 
         });
@@ -81,16 +81,16 @@ public class AddEventFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Calendar calendar=Calendar.getInstance();
-                int mHour=calendar.get(Calendar.HOUR_OF_DAY);
-                int mMin=calendar.get(Calendar.MINUTE);
+                Calendar calendar = Calendar.getInstance();
+                int mHour = calendar.get(Calendar.HOUR_OF_DAY);
+                int mMin = calendar.get(Calendar.MINUTE);
 
-                TimePickerDialog timePickerDialog=new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        time.setText(hourOfDay+":"+minute);
+                        time.setText(hourOfDay + ":" + minute);
                     }
-                },mHour,mMin,true);
+                }, mHour, mMin, true);
                 timePickerDialog.show();
 
             }
@@ -98,14 +98,14 @@ public class AddEventFragment extends Fragment {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(),"Add Image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Add Image", Toast.LENGTH_SHORT).show();
                 //TODO (1) upload image to server
             }
         });
         createEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(),"Add Event", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Add Event", Toast.LENGTH_SHORT).show();
                 //TODO (2) save event
             }
         });

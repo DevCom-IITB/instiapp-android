@@ -24,8 +24,8 @@
             android:title="Mess Menu" />
         <item
             android:id="@+id/nav_gc_rankings"
-            android:title="GC Rankings"
-            android:icon="@drawable/ic_equalizer_black_48dp"/>
+            android:icon="@drawable/ic_equalizer_black_48dp"
+            android:title="GC Rankings" />
         <item
             android:id="@+id/nav_calendar"
             android:icon="@drawable/ic_date_range_black_48dp"
@@ -44,8 +44,8 @@
             android:title="Map" />
         <item
             android:id="@+id/nav_people"
-            android:title="People"
-            android:icon="@drawable/ic_supervisor_account_black_48dp"/>
+            android:icon="@drawable/ic_supervisor_account_black_48dp"
+            android:title="People" />
     </group>
 
     <item android:title="Communicate">

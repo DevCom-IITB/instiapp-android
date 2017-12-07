@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "in.ac.iitb.gymkhana.iitbapp"
         manifestPlaceholders 'appAuthRedirectScheme': 'https'
         minSdkVersion 17
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -22,9 +22,9 @@ android {
 }
 
 ext {
-    supportLibVersion = '25.3.1'
-    playServicesVersion = '11.0.2'
-    butterKnifeVersion = '8.6.0'
+    supportLibVersion = '26.1.0'
+    playServicesVersion = '11.6.2'
+    butterKnifeVersion = '8.7.0'
     appAuthVersion = '0.2.0'
     retrofitVersion = '2.1.0'
     okhttpVersion = '3.4.1'
@@ -51,6 +51,5 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     compile "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}"
     compile "com.squareup.picasso:picasso:${picassoVersion}"
-    implementation 'com.android.support:support-v4:25.4.0'
 }
 apply plugin: 'com.google.gms.google-services'

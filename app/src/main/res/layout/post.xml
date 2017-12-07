@@ -2,27 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingTop="8dp">
 
     <ImageView
-        android:layout_weight="1"
-        android:layout_width="0dp"
         android:id="@+id/event_picture"
-        android:layout_height="50dp" />
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="3"
-        android:layout_height="wrap_content">
+        android:orientation="vertical">
 
         <TextView
-            android:textColor="@android:color/black"
-            android:textSize="24sp"
             android:id="@+id/event_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/event_details"
@@ -32,10 +32,10 @@
     </LinearLayout>
 
     <ImageView
-        android:src="@drawable/ic_input_add"
         android:id="@+id/event_enthu"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_height="wrap_content" />
+        android:src="@drawable/ic_input_add" />
 
 </LinearLayout>

@@ -18,9 +18,9 @@ import in.ac.iitb.gymkhana.iitbapp.R;
  */
 public class CalendarFragment extends Fragment {
 
+    FloatingActionButton fab;
     private View view;
     private Toast toast;
-    FloatingActionButton fab;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -33,7 +33,7 @@ public class CalendarFragment extends Fragment {
         // Inflate the layout for this fragment
 
         view = inflater.inflate(R.layout.fragment_calendar, container, false);
-        fab=(FloatingActionButton) view.findViewById(R.id.fab);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
         final CalendarView simpleCalendarView = (CalendarView) view.findViewById(R.id.simpleCalendarView); // get the reference of CalendarView
         simpleCalendarView.setFirstDayOfWeek(1); // set Sunday as the first day of the week
 
@@ -52,14 +52,14 @@ public class CalendarFragment extends Fragment {
 
             }
         });
-        fab.setOnClickListener(new View.OnClickListener(){
+        fab.setOnClickListener(new View.OnClickListener() {
 
 
             @Override
             public void onClick(View v) {
-                AddEventFragment addEventFragment=new AddEventFragment();
+                AddEventFragment addEventFragment = new AddEventFragment();
                 FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                ft.replace(R.id.calendar_layout,addEventFragment);
+                ft.replace(R.id.calendar_layout, addEventFragment);
                 ft.addToBackStack("addEvent");
                 ft.commit();
             }

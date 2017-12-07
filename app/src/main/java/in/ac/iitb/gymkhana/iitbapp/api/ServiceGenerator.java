@@ -13,6 +13,7 @@ public class ServiceGenerator {
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create());
     private static Retrofit retrofit;
+
     public static <S> S createService(Class<S> serviceClass) {
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

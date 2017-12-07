@@ -17,9 +17,7 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 
-
 import java.util.ArrayList;
-
 import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
@@ -105,7 +103,7 @@ public class FeedFragment extends Fragment {
     private void updateFeed() {
         NewsFeedRequest newsFeedRequest = new NewsFeedRequest(NewsFeedRequest.FOLLOWED, 0, 20);
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getNewsFeed(newsFeedRequest ).enqueue(new Callback<NewsFeedResponse>() {
+        retrofitInterface.getNewsFeed(newsFeedRequest).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
