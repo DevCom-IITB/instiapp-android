@@ -20,7 +20,7 @@ The IITB App features the Placement Blog, Upcoming Events and general informatio
 
 A more detailed list of features can be found [here](https://docs.google.com/document/d/1L4wzuw88JrLyBt1DvnjavtAwhJkXgNSIxJG3yBsLwQ0/edit?usp=sharing).
 
-IITB App is a community effort and we appreciate the help of everyone who wants to help improve the App:
+IITB App is a community effort and we appreciate the help of everyone who wants to help improve the App.
 
 Check http://github.com/wncc for more information about all development activities under WnCC.
 
@@ -28,6 +28,8 @@ Development
 -----------
 
 Read the [Development Documentation](https://docs.google.com/document/d/1LYmtKPyA-TMFqxC9rxXHp785pUI05u9M-38qB0nQPDQ/edit?usp=sharing).
+
+See the [Frontend Design](https://drive.google.com/drive/folders/0B8nDKRNC4Y7OZG5SV1hsOWdkdFE?usp=sharing).
 
 ### Contributors
 See [list of contributors](https://github.com/unstablebrainiac/IITB-App/graphs/contributors)
