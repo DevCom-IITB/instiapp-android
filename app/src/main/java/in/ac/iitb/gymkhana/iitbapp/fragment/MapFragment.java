@@ -35,7 +35,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap gMap) {
         googleMap = gMap;
-        googleMap.setMyLocationEnabled(true);
+//        googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         googleMap.getUiSettings().setZoomGesturesEnabled(true);
 

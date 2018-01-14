@@ -179,11 +179,14 @@ public class MainActivity extends AppCompatActivity
                 updateFragment(timetableFragment);
                 break;
             case R.id.nav_map:
+                MapFragment mapFragment = new MapFragment();
                 if (ContextCompat.checkSelfPermission(MainActivity.this,
                         Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
-                } else
+                    updateFragment(mapFragment);
+                } else{
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+                }
                 break;
 
             case R.id.nav_contacts:
