@@ -7,7 +7,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_feed"
-            android:icon="@drawable/ic_feed"
+            android:icon="@drawable/ic_dashboard_black_48dp"
             android:title="Feed" />
         <item
             android:id="@+id/nav_my_events"
@@ -15,35 +15,36 @@
             android:title="My Events" />
         <item
             android:id="@+id/nav_pt_cell"
-            android:icon="@drawable/ic_pt"
+            android:icon="@drawable/ic_work_black_48dp"
             android:title="PT Cell" />
 
         <item
             android:id="@+id/nav_mess_menu"
-            android:icon="@drawable/ic_mess_menu"
+            android:icon="@drawable/ic_restaurant_black_48dp"
             android:title="Mess Menu" />
         <item
             android:id="@+id/nav_gc_rankings"
-            android:icon="@drawable/ic_poll"
+            android:icon="@drawable/ic_equalizer_black_48dp"
             android:title="GC Rankings" />
         <item
             android:id="@+id/nav_calendar"
-            android:icon="@drawable/ic_calendar"
+            android:icon="@drawable/ic_date_range_black_48dp"
             android:title="Calendar" />
         <item
             android:id="@+id/nav_timetable"
-            android:icon="@drawable/ic_timetable"
+            android:icon="@drawable/ic_web_black_48dp"
             android:title="Timetable" />
         <item
             android:id="@+id/nav_cms"
-            android:icon="@drawable/ic_contacts"
-            android:title="CMS" />
+            android:icon="@drawable/ic_announcement_black_48dp"
+            android:title="CMS" />e
         <item
             android:id="@+id/nav_map"
-            android:icon="@drawable/ic_map"
+            android:icon="@drawable/ic_map_black_48dp"
             android:title="Map" />
         <item
             android:id="@+id/nav_people"
+            android:icon="@drawable/ic_supervisor_account_black_48dp"
             android:title="People" />
     </group>
 
@@ -55,7 +56,7 @@
                 android:title="Contacts" />
             <item
                 android:id="@+id/nav_about"
-                android:icon="@drawable/ic_about"
+                android:icon="@drawable/ic_info_black_48dp"
                 android:title="About" />
         </menu>
     </item>

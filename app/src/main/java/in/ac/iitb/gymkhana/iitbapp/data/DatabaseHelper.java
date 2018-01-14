@@ -50,10 +50,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 DatabaseContract.UserFollowsEntry.COLUMN_USER_NAME + " TEXT NOT NULL, " +
                 DatabaseContract.UserFollowsEntry.COLUMN_USER_PROFILE + " TEXT NOT NULL);";
 
+        final String CREATE_TABLE_NEWS_FEED = "CREATE TABLE " + DatabaseContract.NewsFeedEntry.TABLE_NAME + " (" +
+                DatabaseContract.NewsFeedEntry._ID + " INTEGER PRIMARY KEY, " +
+                DatabaseContract.NewsFeedEntry.COLUMN_EVENT_NAME + " TEXT NOT NULL, " +
+                DatabaseContract.NewsFeedEntry.COLUMN_EVENT_DESCRIPTION + " TEXT NOT NULL, " +
+                DatabaseContract.NewsFeedEntry.COLUMN_EVENT_IMAGE + " TEXT NOT NULL, " +
+                DatabaseContract.NewsFeedEntry.COLUMN_EVENT_CREATOR_NAME + " TEXT NOT NULL, " +
+                DatabaseContract.NewsFeedEntry.COLUMN_EVENT_CREATOR_ID + " TEXT NOT NULL, " +
+                DatabaseContract.NewsFeedEntry.COLUMN_EVENT_GOING_STATUS + " INTEGER NOT NULL);";
+
         db.execSQL(CREATE_TABLE_MAP);
         db.execSQL(CREATE_TABLE_USER_PROFILE);
         db.execSQL(CREATE_TABLE_USER_FOLLOWERS);
         db.execSQL(CREATE_TABLE_USER_FOLLOWS);
+        db.execSQL(CREATE_TABLE_NEWS_FEED);
     }
 
     @Override
@@ -62,6 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.UserProfileEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.UserFollowersEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.UserFollowsEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.NewsFeedEntry.TABLE_NAME);
         onCreate(db);
     }
 }

@@ -8,7 +8,8 @@
     <ImageView
         android:id="@+id/event_picture_2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="360dp"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/event_title_2"
@@ -24,25 +25,29 @@
         style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:orientation="horizontal">
 
         <Button
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Going" />
 
         <Button
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Interested" />
 
         <Button
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Not Going" />
     </LinearLayout>
 
     <TextView

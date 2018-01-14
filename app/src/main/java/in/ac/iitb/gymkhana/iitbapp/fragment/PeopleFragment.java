@@ -2,10 +2,10 @@ package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.support.v7.widget.SearchView;
 
 import java.util.ArrayList;
 
@@ -25,8 +24,9 @@ public class PeopleFragment extends Fragment {
     View view;
     SearchView searchView;
     PeopleSuggestionAdapter adapter;
-    ArrayList<String> suggestionList=new ArrayList<String>();
+    ArrayList<String> suggestionList = new ArrayList<String>();
     ListView listView;
+
     public PeopleFragment() {
         // Required empty public constructor
     }
@@ -36,7 +36,7 @@ public class PeopleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view=inflater.inflate(R.layout.fragment_people, container, false);
+        view = inflater.inflate(R.layout.fragment_people, container, false);
         setHasOptionsMenu(true);
 
         suggestionList.add("Web and Coding Club");
@@ -62,21 +62,18 @@ public class PeopleFragment extends Fragment {
         suggestionList.add("SARC");
         suggestionList.add("Academic Council");
 
-        listView= (ListView) view.findViewById(R.id.list_view);
+        listView = (ListView) view.findViewById(R.id.list_view);
         listView.setVisibility(View.GONE);
 
 
-
-        adapter=new PeopleSuggestionAdapter(suggestionList);
+        adapter = new PeopleSuggestionAdapter(suggestionList);
         listView.setAdapter(adapter);
 
 
         //TODO SuggestionClickListener
 
 
-
-
-        return  view;
+        return view;
     }
 
     @Override

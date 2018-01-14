@@ -10,6 +10,7 @@ public class DatabaseContract {
     public static final String PATH_USER_PROFILE = "userProfile";
     public static final String PATH_USER_FOLLOWERS = "userFollowers";
     public static final String PATH_USER_FOLLOWS = "userFollows";
+    public static final String PATH_NEWS_FEED = "newsFeed";
 
     public static final class MapEntry implements BaseColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
@@ -64,6 +65,21 @@ public class DatabaseContract {
         public static final String COLUMN_USER_PROFILE_PICTURE = "user_profile_picture";
         public static final String COLUMN_USER_NAME = "user_name";
         public static final String COLUMN_USER_PROFILE = "userProfile";
+
+
+    }
+
+    public static final class NewsFeedEntry implements BaseColumns {
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_NEWS_FEED)
+                .build();
+        public static final String TABLE_NAME = "newsFeed";
+        public static final String COLUMN_EVENT_NAME = "event_name";
+        public static final String COLUMN_EVENT_DESCRIPTION = "event_description";
+        public static final String COLUMN_EVENT_IMAGE = "event_image";
+        public static final String COLUMN_EVENT_CREATOR_NAME = "event_creator_name";
+        public static final String COLUMN_EVENT_CREATOR_ID = "event_creator_id";
+        public static final String COLUMN_EVENT_GOING_STATUS = "event_going_status";
 
 
     }

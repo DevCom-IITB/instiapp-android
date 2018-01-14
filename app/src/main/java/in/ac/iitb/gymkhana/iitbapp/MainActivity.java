@@ -20,11 +20,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.List;
-
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
-import in.ac.iitb.gymkhana.iitbapp.api.model.AppNotification;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsResponse;
 import in.ac.iitb.gymkhana.iitbapp.fragment.AboutFragment;

@@ -86,8 +86,6 @@ public class AddEventFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_add_event, container, false);
         ButterKnife.bind(this, view);
 
-
-
         cb_permission.setVisibility(View.GONE);
         cb_public.setVisibility(View.GONE);
         et_mapLocation.setVisibility(View.GONE);
@@ -95,7 +93,6 @@ public class AddEventFragment extends Fragment {
 
         close.setVisibility(View.GONE);
         open.setVisibility(View.VISIBLE);
-
 
 
         start.setOnClickListener(new View.OnClickListener() {
@@ -106,9 +103,11 @@ public class AddEventFragment extends Fragment {
                 int mYear = calendar.get(Calendar.YEAR);
                 int mMonth = calendar.get(Calendar.MONTH);
                 int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
                 final int mHour = calendar.get(Calendar.HOUR_OF_DAY);
                 final int mMin = calendar.get(Calendar.MINUTE);
                 long millis = calendar.getTimeInMillis();
+
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
 
@@ -124,24 +123,28 @@ public class AddEventFragment extends Fragment {
                     }
                 }, mYear, mMonth, mDay);
 
+
                 datePickerDialog.show();
                 timestamp_start = new Timestamp(millis);
+
             }
 
         });
 
 
         end.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
+
                 Calendar calendar = Calendar.getInstance();
                 int mYear = calendar.get(Calendar.YEAR);
                 int mMonth = calendar.get(Calendar.MONTH);
                 int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
                 final int mHour = calendar.get(Calendar.HOUR_OF_DAY);
                 final int mMin = calendar.get(Calendar.MINUTE);
                 long millis = calendar.getTimeInMillis();
+
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
 
@@ -157,10 +160,12 @@ public class AddEventFragment extends Fragment {
                     }
                 }, mYear, mMonth, mDay);
 
+
                 datePickerDialog.show();
                 timestamp_end = new Timestamp(millis);
 
             }
+
         });
         if (cb_permission.isChecked()) {
             publicStatus = 1;
@@ -195,7 +200,10 @@ public class AddEventFragment extends Fragment {
         createEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //addEvent();
+
+                Toast.makeText(getContext(), "Add Event", Toast.LENGTH_SHORT).show();
+                //TODO (2) save event
+
             }
         });
 
