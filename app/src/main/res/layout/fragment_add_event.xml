@@ -4,129 +4,179 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.AddEventFragment">
-
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <ImageView
-            android:id="@+id/iv_eventImage"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#EEEEEE" />
+            android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/ib_eventImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#EEEEEE"
-            android:src="@drawable/ic_input_add" />
-    </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
 
-    <EditText
-        android:id="@+id/et_eventName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#81d2cb"
-        android:hint="Event Name"
-        android:padding="16dp"
-        android:paddingBottom="16dp"
-        android:textColorHint="#FFFFFF"
+                <ImageView
+                    android:id="@+id/iv_eventImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#EEEEEE" />
 
-        />
+                <ImageButton
+                    android:id="@+id/ib_eventImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#EEEEEE"
+                    android:src="@drawable/ic_input_add" />
+            </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+            <EditText
+                android:id="@+id/et_eventName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#81d2cb"
+                android:hint="Event Name"
+                android:padding="16dp"
+                android:paddingBottom="16dp"
+                android:textColorHint="#FFFFFF"
 
-        <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:hint="  Date    "
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp"
-            android:paddingTop="8dp" />
+                />
 
-        <View
-            android:layout_width="3dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/common_google_signin_btn_text_dark_disabled" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:hint="  Time  "
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp"
-            android:paddingTop="8dp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:paddingRight="6dp"
+                    android:gravity="bottom"
+                    android:layout_height="match_parent"
+                    android:id="@+id/tv_start"
+                    android:textSize="20sp"
+                    android:hint="From  "
 
-        <View
-            android:layout_width="3dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/common_google_signin_btn_text_dark_disabled" />
+                    android:background="?attr/editTextBackground"
+                    android:paddingTop="8dp"/>
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/common_google_signin_btn_text_dark_disabled" />
 
 
-        <EditText
-            android:id="@+id/et_venue"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:hint="Venue"
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp" />
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:paddingRight="6dp"
+                    android:gravity="bottom"
+                    android:layout_height="match_parent"
+                    android:id="@+id/tv_end"
+                    android:textSize="20sp"
+                    android:hint="To  "
 
-    <EditText
-        android:id="@+id/et_eventDetails"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1"
-        android:background="#E0E0E0"
-        android:gravity="top"
-        android:hint="Details"
-        android:paddingLeft="6dp"
-        android:paddingRight="6dp" />
+                    android:background="?attr/editTextBackground"
+                    android:paddingTop="8dp"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:paddingLeft="8dp"
-            android:text="Public"
-            android:textSize="18sp" />
 
-        <CheckBox
-            android:id="@+id/cb_public"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp" />
-    </RelativeLayout>
+
+            </LinearLayout>
+            <EditText
+                android:layout_width="match_parent"
+
+                android:paddingRight="6dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:id="@+id/et_venue"
+                android:hint="Venue"/>
+
+            <EditText
+                android:id="@+id/et_eventDetails"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:textSize="20sp"
+                android:hint="Details"
+                android:paddingRight="6dp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/advanced_menu">
+
+
+                <TextView android:layout_height="30dp"
+                    android:layout_width="wrap_content"
+                    android:text="Advanced Options"
+                    android:paddingLeft="18dp"
+                    android:textSize="20sp"
+                    android:paddingRight="16dp"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/close"
+                    android:src="@mipmap/advanced_menu_close"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:id="@+id/open"
+                    android:layout_alignParentEnd="true"
+                    android:src="@mipmap/advanced_menu_open"/>
+            </RelativeLayout>
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/cb_public"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="12dp"
+                android:text="Outsiders Allowed "/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/map_location"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="12dp"
+                android:hint="Map Location"/>
+
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Request User Info"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="12dp"
+                android:id="@+id/cb_permission"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
 
     <Button
-        android:id="@+id/button_createEvent"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/colorAccent"
-        android:gravity="center"
-        android:text="Create" />
+        android:layout_height="40dp"
+        android:text="Create"
+        android:layout_margin="8dp"
+        android:background="@drawable/round_text_box"
+        android:id="@+id/button_createEvent"
+        android:gravity="center"/>
+
 </LinearLayout>
