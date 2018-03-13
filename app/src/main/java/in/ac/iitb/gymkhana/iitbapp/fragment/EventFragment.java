@@ -14,7 +14,6 @@ import com.squareup.picasso.Picasso;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.R;
-import in.ac.iitb.gymkhana.iitbapp.api.model.Event;
 
 /**
  * A simple {@link Fragment} subclass.

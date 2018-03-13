@@ -26,7 +26,6 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.adapter.FeedAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
-import in.ac.iitb.gymkhana.iitbapp.api.model.Event;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedResponse;
 import in.ac.iitb.gymkhana.iitbapp.data.DatabaseContract;

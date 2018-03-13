@@ -14,7 +14,6 @@ import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.R;
-import in.ac.iitb.gymkhana.iitbapp.api.model.Event;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
