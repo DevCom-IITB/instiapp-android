@@ -7,6 +7,8 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
+import retrofit2.http.DELETE;
+
 /**
  * Created by mrunz on 13/3/18.
  */
@@ -31,13 +33,13 @@ public interface DbDao {
     int countBodies();
 
     @Insert
-    void insertEvents(Event... events);
+    void insertEvents(List<Event> events);
 
     @Insert
-    void insertBodies(Body... bodies);
+    void insertBodies(List<Body> bodies);
 
     @Insert
-    void insertVenues(Venue... venues);
+    void insertVenues(List<Venue> venues);
 
     @Delete
     void deleteEvent(Event event);
@@ -47,4 +49,13 @@ public interface DbDao {
 
     @Delete
     void deleteBody(Body body);
+
+    @Query("DELETE from events")
+    void deleteEvents();
+
+    @Query("DELETE from venues")
+    void deleteVenues();
+
+    @Query("DELETE from bodies")
+    void deleteBodies();
 }
