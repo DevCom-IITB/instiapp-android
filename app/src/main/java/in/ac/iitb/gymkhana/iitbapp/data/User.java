@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-@Entity
+@Entity(tableName = "users")
 class User {
     @ColumnInfo(name = "id")
     @SerializedName("id")

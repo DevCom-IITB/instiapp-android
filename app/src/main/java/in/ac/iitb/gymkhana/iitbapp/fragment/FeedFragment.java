@@ -28,7 +28,6 @@ import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedResponse;
-import in.ac.iitb.gymkhana.iitbapp.data.DatabaseContract;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
