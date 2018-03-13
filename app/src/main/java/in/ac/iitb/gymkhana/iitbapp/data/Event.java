@@ -50,4 +50,124 @@ public class Event {
     @ColumnInfo(name = "going")
     @SerializedName("going")
     List<User> eventGoing;
+
+    public Event(String eventID, String eventName, String eventDescription, String eventImageURL, String eventStartTime, String eventEndTime, boolean allDayEvent, List<Venue> eventVenues, List<Body> eventBodies, int eventInterestedCount, int eventGoingCount, List<User> eventInterested, List<User> eventGoing) {
+        this.eventID = eventID;
+        this.eventName = eventName;
+        this.eventDescription = eventDescription;
+        this.eventImageURL = eventImageURL;
+        this.eventStartTime = eventStartTime;
+        this.eventEndTime = eventEndTime;
+        this.allDayEvent = allDayEvent;
+        this.eventVenues = eventVenues;
+        this.eventBodies = eventBodies;
+        this.eventInterestedCount = eventInterestedCount;
+        this.eventGoingCount = eventGoingCount;
+        this.eventInterested = eventInterested;
+        this.eventGoing = eventGoing;
+    }
+
+    public String getEventID() {
+        return eventID;
+    }
+
+    public void setEventID(String eventID) {
+        this.eventID = eventID;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
+
+    public String getEventImageURL() {
+        return eventImageURL;
+    }
+
+    public void setEventImageURL(String eventImageURL) {
+        this.eventImageURL = eventImageURL;
+    }
+
+    public String getEventStartTime() {
+        return eventStartTime;
+    }
+
+    public void setEventStartTime(String eventStartTime) {
+        this.eventStartTime = eventStartTime;
+    }
+
+    public String getEventEndTime() {
+        return eventEndTime;
+    }
+
+    public void setEventEndTime(String eventEndTime) {
+        this.eventEndTime = eventEndTime;
+    }
+
+    public boolean isAllDayEvent() {
+        return allDayEvent;
+    }
+
+    public void setAllDayEvent(boolean allDayEvent) {
+        this.allDayEvent = allDayEvent;
+    }
+
+    public List<Venue> getEventVenues() {
+        return eventVenues;
+    }
+
+    public void setEventVenues(List<Venue> eventVenues) {
+        this.eventVenues = eventVenues;
+    }
+
+    public List<Body> getEventBodies() {
+        return eventBodies;
+    }
+
+    public void setEventBodies(List<Body> eventBodies) {
+        this.eventBodies = eventBodies;
+    }
+
+    public int getEventInterestedCount() {
+        return eventInterestedCount;
+    }
+
+    public void setEventInterestedCount(int eventInterestedCount) {
+        this.eventInterestedCount = eventInterestedCount;
+    }
+
+    public int getEventGoingCount() {
+        return eventGoingCount;
+    }
+
+    public void setEventGoingCount(int eventGoingCount) {
+        this.eventGoingCount = eventGoingCount;
+    }
+
+    public List<User> getEventInterested() {
+        return eventInterested;
+    }
+
+    public void setEventInterested(List<User> eventInterested) {
+        this.eventInterested = eventInterested;
+    }
+
+    public List<User> getEventGoing() {
+        return eventGoing;
+    }
+
+    public void setEventGoing(List<User> eventGoing) {
+        this.eventGoing = eventGoing;
+    }
 }

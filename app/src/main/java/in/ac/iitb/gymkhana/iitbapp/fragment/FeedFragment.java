@@ -26,8 +26,9 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.adapter.FeedAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
-import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedResponse;
+import in.ac.iitb.gymkhana.iitbapp.data.DatabaseContract;
+import in.ac.iitb.gymkhana.iitbapp.data.Event;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,37 +56,37 @@ public class FeedFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Cursor cursor = getContext().getContentResolver().query(DatabaseContract.NewsFeedEntry.CONTENT_URI, null, null, null, null);
-        if (cursor.getCount() != 0) {
-            final List<Event> events = new ArrayList<>();
-            while (cursor.moveToNext()) {
-                Event event = new Event(cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_NAME)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_DESCRIPTION)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_IMAGE)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_CREATOR_NAME)),
-                        cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_CREATOR_ID)),
-                        cursor.getInt(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_GOING_STATUS)));
-                events.add(event);
-            }
-            FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
-                @Override
-                public void onItemClick(View v, int position) {
-                    String eventJson = new Gson().toJson(events.get(position));
-                    Bundle bundle = new Bundle();
-                    bundle.putString(Constants.EVENT_JSON, eventJson);
-                    EventFragment eventFragment = new EventFragment();
-                    eventFragment.setArguments(bundle);
-                    FragmentManager manager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                    transaction.commit();
-                }
-            });
-            feedRecyclerView = (RecyclerView) getActivity().findViewById(R.id.feed_recycler_view);
-            feedRecyclerView.setAdapter(feedAdapter);
-            feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        }
+//        Cursor cursor = getContext().getContentResolver().query(DatabaseContract.NewsFeedEntry.CONTENT_URI, null, null, null, null);
+//        if (cursor.getCount() != 0) {
+//            final List<Event> events = new ArrayList<>();
+//            while (cursor.moveToNext()) {
+//                Event event = new Event(cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_NAME)),
+//                        cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_DESCRIPTION)),
+//                        cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_IMAGE)),
+//                        cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_CREATOR_NAME)),
+//                        cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_CREATOR_ID)),
+//                        cursor.getInt(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_GOING_STATUS)));
+//                events.add(event);
+//            }
+//            FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
+//                @Override
+//                public void onItemClick(View v, int position) {
+//                    String eventJson = new Gson().toJson(events.get(position));
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString(Constants.EVENT_JSON, eventJson);
+//                    EventFragment eventFragment = new EventFragment();
+//                    eventFragment.setArguments(bundle);
+//                    FragmentManager manager = getActivity().getSupportFragmentManager();
+//                    FragmentTransaction transaction = manager.beginTransaction();
+//                    transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
+//                    transaction.commit();
+//                }
+//            });
+//            feedRecyclerView = (RecyclerView) getActivity().findViewById(R.id.feed_recycler_view);
+//            feedRecyclerView.setAdapter(feedAdapter);
+//            feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//
+//        }
 
         updateFeed();
 
@@ -99,9 +100,10 @@ public class FeedFragment extends Fragment {
     }
 
     private void updateFeed() {
-        NewsFeedRequest newsFeedRequest = new NewsFeedRequest(NewsFeedRequest.FOLLOWED, 0, 20);
+        //TODO: Fetch userID from SharedPreferences
+        String userID = "51e04db1-040f-406c-8b6f-0c47a1bdc5a4";
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getNewsFeed(newsFeedRequest).enqueue(new Callback<NewsFeedResponse>() {
+        retrofitInterface.getNewsFeed(userID).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
@@ -133,10 +135,7 @@ public class FeedFragment extends Fragment {
                         ContentValues contentValues1 = new ContentValues();
                         contentValues1.put(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_NAME, events.get(i).getEventName());
                         contentValues1.put(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_DESCRIPTION, events.get(i).getEventDescription());
-                        contentValues1.put(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_IMAGE, events.get(i).getEventImage());
-                        contentValues1.put(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_CREATOR_NAME, events.get(i).getEventCreatorName());
-                        contentValues1.put(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_CREATOR_ID, events.get(i).getEventCreatorId());
-                        contentValues1.put(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_GOING_STATUS, events.get(i).getEventEnthu());
+                        contentValues1.put(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_IMAGE, events.get(i).getEventImageURL());
                         contentValues[i] = contentValues1;
                     }
                     int insertCount = getContext().getContentResolver().bulkInsert(DatabaseContract.NewsFeedEntry.CONTENT_URI, contentValues);
