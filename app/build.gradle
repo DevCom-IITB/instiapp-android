@@ -29,7 +29,7 @@ ext {
     retrofitVersion = '2.1.0'
     okhttpVersion = '3.4.1'
     picassoVersion = '2.5.0'
-    archRoomVersion = "1.0.0-alpha1"
+    archRoomVersion = "1.1.0-alpha3"
 
 }
 
@@ -53,6 +53,7 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     compile "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}"
     compile "com.squareup.picasso:picasso:${picassoVersion}"
+    compile "com.android.support:customtabs:${supportLibVersion}"
     compile "android.arch.persistence.room:runtime:${archRoomVersion}"
     annotationProcessor "android.arch.persistence.room:compiler:${archRoomVersion}"
 }
