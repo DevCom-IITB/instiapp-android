@@ -90,8 +90,7 @@
             style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="4dp">
+            android:orientation="horizontal">
 
             <Button
                 style="?android:attr/buttonBarButtonStyle"
@@ -99,12 +98,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Going"
+                android:layout_margin="0dp"
                 android:textColor="@color/colorGray"/>
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="#aaa"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="6dp">
 
             </View>
@@ -115,12 +115,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Interested"
+                android:layout_margin="0dp"
                 android:textColor="@color/colorGray"/>
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:background="#aaa"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="6dp">
 
             </View>
@@ -131,6 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Not Going"
+                android:layout_margin="0dp"
                 android:textColor="@color/colorGray"/>
         </LinearLayout>
 
@@ -138,7 +140,6 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#aaa"
-            android:layout_marginTop="4dp"
             android:layout_marginBottom="6dp"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp">
@@ -148,6 +149,11 @@
         <TextView
             android:id="@+id/event_page_description"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:textColor="#777"
+            android:textSize="16sp"/>
     </LinearLayout>
 </LinearLayout>
