@@ -1,9 +1,11 @@
 package in.ac.iitb.gymkhana.iitbapp.data;
 
 import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
 
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "venues")
 class Venue {
     @ColumnInfo(name = "id")
     @SerializedName("id")
