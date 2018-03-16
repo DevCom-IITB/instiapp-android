@@ -54,12 +54,10 @@ public class EventFragment extends Fragment {
         TextView eventDate = (TextView) getActivity().findViewById(R.id.event_page_date);
         TextView eventTime = (TextView) getActivity().findViewById(R.id.event_page_time);
         TextView eventVenue = (TextView) getActivity().findViewById(R.id.event_page_venue);
-        TextView eventDetails = (TextView) getActivity().findViewById(R.id.event_details_2);
-        TextView eventDescription = (TextView) getActivity().findViewById(R.id.event_description_2);
+        TextView eventDescription = (TextView) getActivity().findViewById(R.id.event_page_description);
 
         Picasso.with(getContext()).load(event.getEventImageURL()).into(eventPicture);
         eventTitle.setText(event.getEventName());
-        eventDetails.setText(event.getEventDescription());
         eventDescription.setText(event.getEventDescription());
         Timestamp timestamp = event.getEventStartTime();
         Date Date = new Date(timestamp.getTime());
