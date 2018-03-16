@@ -7,10 +7,9 @@ import android.arch.persistence.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "venues")
-class Venue {
+public class Venue {
     @PrimaryKey(autoGenerate = true)
     int db_id;
-
     @ColumnInfo(name = "id")
     @SerializedName("id")
     String venueID;

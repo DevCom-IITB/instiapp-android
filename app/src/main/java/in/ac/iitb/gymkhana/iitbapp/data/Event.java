@@ -6,6 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity(tableName = "events")
@@ -29,10 +30,10 @@ public class Event {
     String eventImageURL;
     @ColumnInfo(name = "start_time")
     @SerializedName("start_time")
-    String eventStartTime;
+    Timestamp eventStartTime;
     @ColumnInfo(name = "end_time")
     @SerializedName("end_time")
-    String eventEndTime;
+    Timestamp eventEndTime;
     @ColumnInfo(name = "all_day")
     @SerializedName("all_day")
     boolean allDayEvent;
@@ -55,7 +56,7 @@ public class Event {
     @SerializedName("going")
     List<User> eventGoing;
 
-    public Event(String eventID, String eventName, String eventDescription, String eventImageURL, String eventStartTime, String eventEndTime, boolean allDayEvent, List<Venue> eventVenues, List<Body> eventBodies, int eventInterestedCount, int eventGoingCount, List<User> eventInterested, List<User> eventGoing) {
+    public Event(String eventID, String eventName, String eventDescription, String eventImageURL, Timestamp eventStartTime, Timestamp eventEndTime, boolean allDayEvent, List<Venue> eventVenues, List<Body> eventBodies, int eventInterestedCount, int eventGoingCount, List<User> eventInterested, List<User> eventGoing) {
         this.eventID = eventID;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
@@ -103,19 +104,19 @@ public class Event {
         this.eventImageURL = eventImageURL;
     }
 
-    public String getEventStartTime() {
+    public Timestamp getEventStartTime() {
         return eventStartTime;
     }
 
-    public void setEventStartTime(String eventStartTime) {
+    public void setEventStartTime(Timestamp eventStartTime) {
         this.eventStartTime = eventStartTime;
     }
 
-    public String getEventEndTime() {
+    public Timestamp getEventEndTime() {
         return eventEndTime;
     }
 
-    public void setEventEndTime(String eventEndTime) {
+    public void setEventEndTime(Timestamp eventEndTime) {
         this.eventEndTime = eventEndTime;
     }
 

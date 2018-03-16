@@ -2,6 +2,8 @@ package in.ac.iitb.gymkhana.iitbapp.api;
 
 import in.ac.iitb.gymkhana.iitbapp.api.model.EventCreateRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.EventCreateResponse;
+import in.ac.iitb.gymkhana.iitbapp.api.model.ImageUploadRequest;
+import in.ac.iitb.gymkhana.iitbapp.api.model.ImageUploadResponse;
 import in.ac.iitb.gymkhana.iitbapp.api.model.LoginRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.LoginResponse;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedResponse;
@@ -12,6 +14,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface RetrofitInterface {
     @POST("login/")
@@ -25,4 +28,7 @@ public interface RetrofitInterface {
 
     @POST("getNotifications/")
     Call<NotificationsResponse> getNotifications(@Body NotificationsRequest notificationsRequest);
+
+    @POST("upload")
+    Call<ImageUploadResponse> uploadImage(@Body ImageUploadRequest imageUploadRequest);
 }
