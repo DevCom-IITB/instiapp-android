@@ -6,42 +6,36 @@ import android.support.annotation.Nullable;
 import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
-
-/**
- * Created by mrunz on 15/7/17.
- */
+import java.util.List;
 
 public class EventCreateRequest {
-    @SerializedName("event_name")
+    @SerializedName("name")
     private String eventName;
-    @SerializedName("event_description")
+    @SerializedName("description")
     private String eventDescription;
-    @SerializedName("event_timing_from")
-    private Timestamp eventTimingFrom;
-    @SerializedName("event_timing_to")
-    private Timestamp eventTimingTo;
-    @SerializedName("event_venue_id")
-    private int eventVenueID;
-    @SerializedName("event_maplocation_id")
-    private int eventMapLocationId;
-    @SerializedName("event_venue")
-    private String eventVenue;
-    @SerializedName("public_status")
-    private int publicStatus;
+    @SerializedName("image_url")
+    private String eventImageURL;
+    @SerializedName("start_time")
+    private String eventStartTime;
+    @SerializedName("end_time")
+    private String eventEndTime;
+    @SerializedName("all_day")
+    private boolean allDayEvent;
+    @SerializedName("venue_names")
+    private List<String> eventVenueNames;
+    @SerializedName("bodies_id")
+    private List<String> eventBodiesID;
 
-
-    public EventCreateRequest(String eventName, String eventDescription,String eventVenue,Timestamp eventTimingFrom,Timestamp eventTimingTo,int publicStatus,@Nullable int eventVenueID,@Nullable int eventMapLocationId) {
-        this.eventName=eventName;
-        this.eventDescription=eventDescription;
-        this.eventTimingFrom=eventTimingFrom;
-        this.eventTimingTo=eventTimingTo;
-        this.eventVenueID=eventVenueID;
-        this.eventMapLocationId=eventMapLocationId;
-        this.eventVenue=eventVenue;
-        this.publicStatus=publicStatus;
-
+    public EventCreateRequest(String eventName, String eventDescription, String eventImageURL, String eventStartTime, String eventEndTime, boolean allDayEvent, List<String> eventVenueNames, List<String> eventBodiesID) {
+        this.eventName = eventName;
+        this.eventDescription = eventDescription;
+        this.eventImageURL = eventImageURL;
+        this.eventStartTime = eventStartTime;
+        this.eventEndTime = eventEndTime;
+        this.allDayEvent = allDayEvent;
+        this.eventVenueNames = eventVenueNames;
+        this.eventBodiesID = eventBodiesID;
     }
-
 
     public String getEventName() {
         return eventName;
@@ -59,53 +53,51 @@ public class EventCreateRequest {
         this.eventDescription = eventDescription;
     }
 
-    public Timestamp getEventTimingFrom() {
-        return eventTimingFrom;
+    public String getEventImageURL() {
+        return eventImageURL;
     }
 
-    public void setEventTimingFrom(Timestamp eventTimingFrom) {
-        this.eventTimingFrom = eventTimingFrom;
+    public void setEventImageURL(String eventImageURL) {
+        this.eventImageURL = eventImageURL;
     }
 
-    public Timestamp getEventTimingTo() {
-        return eventTimingTo;
+    public String getEventStartTime() {
+        return eventStartTime;
     }
 
-    public void setEventTimingTo(Timestamp eventTimingTo) {
-        this.eventTimingTo = eventTimingTo;
+    public void setEventStartTime(String eventStartTime) {
+        this.eventStartTime = eventStartTime;
     }
 
-    public int getEventVenueID() {
-        return eventVenueID;
+    public String getEventEndTime() {
+        return eventEndTime;
     }
 
-    public void setEventVenueID(@Nullable  int eventVenueID) {
-        this.eventVenueID = eventVenueID;
+    public void setEventEndTime(String eventEndTime) {
+        this.eventEndTime = eventEndTime;
     }
 
-    public int getEventMapLocationId() {
-        return eventMapLocationId;
+    public boolean isAllDayEvent() {
+        return allDayEvent;
     }
 
-    public void setEventMapLocationId(@Nullable  int eventMapLocationId) {
-        this.eventMapLocationId = eventMapLocationId;
+    public void setAllDayEvent(boolean allDayEvent) {
+        this.allDayEvent = allDayEvent;
     }
 
-    public String getEventVenue() {
-        return eventVenue;
+    public List<String> getEventVenueNames() {
+        return eventVenueNames;
     }
 
-    public void setEventVenue(String eventVenue) {
-        this.eventVenue = eventVenue;
+    public void setEventVenueNames(List<String> eventVenueNames) {
+        this.eventVenueNames = eventVenueNames;
     }
 
-    public int getPublicStatus() {
-        return publicStatus;
+    public List<String> getEventBodiesID() {
+        return eventBodiesID;
     }
 
-    public void setPublicStatus(int publicStatus) {
-        this.publicStatus = publicStatus;
+    public void setEventBodiesID(List<String> eventBodiesID) {
+        this.eventBodiesID = eventBodiesID;
     }
-
-
 }
