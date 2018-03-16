@@ -17,8 +17,8 @@ public interface RetrofitInterface {
     @POST("login/")
     Call<LoginResponse> login(@Body LoginRequest loginRequest);
 
-    @POST("/createEvent/")
-    Call<EventCreateResponse> eventCreate(@Body EventCreateRequest eventCreateRequest);
+    @POST("events")
+    Call<EventCreateResponse> createEvent(@Body EventCreateRequest eventCreateRequest);
 
     @GET("users/{uuid}/followed_bodies_events")
     Call<NewsFeedResponse> getNewsFeed(@Path("uuid") String uuid);
