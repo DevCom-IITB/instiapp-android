@@ -1,13 +1,21 @@
 package in.ac.iitb.gymkhana.iitbapp.data;
 
 import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+@Entity(tableName = "events")
+
 public class Event {
+
+    @PrimaryKey(autoGenerate = true)
+    int db_id;
+
     @ColumnInfo(name = "id")
     @SerializedName("id")
     String eventID;

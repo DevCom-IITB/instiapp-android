@@ -92,10 +92,6 @@
             android:exported="false"></service>
 
 
-        <provider
-            android:name="in.ac.iitb.gymkhana.iitbapp.data.IITBAppContentProvider"
-            android:authorities="in.ac.iitb.gymkhana.iitbapp"
-            android:exported="false" />
     </application>
 
 </manifest>

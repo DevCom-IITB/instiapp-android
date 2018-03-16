@@ -3,6 +3,7 @@ package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,7 +28,7 @@ import in.ac.iitb.gymkhana.iitbapp.adapter.FeedAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedResponse;
-import in.ac.iitb.gymkhana.iitbapp.data.DatabaseContract;
+import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,6 +41,7 @@ public class FeedFragment extends Fragment {
 
     private RecyclerView feedRecyclerView;
     private SwipeRefreshLayout feedSwipeRefreshLayout;
+    private AppDatabase appDatabase;
 
     public FeedFragment() {
         // Required empty public constructor
@@ -50,42 +52,34 @@ public class FeedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_feed, container, false);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-//        Cursor cursor = getContext().getContentResolver().query(DatabaseContract.NewsFeedEntry.CONTENT_URI, null, null, null, null);
-//        if (cursor.getCount() != 0) {
-//            final List<Event> events = new ArrayList<>();
-//            while (cursor.moveToNext()) {
-//                Event event = new Event(cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_NAME)),
-//                        cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_DESCRIPTION)),
-//                        cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_IMAGE)),
-//                        cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_CREATOR_NAME)),
-//                        cursor.getString(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_CREATOR_ID)),
-//                        cursor.getInt(cursor.getColumnIndex(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_GOING_STATUS)));
-//                events.add(event);
-//            }
-//            FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
-//                @Override
-//                public void onItemClick(View v, int position) {
-//                    String eventJson = new Gson().toJson(events.get(position));
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString(Constants.EVENT_JSON, eventJson);
-//                    EventFragment eventFragment = new EventFragment();
-//                    eventFragment.setArguments(bundle);
-//                    FragmentManager manager = getActivity().getSupportFragmentManager();
-//                    FragmentTransaction transaction = manager.beginTransaction();
-//                    transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-//                    transaction.commit();
-//                }
-//            });
-//            feedRecyclerView = (RecyclerView) getActivity().findViewById(R.id.feed_recycler_view);
-//            feedRecyclerView.setAdapter(feedAdapter);
-//            feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//
+
+        appDatabase= AppDatabase.getAppDatabase(getContext());
+        final List<Event> events=appDatabase.dbDao().getAllEvents();
+            FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
+                @Override
+                public void onItemClick(View v, int position) {
+                    String eventJson = new Gson().toJson(events.get(position));
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.EVENT_JSON, eventJson);
+                    EventFragment eventFragment = new EventFragment();
+                    eventFragment.setArguments(bundle);
+                    FragmentManager manager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
+                    transaction.commit();
+                }
+            });
+            feedRecyclerView = (RecyclerView) getActivity().findViewById(R.id.feed_recycler_view);
+            feedRecyclerView.setAdapter(feedAdapter);
+            feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
 //        }
 
         updateFeed();
@@ -127,22 +121,12 @@ public class FeedFragment extends Fragment {
                     feedRecyclerView = (RecyclerView) getActivity().findViewById(R.id.feed_recycler_view);
                     feedRecyclerView.setAdapter(feedAdapter);
                     feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    long itemsRemoved = getContext().getContentResolver().delete(DatabaseContract.NewsFeedEntry.CONTENT_URI, null, null);
 
-                    Log.d("FeedFragment", itemsRemoved + " items removed.");
-                    ContentValues contentValues[] = new ContentValues[events.size()];
-                    for (int i = 0; i < events.size(); i++) {
-                        ContentValues contentValues1 = new ContentValues();
-                        contentValues1.put(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_NAME, events.get(i).getEventName());
-                        contentValues1.put(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_DESCRIPTION, events.get(i).getEventDescription());
-                        contentValues1.put(DatabaseContract.NewsFeedEntry.COLUMN_EVENT_IMAGE, events.get(i).getEventImageURL());
-                        contentValues[i] = contentValues1;
-                    }
-                    int insertCount = getContext().getContentResolver().bulkInsert(DatabaseContract.NewsFeedEntry.CONTENT_URI, contentValues);
-                    Log.d("FeedFragment", Integer.toString(insertCount) + " elements inserted");
+                    appDatabase.dbDao().deleteEvents();
+                    appDatabase.dbDao().insertEvents(events);
+                    //Server Error
+                    feedSwipeRefreshLayout.setRefreshing(false);
                 }
-                //Server Error
-                feedSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
