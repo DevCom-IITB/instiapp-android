@@ -14,7 +14,7 @@ import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.R;
-import in.ac.iitb.gymkhana.iitbapp.api.model.Event;
+import in.ac.iitb.gymkhana.iitbapp.data.Event;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
@@ -48,7 +48,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         Event currentEvent = posts.get(i);
         viewHolder.eventTitle.setText(currentEvent.getEventName());
         viewHolder.eventDetails.setText(currentEvent.getEventDescription());
-        Picasso.with(context).load(currentEvent.getEventImage()).into(viewHolder.eventPicture);
+        Picasso.with(context).load(currentEvent.getEventImageURL()).into(viewHolder.eventPicture);
     }
 
     @Override

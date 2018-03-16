@@ -22,7 +22,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -203,6 +205,7 @@ public class AddEventFragment extends Fragment {
 
                 Toast.makeText(getContext(), "Add Event", Toast.LENGTH_SHORT).show();
                 //TODO (2) save event
+                addEvent();
 
             }
         });
@@ -212,9 +215,9 @@ public class AddEventFragment extends Fragment {
     }
 
     public void addEvent() {
-        EventCreateRequest eventCreateRequest = new EventCreateRequest(eventName.getText().toString(), details.getText().toString(), venue.getText().toString(), timestamp_start, timestamp_end, publicStatus, 0, 0);
+        EventCreateRequest eventCreateRequest = new EventCreateRequest(eventName.getText().toString(), details.getText().toString(), "http://resources.wncc-iitb.org/logo_banner.png", timestamp_start.toString(), timestamp_end.toString(), false, Arrays.asList(new String[]{venue.getText().toString()}), Arrays.asList(new String[]{"bde82d5e-f379-4b8a-ae38-a9f03e4f1c4a"}));
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.eventCreate(eventCreateRequest).enqueue(new Callback<EventCreateResponse>() {
+        retrofitInterface.createEvent(eventCreateRequest).enqueue(new Callback<EventCreateResponse>() {
             @Override
             public void onResponse(Call<EventCreateResponse> call, Response<EventCreateResponse> response) {
                 Toast.makeText(getContext(), "Event Created", Toast.LENGTH_SHORT).show();

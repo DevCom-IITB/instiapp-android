@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.R;
-import in.ac.iitb.gymkhana.iitbapp.api.model.Event;
+import in.ac.iitb.gymkhana.iitbapp.data.Event;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,7 +50,7 @@ public class EventFragment extends Fragment {
         TextView eventDetails = (TextView) getActivity().findViewById(R.id.event_details_2);
         TextView eventDescription = (TextView) getActivity().findViewById(R.id.event_description_2);
 
-        Picasso.with(getContext()).load(event.getEventImage()).into(eventPicture);
+        Picasso.with(getContext()).load(event.getEventImageURL()).into(eventPicture);
         eventTitle.setText(event.getEventName());
         eventDetails.setText(event.getEventDescription());
         eventDescription.setText(event.getEventDescription());
