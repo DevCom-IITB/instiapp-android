@@ -6,7 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,6 +63,18 @@ public class Converters {
     public static String stringfromBodies(List<Body> list) {
         Gson gson = new Gson();
         String json = gson.toJson(list);
+        return json;
+    }
+
+    @TypeConverter
+    public static Timestamp timestampfromString(String value) {
+        return new Gson().fromJson(value, Timestamp.class);
+    }
+
+    @TypeConverter
+    public static String stringfromTimestamp(Timestamp timestamp) {
+        Gson gson = new Gson();
+        String json = gson.toJson(timestamp);
         return json;
     }
 }

@@ -15,7 +15,6 @@ public class Event {
 
     @PrimaryKey(autoGenerate = true)
     int db_id;
-
     @ColumnInfo(name = "id")
     @SerializedName("id")
     String eventID;
