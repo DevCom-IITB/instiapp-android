@@ -12,6 +12,10 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
@@ -46,7 +50,10 @@ public class EventFragment extends Fragment {
 
     private void inflateViews(Event event) {
         ImageView eventPicture = (ImageView) getActivity().findViewById(R.id.event_picture_2);
-        TextView eventTitle = (TextView) getActivity().findViewById(R.id.event_title_2);
+        TextView eventTitle = (TextView) getActivity().findViewById(R.id.event_page_title);
+        TextView eventDate = (TextView) getActivity().findViewById(R.id.event_page_date);
+        TextView eventTime = (TextView) getActivity().findViewById(R.id.event_page_time);
+        TextView eventVenue = (TextView) getActivity().findViewById(R.id.event_page_venue);
         TextView eventDetails = (TextView) getActivity().findViewById(R.id.event_details_2);
         TextView eventDescription = (TextView) getActivity().findViewById(R.id.event_description_2);
 
@@ -54,5 +61,12 @@ public class EventFragment extends Fragment {
         eventTitle.setText(event.getEventName());
         eventDetails.setText(event.getEventDescription());
         eventDescription.setText(event.getEventDescription());
+        Timestamp timestamp = event.getEventStartTime();
+        Date Date = new Date(timestamp.getTime());
+        SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
+        SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm a");
+        eventDate.setText(simpleDateFormatDate.format(Date));
+        eventTime.setText(simpleDateFormatDate.format(Date));
+        eventVenue.setText(event.getEventVenues().get(0).getVenueName());
     }
 }
