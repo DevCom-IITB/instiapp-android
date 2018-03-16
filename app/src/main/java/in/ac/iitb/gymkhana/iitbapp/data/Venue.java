@@ -4,7 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 
 import com.google.gson.annotations.SerializedName;
 
-class Venue {
+public class Venue {
     @ColumnInfo(name = "id")
     @SerializedName("id")
     String venueID;

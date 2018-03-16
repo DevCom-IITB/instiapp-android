@@ -56,5 +56,9 @@ dependencies {
     compile "com.android.support:customtabs:${supportLibVersion}"
     compile "android.arch.persistence.room:runtime:${archRoomVersion}"
     annotationProcessor "android.arch.persistence.room:compiler:${archRoomVersion}"
+
+
+    implementation "com.android.support:cardview-v7:${supportLibVersion}"
+
 }
 apply plugin: 'com.google.gms.google-services'
