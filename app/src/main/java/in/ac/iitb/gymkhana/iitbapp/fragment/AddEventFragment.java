@@ -1,11 +1,18 @@
 package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.media.Image;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.ListPopupWindow;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +23,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,15 +39,20 @@ import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.api.model.EventCreateRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.EventCreateResponse;
+import in.ac.iitb.gymkhana.iitbapp.api.model.ImageUploadRequest;
+import in.ac.iitb.gymkhana.iitbapp.api.model.ImageUploadResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_OK;
+import static android.content.ContentValues.TAG;
+
 
 public class AddEventFragment extends Fragment {
+    private static final int RESULT_LOAD_IMAGE = 1;
     @BindView(R.id.button_createEvent)
     Button createEvent;
-
     @BindView(R.id.tv_start)
     TextView start;
     @BindView(R.id.et_eventName)
@@ -68,11 +79,14 @@ public class AddEventFragment extends Fragment {
     @BindView(R.id.map_location)
     EditText et_mapLocation;
     @BindView(R.id.open)
-            ImageView open;
+    ImageView open;
     @BindView(R.id.close)
-            ImageView close;
+    ImageView close;
+    ImageView eventPictureImageView;
     int publicStatus;
     View view;
+    String base64Image;
+    ProgressDialog progressDialog;
 
 
     public AddEventFragment() {
@@ -87,6 +101,9 @@ public class AddEventFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_add_event, container, false);
         ButterKnife.bind(this, view);
+
+        eventPictureImageView = view.findViewById(R.id.ib_eventImage);
+        progressDialog = new ProgressDialog(getContext());
 
         cb_permission.setVisibility(View.GONE);
         cb_public.setVisibility(View.GONE);
@@ -195,18 +212,17 @@ public class AddEventFragment extends Fragment {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Add Image", Toast.LENGTH_SHORT).show();
-                //TODO (1) upload image to server
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
             }
         });
         createEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(getContext(), "Add Event", Toast.LENGTH_SHORT).show();
-                //TODO (2) save event
-                addEvent();
-
+                progressDialog.setIndeterminate(true);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+                sendImage();
             }
         });
 
@@ -214,20 +230,109 @@ public class AddEventFragment extends Fragment {
         return view;
     }
 
-    public void addEvent() {
-        EventCreateRequest eventCreateRequest = new EventCreateRequest(eventName.getText().toString(), details.getText().toString(), "http://resources.wncc-iitb.org/logo_banner.png", timestamp_start.toString(), timestamp_end.toString(), false, Arrays.asList(new String[]{venue.getText().toString()}), Arrays.asList(new String[]{"bde82d5e-f379-4b8a-ae38-a9f03e4f1c4a"}));
+    private void sendImage() {
+        progressDialog.setMessage("Uploading Image");
+        ImageUploadRequest imageUploadRequest = new ImageUploadRequest(base64Image);
+        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        retrofitInterface.uploadImage(imageUploadRequest).enqueue(new Callback<ImageUploadResponse>() {
+            @Override
+            public void onResponse(Call<ImageUploadResponse> call, Response<ImageUploadResponse> response) {
+                if (response.isSuccessful()) {
+                    ImageUploadResponse imageUploadResponse = response.body();
+                    String imageURL = imageUploadResponse.getPictureURL();
+                    addEvent(imageURL);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+    public void addEvent(String eventImageURL) {
+        progressDialog.setMessage("Creating Event");
+        EventCreateRequest eventCreateRequest = new EventCreateRequest(eventName.getText().toString(), details.getText().toString(), eventImageURL, timestamp_start.toString(), timestamp_end.toString(), false, Arrays.asList(new String[]{venue.getText().toString()}), Arrays.asList(new String[]{"bde82d5e-f379-4b8a-ae38-a9f03e4f1c4a"}));
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
         retrofitInterface.createEvent(eventCreateRequest).enqueue(new Callback<EventCreateResponse>() {
             @Override
             public void onResponse(Call<EventCreateResponse> call, Response<EventCreateResponse> response) {
                 Toast.makeText(getContext(), "Event Created", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<EventCreateResponse> call, Throwable t) {
                 Toast.makeText(getContext(), "Event Creation Failed", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         });
     }
 
+    public static String convertImageToString(Bitmap imageBitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        if (imageBitmap != null) {
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 60, stream);
+            byte[] byteArray = stream.toByteArray();
+            return Base64.encodeToString(byteArray, Base64.DEFAULT);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            eventPictureImageView.setImageBitmap(getScaledBitmap(picturePath, imageButton.getWidth(), imageButton.getHeight()));
+            eventPictureImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            base64Image = convertImageToString(getScaledBitmap(picturePath, 800, 800));
+            Log.d(TAG, "onActivityResult: " + base64Image);
+        }
+    }
+
+    private Bitmap getScaledBitmap(String picturePath, int width, int height) {
+        BitmapFactory.Options sizeOptions = new BitmapFactory.Options();
+        sizeOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(picturePath, sizeOptions);
+
+        int inSampleSize = calculateInSampleSize(sizeOptions, width, height);
+
+        sizeOptions.inJustDecodeBounds = false;
+        sizeOptions.inSampleSize = inSampleSize;
+
+        return BitmapFactory.decodeFile(picturePath, sizeOptions);
+    }
+
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            // Calculate ratios of height and width to requested height and
+            // width
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+
+            // Choose the smallest ratio as inSampleSize value, this will
+            // guarantee
+            // a final image with both dimensions larger than or equal to the
+            // requested height and width.
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+
+        return inSampleSize;
+    }
 }
