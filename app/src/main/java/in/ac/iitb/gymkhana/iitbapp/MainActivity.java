@@ -3,6 +3,7 @@ package in.ac.iitb.gymkhana.iitbapp;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -16,14 +17,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsResponse;
+import in.ac.iitb.gymkhana.iitbapp.data.User;
 import in.ac.iitb.gymkhana.iitbapp.fragment.AboutFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.CMSFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.CalendarFragment;
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private static final String TAG = "MainActivity";
+    private User currentUser;
     SessionManager session;
     NotificationsResponse notificationsResponse;
     private boolean showNotifications = false;
@@ -56,8 +63,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         session = new SessionManager(getApplicationContext());
-        Toast.makeText(getApplicationContext(), "Log In status: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
         session.checkLogin();
+        Toast.makeText(getApplicationContext(), "Log In status: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -67,10 +75,28 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        fetchNotifications();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (session.isLoggedIn()) {
+            currentUser = User.fromString(session.pref.getString(SessionManager.CURRENT_USER, "Error"));
+            updateNavigationView();
+        }
+    }
+
+    private void updateNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        fetchNotifications();
+        View header = navigationView.getHeaderView(0);
+        TextView nameTextView = header.findViewById(R.id.user_name_nav_header);
+        TextView rollNoTextView = header.findViewById(R.id.user_rollno_nav_header);
+        ImageView profilePictureImageView = header.findViewById(R.id.user_profile_picture_nav_header);
+        nameTextView.setText(currentUser.getUserName());
+        rollNoTextView.setText(currentUser.getUserRollNumber());
+        Picasso.with(this).load(currentUser.getUserProfilePictureUrl()).into(profilePictureImageView);
     }
 
     private void fetchNotifications() {

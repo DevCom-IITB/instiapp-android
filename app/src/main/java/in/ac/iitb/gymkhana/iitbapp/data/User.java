@@ -3,11 +3,14 @@ package in.ac.iitb.gymkhana.iitbapp.data;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 @Entity(tableName = "users")
 public class User {
@@ -168,6 +171,7 @@ public class User {
     }
 
     public static User fromString(String json) {
+        Log.d(TAG, "fromString: " + json);
         return new Gson().fromJson(json, User.class);
     }
 }
