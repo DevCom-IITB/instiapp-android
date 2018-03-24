@@ -23,14 +23,14 @@ android {
 
 ext {
     supportLibVersion = '26.1.0'
-    playServicesVersion = '11.8.0'
+    playServicesVersion = '12.0.0'
     butterKnifeVersion = '8.8.1'
     appAuthVersion = '0.2.0'
     retrofitVersion = '2.1.0'
     okhttpVersion = '3.4.1'
     picassoVersion = '2.5.0'
-    archRoomVersion = "1.1.0-alpha3"
-
+    archRoomVersion = '1.1.0-beta1'
+    circleImageViewVersion = '2.2.0'
 }
 
 dependencies {
@@ -57,9 +57,7 @@ dependencies {
     compile "com.android.support:customtabs:${supportLibVersion}"
     compile "android.arch.persistence.room:runtime:${archRoomVersion}"
     annotationProcessor "android.arch.persistence.room:compiler:${archRoomVersion}"
-
-
     implementation "com.android.support:cardview-v7:${supportLibVersion}"
-
+    compile "de.hdodenhof:circleimageview:${circleImageViewVersion}"
 }
 apply plugin: 'com.google.gms.google-services'
