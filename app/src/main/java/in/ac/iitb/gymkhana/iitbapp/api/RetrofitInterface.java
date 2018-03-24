@@ -8,6 +8,7 @@ import in.ac.iitb.gymkhana.iitbapp.api.model.LoginResponse;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedResponse;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsResponse;
+import in.ac.iitb.gymkhana.iitbapp.data.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -24,6 +25,9 @@ public interface RetrofitInterface {
 
     @GET("users/{uuid}/followed_bodies_events")
     Call<NewsFeedResponse> getNewsFeed(@Path("uuid") String uuid);
+
+    @GET("users/{uuid}")
+    Call<User> getUser(@Path("uuid") String uuid);
 
     @POST("getNotifications/")
     Call<NotificationsResponse> getNotifications(@Body NotificationsRequest notificationsRequest);

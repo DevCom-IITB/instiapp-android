@@ -42,6 +42,7 @@ import in.ac.iitb.gymkhana.iitbapp.fragment.MyEventsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.NotificationsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.PTCellFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.PeopleFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.ProfileFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.TimetableFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -91,6 +92,16 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.USER_ID, currentUser.getUserID());
+                ProfileFragment profileFragment = new ProfileFragment();
+                profileFragment.setArguments(bundle);
+                updateFragment(profileFragment);
+            }
+        });
         TextView nameTextView = header.findViewById(R.id.user_name_nav_header);
         TextView rollNoTextView = header.findViewById(R.id.user_rollno_nav_header);
         ImageView profilePictureImageView = header.findViewById(R.id.user_profile_picture_nav_header);
