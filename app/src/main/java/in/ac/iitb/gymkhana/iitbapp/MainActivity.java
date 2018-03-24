@@ -100,6 +100,8 @@ public class MainActivity extends AppCompatActivity
                 ProfileFragment profileFragment = new ProfileFragment();
                 profileFragment.setArguments(bundle);
                 updateFragment(profileFragment);
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
             }
         });
         TextView nameTextView = header.findViewById(R.id.user_name_nav_header);
