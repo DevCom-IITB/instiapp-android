@@ -197,7 +197,7 @@ public class LoginActivity extends AppCompatActivity {
                 clientId,
                 "code",
                 redirectUri)
-                .setScope("profile")
+                .setScope("basic profile picture sex ldap phone insti_address program secondary_emails")
                 .build();
 
         Log.d(TAG, "Making auth request");
