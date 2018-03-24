@@ -47,6 +47,7 @@ import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
+import static in.ac.iitb.gymkhana.iitbapp.SessionManager.SESSION_ID;
 
 
 public class AddEventFragment extends Fragment {
@@ -234,7 +235,7 @@ public class AddEventFragment extends Fragment {
         progressDialog.setMessage("Uploading Image");
         ImageUploadRequest imageUploadRequest = new ImageUploadRequest(base64Image);
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.uploadImage(imageUploadRequest).enqueue(new Callback<ImageUploadResponse>() {
+        retrofitInterface.uploadImage("sessionid=" + getArguments().getString(SESSION_ID), imageUploadRequest).enqueue(new Callback<ImageUploadResponse>() {
             @Override
             public void onResponse(Call<ImageUploadResponse> call, Response<ImageUploadResponse> response) {
                 if (response.isSuccessful()) {
@@ -255,7 +256,7 @@ public class AddEventFragment extends Fragment {
         progressDialog.setMessage("Creating Event");
         EventCreateRequest eventCreateRequest = new EventCreateRequest(eventName.getText().toString(), details.getText().toString(), eventImageURL, timestamp_start.toString(), timestamp_end.toString(), false, Arrays.asList(new String[]{venue.getText().toString()}), Arrays.asList(new String[]{"bde82d5e-f379-4b8a-ae38-a9f03e4f1c4a"}));
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.createEvent(eventCreateRequest).enqueue(new Callback<EventCreateResponse>() {
+        retrofitInterface.createEvent("sessionid=" + getArguments().getString(SESSION_ID), eventCreateRequest).enqueue(new Callback<EventCreateResponse>() {
             @Override
             public void onResponse(Call<EventCreateResponse> call, Response<EventCreateResponse> response) {
                 Toast.makeText(getContext(), "Event Created", Toast.LENGTH_SHORT).show();

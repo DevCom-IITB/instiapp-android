@@ -34,6 +34,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static in.ac.iitb.gymkhana.iitbapp.SessionManager.SESSION_ID;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -94,10 +96,8 @@ public class FeedFragment extends Fragment {
     }
 
     private void updateFeed() {
-        //TODO: Fetch userID from SharedPreferences
-        String userID = "51e04db1-040f-406c-8b6f-0c47a1bdc5a4";
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getNewsFeed(userID).enqueue(new Callback<NewsFeedResponse>() {
+        retrofitInterface.getNewsFeed("sessionid=" + getArguments().getString(SESSION_ID)).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {

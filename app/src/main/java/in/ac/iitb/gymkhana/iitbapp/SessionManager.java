@@ -13,6 +13,7 @@ public class SessionManager {
     private static final String IS_LOGGED_IN = "IsLoggedIn";
     private static final String GCM_ID = "GcmId";
     public static final String CURRENT_USER = "current_user";
+    public static final String SESSION_ID = "session_id";
     SharedPreferences pref;
     Editor editor;
     Context context;
@@ -36,11 +37,12 @@ public class SessionManager {
         }
     }
 
-    public void createLoginSession(String gcmId, User currentUser) {
+    public void createLoginSession(String gcmId, User currentUser, String sessionID) {
         Log.d("SessionManager", "GcmId being stored");
         editor.putBoolean(IS_LOGGED_IN, true);
         editor.putString(GCM_ID, gcmId);
         editor.putString(CURRENT_USER, currentUser.toString());
+        editor.putString(SESSION_ID, sessionID);
         editor.commit();
     }
 

@@ -48,6 +48,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static in.ac.iitb.gymkhana.iitbapp.SessionManager.SESSION_ID;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -249,6 +251,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateFragment(Fragment fragment) {
+        Bundle bundle = new Bundle();
+        bundle.putString(SESSION_ID, session.pref.getString(SESSION_ID, "Error"));
+        fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());

@@ -58,6 +58,7 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AddEventFragment addEventFragment = new AddEventFragment();
+                addEventFragment.setArguments(getArguments());
                 FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                 ft.replace(R.id.calendar_layout, addEventFragment);
                 ft.addToBackStack("addEvent");

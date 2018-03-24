@@ -232,7 +232,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
                     Log.d(TAG, "Login request successful");
-                    session.createLoginSession(redirectURI, response.body().getUser());
+                    session.createLoginSession(redirectURI, response.body().getUser(), response.body().getSessionID());
                     Intent i = new Intent(mContext, MainActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
