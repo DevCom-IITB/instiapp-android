@@ -1,16 +1,20 @@
 package in.ac.iitb.gymkhana.iitbapp.fragment;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,11 +51,12 @@ import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
+import static in.ac.iitb.gymkhana.iitbapp.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
+import static in.ac.iitb.gymkhana.iitbapp.Constants.RESULT_LOAD_IMAGE;
 import static in.ac.iitb.gymkhana.iitbapp.SessionManager.SESSION_ID;
 
 
 public class AddEventFragment extends Fragment {
-    private static final int RESULT_LOAD_IMAGE = 1;
     @BindView(R.id.button_createEvent)
     Button createEvent;
     @BindView(R.id.tv_start)
@@ -213,6 +218,11 @@ public class AddEventFragment extends Fragment {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    // Permission is not granted
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                    return;
+                }
                 Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
             }
@@ -226,8 +236,6 @@ public class AddEventFragment extends Fragment {
                 sendImage();
             }
         });
-
-
         return view;
     }
 

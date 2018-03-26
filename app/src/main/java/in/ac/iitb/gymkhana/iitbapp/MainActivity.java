@@ -1,6 +1,7 @@
 package in.ac.iitb.gymkhana.iitbapp;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -48,6 +49,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static in.ac.iitb.gymkhana.iitbapp.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
+import static in.ac.iitb.gymkhana.iitbapp.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
+import static in.ac.iitb.gymkhana.iitbapp.Constants.RESULT_LOAD_IMAGE;
 import static in.ac.iitb.gymkhana.iitbapp.SessionManager.SESSION_ID;
 
 
@@ -226,7 +230,7 @@ public class MainActivity extends AppCompatActivity
                         == PackageManager.PERMISSION_GRANTED) {
                     updateFragment(mapFragment);
                 } else {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_ACCESS_LOCATION);
                 }
                 break;
 
@@ -260,15 +264,34 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions,
-                                           int[] grantResults) {
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            MapFragment mapFragment = new MapFragment();
-            updateFragment(mapFragment);
-        } else {
-            Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
-            toast.show();
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(i, RESULT_LOAD_IMAGE);
+                }
+                return;
+            case MY_PERMISSIONS_REQUEST_ACCESS_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    MapFragment mapFragment = new MapFragment();
+                    updateFragment(mapFragment);
+                } else {
+                    Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+            for (Fragment subfragment : fragment.getChildFragmentManager().getFragments()) {
+                subfragment.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 }
