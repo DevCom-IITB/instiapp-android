@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     //TODO: Change this to production before launch
     private final String clientId = "vR1pU7wXWyve1rUkg0fMS6StL1Kr6paoSmRIiLXJ";
     private final Uri redirectUri = Uri.parse("https://redirecturi");
-    private final Uri mAuthEndpoint = Uri.parse("http://gymkhana.iitb.ac.in/sso/oauth/authorize/");
+    private final Uri mAuthEndpoint = Uri.parse("https://temp-iitb.radialapps.com/content/login.html");
     private final Uri mTokenEndpoint = Uri.parse("http://gymkhana.iitb.ac.in/sso/oauth/token/");
     public String authCode = null;
     SessionManager session;
