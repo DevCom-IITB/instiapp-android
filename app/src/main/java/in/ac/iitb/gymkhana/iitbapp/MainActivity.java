@@ -82,6 +82,9 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        FeedFragment feedFragment = new FeedFragment();
+        updateFragment(feedFragment);
+
         fetchNotifications();
     }
 
