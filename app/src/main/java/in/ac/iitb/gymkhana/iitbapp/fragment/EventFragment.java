@@ -64,7 +64,7 @@ public class EventFragment extends Fragment {
         SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
         SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm a");
         eventDate.setText(simpleDateFormatDate.format(Date));
-        eventTime.setText(simpleDateFormatDate.format(Date));
+        eventTime.setText(simpleDateFormatTime.format(Date));
         eventVenue.setText(event.getEventVenues().get(0).getVenueName());
     }
 }
