@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,8 +56,7 @@ import static in.ac.iitb.gymkhana.iitbapp.Constants.RESULT_LOAD_IMAGE;
 import static in.ac.iitb.gymkhana.iitbapp.SessionManager.SESSION_ID;
 
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
     private static final String TAG = "MainActivity";
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     SessionManager session;
     NotificationsResponse notificationsResponse;
     private boolean showNotifications = false;
+    FeedFragment feedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        FeedFragment feedFragment = new FeedFragment();
+        feedFragment = new FeedFragment();
         updateFragment(feedFragment);
 
         fetchNotifications();
@@ -158,6 +159,8 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (feedFragment != null && feedFragment.isVisible()) {
+            finish();
         } else {
             super.onBackPressed();
         }
@@ -195,7 +198,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_feed:
-                FeedFragment feedFragment = new FeedFragment();
+                feedFragment = new FeedFragment();
                 updateFragment(feedFragment);
                 break;
             case R.id.nav_my_events:
@@ -257,14 +260,20 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void updateFragment(Fragment fragment) {
-        Bundle bundle = new Bundle();
+    public void updateFragment(Fragment fragment) {
+        Log.d(TAG, "updateFragment: " + fragment.toString());
+        Bundle bundle = fragment.getArguments();
+        if (bundle == null) {
+            bundle = new Bundle();
+        }
         bundle.putString(SESSION_ID, session.pref.getString(SESSION_ID, "Error"));
         fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
+        if (fragment instanceof FeedFragment)
+            manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());
-        transaction.commit();
+        transaction.addToBackStack(fragment.getTag()).commit();
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

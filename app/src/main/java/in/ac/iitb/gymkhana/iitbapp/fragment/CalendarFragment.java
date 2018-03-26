@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
+import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 
 /**
@@ -58,11 +59,7 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AddEventFragment addEventFragment = new AddEventFragment();
-                addEventFragment.setArguments(getArguments());
-                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                ft.replace(R.id.calendar_layout, addEventFragment);
-                ft.addToBackStack("addEvent");
-                ft.commit();
+                ((MainActivity) getActivity()).updateFragment(addEventFragment);
             }
         });
         return view;

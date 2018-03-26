@@ -23,6 +23,7 @@ import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
+import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.adapter.FeedAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
@@ -72,10 +73,7 @@ public class FeedFragment extends Fragment {
                     bundle.putString(Constants.EVENT_JSON, eventJson);
                     EventFragment eventFragment = new EventFragment();
                     eventFragment.setArguments(bundle);
-                    FragmentManager manager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                    transaction.commit();
+                    ((MainActivity) getActivity()).updateFragment(eventFragment);
                 }
             });
             feedRecyclerView = (RecyclerView) getActivity().findViewById(R.id.feed_recycler_view);
@@ -112,10 +110,7 @@ public class FeedFragment extends Fragment {
                             bundle.putString(Constants.EVENT_JSON, eventJson);
                             EventFragment eventFragment = new EventFragment();
                             eventFragment.setArguments(bundle);
-                            FragmentManager manager = getActivity().getSupportFragmentManager();
-                            FragmentTransaction transaction = manager.beginTransaction();
-                            transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                            transaction.commit();
+                            ((MainActivity) getActivity()).updateFragment(eventFragment);
                         }
                     });
                     feedRecyclerView = (RecyclerView) getActivity().findViewById(R.id.feed_recycler_view);
