@@ -12,7 +12,7 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ContactsFragment extends Fragment {
+public class ContactsFragment extends BaseFragment {
 
 
     public ContactsFragment() {

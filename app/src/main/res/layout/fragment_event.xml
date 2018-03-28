@@ -49,7 +49,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/event_page_date"
-                        android:text="26 May"
+                        android:text="No Date Specified"
                         android:textSize="16sp"
                         android:textColor="#fff"/>
                     <TextView
@@ -62,7 +62,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/event_page_time"
-                        android:text="6:00 PM"
+                        android:text="No Time Specified"
                         android:textSize="16sp"
                         android:textColor="#fff"/>
                     <TextView
@@ -75,7 +75,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/event_page_venue"
-                        android:text="LH 101"
+                        android:text="No Venue Specified"
                         android:ellipsize="end"
                         android:textSize="16sp"
                         android:textColor="#fff"/>
@@ -93,6 +93,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/going_button"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -110,6 +111,7 @@
             </View>
 
             <Button
+                android:id="@+id/interested_button"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -127,6 +129,7 @@
             </View>
 
             <Button
+                android:id="@+id/not_going_button"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

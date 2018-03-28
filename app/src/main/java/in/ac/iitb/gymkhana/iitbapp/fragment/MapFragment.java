@@ -54,7 +54,7 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 
 import static android.content.Context.LOCATION_SERVICE;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener,
+public class MapFragment extends BaseFragment implements OnMapReadyCallback, LocationListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     SupportMapFragment gMapFragment;

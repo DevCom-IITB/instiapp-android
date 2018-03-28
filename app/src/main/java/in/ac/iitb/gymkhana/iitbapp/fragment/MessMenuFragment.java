@@ -12,7 +12,7 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MessMenuFragment extends Fragment {
+public class MessMenuFragment extends BaseFragment {
 
 
     public MessMenuFragment() {

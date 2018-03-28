@@ -56,7 +56,7 @@ import static in.ac.iitb.gymkhana.iitbapp.Constants.RESULT_LOAD_IMAGE;
 import static in.ac.iitb.gymkhana.iitbapp.SessionManager.SESSION_ID;
 
 
-public class AddEventFragment extends Fragment {
+public class AddEventFragment extends BaseFragment {
     @BindView(R.id.button_createEvent)
     Button createEvent;
     @BindView(R.id.tv_start)

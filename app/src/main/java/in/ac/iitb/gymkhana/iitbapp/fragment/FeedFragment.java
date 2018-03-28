@@ -1,9 +1,7 @@
 package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,16 +9,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import in.ac.iitb.gymkhana.iitbapp.ActivityBuffer;
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.R;
@@ -39,7 +36,7 @@ import static in.ac.iitb.gymkhana.iitbapp.SessionManager.SESSION_ID;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FeedFragment extends Fragment {
+public class FeedFragment extends BaseFragment {
 
     private RecyclerView feedRecyclerView;
     private SwipeRefreshLayout feedSwipeRefreshLayout;
@@ -62,31 +59,13 @@ public class FeedFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        appDatabase= AppDatabase.getAppDatabase(getContext());
-        final List<Event> events=appDatabase.dbDao().getAllEvents();
-            FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
-                @Override
-                public void onItemClick(View v, int position) {
-                    String eventJson = new Gson().toJson(events.get(position));
-                    Bundle bundle = new Bundle();
-                    bundle.putString(Constants.EVENT_JSON, eventJson);
-                    EventFragment eventFragment = new EventFragment();
-                    eventFragment.setArguments(bundle);
-                    FragmentManager manager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                    transaction.commit();
-                }
-            });
-            feedRecyclerView = (RecyclerView) getActivity().findViewById(R.id.feed_recycler_view);
-            feedRecyclerView.setAdapter(feedAdapter);
-            feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-//        }
+        appDatabase = AppDatabase.getAppDatabase(getContext());
+        final List<Event> events = appDatabase.dbDao().getAllEvents();
+        displayEvents(events);
 
         updateFeed();
 
-        feedSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.feed_swipe_refresh_layout);
+        feedSwipeRefreshLayout = getActivity().findViewById(R.id.feed_swipe_refresh_layout);
         feedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -102,31 +81,14 @@ public class FeedFragment extends Fragment {
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
                     NewsFeedResponse newsFeedResponse = response.body();
-                    final List<Event> events = newsFeedResponse.getEvents();
-
-                    FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
-                        @Override
-                        public void onItemClick(View v, int position) {
-                            String eventJson = new Gson().toJson(events.get(position));
-                            Bundle bundle = new Bundle();
-                            bundle.putString(Constants.EVENT_JSON, eventJson);
-                            EventFragment eventFragment = new EventFragment();
-                            eventFragment.setArguments(bundle);
-                            FragmentManager manager = getActivity().getSupportFragmentManager();
-                            FragmentTransaction transaction = manager.beginTransaction();
-                            transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                            transaction.commit();
-                        }
-                    });
-                    feedRecyclerView = (RecyclerView) getActivity().findViewById(R.id.feed_recycler_view);
-                    feedRecyclerView.setAdapter(feedAdapter);
-                    feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    List<Event> events = newsFeedResponse.getEvents();
+                    displayEvents(events);
 
                     appDatabase.dbDao().deleteEvents();
                     appDatabase.dbDao().insertEvents(events);
-                    //Server Error
-                    feedSwipeRefreshLayout.setRefreshing(false);
                 }
+                //Server Error
+                feedSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
@@ -135,5 +97,33 @@ public class FeedFragment extends Fragment {
                 feedSwipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    private void displayEvents(final List<Event> events) {
+        FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                String eventJson = new Gson().toJson(events.get(position));
+                Bundle bundle = getArguments();
+                if (bundle == null)
+                    bundle = new Bundle();
+                bundle.putString(Constants.EVENT_JSON, eventJson);
+                EventFragment eventFragment = new EventFragment();
+                eventFragment.setArguments(bundle);
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
+                transaction.commit();
+            }
+        });
+        getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
+            @Override
+            public void run(Activity pActivity) {
+                feedRecyclerView = pActivity.findViewById(R.id.feed_recycler_view);
+            }
+        });
+        feedRecyclerView.setAdapter(feedAdapter);
+        feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
     }
 }

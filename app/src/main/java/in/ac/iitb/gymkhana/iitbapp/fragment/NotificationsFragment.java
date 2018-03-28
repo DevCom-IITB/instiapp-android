@@ -23,7 +23,7 @@ import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsResponse;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NotificationsFragment extends Fragment {
+public class NotificationsFragment extends BaseFragment {
 
     RecyclerView notificationsRecyclerView;
 
