@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -44,6 +45,7 @@ public class FeedFragment extends Fragment {
     private RecyclerView feedRecyclerView;
     private SwipeRefreshLayout feedSwipeRefreshLayout;
     private AppDatabase appDatabase;
+    private FloatingActionButton fab;
 
     public FeedFragment() {
         // Required empty public constructor
@@ -55,7 +57,22 @@ public class FeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        return inflater.inflate(R.layout.fragment_feed, container, false);
+        View view=inflater.inflate(R.layout.fragment_feed, container, false);
+
+        fab=(FloatingActionButton) view.findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddEventFragment addEventFragment = new AddEventFragment();
+                addEventFragment.setArguments(getArguments());
+                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                ft.replace(R.id.relative_layout, addEventFragment);
+                ft.addToBackStack("addEvent");
+                ft.commit();
+            }
+        });
+        return view;
     }
 
     @Override
@@ -85,6 +102,7 @@ public class FeedFragment extends Fragment {
 //        }
 
         updateFeed();
+
 
         feedSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.feed_swipe_refresh_layout);
         feedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -136,4 +154,6 @@ public class FeedFragment extends Fragment {
             }
         });
     }
+
+
 }
