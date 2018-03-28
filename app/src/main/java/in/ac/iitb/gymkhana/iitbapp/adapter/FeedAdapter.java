@@ -22,6 +22,7 @@ import java.util.logging.SimpleFormatter;
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
+import in.ac.iitb.gymkhana.iitbapp.data.Venue;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
@@ -62,7 +63,16 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
         viewHolder.eventDate.setText(simpleDateFormatDate.format(Date));
         viewHolder.eventTime.setText(simpleDateFormatTime.format(Date));
-        viewHolder.eventVenue.setText(currentEvent.getEventVenues().get(0).getVenueName());
+
+        List<Venue> venues = currentEvent.getEventVenues();
+        if (venues.size() == 1) {
+            viewHolder.eventVenue.setText(currentEvent.getEventVenues().get(0).getVenueName());
+        } else if (venues.size() > 1) {
+            viewHolder.eventVenue.setText(currentEvent.getEventVenues().get(0).getVenueName() + "+");
+        } else {
+            viewHolder.eventVenue.setText("");
+        }
+
 
         Picasso.with(context).load(currentEvent.getEventImageURL()).resize(320,0).into(viewHolder.eventPicture);
     }
