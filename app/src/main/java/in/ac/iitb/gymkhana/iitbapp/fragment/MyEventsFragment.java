@@ -14,7 +14,7 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyEventsFragment extends Fragment {
+public class MyEventsFragment extends BaseFragment {
 
     FloatingActionButton fab;
 

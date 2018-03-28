@@ -12,7 +12,7 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TimetableFragment extends Fragment {
+public class TimetableFragment extends BaseFragment {
 
 
     public TimetableFragment() {

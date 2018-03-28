@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity
         FeedFragment feedFragment = new FeedFragment();
         updateFragment(feedFragment);
 
-        fetchNotifications();
+//        fetchNotifications();
     }
 
     @Override
@@ -121,28 +121,28 @@ public class MainActivity extends AppCompatActivity
         Picasso.with(this).load(currentUser.getUserProfilePictureUrl()).into(profilePictureImageView);
     }
 
-    private void fetchNotifications() {
-        NotificationsRequest notificationsRequest = new NotificationsRequest(0, 20);
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getNotifications(notificationsRequest).enqueue(new Callback<NotificationsResponse>() {
-            @Override
-            public void onResponse(Call<NotificationsResponse> call, Response<NotificationsResponse> response) {
-                if (response.isSuccessful()) {
-                    notificationsResponse = response.body();
-                    if (showNotifications) {
-                        showNotifications();
-                        showNotifications = false;
-                    }
-                }
-                //Server Error
-            }
-
-            @Override
-            public void onFailure(Call<NotificationsResponse> call, Throwable t) {
-                //Network Error
-            }
-        });
-    }
+//    private void fetchNotifications() {
+//        NotificationsRequest notificationsRequest = new NotificationsRequest(0, 20);
+//        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+//        retrofitInterface.getNotifications(notificationsRequest).enqueue(new Callback<NotificationsResponse>() {
+//            @Override
+//            public void onResponse(Call<NotificationsResponse> call, Response<NotificationsResponse> response) {
+//                if (response.isSuccessful()) {
+//                    notificationsResponse = response.body();
+//                    if (showNotifications) {
+//                        showNotifications();
+//                        showNotifications = false;
+//                    }
+//                }
+//                //Server Error
+//            }
+//
+//            @Override
+//            public void onFailure(Call<NotificationsResponse> call, Throwable t) {
+//                //Network Error
+//            }
+//        });
+//    }
 
     public void showNotifications() {
         String notificationsResponseJson = new Gson().toJson(notificationsResponse);
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_notifications) {
             showNotifications = true;
-            fetchNotifications();
+//            fetchNotifications();
             return true;
         }
         return super.onOptionsItemSelected(item);

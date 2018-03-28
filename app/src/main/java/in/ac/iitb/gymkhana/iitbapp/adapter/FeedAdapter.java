@@ -10,18 +10,15 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.SimpleFormatter;
 
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
+import in.ac.iitb.gymkhana.iitbapp.data.Venue;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
@@ -62,7 +59,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
         viewHolder.eventDate.setText(simpleDateFormatDate.format(Date));
         viewHolder.eventTime.setText(simpleDateFormatTime.format(Date));
-        viewHolder.eventVenue.setText(currentEvent.getEventVenues().get(0).getVenueName());
+        StringBuilder eventVenueName = new StringBuilder();
+        for (Venue venue : currentEvent.getEventVenues()) {
+            eventVenueName.append(", ").append(venue.getVenueName());
+        }
+        if (!eventVenueName.toString().equals(""))
+            viewHolder.eventVenue.setText(eventVenueName.toString().substring(2));
 
         Picasso.with(context).load(currentEvent.getEventImageURL()).resize(320,0).into(viewHolder.eventPicture);
     }

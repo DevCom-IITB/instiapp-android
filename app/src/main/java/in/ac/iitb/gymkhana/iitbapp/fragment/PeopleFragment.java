@@ -20,7 +20,7 @@ import in.ac.iitb.gymkhana.iitbapp.PeopleSuggestionAdapter;
 import in.ac.iitb.gymkhana.iitbapp.R;
 
 
-public class PeopleFragment extends Fragment {
+public class PeopleFragment extends BaseFragment {
     View view;
     SearchView searchView;
     PeopleSuggestionAdapter adapter;

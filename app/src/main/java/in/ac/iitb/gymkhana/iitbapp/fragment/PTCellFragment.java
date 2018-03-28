@@ -12,7 +12,7 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PTCellFragment extends Fragment {
+public class PTCellFragment extends BaseFragment {
 
 
     public PTCellFragment() {
