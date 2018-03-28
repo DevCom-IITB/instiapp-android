@@ -1,7 +1,5 @@
 package in.ac.iitb.gymkhana.iitbapp.api.model;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by mrunz on 15/7/17.
  */
@@ -13,9 +11,9 @@ public class EventCreateResponse {
 
     private String eventId;
 
-    public EventCreateResponse(String result,String eventId){
-        this.result=result;
-        this.eventId=eventId;
+    public EventCreateResponse(String result, String eventId) {
+        this.result = result;
+        this.eventId = eventId;
     }
 
     public String getResult() {

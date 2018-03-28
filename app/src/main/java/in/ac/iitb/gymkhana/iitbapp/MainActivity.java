@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -26,9 +25,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
-import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
-import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsResponse;
 import in.ac.iitb.gymkhana.iitbapp.data.User;
 import in.ac.iitb.gymkhana.iitbapp.fragment.AboutFragment;
@@ -45,14 +41,10 @@ import in.ac.iitb.gymkhana.iitbapp.fragment.PTCellFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.PeopleFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.ProfileFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.TimetableFragment;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static in.ac.iitb.gymkhana.iitbapp.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
 import static in.ac.iitb.gymkhana.iitbapp.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static in.ac.iitb.gymkhana.iitbapp.Constants.RESULT_LOAD_IMAGE;
-import static in.ac.iitb.gymkhana.iitbapp.SessionManager.SESSION_ID;
 
 
 public class MainActivity extends AppCompatActivity
@@ -60,9 +52,9 @@ public class MainActivity extends AppCompatActivity
 
 
     private static final String TAG = "MainActivity";
-    private User currentUser;
     SessionManager session;
     NotificationsResponse notificationsResponse;
+    private User currentUser;
     private boolean showNotifications = false;
 
     @Override
@@ -92,7 +84,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         if (session.isLoggedIn()) {
-            currentUser = User.fromString(session.pref.getString(SessionManager.CURRENT_USER, "Error"));
+            currentUser = User.fromString(session.pref.getString(Constants.CURRENT_USER, "Error"));
             updateNavigationView();
         }
     }
@@ -259,7 +251,7 @@ public class MainActivity extends AppCompatActivity
 
     private void updateFragment(Fragment fragment) {
         Bundle bundle = new Bundle();
-        bundle.putString(SESSION_ID, session.pref.getString(SESSION_ID, "Error"));
+        bundle.putString(Constants.SESSION_ID, session.pref.getString(Constants.SESSION_ID, "Error"));
         fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

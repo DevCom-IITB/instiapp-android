@@ -3,16 +3,9 @@ package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import in.ac.iitb.gymkhana.iitbapp.ActivityBuffer;
-import in.ac.iitb.gymkhana.iitbapp.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,15 +27,16 @@ public class BaseFragment extends Fragment {
         // Handle as usual.
         super.onAttach(pContext);
         // Is the Context an Activity?
-        if(pContext instanceof Activity) {
+        if (pContext instanceof Activity) {
             // Cast Accordingly.
-            final Activity lActivity = (Activity)pContext;
+            final Activity lActivity = (Activity) pContext;
             // Inform the ActivityBuffer.
             this.getActivityBuffer().onContextGained(lActivity);
         }
     }
 
-    @Deprecated @Override
+    @Deprecated
+    @Override
     public final void onAttach(final Activity pActivity) {
         // Handle as usual.
         super.onAttach(pActivity);

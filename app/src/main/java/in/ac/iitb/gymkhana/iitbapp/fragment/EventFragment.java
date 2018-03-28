@@ -29,9 +29,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.ContentValues.TAG;
-import static in.ac.iitb.gymkhana.iitbapp.SessionManager.SESSION_ID;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -40,6 +37,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
     Button goingButton;
     Button interestedButton;
     Button notGoingButton;
+    String TAG = "EventFragment";
 
     public EventFragment() {
         // Required empty public constructor
@@ -115,7 +113,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
                 break;
         }
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.updateUserEventStatus("sessionid=" + getArguments().getString(SESSION_ID), event.getEventID(), status).enqueue(new Callback<Void>() {
+        retrofitInterface.updateUserEventStatus("sessionid=" + getArguments().getString(Constants.SESSION_ID), event.getEventID(), status).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {

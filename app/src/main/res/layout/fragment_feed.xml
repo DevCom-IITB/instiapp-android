@@ -1,21 +1,22 @@
-<RelativeLayout android:layout_height="match_parent"
-    android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
-<android.support.v4.widget.SwipeRefreshLayout
-    android:id="@+id/feed_swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.FeedFragment">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/feed_recycler_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/feed_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="8dp"/>
+        tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.FeedFragment">
 
-</android.support.v4.widget.SwipeRefreshLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/feed_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="8dp" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

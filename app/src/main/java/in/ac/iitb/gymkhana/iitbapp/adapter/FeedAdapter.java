@@ -66,7 +66,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         if (!eventVenueName.toString().equals(""))
             viewHolder.eventVenue.setText(eventVenueName.toString().substring(2));
 
-        Picasso.with(context).load(currentEvent.getEventImageURL()).resize(320,0).into(viewHolder.eventPicture);
+        Picasso.with(context).load(currentEvent.getEventImageURL()).resize(320, 0).into(viewHolder.eventPicture);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView eventPicture;
         private TextView eventTitle;
-//        private TextView eventDetails;
+        //        private TextView eventDetails;
         private TextView eventDate;
         private TextView eventTime;
         private TextView eventVenue;

@@ -40,8 +40,6 @@ import retrofit2.Response;
 
 
 public class LoginActivity extends AppCompatActivity {
-    public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
-    public static final String REGISTRATION_COMPLETE = "registrationComplete";
     private static final String TAG = "LoginActivity";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     //TODO: Change this to production before launch
@@ -67,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
 
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                boolean sentToken = sharedPreferences.getBoolean(SENT_TOKEN_TO_SERVER, false);
+                boolean sentToken = sharedPreferences.getBoolean(Constants.SENT_TOKEN_TO_SERVER, false);
                 if (sentToken) {
                     String token = intent.getStringExtra("Token");
                     Log.d(TAG, "Going to login with :" + authCode + "\n" + token);
@@ -254,7 +252,7 @@ public class LoginActivity extends AppCompatActivity {
     private void registerReceiver() {
         if (!isReceiverRegistered) {
             LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                    new IntentFilter(REGISTRATION_COMPLETE));
+                    new IntentFilter(Constants.REGISTRATION_COMPLETE));
             isReceiverRegistered = true;
         }
     }

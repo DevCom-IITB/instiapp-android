@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
@@ -38,6 +37,7 @@ import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
@@ -50,10 +50,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.ContentValues.TAG;
 import static in.ac.iitb.gymkhana.iitbapp.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static in.ac.iitb.gymkhana.iitbapp.Constants.RESULT_LOAD_IMAGE;
-import static in.ac.iitb.gymkhana.iitbapp.SessionManager.SESSION_ID;
 
 
 public class AddEventFragment extends BaseFragment {
@@ -93,12 +91,23 @@ public class AddEventFragment extends BaseFragment {
     View view;
     String base64Image;
     ProgressDialog progressDialog;
+    String TAG = "AddEventFragment";
 
 
     public AddEventFragment() {
         // Required empty public constructor
     }
 
+    public static String convertImageToString(Bitmap imageBitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        if (imageBitmap != null) {
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 60, stream);
+            byte[] byteArray = stream.toByteArray();
+            return Base64.encodeToString(byteArray, Base64.DEFAULT);
+        } else {
+            return null;
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -243,7 +252,7 @@ public class AddEventFragment extends BaseFragment {
         progressDialog.setMessage("Uploading Image");
         ImageUploadRequest imageUploadRequest = new ImageUploadRequest(base64Image);
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.uploadImage("sessionid=" + getArguments().getString(SESSION_ID), imageUploadRequest).enqueue(new Callback<ImageUploadResponse>() {
+        retrofitInterface.uploadImage("sessionid=" + getArguments().getString(Constants.SESSION_ID), imageUploadRequest).enqueue(new Callback<ImageUploadResponse>() {
             @Override
             public void onResponse(Call<ImageUploadResponse> call, Response<ImageUploadResponse> response) {
                 if (response.isSuccessful()) {
@@ -264,7 +273,7 @@ public class AddEventFragment extends BaseFragment {
         progressDialog.setMessage("Creating Event");
         EventCreateRequest eventCreateRequest = new EventCreateRequest(eventName.getText().toString(), details.getText().toString(), eventImageURL, timestamp_start.toString(), timestamp_end.toString(), false, Arrays.asList(new String[]{venue.getText().toString()}), Arrays.asList(new String[]{"bde82d5e-f379-4b8a-ae38-a9f03e4f1c4a"}));
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.createEvent("sessionid=" + getArguments().getString(SESSION_ID), eventCreateRequest).enqueue(new Callback<EventCreateResponse>() {
+        retrofitInterface.createEvent("sessionid=" + getArguments().getString(Constants.SESSION_ID), eventCreateRequest).enqueue(new Callback<EventCreateResponse>() {
             @Override
             public void onResponse(Call<EventCreateResponse> call, Response<EventCreateResponse> response) {
                 Toast.makeText(getContext(), "Event Created", Toast.LENGTH_SHORT).show();
@@ -277,17 +286,6 @@ public class AddEventFragment extends BaseFragment {
                 progressDialog.dismiss();
             }
         });
-    }
-
-    public static String convertImageToString(Bitmap imageBitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        if (imageBitmap != null) {
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 60, stream);
-            byte[] byteArray = stream.toByteArray();
-            return Base64.encodeToString(byteArray, Base64.DEFAULT);
-        } else {
-            return null;
-        }
     }
 
     @Override

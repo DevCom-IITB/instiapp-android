@@ -9,11 +9,6 @@ import android.util.Log;
 import in.ac.iitb.gymkhana.iitbapp.data.User;
 
 public class SessionManager {
-    private static final String PREF_NAME = "LoggedInPref";
-    private static final String IS_LOGGED_IN = "IsLoggedIn";
-    private static final String GCM_ID = "GcmId";
-    public static final String CURRENT_USER = "current_user";
-    public static final String SESSION_ID = "session_id";
     SharedPreferences pref;
     Editor editor;
     Context context;
@@ -21,7 +16,7 @@ public class SessionManager {
 
     public SessionManager(Context context) {
         this.context = context;
-        pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        pref = context.getSharedPreferences(Constants.PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
     }
 
@@ -39,14 +34,14 @@ public class SessionManager {
 
     public void createLoginSession(String gcmId, User currentUser, String sessionID) {
         Log.d("SessionManager", "GcmId being stored");
-        editor.putBoolean(IS_LOGGED_IN, true);
-        editor.putString(GCM_ID, gcmId);
-        editor.putString(CURRENT_USER, currentUser.toString());
-        editor.putString(SESSION_ID, sessionID);
+        editor.putBoolean(Constants.IS_LOGGED_IN, true);
+        editor.putString(Constants.GCM_ID, gcmId);
+        editor.putString(Constants.CURRENT_USER, currentUser.toString());
+        editor.putString(Constants.SESSION_ID, sessionID);
         editor.commit();
     }
 
     public boolean isLoggedIn() {
-        return pref.getBoolean(IS_LOGGED_IN, false);
+        return pref.getBoolean(Constants.IS_LOGGED_IN, false);
     }
 }

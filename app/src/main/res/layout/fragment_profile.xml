@@ -6,45 +6,45 @@
     tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.ProfileFragment">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_margin="32dp"
         android:id="@+id/user_profile_picture_profile"
         android:layout_width="160dp"
-        android:layout_height="160dp" />
+        android:layout_height="160dp"
+        android:layout_margin="32dp" />
 
     <LinearLayout
-        android:layout_marginTop="32dp"
-        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:orientation="vertical">
 
         <TextView
-            android:textSize="20sp"
-            android:layout_marginBottom="2dp"
             android:id="@+id/user_name_profile"
-            android:textStyle="bold"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:textSize="16sp"
-            android:layout_marginBottom="2dp"
             android:id="@+id/user_rollno_profile"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:textSize="16sp" />
 
         <TextView
-            android:textSize="16sp"
-            android:layout_marginBottom="2dp"
             android:id="@+id/user_email_profile"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:textSize="16sp" />
 
         <TextView
-            android:textSize="16sp"
-            android:layout_marginBottom="2dp"
             android:id="@+id/user_contact_no_profile"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:textSize="16sp" />
     </LinearLayout>
 
 </LinearLayout>

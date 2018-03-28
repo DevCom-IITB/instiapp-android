@@ -7,8 +7,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,7 +16,8 @@ import java.util.List;
 public class Converters {
     @TypeConverter
     public static List<Event> eventsfromString(String value) {
-        Type listType = new TypeToken<List<Event>>() {}.getType();
+        Type listType = new TypeToken<List<Event>>() {
+        }.getType();
         return new Gson().fromJson(value, listType);
     }
 
@@ -31,7 +30,8 @@ public class Converters {
 
     @TypeConverter
     public static List<User> usersfromString(String value) {
-        Type listType = new TypeToken<List<User>>() {}.getType();
+        Type listType = new TypeToken<List<User>>() {
+        }.getType();
         return new Gson().fromJson(value, listType);
     }
 
@@ -41,9 +41,11 @@ public class Converters {
         String json = gson.toJson(list);
         return json;
     }
+
     @TypeConverter
     public static List<Venue> venuesfromString(String value) {
-        Type listType = new TypeToken<List<Venue>>() {}.getType();
+        Type listType = new TypeToken<List<Venue>>() {
+        }.getType();
         return new Gson().fromJson(value, listType);
     }
 
@@ -53,9 +55,11 @@ public class Converters {
         String json = gson.toJson(list);
         return json;
     }
+
     @TypeConverter
     public static List<Body> bodiesfromString(String value) {
-        Type listType = new TypeToken<List<Body>>() {}.getType();
+        Type listType = new TypeToken<List<Body>>() {
+        }.getType();
         return new Gson().fromJson(value, listType);
     }
 
