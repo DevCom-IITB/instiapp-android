@@ -15,10 +15,12 @@ import com.squareup.picasso.Picasso;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
+import in.ac.iitb.gymkhana.iitbapp.data.Venue;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,6 +67,15 @@ public class EventFragment extends Fragment {
         SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm a");
         eventDate.setText(simpleDateFormatDate.format(Date));
         eventTime.setText(simpleDateFormatTime.format(Date));
-        eventVenue.setText(event.getEventVenues().get(0).getVenueName());
+
+        /* Build a string of venue names */
+        List<Venue> venues = event.getEventVenues();
+        StringBuilder venueBuilder = new StringBuilder();
+        for (Venue venue: venues) {
+            if (venueBuilder.length() != 0)
+                venueBuilder.append(", ");
+            venueBuilder.append(venue.getVenueName());
+        }
+        eventVenue.setText(venueBuilder.toString());
     }
 }
