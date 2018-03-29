@@ -21,6 +21,7 @@ import java.util.Date;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.R;
+import in.ac.iitb.gymkhana.iitbapp.SessionManager;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
@@ -40,6 +41,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
     Button goingButton;
     Button interestedButton;
     Button notGoingButton;
+    SessionManager sessionManager;
 
     public EventFragment() {
         // Required empty public constructor
@@ -62,6 +64,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
         Log.d(TAG, "onStart: " + eventJson);
         event = new Gson().fromJson(eventJson, Event.class);
         inflateViews(event);
+        sessionManager=new SessionManager(getContext());
     }
 
     private void inflateViews(Event event) {
@@ -114,18 +117,21 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
                 status = Constants.STATUS_NOT_GOING;
                 break;
         }
+        final int finalStatus=status;
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
         retrofitInterface.updateUserEventStatus("sessionid=" + getArguments().getString(SESSION_ID), event.getEventID(), status).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-
+                    sessionManager.setUserEventStatus("sessionid=" + getArguments().getString(SESSION_ID), event.getEventID(), finalStatus);
+                    sessionManager.setIfUpdated(true);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                //TODO: Store the status offline and update when connected
+                sessionManager.setUserEventStatus("sessionid=" + getArguments().getString(SESSION_ID), event.getEventID(), finalStatus);
+                sessionManager.setIfUpdated(false);
                 Toast.makeText(getContext(), "Network Error", Toast.LENGTH_LONG).show();
             }
         });
