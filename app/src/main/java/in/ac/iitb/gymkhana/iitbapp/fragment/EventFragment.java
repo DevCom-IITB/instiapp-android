@@ -28,6 +28,7 @@ import in.ac.iitb.gymkhana.iitbapp.data.Venue;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.noties.markwon.Markwon;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,7 +76,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
 
         Picasso.with(getContext()).load(event.getEventImageURL()).into(eventPicture);
         eventTitle.setText(event.getEventName());
-        eventDescription.setText(event.getEventDescription());
+        Markwon.setMarkdown(eventDescription, event.getEventDescription());
         Timestamp timestamp = event.getEventStartTime();
         Date Date = new Date(timestamp.getTime());
         SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
