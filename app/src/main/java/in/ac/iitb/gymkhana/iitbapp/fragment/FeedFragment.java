@@ -21,7 +21,6 @@ import java.util.List;
 import in.ac.iitb.gymkhana.iitbapp.ActivityBuffer;
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
-import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.adapter.FeedAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
@@ -116,7 +115,7 @@ public class FeedFragment extends BaseFragment {
     }
 
     private void displayEvents(final List<Event> events) {
-        FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
+        final FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
                 String eventJson = new Gson().toJson(events.get(position));
@@ -129,17 +128,16 @@ public class FeedFragment extends BaseFragment {
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                transaction.commit();
+                transaction.addToBackStack(eventFragment.getTag()).commit();
             }
         });
         getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
             @Override
             public void run(Activity pActivity) {
-                feedRecyclerView = pActivity.findViewById(R.id.feed_recycler_view);
+                feedRecyclerView = getActivity().findViewById(R.id.feed_recycler_view);
+                feedRecyclerView.setAdapter(feedAdapter);
+                feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             }
         });
-        feedRecyclerView.setAdapter(feedAdapter);
-        feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
     }
 }

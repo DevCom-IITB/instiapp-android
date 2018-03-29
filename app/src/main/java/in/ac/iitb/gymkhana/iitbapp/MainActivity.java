@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (bundle == null) {
             bundle = new Bundle();
         }
-        bundle.putString(SESSION_ID, session.pref.getString(SESSION_ID, "Error"));
+        bundle.putString(Constants.SESSION_ID, session.pref.getString(Constants.SESSION_ID, "Error"));
         fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
         if (fragment instanceof FeedFragment)

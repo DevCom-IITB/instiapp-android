@@ -1,8 +1,10 @@
 package in.ac.iitb.gymkhana.iitbapp.data;
 
 import android.arch.persistence.room.TypeConverter;
+import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -72,7 +74,13 @@ public class Converters {
 
     @TypeConverter
     public static Timestamp timestampfromString(String value) {
-        return new Gson().fromJson(value, Timestamp.class);
+        try {
+            return new Gson().fromJson(value, Timestamp.class);
+        } catch (JsonSyntaxException e) {
+            Log.d("Converters", "timestampfromString: " + value);
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @TypeConverter
