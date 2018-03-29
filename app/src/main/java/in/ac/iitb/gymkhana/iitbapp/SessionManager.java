@@ -9,6 +9,16 @@ import android.util.Log;
 import in.ac.iitb.gymkhana.iitbapp.data.User;
 
 public class SessionManager {
+
+    private static final String PREF_NAME = "LoggedInPref";
+    private static final String IS_LOGGED_IN = "IsLoggedIn";
+    private static final String GCM_ID = "GcmId";
+    public static final String CURRENT_USER = "current_user";
+    public static final String SESSION_ID = "session_id";
+    public static final String EVENT_ID = "event_id";
+    public static final String STATUS = "status";
+    public static final String IF_UPDATED = "if_updated";
+
     SharedPreferences pref;
     Editor editor;
     Context context;
@@ -38,6 +48,18 @@ public class SessionManager {
         editor.putString(Constants.GCM_ID, gcmId);
         editor.putString(Constants.CURRENT_USER, currentUser.toString());
         editor.putString(Constants.SESSION_ID, sessionID);
+        editor.commit();
+    }
+
+    public void setUserEventStatus(String sessionID,String eventID, int status) {
+        editor.putString(EVENT_ID,eventID);
+        editor.putString(SESSION_ID,sessionID);
+        editor.putInt(STATUS,status);
+        editor.commit();
+    }
+
+    public void setIfUpdated(Boolean updated) {
+        editor.putBoolean(IF_UPDATED,updated);
         editor.commit();
     }
 
