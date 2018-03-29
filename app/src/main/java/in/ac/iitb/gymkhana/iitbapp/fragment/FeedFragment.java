@@ -32,8 +32,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static in.ac.iitb.gymkhana.iitbapp.SessionManager.SESSION_ID;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -54,9 +52,9 @@ public class FeedFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view=inflater.inflate(R.layout.fragment_feed, container, false);
+        View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
-        fab=(FloatingActionButton) view.findViewById(R.id.fab);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +91,7 @@ public class FeedFragment extends BaseFragment {
 
     private void updateFeed() {
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getNewsFeed("sessionid=" + getArguments().getString(SESSION_ID)).enqueue(new Callback<NewsFeedResponse>() {
+        retrofitInterface.getNewsFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
@@ -117,7 +115,7 @@ public class FeedFragment extends BaseFragment {
     }
 
     private void displayEvents(final List<Event> events) {
-        FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
+        final FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
                 String eventJson = new Gson().toJson(events.get(position));
@@ -130,17 +128,20 @@ public class FeedFragment extends BaseFragment {
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                transaction.commit();
+                transaction.addToBackStack(eventFragment.getTag()).commit();
             }
         });
         getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
             @Override
             public void run(Activity pActivity) {
-                feedRecyclerView = pActivity.findViewById(R.id.feed_recycler_view);
+                try {
+                    feedRecyclerView = getActivity().findViewById(R.id.feed_recycler_view);
+                    feedRecyclerView.setAdapter(feedAdapter);
+                    feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
         });
-        feedRecyclerView.setAdapter(feedAdapter);
-        feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
     }
 }

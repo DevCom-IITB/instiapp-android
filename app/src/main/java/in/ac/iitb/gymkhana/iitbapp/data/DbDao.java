@@ -7,8 +7,6 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-import retrofit2.http.DELETE;
-
 /**
  * Created by mrunz on 13/3/18.
  */

@@ -1,6 +1,7 @@
 package in.ac.iitb.gymkhana.iitbapp.api.model;
 
 import com.google.gson.annotations.SerializedName;
+
 import in.ac.iitb.gymkhana.iitbapp.data.User;
 
 public class LoginResponse {

@@ -20,8 +20,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static in.ac.iitb.gymkhana.iitbapp.SessionManager.SESSION_ID;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -47,7 +45,7 @@ public class ProfileFragment extends BaseFragment {
         String userID = bundle.getString(Constants.USER_ID);
 
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getUser("sessionid=" + getArguments().getString(SESSION_ID), userID).enqueue(new Callback<User>() {
+        retrofitInterface.getUser("sessionid=" + getArguments().getString(Constants.SESSION_ID), userID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
