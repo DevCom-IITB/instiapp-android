@@ -17,7 +17,7 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CalendarFragment extends Fragment {
+public class CalendarFragment extends BaseFragment {
 
     FloatingActionButton fab;
     private View view;

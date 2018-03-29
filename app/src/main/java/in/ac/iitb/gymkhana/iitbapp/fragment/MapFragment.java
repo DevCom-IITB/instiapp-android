@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -12,13 +11,10 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,11 +46,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
+import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.R;
 
 import static android.content.Context.LOCATION_SERVICE;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener,
+public class MapFragment extends BaseFragment implements OnMapReadyCallback, LocationListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     SupportMapFragment gMapFragment;
@@ -65,7 +62,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     LocationRequest mLocationRequest;
     private FloatingActionButton locationButton;
     private Location currentLocation;
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,8 +73,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         return view;
     }
+
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         locationButton = (FloatingActionButton) getActivity().findViewById(R.id.location_button);
         locationButton.setImageResource(R.drawable.ic_my_location_black_24dp);
@@ -87,7 +84,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("MapFragment", "Location button pressed" );
+                Log.v("MapFragment", "Location button pressed");
                 try {
 
                     LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
@@ -95,19 +92,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                     boolean network_enabled = false;
 
                     if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, Constants.MY_PERMISSIONS_REQUEST_LOCATION);
                         return;
                     }
 
                     try {
                         gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                    } catch(Exception ex) {}
+                    } catch (Exception ex) {
+                    }
 
                     try {
                         network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-                    } catch(Exception ex) {}
+                    } catch (Exception ex) {
+                    }
 
-                    if(!gps_enabled && !network_enabled) {
+                    if (!gps_enabled && !network_enabled) {
 
 
                         LocationRequest locationRequest = LocationRequest.create();
@@ -163,7 +162,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                     }
 
 
-                } catch (Exception e){
+                } catch (Exception e) {
                     checkLocationPermission();
                     Toast.makeText(getContext(), "Please turn on Location from the Settings", Toast.LENGTH_SHORT).show();
 
@@ -188,7 +187,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
 
                 ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
+                        Constants.MY_PERMISSIONS_REQUEST_LOCATION);
             }
             //Get the last known location from the data provider
             Location l = mLocationManager.getLastKnownLocation(provider);
@@ -263,7 +262,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 //Prompt the user once explanation has been shown
                                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                        MY_PERMISSIONS_REQUEST_LOCATION);
+                                        Constants.MY_PERMISSIONS_REQUEST_LOCATION);
 
                             }
                         })
@@ -274,7 +273,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             } else {
                 // No explanation needed, we can request the permission.
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
+                        Constants.MY_PERMISSIONS_REQUEST_LOCATION);
             }
         }
     }
@@ -287,6 +286,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 .build();
         mGoogleApiClient.connect();
     }
+
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
@@ -298,13 +298,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         //move map camera
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        googleMap .animateCamera(CameraUpdateFactory.zoomTo(17));
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
 
         //stop location updates
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
+
     @Override
     public void onConnectionSuspended(int i) {
     }
@@ -313,7 +314,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
+            case Constants.MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -327,6 +328,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             }
         }
     }
+
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
     }
@@ -343,7 +345,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
     }
-
 
 
 }

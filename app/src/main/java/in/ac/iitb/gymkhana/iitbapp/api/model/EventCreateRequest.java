@@ -1,11 +1,7 @@
 package in.ac.iitb.gymkhana.iitbapp.api.model;
 
-import android.media.Image;
-import android.support.annotation.Nullable;
-
 import com.google.gson.annotations.SerializedName;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 public class EventCreateRequest {

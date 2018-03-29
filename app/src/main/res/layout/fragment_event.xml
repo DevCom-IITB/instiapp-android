@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.EventFragment">
 
@@ -10,80 +10,86 @@
         android:id="@+id/event_picture_2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:scaleType="centerCrop"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
+
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/colorPrimary">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:orientation="vertical"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="16dp"
+                android:layout_marginBottom="12dp"
                 android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp">
+                android:layout_weight="3"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/event_page_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="28sp"
+                    android:text="Event Title"
                     android:textColor="#fff"
-                    android:text="Event Title"/>
+                    android:textSize="28sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:id="@+id/event_page_date"
-                        android:text="26 May"
-                        android:textSize="16sp"
-                        android:textColor="#fff"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No Date Specified"
+                        android:textColor="#fff"
+                        android:textSize="16sp" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=" | "
-                        android:textSize="20sp"
-                        android:textColor="#fff"/>
+                        android:textColor="#fff"
+                        android:textSize="20sp" />
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:id="@+id/event_page_time"
-                        android:text="6:00 PM"
-                        android:textSize="16sp"
-                        android:textColor="#fff"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No Time Specified"
+                        android:textColor="#fff"
+                        android:textSize="16sp" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=" | "
-                        android:textSize="20sp"
-                        android:textColor="#fff"/>
+                        android:textColor="#fff"
+                        android:textSize="20sp" />
+
                     <TextView
+                        android:id="@+id/event_page_venue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/event_page_venue"
-                        android:text="LH 101"
                         android:ellipsize="end"
-                        android:textSize="16sp"
-                        android:textColor="#fff"/>
+                        android:text="No Venue Specified"
+                        android:textColor="#fff"
+                        android:textSize="16sp" />
                 </LinearLayout>
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
-
 
 
         <LinearLayout
@@ -93,56 +99,61 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/going_button"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_weight="1"
                 android:text="Going"
-                android:layout_margin="0dp"
-                android:textColor="@color/colorGray"/>
+                android:textColor="@color/colorGray" />
+
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#aaa"
+                android:layout_marginBottom="6dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="6dp">
+                android:background="#aaa">
 
             </View>
 
             <Button
+                android:id="@+id/interested_button"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_weight="1"
                 android:text="Interested"
-                android:layout_margin="0dp"
-                android:textColor="@color/colorGray"/>
+                android:textColor="@color/colorGray" />
+
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#aaa"
+                android:layout_marginBottom="6dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="6dp">
+                android:background="#aaa">
 
             </View>
 
             <Button
+                android:id="@+id/not_going_button"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
                 android:layout_weight="1"
                 android:text="Not Going"
-                android:layout_margin="0dp"
-                android:textColor="@color/colorGray"/>
+                android:textColor="@color/colorGray" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#aaa"
             android:layout_marginBottom="6dp"
             android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp">
+            android:layout_marginRight="6dp"
+            android:background="#aaa">
 
         </View>
 
@@ -150,10 +161,10 @@
             android:id="@+id/event_page_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
             android:textColor="#777"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>

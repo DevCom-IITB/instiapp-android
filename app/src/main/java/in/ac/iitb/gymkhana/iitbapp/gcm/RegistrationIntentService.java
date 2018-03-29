@@ -16,13 +16,11 @@ import android.widget.Toast;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
+import in.ac.iitb.gymkhana.iitbapp.Constants;
+
 
 @TargetApi(Build.VERSION_CODES.CUPCAKE)
 public class RegistrationIntentService extends IntentService {
-
-
-    public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
-    public static final String REGISTRATION_COMPLETE = "registrationComplete";
     private static final String TAG = "RegIntentService";
 
 
@@ -44,15 +42,15 @@ public class RegistrationIntentService extends IntentService {
             Toast.makeText(this, "GCM Registration Token: " + token, Toast.LENGTH_SHORT).show();
 
 
-            sharedPreferences.edit().putBoolean(SENT_TOKEN_TO_SERVER, true).apply();
+            sharedPreferences.edit().putBoolean(Constants.SENT_TOKEN_TO_SERVER, true).apply();
 
         } catch (Exception e) {
             Log.d(TAG, "Failed to complete token refresh", e);
-            sharedPreferences.edit().putBoolean(SENT_TOKEN_TO_SERVER, false).apply();
+            sharedPreferences.edit().putBoolean(Constants.SENT_TOKEN_TO_SERVER, false).apply();
         }
 
         //Notify UI that registration is complete
-        Intent registrationComplete = new Intent(REGISTRATION_COMPLETE);
+        Intent registrationComplete = new Intent(Constants.REGISTRATION_COMPLETE);
         registrationComplete.putExtra("Token", token);
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }

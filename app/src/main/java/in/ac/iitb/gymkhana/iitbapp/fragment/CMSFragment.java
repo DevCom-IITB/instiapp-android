@@ -12,7 +12,7 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CMSFragment extends Fragment {
+public class CMSFragment extends BaseFragment {
 
 
     public CMSFragment() {
