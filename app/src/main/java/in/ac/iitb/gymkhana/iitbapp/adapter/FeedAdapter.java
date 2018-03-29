@@ -53,12 +53,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         viewHolder.eventTitle.setText(currentEvent.getEventName());
 //        viewHolder.eventDetails.setText(currentEvent.getEventDescription());
         Timestamp timestamp = currentEvent.getEventStartTime();
-        Date Date = new Date(timestamp.getTime());
-        SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
-        SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm a");
+        if (timestamp != null) {
+            Date Date = new Date(timestamp.getTime());
+            SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
+            SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm a");
 
-        viewHolder.eventDate.setText(simpleDateFormatDate.format(Date));
-        viewHolder.eventTime.setText(simpleDateFormatTime.format(Date));
+            viewHolder.eventDate.setText(simpleDateFormatDate.format(Date));
+            viewHolder.eventTime.setText(simpleDateFormatTime.format(Date));
+        }
         StringBuilder eventVenueName = new StringBuilder();
         for (Venue venue : currentEvent.getEventVenues()) {
             eventVenueName.append(", ").append(venue.getVenueName());
