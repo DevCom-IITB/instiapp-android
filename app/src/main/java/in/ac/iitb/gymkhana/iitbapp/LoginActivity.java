@@ -32,7 +32,6 @@ import net.openid.appauth.AuthorizationServiceConfiguration;
 
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
-import in.ac.iitb.gymkhana.iitbapp.api.model.LoginRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.LoginResponse;
 import in.ac.iitb.gymkhana.iitbapp.gcm.RegistrationIntentService;
 import retrofit2.Call;
@@ -41,12 +40,10 @@ import retrofit2.Response;
 
 
 public class LoginActivity extends AppCompatActivity {
-    public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
-    public static final String REGISTRATION_COMPLETE = "registrationComplete";
     private static final String TAG = "LoginActivity";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private final String clientId = "pFcDDWtUUfzlAX2ibriV25lm1J2m92O5ynfT4SYk";
-    private final String clientSecret = "k56GXiN1qB4Dt7CnTVWjuwLJyWntNulitWOkL7Wddr6JHPiHqIZgSfgUplO6neTqumVr32zA14XgQmkuoC8y6y9jnaQT9tKDsq4jQklRb8MQNQglQ1H4YrmqOwPfaNyO";
+    //TODO: Change this to production before launch
+    private final String clientId = "vR1pU7wXWyve1rUkg0fMS6StL1Kr6paoSmRIiLXJ";
     private final Uri redirectUri = Uri.parse("https://redirecturi");
     private final Uri mAuthEndpoint = Uri.parse("http://gymkhana.iitb.ac.in/sso/oauth/authorize/");
     private final Uri mTokenEndpoint = Uri.parse("http://gymkhana.iitb.ac.in/sso/oauth/token/");
@@ -67,26 +64,23 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
 
-                SharedPreferences sharedPreferences =
-                        PreferenceManager.getDefaultSharedPreferences(context);
-                boolean sentToken = sharedPreferences
-                        .getBoolean(SENT_TOKEN_TO_SERVER, false);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences.getBoolean(Constants.SENT_TOKEN_TO_SERVER, false);
                 if (sentToken) {
                     String token = intent.getStringExtra("Token");
-
                     Log.d(TAG, "Going to login with :" + authCode + "\n" + token);
                     //************
                     //TODO Remove following 6 lines after the server is hosted
                     String gcmRegId = token;
-                    session.createLoginSession(gcmRegId);
-                    Intent i = new Intent(mContext, MainActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(i);
+//                    session.createLoginSession(gcmRegId);
+//                    Intent i = new Intent(mContext, MainActivity.class);
+//                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(i);
 
 
                     //**************
-                    login(authCode, token);
+                    login(authCode, redirectUri.toString(), gcmRegId);
 
                 } else {
 
@@ -101,8 +95,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d(TAG, "Initiating auth");
 
-                AuthorizationServiceConfiguration config =
-                        new AuthorizationServiceConfiguration(mAuthEndpoint, mTokenEndpoint);
+                AuthorizationServiceConfiguration config = new AuthorizationServiceConfiguration(mAuthEndpoint, mTokenEndpoint);
 
                 makeAuthRequest(config);
             }
@@ -121,7 +114,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-
         checkIntent(intent);
     }
 
@@ -154,7 +146,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         registerReceiver();
-        Log.d(TAG, "In Resume");
+        Log.d(TAG, "On Resume");
     }
 
     @Override
@@ -196,15 +188,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void makeAuthRequest(
-            @NonNull AuthorizationServiceConfiguration serviceConfig) {
+    private void makeAuthRequest(@NonNull AuthorizationServiceConfiguration serviceConfig) {
 
         AuthorizationRequest authRequest = new AuthorizationRequest.Builder(
                 serviceConfig,
                 clientId,
                 "code",
                 redirectUri)
-                .setScope("profile")
+                .setScope("basic profile picture sex ldap phone insti_address program secondary_emails")
                 .build();
 
         Log.d(TAG, "Making auth request");
@@ -221,7 +212,7 @@ public class LoginActivity extends AppCompatActivity {
                         .build());
     }
 
-    //Todo: Change the color of Chrome custom tabs based on app theme color
+    //TODO: Change the color of Chrome custom tabs based on app theme color
     @TargetApi(Build.VERSION_CODES.M)
     @SuppressWarnings("deprecation")
     private int getCustomTabColor() {
@@ -232,16 +223,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void login(String authorizationCode, String gcmId) {
-        final String gcmRegId = gcmId;
-        LoginRequest loginRequest = new LoginRequest(authorizationCode, gcmId);
+    private void login(String authorizationCode, final String redirectURI, String gcmID) {
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.login(loginRequest).enqueue(new Callback<LoginResponse>() {
+        retrofitInterface.login(authorizationCode, redirectURI, gcmID).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
                     Log.d(TAG, "Login request successful");
-                    session.createLoginSession(gcmRegId);
+                    session.createLoginSession(redirectURI, response.body().getUser(), response.body().getSessionID());
                     Intent i = new Intent(mContext, MainActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -263,7 +252,7 @@ public class LoginActivity extends AppCompatActivity {
     private void registerReceiver() {
         if (!isReceiverRegistered) {
             LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                    new IntentFilter(REGISTRATION_COMPLETE));
+                    new IntentFilter(Constants.REGISTRATION_COMPLETE));
             isReceiverRegistered = true;
         }
     }

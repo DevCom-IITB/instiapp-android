@@ -12,7 +12,7 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GCRankingsFragment extends Fragment {
+public class GCRankingsFragment extends BaseFragment {
 
 
     public GCRankingsFragment() {

@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.AddEventFragment">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -53,17 +54,18 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:paddingRight="6dp"
-                    android:gravity="bottom"
-                    android:layout_height="match_parent"
                     android:id="@+id/tv_start"
-                    android:textSize="20sp"
-                    android:hint="From  "
-
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="?attr/editTextBackground"
-                    android:paddingTop="8dp"/>
+                    android:gravity="bottom"
+                    android:hint="From  "
+                    android:paddingRight="6dp"
+
+                    android:paddingTop="8dp"
+                    android:textSize="20sp" />
+
                 <View
                     android:layout_width="3dp"
                     android:layout_height="match_parent"
@@ -72,35 +74,33 @@
                     android:background="@color/common_google_signin_btn_text_dark_disabled" />
 
 
-
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:paddingRight="6dp"
-                    android:gravity="bottom"
-                    android:layout_height="match_parent"
                     android:id="@+id/tv_end"
-                    android:textSize="20sp"
-                    android:hint="To  "
-
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="?attr/editTextBackground"
-                    android:paddingTop="8dp"/>
+                    android:gravity="bottom"
+                    android:hint="To  "
+                    android:paddingRight="6dp"
 
-
+                    android:paddingTop="8dp"
+                    android:textSize="20sp" />
 
 
             </LinearLayout>
-            <EditText
-                android:layout_width="match_parent"
 
-                android:paddingRight="6dp"
+            <EditText
+                android:id="@+id/et_venue"
+
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="10dp"
-                android:textSize="20sp"
-                android:id="@+id/et_venue"
-                android:hint="Venue"/>
+                android:hint="Venue"
+                android:paddingRight="6dp"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/et_eventDetails"
@@ -111,72 +111,75 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:gravity="top"
-                android:textSize="20sp"
                 android:hint="Details"
-                android:paddingRight="6dp" />
+                android:paddingRight="6dp"
+                android:textSize="20sp" />
+
             <RelativeLayout
+                android:id="@+id/advanced_menu"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/advanced_menu">
+                android:layout_height="wrap_content">
 
 
-                <TextView android:layout_height="30dp"
+                <TextView
                     android:layout_width="wrap_content"
-                    android:text="Advanced Options"
+                    android:layout_height="30dp"
                     android:paddingLeft="18dp"
-                    android:textSize="20sp"
-                    android:paddingRight="16dp"/>
+                    android:paddingRight="16dp"
+                    android:text="Advanced Options"
+                    android:textSize="20sp" />
+
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_alignParentEnd="true"
                     android:id="@+id/close"
-                    android:src="@mipmap/advanced_menu_close"/>
-                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
-                    android:id="@+id/open"
                     android:layout_alignParentEnd="true"
-                    android:src="@mipmap/advanced_menu_open"/>
+                    android:src="@mipmap/advanced_menu_close" />
+
+                <ImageView
+                    android:id="@+id/open"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:src="@mipmap/advanced_menu_open" />
             </RelativeLayout>
 
             <CheckBox
+                android:id="@+id/cb_public"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/cb_public"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="12dp"
-                android:text="Outsiders Allowed "/>
+                android:text="Outsiders Allowed " />
 
             <EditText
+                android:id="@+id/map_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/map_location"
                 android:layout_marginLeft="22dp"
                 android:layout_marginRight="12dp"
-                android:hint="Map Location"/>
+                android:hint="Map Location" />
 
 
             <CheckBox
+                android:id="@+id/cb_permission"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Request User Info"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="12dp"
-                android:id="@+id/cb_permission"/>
+                android:text="Request User Info" />
 
         </LinearLayout>
     </ScrollView>
 
 
-
     <Button
+        android:id="@+id/button_createEvent"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="Create"
         android:layout_margin="8dp"
         android:background="@drawable/round_text_box"
-        android:id="@+id/button_createEvent"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="Create" />
 
 </LinearLayout>

@@ -27,9 +27,9 @@ Check http://github.com/wncc for more information about all development activiti
 Development
 -----------
 
-Read the [Development Documentation](https://docs.google.com/document/d/1LYmtKPyA-TMFqxC9rxXHp785pUI05u9M-38qB0nQPDQ/edit?usp=sharing).
+Read the [Development Documentation](https://iitbapp1.docs.apiary.io/).
 
-See the [Frontend Design](https://drive.google.com/drive/folders/0B8nDKRNC4Y7OZG5SV1hsOWdkdFE?usp=sharing).
+See the [Frontend Design](https://drive.google.com/open?id=1YJRUvsyqR5QtfWYug_PoBJ08p-criCPo).
 
 ### Contributors
 See [list of contributors](https://github.com/unstablebrainiac/IITB-App/graphs/contributors)

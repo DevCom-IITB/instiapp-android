@@ -11,12 +11,13 @@ import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
+import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CalendarFragment extends Fragment {
+public class CalendarFragment extends BaseFragment {
 
     FloatingActionButton fab;
     private View view;
@@ -58,10 +59,7 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AddEventFragment addEventFragment = new AddEventFragment();
-                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                ft.replace(R.id.calendar_layout, addEventFragment);
-                ft.addToBackStack("addEvent");
-                ft.commit();
+                ((MainActivity) getActivity()).updateFragment(addEventFragment);
             }
         });
         return view;

@@ -1,27 +1,55 @@
 package in.ac.iitb.gymkhana.iitbapp.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
+import in.ac.iitb.gymkhana.iitbapp.data.User;
+
 public class LoginResponse {
-    private String result;
-    private String message;
+    @SerializedName("sessionid")
+    private String sessionID;
+    @SerializedName("user")
+    private int userID;
+    @SerializedName("profile_id")
+    private String profileID;
+    @SerializedName("profile")
+    private User user;
 
-    public LoginResponse(String result, String message) {
-        this.result = result;
-        this.message = message;
+    public LoginResponse(String sessionID, int userID, String profileID, User user) {
+        this.sessionID = sessionID;
+        this.userID = userID;
+        this.profileID = profileID;
+        this.user = user;
     }
 
-    public String getResult() {
-        return result;
+    public String getSessionID() {
+        return sessionID;
     }
 
-    public void setResult(String result) {
-        this.result = result;
+    public void setSessionID(String sessionID) {
+        this.sessionID = sessionID;
     }
 
-    public String getMessage() {
-        return message;
+    public int getUserID() {
+        return userID;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public String getProfileID() {
+        return profileID;
+    }
+
+    public void setProfileID(String profileID) {
+        this.profileID = profileID;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

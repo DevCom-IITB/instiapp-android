@@ -2,13 +2,19 @@ package in.ac.iitb.gymkhana.iitbapp.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 @Entity(tableName = "users")
-class User {
+public class User {
+    @PrimaryKey(autoGenerate = true)
+    int db_id;
+
     @ColumnInfo(name = "id")
     @SerializedName("id")
     String userID;
@@ -59,6 +65,10 @@ class User {
         this.userAbout = userAbout;
         this.userFollowedBodies = userFollowedBodies;
         this.userFollowedBodiesID = userFollowedBodiesID;
+    }
+
+    public static User fromString(String json) {
+        return new Gson().fromJson(json, User.class);
     }
 
     public String getUserID() {
@@ -155,5 +165,10 @@ class User {
 
     public void setUserFollowedBodiesID(List<String> userFollowedBodiesID) {
         this.userFollowedBodiesID = userFollowedBodiesID;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }
