@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import in.ac.iitb.gymkhana.iitbapp.R;
 
@@ -14,6 +16,7 @@ import in.ac.iitb.gymkhana.iitbapp.R;
  */
 public class CMSFragment extends BaseFragment {
 
+    WebView wb;
 
     public CMSFragment() {
         // Required empty public constructor
@@ -24,7 +27,18 @@ public class CMSFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cms, container, false);
+        View v =  inflater.inflate(R.layout.fragment_cms, container, false);
+
+        wb =(WebView) v.findViewById(R.id.WebView);
+        wb.loadUrl("https://support.iitb.ac.in/support/login.jsp");
+
+        WebSettings webSettings = wb.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+
+
+
+
+        return v;
     }
 
 }
