@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -89,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         };
         registerReceiver();
 
-        Button ldapLogin = (Button) findViewById(R.id.ldap_login);
+        CardView ldapLogin = (CardView) findViewById(R.id.ldap_login);
         ldapLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                 makeAuthRequest(config);
             }
         });
-        Button guestLogin = (Button) findViewById(R.id.guest_login);
+        CardView guestLogin = (CardView) findViewById(R.id.guest_login);
         guestLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

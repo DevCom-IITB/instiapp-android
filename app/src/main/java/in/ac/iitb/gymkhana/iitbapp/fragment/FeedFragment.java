@@ -58,7 +58,7 @@ public class FeedFragment extends BaseFragment {
 
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
-        if (userData.getUserGoingEvents().size() != 0){
+//        if (userData.getUserGoingEvents().size() != 0){
             fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -71,7 +71,7 @@ public class FeedFragment extends BaseFragment {
                     ft.commit();
                 }
             });
-        }
+//        }
 
 
         return view;
