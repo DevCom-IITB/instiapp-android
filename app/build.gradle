@@ -60,7 +60,6 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:${archRoomVersion}"
     implementation "com.android.support:cardview-v7:${supportLibVersion}"
     implementation "de.hdodenhof:circleimageview:${circleImageViewVersion}"
-    implementation "com.android.support:customtabs:${supportLibVersion}"
     implementation "ru.noties:markwon:${markwonVersion}"
 }
 apply plugin: 'com.google.gms.google-services'
