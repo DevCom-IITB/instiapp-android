@@ -42,8 +42,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    //TODO: Change this to production before launch
-    private final String clientId = "vR1pU7wXWyve1rUkg0fMS6StL1Kr6paoSmRIiLXJ";
+    private final String clientId = "u1eFlmRWUOY5Sh4yFeqeWD71OXR8M8PYc0xUK33D";
     private final Uri redirectUri = Uri.parse("https://redirecturi");
     private final Uri mAuthEndpoint = Uri.parse("http://gymkhana.iitb.ac.in/sso/oauth/authorize/");
     private final Uri mTokenEndpoint = Uri.parse("http://gymkhana.iitb.ac.in/sso/oauth/token/");
