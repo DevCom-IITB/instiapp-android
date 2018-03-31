@@ -141,9 +141,13 @@ public class FeedFragment extends BaseFragment {
         getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
             @Override
             public void run(Activity pActivity) {
-                feedRecyclerView = getActivity().findViewById(R.id.feed_recycler_view);
-                feedRecyclerView.setAdapter(feedAdapter);
-                feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                try {
+                    feedRecyclerView = getActivity().findViewById(R.id.feed_recycler_view);
+                    feedRecyclerView.setAdapter(feedAdapter);
+                    feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

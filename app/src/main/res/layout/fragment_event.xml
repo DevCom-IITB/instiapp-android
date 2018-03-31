@@ -29,8 +29,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginBottom="12dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginTop="12dp"
                 android:layout_weight="3"
                 android:orientation="vertical">
@@ -150,21 +150,24 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:background="#aaa">
 
         </View>
 
-        <TextView
-            android:id="@+id/event_page_description"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:textColor="#777"
-            android:textSize="16sp" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/event_page_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:textColor="#777"
+                android:textSize="16sp" />
+        </ScrollView>
     </LinearLayout>
 </LinearLayout>
