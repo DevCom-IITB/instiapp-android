@@ -1,6 +1,7 @@
 package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +40,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
     Button goingButton;
     Button interestedButton;
     Button notGoingButton;
+    ImageButton shareEventButton;
     String TAG = "EventFragment";
 
     public EventFragment() {
@@ -63,7 +66,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
         inflateViews(event);
     }
 
-    private void inflateViews(Event event) {
+    private void inflateViews(final Event event) {
         ImageView eventPicture = (ImageView) getActivity().findViewById(R.id.event_picture_2);
         TextView eventTitle = (TextView) getActivity().findViewById(R.id.event_page_title);
         TextView eventDate = (TextView) getActivity().findViewById(R.id.event_page_date);
@@ -73,6 +76,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
         goingButton = getActivity().findViewById(R.id.going_button);
         interestedButton = getActivity().findViewById(R.id.interested_button);
         notGoingButton = getActivity().findViewById(R.id.not_going_button);
+        shareEventButton = getActivity().findViewById(R.id.share_event_button);
 
         Picasso.with(getContext()).load(event.getEventImageURL()).into(eventPicture);
         eventTitle.setText(event.getEventName());
@@ -93,6 +97,17 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
         goingButton.setOnClickListener(this);
         interestedButton.setOnClickListener(this);
         notGoingButton.setOnClickListener(this);
+        shareEventButton.setOnClickListener(new View.OnClickListener() {
+            String shareUrl = "https://instiapp.wncc-iitb.org/event-details/" + event.getEventID();
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
+                i.putExtra(Intent.EXTRA_TEXT, shareUrl);
+                startActivity(Intent.createChooser(i, "Share URL"));
+            }
+        });
     }
 
     @Override
@@ -118,7 +133,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-
+                    //TODO: Set flag for details updated so as to not try again when connected
                 }
             }
 
