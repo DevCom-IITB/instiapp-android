@@ -14,7 +14,7 @@ import in.ac.iitb.gymkhana.iitbapp.fragment.UserFollowingFragment;
 
 public class ProfileAdapter extends FragmentPagerAdapter {
     private static final String TAG = ProfileAdapter.class.getSimpleName();
-    private static final int FRAGMENT_COUNT = 3;
+    private static final int FRAGMENT_COUNT = 2;
     public ProfileAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -25,8 +25,6 @@ public class ProfileAdapter extends FragmentPagerAdapter {
                 return new UserEventsFragment();
             case 1:
                 return new UserFollowersFragment();
-            case 2:
-                return new UserFollowingFragment();
         }
         return null;
     }
@@ -41,8 +39,6 @@ public class ProfileAdapter extends FragmentPagerAdapter {
                 return "Events";
             case 1:
                 return "Followers";
-            case 2:
-                return "Following";
         }
         return null;
     }
