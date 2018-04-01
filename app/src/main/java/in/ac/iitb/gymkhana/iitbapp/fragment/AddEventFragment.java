@@ -38,6 +38,7 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.ac.iitb.gymkhana.iitbapp.Constants;
+import in.ac.iitb.gymkhana.iitbapp.CustomTimePicker;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
@@ -134,9 +135,9 @@ public class AddEventFragment extends BaseFragment {
             public void onClick(View v) {
 
                 Calendar calendar = Calendar.getInstance();
-                int mYear = calendar.get(Calendar.YEAR);
-                int mMonth = calendar.get(Calendar.MONTH);
-                int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+                final int mYear = calendar.get(Calendar.YEAR);
+                final int mMonth = calendar.get(Calendar.MONTH);
+                final int mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
                 final int mHour = calendar.get(Calendar.HOUR_OF_DAY);
                 final int mMin = calendar.get(Calendar.MINUTE);
@@ -147,21 +148,48 @@ public class AddEventFragment extends BaseFragment {
 
                     @Override
                     public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                        CustomTimePicker timePickerDialog = new CustomTimePicker(getContext(), new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                start.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":" + minute);
+                                if(minute<10) {
+                                    start.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":0" + minute);
+                                }
+                                else{
+
+                                    start.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":" + minute);
+                                }
                             }
                         }, mHour, mMin, true);
+
+                        if(year==mYear){
+                            if(month==mMonth){
+                                if(dayOfMonth==mDay){
+                                    timePickerDialog.setMin(mHour,mMin);
+                                }
+                                else if(dayOfMonth>mDay){
+                                    timePickerDialog.removeMin();
+                                }
+                            }
+                            else{
+                                timePickerDialog.removeMin();
+                            }
+                        }
+                        else{
+                            timePickerDialog.removeMin();
+                        }
                         timePickerDialog.show();
                     }
                 }, mYear, mMonth, mDay);
 
 
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+
                 datePickerDialog.show();
                 timestamp_start = new Timestamp(millis);
 
+
             }
+
 
         });
 
@@ -171,30 +199,55 @@ public class AddEventFragment extends BaseFragment {
             public void onClick(View v) {
 
                 Calendar calendar = Calendar.getInstance();
-                int mYear = calendar.get(Calendar.YEAR);
-                int mMonth = calendar.get(Calendar.MONTH);
-                int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+                final int mYear = calendar.get(Calendar.YEAR);
+                final int mMonth = calendar.get(Calendar.MONTH);
+                final int mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
                 final int mHour = calendar.get(Calendar.HOUR_OF_DAY);
                 final int mMin = calendar.get(Calendar.MINUTE);
-                long millis = calendar.getTimeInMillis();
+                final long millis = calendar.getTimeInMillis();
 
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                final DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
 
                     @Override
                     public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                        CustomTimePicker timePickerDialog = new CustomTimePicker(getContext(), new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                end.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":" + minute);
+                                if(minute<10) {
+                                    end.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":0" + minute);
+                                }
+                                else{
+                                    end.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":" + minute);
+                                }
                             }
                         }, mHour, mMin, true);
+                        if(year==mYear){
+                            if(month==mMonth){
+                                if(dayOfMonth==mDay){
+                                    timePickerDialog.setMin(mHour,mMin);
+                                }
+                                else if(dayOfMonth>mDay){
+                                   timePickerDialog.removeMin();
+                                }
+                            }
+                            else{
+                                timePickerDialog.removeMin();
+                            }
+                        }
+                        else{
+                            timePickerDialog.removeMin();
+                        }
+
+                        Log.i("hour", String.valueOf(mHour));
                         timePickerDialog.show();
                     }
                 }, mYear, mMonth, mDay);
 
 
+
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
                 datePickerDialog.show();
                 timestamp_end = new Timestamp(millis);
 
