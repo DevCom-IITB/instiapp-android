@@ -10,6 +10,6 @@ public final class ShareURLMaker {
     public static final String WEB_HOST = "https://instiapp.wncc-iitb.org/";
 
     public static final String getEventURL(Event event) {
-        return WEB_HOST + "event/" + event.getEventID();
+        return WEB_HOST + "event/" + event.getEventStrID();
     }
 }
