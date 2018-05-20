@@ -23,6 +23,7 @@ import java.util.Date;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.R;
+import in.ac.iitb.gymkhana.iitbapp.ShareURLMaker;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
@@ -98,7 +99,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
         interestedButton.setOnClickListener(this);
         notGoingButton.setOnClickListener(this);
         shareEventButton.setOnClickListener(new View.OnClickListener() {
-            String shareUrl = "https://instiapp.wncc-iitb.org/event-details/" + event.getEventID();
+            String shareUrl = ShareURLMaker.getEventURL(event);
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(Intent.ACTION_SEND);
