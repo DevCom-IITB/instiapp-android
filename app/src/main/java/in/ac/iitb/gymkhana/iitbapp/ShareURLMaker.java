@@ -7,7 +7,7 @@ import in.ac.iitb.gymkhana.iitbapp.data.Event;
  */
 
 public final class ShareURLMaker {
-    public static final String WEB_HOST = "https://instiapp.wncc-iitb.org/";
+    public static final String WEB_HOST = "https://insti.app/";
 
     public static final String getEventURL(Event event) {
         return WEB_HOST + "event/" + event.getEventStrID();
