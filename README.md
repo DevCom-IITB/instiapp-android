@@ -10,7 +10,6 @@ The IITB App features the Placement Blog, Upcoming Events and general informatio
 * Events Directory
 * Placement Blog
 * Mess Menus
-* Placement Blog
 * Internship Blog
 * Inter Hostel GC rankings
 * Academic Timetable
