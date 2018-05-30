@@ -15,6 +15,7 @@ import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
+import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
 import in.ac.iitb.gymkhana.iitbapp.data.Body;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,6 +31,7 @@ public class BodyFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_BODY = "body";
 
+    private AppDatabase appDatabase;
     String TAG = "BodyFragment";
 
     // TODO: Rename and change types of parameters
@@ -67,7 +69,16 @@ public class BodyFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        updateBody();
+
+        /* Initialize */
+        appDatabase = AppDatabase.getAppDatabase(getContext());
+
+        Body[] inLocalDb = appDatabase.dbDao().getBody(min_body.getBodyID());
+        if (inLocalDb.length > 0) {
+            displayBody(inLocalDb[0]);
+        } else {
+            updateBody();
+        }
     }
 
     private void updateBody() {
@@ -77,6 +88,9 @@ public class BodyFragment extends Fragment {
             public void onResponse(Call<Body> call, Response<Body> response) {
                 if (response.isSuccessful()) {
                     Body body = response.body();
+
+                    appDatabase.dbDao().insertBody(body);
+
                     displayBody(body);
                 }
             }
