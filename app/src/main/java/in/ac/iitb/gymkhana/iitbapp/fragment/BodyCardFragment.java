@@ -68,7 +68,7 @@ public class BodyCardFragment extends Fragment {
         TextView bodyDescription = (TextView) getView().findViewById(R.id.body_description);
 
         bodyName.setText(body.getBodyName());
-        bodyDescription.setText(body.getBodyName());
+        bodyDescription.setText(body.getBodyShortDescription());
         Picasso.with(getContext()).load(body.getBodyImageURL()).into(bodyAvatar);
     }
 
