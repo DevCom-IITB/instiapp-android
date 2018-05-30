@@ -9,11 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.data.Body;
 
@@ -63,6 +66,7 @@ public class BodyCardFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.body_card_layout);
         ImageView bodyAvatar = (ImageView) getView().findViewById(R.id.body_avatar);
         TextView bodyName = (TextView) getView().findViewById(R.id.body_name);
         TextView bodyDescription = (TextView) getView().findViewById(R.id.body_description);
@@ -70,6 +74,13 @@ public class BodyCardFragment extends Fragment {
         bodyName.setText(body.getBodyName());
         bodyDescription.setText(body.getBodyShortDescription());
         Picasso.with(getContext()).load(body.getBodyImageURL()).into(bodyAvatar);
+
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "You clicked " + body.getBodyName(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
