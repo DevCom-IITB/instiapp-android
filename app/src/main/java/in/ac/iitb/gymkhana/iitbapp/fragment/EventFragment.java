@@ -101,12 +101,14 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
             eventVenueName.append(", ").append(venue.getVenueName());
         }
 
-        for (Body body : event.getEventBodies()) {
-            Fragment bodyCardFragment = BodyCardFragment.newInstance(body);
-            getChildFragmentManager().beginTransaction()
-                    .add(R.id.body_container, bodyCardFragment, getTag())
-                    .disallowAddToBackStack()
-                    .commit();
+        if(((LinearLayout) getActivity().findViewById(R.id.body_container)).getChildCount() == 0) {
+            for (Body body : event.getEventBodies()) {
+                Fragment bodyCardFragment = BodyCardFragment.newInstance(body);
+                getChildFragmentManager().beginTransaction()
+                        .add(R.id.body_container, bodyCardFragment, getTag())
+                        .disallowAddToBackStack()
+                        .commit();
+            }
         }
 
         if (!eventVenueName.toString().equals(""))

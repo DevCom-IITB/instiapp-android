@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,7 +79,13 @@ public class BodyCardFragment extends Fragment {
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "You clicked " + body.getBodyName(), Toast.LENGTH_SHORT).show();
+                /* Show the next fragment and destroy the page */
+                BodyFragment bodyFragment = BodyFragment.newInstance("Dummy", "Dummy");
+                bodyFragment.setArguments(getArguments());
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
+                ft.addToBackStack(bodyFragment.getTag());
+                ft.commit();
             }
         });
     }
