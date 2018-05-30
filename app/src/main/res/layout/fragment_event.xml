@@ -52,7 +52,8 @@
                             android:layout_weight="10"
                             android:text="Event Title"
                             android:textColor="#fff"
-                            android:textSize="28sp" />
+                            android:textSize="21sp"
+                            android:textStyle="bold"/>
 
                         <ImageButton
                             android:id="@+id/share_event_button"
