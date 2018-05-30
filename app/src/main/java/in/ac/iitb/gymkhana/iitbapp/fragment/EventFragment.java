@@ -101,7 +101,6 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
             eventVenueName.append(", ").append(venue.getVenueName());
         }
 
-        LinearLayout myRoot = (LinearLayout) getActivity().findViewById(R.id.body_container);
         for (Body body : event.getEventBodies()) {
             Fragment bodyCardFragment = BodyCardFragment.newInstance(body);
             getChildFragmentManager().beginTransaction()
