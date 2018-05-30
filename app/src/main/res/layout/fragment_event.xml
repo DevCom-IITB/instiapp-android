@@ -179,8 +179,6 @@
 
             </View>
 
-
-
             <TextView
                 android:id="@+id/event_page_description"
                 android:layout_width="match_parent"
@@ -189,6 +187,14 @@
                 android:layout_marginStart="8dp"
                 android:textColor="#777"
                 android:textSize="16sp" />
+
+            <LinearLayout
+                android:id="@+id/body_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

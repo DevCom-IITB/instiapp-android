@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 @Entity(tableName = "bodies")
-class Body {
+public class Body {
     @PrimaryKey(autoGenerate = true)
     int db_id;
 

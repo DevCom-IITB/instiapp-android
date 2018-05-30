@@ -4,6 +4,8 @@ package in.ac.iitb.gymkhana.iitbapp.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,22 +13,27 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
+import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.ShareURLMaker;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
+import in.ac.iitb.gymkhana.iitbapp.data.Body;
 import in.ac.iitb.gymkhana.iitbapp.data.Venue;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -89,8 +96,18 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
         eventDate.setText(simpleDateFormatDate.format(Date));
         eventTime.setText(simpleDateFormatTime.format(Date));
         StringBuilder eventVenueName = new StringBuilder();
+
         for (Venue venue : event.getEventVenues()) {
             eventVenueName.append(", ").append(venue.getVenueName());
+        }
+
+        LinearLayout myRoot = (LinearLayout) getActivity().findViewById(R.id.body_container);
+        for (Body body : event.getEventBodies()) {
+            Fragment bodyCardFragment = BodyCardFragment.newInstance(body);
+            getChildFragmentManager().beginTransaction()
+                    .add(R.id.body_container, bodyCardFragment, getTag())
+                    .disallowAddToBackStack()
+                    .commit();
         }
 
         if (!eventVenueName.toString().equals(""))
