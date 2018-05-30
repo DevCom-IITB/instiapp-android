@@ -26,7 +26,7 @@ public class BodyFragment extends Fragment {
     String TAG = "BodyFragment";
 
     // TODO: Rename and change types of parameters
-    private Body body;
+    private Body min_body;
 
 
     public BodyFragment() {
@@ -53,7 +53,7 @@ public class BodyFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            body = new Gson().fromJson(getArguments().getString(ARG_BODY), Body.class);
+            min_body = new Gson().fromJson(getArguments().getString(ARG_BODY), Body.class);
         }
     }
 
@@ -62,7 +62,7 @@ public class BodyFragment extends Fragment {
         super.onStart();
 
         TextView bodyName = (TextView) getView().findViewById(R.id.body_name);
-        bodyName.setText(body.getBodyName());
+        bodyName.setText(min_body.getBodyName());
 
     }
 
