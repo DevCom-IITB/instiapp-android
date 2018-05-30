@@ -10,8 +10,15 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import in.ac.iitb.gymkhana.iitbapp.Constants;
+import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
+import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
+import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.Body;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,10 +67,33 @@ public class BodyFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        updateBody();
+    }
 
+    private void updateBody() {
+        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        retrofitInterface.getBody(((MainActivity)getActivity()).getSessionIDHeader(), min_body.getBodyID()).enqueue(new Callback<Body>() {
+            @Override
+            public void onResponse(Call<Body> call, Response<Body> response) {
+                if (response.isSuccessful()) {
+                    Body body = response.body();
+                    displayBody(body);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Body> call, Throwable t) {
+                // Network Error
+            }
+        });
+    }
+
+    private void displayBody(Body body) {
         TextView bodyName = (TextView) getView().findViewById(R.id.body_name);
-        bodyName.setText(min_body.getBodyName());
+        TextView bodyDescription = (TextView) getView().findViewById(R.id.body_description);
 
+        bodyName.setText(body.getBodyName());
+        bodyDescription.setText(body.getBodyDescription());
     }
 
     @Override

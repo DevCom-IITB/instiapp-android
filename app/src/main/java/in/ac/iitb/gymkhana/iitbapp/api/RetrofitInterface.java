@@ -28,6 +28,9 @@ public interface RetrofitInterface {
     @GET("users/{uuid}")
     Call<User> getUser(@Header("Cookie") String sessionId, @Path("uuid") String uuid);
 
+    @GET("bodies/{uuid}")
+    Call<in.ac.iitb.gymkhana.iitbapp.data.Body> getBody(@Header("Cookie") String sessionId, @Path("uuid") String uuid);
+
     @POST("upload")
     Call<ImageUploadResponse> uploadImage(@Header("Cookie") String sessionID, @Body ImageUploadRequest imageUploadRequest);
 

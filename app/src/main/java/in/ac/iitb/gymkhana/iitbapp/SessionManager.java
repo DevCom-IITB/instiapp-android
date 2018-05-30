@@ -41,6 +41,10 @@ public class SessionManager {
         editor.commit();
     }
 
+    public String getSessionID() {
+        return pref.getString(Constants.SESSION_ID, "");
+    }
+
     public boolean isLoggedIn() {
         return pref.getBoolean(Constants.IS_LOGGED_IN, false);
     }

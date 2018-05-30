@@ -293,6 +293,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    public String getSessionIDHeader() {
+        return "sessionid=" + session.getSessionID();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
