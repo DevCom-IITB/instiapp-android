@@ -37,7 +37,7 @@
         <item
             android:id="@+id/nav_cms"
             android:icon="@drawable/ic_announcement_black_48dp"
-            android:title="CMS" />e
+            android:title="CMS" />
         <item
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_map_black_48dp"
