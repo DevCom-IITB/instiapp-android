@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 @Entity(tableName = "bodies")
-class Body {
+public class Body {
     @PrimaryKey(autoGenerate = true)
     int db_id;
 
@@ -19,6 +19,9 @@ class Body {
     @ColumnInfo(name = "name")
     @SerializedName("name")
     String bodyName;
+    @ColumnInfo(name = "short_description")
+    @SerializedName("short_description")
+    String bodyShortDescription;
     @ColumnInfo(name = "description")
     @SerializedName("description")
     String bodyDescription;
@@ -63,6 +66,14 @@ class Body {
 
     public void setBodyName(String bodyName) {
         this.bodyName = bodyName;
+    }
+
+    public String getBodyShortDescription() {
+        return bodyShortDescription;
+    }
+
+    public void setBodyShortDescription(String bodyShortDescription) {
+        this.bodyShortDescription = bodyShortDescription;
     }
 
     public String getBodyDescription() {

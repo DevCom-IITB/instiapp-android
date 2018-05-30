@@ -21,6 +21,9 @@ public interface DbDao {
     @Query("SELECT * FROM venues")
     List<Venue> getAllVenues();
 
+    @Query("SELECT * FROM bodies WHERE id == :id")
+    public Body[] getBody(String id);
+
     @Query("SELECT COUNT(*) from events")
     int countEvents();
 
@@ -35,6 +38,9 @@ public interface DbDao {
 
     @Insert
     void insertBodies(List<Body> bodies);
+
+    @Insert
+    void insertBody(Body body);
 
     @Insert
     void insertVenues(List<Venue> venues);
