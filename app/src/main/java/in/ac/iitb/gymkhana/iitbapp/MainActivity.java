@@ -84,15 +84,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
+        initNavigationView();
         if (session.isLoggedIn()) {
             currentUser = User.fromString(session.pref.getString(Constants.CURRENT_USER, "Error"));
             updateNavigationView();
         }
     }
 
-    private void updateNavigationView() {
+    private void initNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void updateNavigationView() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View header = navigationView.getHeaderView(0);
         header.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -286,6 +291,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     toast.show();
                 }
         }
+    }
+
+    public String getSessionIDHeader() {
+        return "sessionid=" + session.getSessionID();
     }
 
     @Override
