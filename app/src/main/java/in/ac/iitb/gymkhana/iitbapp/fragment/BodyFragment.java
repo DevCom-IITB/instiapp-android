@@ -6,8 +6,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import in.ac.iitb.gymkhana.iitbapp.R;
+import in.ac.iitb.gymkhana.iitbapp.data.Body;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,14 +21,12 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 public class BodyFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_BODY = "body";
 
     String TAG = "BodyFragment";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Body body;
 
 
     public BodyFragment() {
@@ -35,16 +37,14 @@ public class BodyFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param arg_body Body for details
      * @return A new instance of fragment BodyFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BodyFragment newInstance(String param1, String param2) {
+    public static BodyFragment newInstance(Body arg_body) {
         BodyFragment fragment = new BodyFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_BODY, new Gson().toJson(arg_body));
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,9 +53,17 @@ public class BodyFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            body = new Gson().fromJson(getArguments().getString(ARG_BODY), Body.class);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        TextView bodyName = (TextView) getView().findViewById(R.id.body_name);
+        bodyName.setText(body.getBodyName());
+
     }
 
     @Override

@@ -68,9 +68,9 @@ public class BodyCardFragment extends Fragment {
     public void onStart() {
         super.onStart();
         LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.body_card_layout);
-        ImageView bodyAvatar = (ImageView) getView().findViewById(R.id.body_avatar);
-        TextView bodyName = (TextView) getView().findViewById(R.id.body_name);
-        TextView bodyDescription = (TextView) getView().findViewById(R.id.body_description);
+        ImageView bodyAvatar = (ImageView) getView().findViewById(R.id.body_card_avatar);
+        TextView bodyName = (TextView) getView().findViewById(R.id.body_card_name);
+        TextView bodyDescription = (TextView) getView().findViewById(R.id.body_card_description);
 
         bodyName.setText(body.getBodyName());
         bodyDescription.setText(body.getBodyShortDescription());
@@ -80,7 +80,7 @@ public class BodyCardFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 /* Show the next fragment and destroy the page */
-                BodyFragment bodyFragment = BodyFragment.newInstance("Dummy", "Dummy");
+                BodyFragment bodyFragment = BodyFragment.newInstance(body);
                 bodyFragment.setArguments(getArguments());
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
