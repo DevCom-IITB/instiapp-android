@@ -18,6 +18,9 @@ public class Event {
     @ColumnInfo(name = "id")
     @SerializedName("id")
     String eventID;
+    @ColumnInfo(name = "str_id")
+    @SerializedName("str_id")
+    String eventStrID;
     @ColumnInfo(name = "name")
     @SerializedName("name")
     String eventName;
@@ -77,6 +80,14 @@ public class Event {
 
     public void setEventID(String eventID) {
         this.eventID = eventID;
+    }
+
+    public String getEventStrID() {
+        return eventStrID;
+    }
+
+    public void setEventStrID(String eventStrID) {
+        this.eventStrID = eventStrID;
     }
 
     public String getEventName() {
