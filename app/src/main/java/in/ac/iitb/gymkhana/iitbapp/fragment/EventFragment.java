@@ -130,6 +130,10 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
                 startActivity(Intent.createChooser(i, "Share URL"));
             }
         });
+       if (event.getEventWebsiteURL() != null)
+      {
+        webEventButton.setVisibility(View.VISIBLE);
+      }
         webEventButton.setOnClickListener(new View.OnClickListener() {
            String eventwebURL = event.getEventWebsiteURL();
             @Override
