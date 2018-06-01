@@ -131,10 +131,10 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
             }
         });
         webEventButton.setOnClickListener(new View.OnClickListener() {
-
+           String eventwebURL = event.getEventWebsiteURL();
             @Override
             public void onClick(View view) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(eventwebURL));
                 startActivity(browserIntent);
             }
         });

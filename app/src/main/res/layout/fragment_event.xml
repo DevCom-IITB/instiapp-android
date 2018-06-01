@@ -57,13 +57,13 @@
 
                         <ImageButton
                             android:id="@+id/web_event_button"
-                            android:layout_width="0dp"
+                            android:layout_width="10dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="1"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="Event Website"
-                            android:src="@drawable/ic_web_black_48dp"
+                            android:src="@drawable/ic_language_black_24dp"
                             android:tint="@color/colorWhite" />
 
                         <ImageButton
