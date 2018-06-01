@@ -101,6 +101,33 @@ public class BodyFragment extends Fragment {
             }
         });
     }
+    private void inflateViews(final Event event) {
+        ImageView eventPicture = (ImageView) getActivity().findViewById(R.id.event_picture_2);
+        TextView eventTitle = (TextView) getActivity().findViewById(R.id.event_page_title);
+        TextView eventDate = (TextView) getActivity().findViewById(R.id.event_page_date);
+        TextView eventTime = (TextView) getActivity().findViewById(R.id.event_page_time);
+        TextView eventVenue = (TextView) getActivity().findViewById(R.id.event_page_venue);
+        TextView eventDescription = (TextView) getActivity().findViewById(R.id.event_page_description);
+        goingButton = getActivity().findViewById(R.id.going_button);
+        interestedButton = getActivity().findViewById(R.id.interested_button);
+        notGoingButton = getActivity().findViewById(R.id.not_going_button);
+        shareEventButton = getActivity().findViewById(R.id.share_event_button);
+
+        Picasso.with(getContext()).load(event.getEventImageURL()).into(eventPicture);
+        eventTitle.setText(event.getEventName());
+        Markwon.setMarkdown(eventDescription, event.getEventDescription());
+        Timestamp timestamp = event.getEventStartTime();
+        Date Date = new Date(timestamp.getTime());
+        SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
+        SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm a");
+        eventDate.setText(simpleDateFormatDate.format(Date));
+        eventTime.setText(simpleDateFormatTime.format(Date));
+        StringBuilder eventVenueName = new StringBuilder();
+
+        for (Venue venue : event.getEventVenues()) {
+            eventVenueName.append(", ").append(venue.getVenueName());
+        }
+
 
     private void displayBody(Body body) {
         TextView bodyName = (TextView) getView().findViewById(R.id.body_name);
