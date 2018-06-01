@@ -1,0 +1,65 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '27.0.3'
+    defaultConfig {
+        applicationId "in.ac.iitb.gymkhana.iitbapp"
+        manifestPlaceholders 'appAuthRedirectScheme': 'https'
+        minSdkVersion 17
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+ext {
+    supportLibVersion = '26.1.0'
+    playServicesVersion = '12.0.0'
+    butterKnifeVersion = '8.8.1'
+    appAuthVersion = '0.2.0'
+    retrofitVersion = '2.1.0'
+    okhttpVersion = '3.4.1'
+    picassoVersion = '2.5.0'
+    archRoomVersion = '1.1.0-beta1'
+    circleImageViewVersion = '2.2.0'
+    markwonVersion = '1.0.4'
+}
+
+dependencies {
+    implementation 'com.android.support:support-v4:26.1.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation "com.android.support:appcompat-v7:${supportLibVersion}"
+    implementation "net.openid:appauth:${appAuthVersion}"
+    testImplementation "junit:junit:4.12"
+    implementation "com.android.support:design:${supportLibVersion}"
+    implementation "com.android.support:support-v4:${supportLibVersion}"
+    implementation "com.jakewharton:butterknife:${butterKnifeVersion}"
+    implementation "com.google.android.gms:play-services-gcm:${playServicesVersion}"
+    implementation "com.google.android.gms:play-services-maps:${playServicesVersion}"
+    implementation "com.google.android.gms:play-services-location:${playServicesVersion}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
+    implementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
+    implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}"
+    implementation "com.squareup.picasso:picasso:${picassoVersion}"
+    implementation "com.android.support:customtabs:${supportLibVersion}"
+    implementation "android.arch.persistence.room:runtime:${archRoomVersion}"
+    annotationProcessor "android.arch.persistence.room:compiler:${archRoomVersion}"
+    implementation "com.android.support:cardview-v7:${supportLibVersion}"
+    implementation "de.hdodenhof:circleimageview:${circleImageViewVersion}"
+    implementation "ru.noties:markwon:${markwonVersion}"
+}
+apply plugin: 'com.google.gms.google-services'

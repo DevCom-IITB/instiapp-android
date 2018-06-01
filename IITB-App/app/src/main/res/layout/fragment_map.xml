@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.MapFragment">
+
+    <fragment
+        android:id="@+id/viewMap"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        map:cameraZoom="18" />
+
+    <!--TODO: Change colours-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="48dp"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:src="@drawable/ic_my_location_black_24dp" />
+
+</FrameLayout>
