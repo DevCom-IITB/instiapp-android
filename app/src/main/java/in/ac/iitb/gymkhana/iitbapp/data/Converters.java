@@ -73,6 +73,20 @@ public class Converters {
     }
 
     @TypeConverter
+    public static List<Role> rolesfromString(String value){
+        Type listType = new TypeToken<List<Role>>(){
+        }.getType();
+        return new Gson().fromJson(value, listType);
+    }
+
+    @TypeConverter
+    public static String stringfromRoles(List<Role> list){
+        Gson gson =  new Gson();
+        String json=  gson.toJson(list);
+        return json;
+    }
+
+    @TypeConverter
     public static Timestamp timestampfromString(String value) {
         try {
             return new Gson().fromJson(value, Timestamp.class);
