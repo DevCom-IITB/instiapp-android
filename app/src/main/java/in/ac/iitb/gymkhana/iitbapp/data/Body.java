@@ -16,6 +16,9 @@ public class Body {
     @ColumnInfo(name = "id")
     @SerializedName("id")
     String bodyID;
+    @ColumnInfo(name = "str_id")
+    @SerializedName("str_id")
+    String bodyStrID;
     @ColumnInfo(name = "name")
     @SerializedName("name")
     String bodyName;
@@ -40,16 +43,26 @@ public class Body {
     @ColumnInfo(name = "followers_count")
     @SerializedName("followers_count")
     int bodyFollowersCount;
+    @ColumnInfo(name = "website_url")
+    @SerializedName("website_url")
+    String bodyWebsiteURL;
+    @ColumnInfo(name = "blog_url")
+    @SerializedName("blog_url")
+    String bodyBlogURL;
 
-    public Body(String bodyID, String bodyName, String bodyDescription, String bodyImageURL, List<Body> bodyChildren, List<Body> bodyParents, List<Event> bodyEvents, int bodyFollowersCount) {
+    public Body(String bodyID, String bodyStrID, String bodyName, String bodyShortDescription, String bodyDescription, String bodyImageURL, List<Body> bodyChildren, List<Body> bodyParents, List<Event> bodyEvents, int bodyFollowersCount, String bodyWebsiteURL, String bodyBlogURL) {
         this.bodyID = bodyID;
+        this.bodyStrID = bodyStrID;
         this.bodyName = bodyName;
+        this.bodyShortDescription = bodyShortDescription;
         this.bodyDescription = bodyDescription;
         this.bodyImageURL = bodyImageURL;
         this.bodyChildren = bodyChildren;
         this.bodyParents = bodyParents;
         this.bodyEvents = bodyEvents;
         this.bodyFollowersCount = bodyFollowersCount;
+        this.bodyWebsiteURL = bodyWebsiteURL;
+        this.bodyBlogURL = bodyBlogURL;
     }
 
     public String getBodyID() {
@@ -58,6 +71,14 @@ public class Body {
 
     public void setBodyID(String bodyID) {
         this.bodyID = bodyID;
+    }
+
+    public String getBodyStrID() {
+        return bodyStrID;
+    }
+
+    public void setBodyStrID(String bodyStrID) {
+        this.bodyStrID = bodyStrID;
     }
 
     public String getBodyName() {
@@ -123,4 +144,21 @@ public class Body {
     public void setBodyFollowersCount(int bodyFollowersCount) {
         this.bodyFollowersCount = bodyFollowersCount;
     }
+
+    public String getBodyWebsiteURL() {
+        return bodyWebsiteURL;
+    }
+
+    public void setBodyWebsiteURL(String bodyWebsiteURL) {
+        this.bodyWebsiteURL = bodyWebsiteURL;
+    }
+
+    public String getBodyBlogURL() {
+        return bodyBlogURL;
+    }
+
+    public void setBodyBlogURL(String bodyBlogURL) {
+        this.bodyBlogURL = bodyBlogURL;
+    }
+
 }

@@ -57,9 +57,13 @@ public class Event {
     @ColumnInfo(name = "going")
     @SerializedName("going")
     List<User> eventGoing;
+    @ColumnInfo(name = "website_url")
+    @SerializedName("website_url")
+    String eventWebsiteURL;
 
-    public Event(String eventID, String eventName, String eventDescription, String eventImageURL, Timestamp eventStartTime, Timestamp eventEndTime, boolean allDayEvent, List<Venue> eventVenues, List<Body> eventBodies, int eventInterestedCount, int eventGoingCount, List<User> eventInterested, List<User> eventGoing) {
+    public Event(String eventID, String eventStrID, String eventName, String eventDescription, String eventImageURL, Timestamp eventStartTime, Timestamp eventEndTime, boolean allDayEvent, List<Venue> eventVenues, List<Body> eventBodies, int eventInterestedCount, int eventGoingCount, List<User> eventInterested, List<User> eventGoing, String eventWebsiteURL) {
         this.eventID = eventID;
+        this.eventStrID = eventStrID;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventImageURL = eventImageURL;
@@ -72,6 +76,7 @@ public class Event {
         this.eventGoingCount = eventGoingCount;
         this.eventInterested = eventInterested;
         this.eventGoing = eventGoing;
+        this.eventWebsiteURL = eventWebsiteURL;
     }
 
     public String getEventID() {
@@ -184,5 +189,13 @@ public class Event {
 
     public void setEventGoing(List<User> eventGoing) {
         this.eventGoing = eventGoing;
+    }
+
+    public String getEventWebsiteURL() {
+        return eventWebsiteURL;
+    }
+
+    public void setEventWebsiteURL(String eventWebsiteURL) {
+        this.eventWebsiteURL = eventWebsiteURL;
     }
 }
