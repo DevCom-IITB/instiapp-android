@@ -33,9 +33,6 @@ public class User {
     @ColumnInfo(name = "email")
     @SerializedName("email")
     String userEmail;
-    @ColumnInfo(name = "year")
-    @SerializedName("year")
-    int userYear;
     @ColumnInfo(name = "roll_no")
     @SerializedName("roll_no")
     String userRollNumber;
@@ -51,20 +48,27 @@ public class User {
     @ColumnInfo(name = "followed_bodies_id")
     @SerializedName("followed_bodies_id")
     List<String> userFollowedBodiesID;
+    @ColumnInfo(name = "website_url")
+    @SerializedName("website_url")
+    String userWebsiteURL;
+    @ColumnInfo(name = "ldap_id")
+    @SerializedName("ldap_id")
+    String userLDAPId;
 
-    public User(String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, int userYear, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID) {
+    public User(String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, String userWebsiteURL, String userLDAPID) {
         this.userID = userID;
         this.userName = userName;
         this.userProfilePictureUrl = userProfilePictureUrl;
         this.userInterestedEvents = userInterestedEvents;
         this.userGoingEvents = userGoingEvents;
         this.userEmail = userEmail;
-        this.userYear = userYear;
         this.userRollNumber = userRollNumber;
         this.userContactNumber = userContactNumber;
         this.userAbout = userAbout;
         this.userFollowedBodies = userFollowedBodies;
         this.userFollowedBodiesID = userFollowedBodiesID;
+        this.userWebsiteURL = userWebsiteURL;
+        this.userLDAPId = userLDAPID;
     }
 
     public static User fromString(String json) {
@@ -119,14 +123,6 @@ public class User {
         this.userEmail = userEmail;
     }
 
-    public int getUserYear() {
-        return userYear;
-    }
-
-    public void setUserYear(int userYear) {
-        this.userYear = userYear;
-    }
-
     public String getUserRollNumber() {
         return userRollNumber;
     }
@@ -165,6 +161,22 @@ public class User {
 
     public void setUserFollowedBodiesID(List<String> userFollowedBodiesID) {
         this.userFollowedBodiesID = userFollowedBodiesID;
+    }
+
+    public String getUserWebsiteURL() {
+        return userWebsiteURL;
+    }
+
+    public void setUserWebsiteURL(String userWebsiteURL) {
+        this.userWebsiteURL = userWebsiteURL;
+    }
+
+    public String getUserLDAPId() {
+        return userLDAPId;
+    }
+
+    public void setUserLDAPId(String userLDAPId) {
+        this.userLDAPId = userLDAPId;
     }
 
     @Override
