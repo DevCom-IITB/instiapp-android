@@ -31,7 +31,7 @@ public class EventCreateRequest {
         this.allDayEvent = allDayEvent;
         this.eventVenueNames = eventVenueNames;
         this.eventBodiesID = eventBodiesID;
-         }
+    }
 
     public String getEventName() {
         return eventName;
