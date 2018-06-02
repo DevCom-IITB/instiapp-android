@@ -2,6 +2,7 @@ package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -49,6 +50,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
     Button interestedButton;
     Button notGoingButton;
     ImageButton shareEventButton;
+    ImageButton webEventButton;
     String TAG = "EventFragment";
 
     public EventFragment() {
@@ -85,6 +87,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
         interestedButton = getActivity().findViewById(R.id.interested_button);
         notGoingButton = getActivity().findViewById(R.id.not_going_button);
         shareEventButton = getActivity().findViewById(R.id.share_event_button);
+        webEventButton = getActivity().findViewById(R.id.web_event_button);
 
         Picasso.with(getContext()).load(event.getEventImageURL()).into(eventPicture);
         eventTitle.setText(event.getEventName());
@@ -125,6 +128,18 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
                 i.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
                 i.putExtra(Intent.EXTRA_TEXT, shareUrl);
                 startActivity(Intent.createChooser(i, "Share URL"));
+            }
+        });
+       if (event.getEventWebsiteURL() != null)
+      {
+        webEventButton.setVisibility(View.VISIBLE);
+      }
+        webEventButton.setOnClickListener(new View.OnClickListener() {
+           String eventwebURL = event.getEventWebsiteURL();
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(eventwebURL));
+                startActivity(browserIntent);
             }
         });
     }

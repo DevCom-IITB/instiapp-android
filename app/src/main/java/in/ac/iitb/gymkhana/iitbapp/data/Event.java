@@ -60,7 +60,7 @@ public class Event {
     @ColumnInfo(name = "website_url")
     @SerializedName("website_url")
     String eventWebsiteURL;
-
+  
     public Event(String eventID, String eventStrID, String eventName, String eventDescription, String eventImageURL, Timestamp eventStartTime, Timestamp eventEndTime, boolean allDayEvent, List<Venue> eventVenues, List<Body> eventBodies, int eventInterestedCount, int eventGoingCount, List<User> eventInterested, List<User> eventGoing, String eventWebsiteURL) {
         this.eventID = eventID;
         this.eventStrID = eventStrID;
