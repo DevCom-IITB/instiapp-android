@@ -103,4 +103,33 @@ public class Converters {
         String json = gson.toJson(timestamp);
         return json;
     }
+
+    @TypeConverter
+    public static Body bodyfromString(String value){
+        Type listType = new TypeToken<Body>(){
+        }.getType();
+        return new Gson().fromJson(value,listType);
+    }
+
+    @TypeConverter
+    public static String stringfromBody(Body body){
+        Gson gson = new Gson();
+        String json = gson.toJson(body);
+        return json;
+    }
+
+    @TypeConverter
+    public static List<String> stringsfromString(String value){
+        Type listType = new TypeToken<List<String>>(){
+        }.getType();
+        return new Gson().fromJson(value,listType);
+    }
+
+    @TypeConverter
+    public static String stringfromStrings(List<String> list) {
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        return json;
+    }
+
 }
