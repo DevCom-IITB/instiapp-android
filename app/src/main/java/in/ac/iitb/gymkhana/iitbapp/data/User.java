@@ -55,7 +55,7 @@ public class User {
     @SerializedName("ldap_id")
     String userLDAPId;
 
-    public User(String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, String userWebsiteURL, String userLDAPID) {
+    public User(String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, String userWebsiteURL, String userLDAPId) {
         this.userID = userID;
         this.userName = userName;
         this.userProfilePictureUrl = userProfilePictureUrl;
@@ -68,7 +68,7 @@ public class User {
         this.userFollowedBodies = userFollowedBodies;
         this.userFollowedBodiesID = userFollowedBodiesID;
         this.userWebsiteURL = userWebsiteURL;
-        this.userLDAPId = userLDAPID;
+        this.userLDAPId = userLDAPId;
     }
 
     public static User fromString(String json) {
