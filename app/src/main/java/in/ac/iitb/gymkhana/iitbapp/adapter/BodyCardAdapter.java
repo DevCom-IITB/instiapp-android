@@ -22,8 +22,7 @@ public class BodyCardAdapter extends RecyclerView.Adapter<BodyCardAdapter.ViewHo
     private List<Body> bodyList;
     private ItemClickListener itemClickListener;
     private Context context;
-
-    BodyCardAdapter( List<Body> bodyList, ItemClickListener itemClickListener){
+    public BodyCardAdapter( List<Body> bodyList, ItemClickListener itemClickListener){
         this.bodyList = bodyList;
         this.itemClickListener = itemClickListener;
     }
