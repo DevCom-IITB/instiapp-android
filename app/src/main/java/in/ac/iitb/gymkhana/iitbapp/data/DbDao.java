@@ -21,6 +21,12 @@ public interface DbDao {
     @Query("SELECT * FROM venues")
     List<Venue> getAllVenues();
 
+    @Query("SELECT * FROM users")
+    List<User> getAllUsers();
+
+    @Query("SELECT * FROM roles")
+    List<Role> getAllRoles();
+
     @Query("SELECT * FROM bodies WHERE id == :id")
     public Body[] getBody(String id);
 
@@ -33,8 +39,17 @@ public interface DbDao {
     @Query("SELECT COUNT(*) from bodies")
     int countBodies();
 
+    @Query("SELECT COUNT(*) from users")
+    int countUsers();
+
+    @Query("SELECT COUNT(*) from roles")
+    int countRoles();
+
     @Insert
     void insertEvents(List<Event> events);
+
+    @Insert
+    void insertEvent(Event event);
 
     @Insert
     void insertBodies(List<Body> bodies);
@@ -45,6 +60,21 @@ public interface DbDao {
     @Insert
     void insertVenues(List<Venue> venues);
 
+    @Insert
+    void insertVenue(Venue venue);
+
+    @Insert
+    void insertUsers(List<User> users);
+
+    @Insert
+    void insertUser(User user);
+
+    @Insert
+    void insertRoles(List<Role> roles);
+
+    @Insert
+    void insertRole(Role role);
+
     @Delete
     void deleteEvent(Event event);
 
@@ -54,6 +84,12 @@ public interface DbDao {
     @Delete
     void deleteBody(Body body);
 
+    @Delete
+    void deleteUser(User user);
+
+    @Delete
+    void deleteRole(Role role);
+
     @Query("DELETE from events")
     void deleteEvents();
 
@@ -62,4 +98,10 @@ public interface DbDao {
 
     @Query("DELETE from bodies")
     void deleteBodies();
+
+    @Query("DELETE from users")
+    void deleteUsers();
+
+    @Query("DELETE from roles")
+    void deleteRoles();
 }

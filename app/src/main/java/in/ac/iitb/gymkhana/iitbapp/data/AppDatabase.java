@@ -10,7 +10,7 @@ import android.content.Context;
  * Created by mrunz on 14/3/18.
  */
 
-@Database(entities = {Event.class, Body.class, Venue.class}, version = 1)
+@Database(entities = {Event.class, Body.class, Venue.class, User.class, Role.class}, version = 1)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 

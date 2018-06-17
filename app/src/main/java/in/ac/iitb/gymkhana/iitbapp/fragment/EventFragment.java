@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +28,14 @@ import org.w3c.dom.Text;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
+import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.ShareURLMaker;
+import in.ac.iitb.gymkhana.iitbapp.adapter.BodyCardAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
@@ -51,6 +56,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
     Button notGoingButton;
     ImageButton shareEventButton;
     ImageButton webEventButton;
+    RecyclerView bodyRecyclerView;
     String TAG = "EventFragment";
 
     public EventFragment() {
@@ -104,7 +110,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
             eventVenueName.append(", ").append(venue.getVenueName());
         }
 
-        if(((LinearLayout) getActivity().findViewById(R.id.body_container)).getChildCount() == 0) {
+       /* if(((LinearLayout) getActivity().findViewById(R.id.body_container)).getChildCount() == 0) {
             for (Body body : event.getEventBodies()) {
                 Fragment bodyCardFragment = BodyCardFragment.newInstance(body);
                 getChildFragmentManager().beginTransaction()
@@ -112,7 +118,24 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
                         .disallowAddToBackStack()
                         .commit();
             }
-        }
+        }*/
+       final List<Body> bodyList = event.getEventBodies();
+       bodyRecyclerView= (RecyclerView) getActivity().findViewById(R.id.body_card_RecyclerView);
+       BodyCardAdapter bodyCardAdapter = new BodyCardAdapter(bodyList, new ItemClickListener() {
+           @Override
+           public void onItemClick(View v, int position) {
+               Body body = bodyList.get(position);
+               BodyFragment bodyFragment = BodyFragment.newInstance(body);
+               bodyFragment.setArguments(getArguments());
+               FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+               ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
+               ft.addToBackStack(bodyFragment.getTag());
+               ft.commit();
+           }
+       });
+       bodyRecyclerView.setAdapter(bodyCardAdapter);
+       bodyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
 
         if (!eventVenueName.toString().equals(""))
             eventVenue.setText(eventVenueName.toString().substring(2));
