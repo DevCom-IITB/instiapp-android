@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,14 +15,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -32,10 +28,9 @@ import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
-import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.ShareURLMaker;
-import in.ac.iitb.gymkhana.iitbapp.adapter.BodyCardAdapter;
+import in.ac.iitb.gymkhana.iitbapp.adapter.BodyAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
@@ -120,8 +115,8 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
             }
         }*/
        final List<Body> bodyList = event.getEventBodies();
-       bodyRecyclerView= (RecyclerView) getActivity().findViewById(R.id.body_card_RecyclerView);
-       BodyCardAdapter bodyCardAdapter = new BodyCardAdapter(bodyList, new ItemClickListener() {
+       bodyRecyclerView= (RecyclerView) getActivity().findViewById(R.id.body_card_recycler_view);
+       BodyAdapter bodyAdapter = new BodyAdapter(bodyList, new ItemClickListener() {
            @Override
            public void onItemClick(View v, int position) {
                Body body = bodyList.get(position);
@@ -133,7 +128,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
                ft.commit();
            }
        });
-       bodyRecyclerView.setAdapter(bodyCardAdapter);
+       bodyRecyclerView.setAdapter(bodyAdapter);
        bodyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 

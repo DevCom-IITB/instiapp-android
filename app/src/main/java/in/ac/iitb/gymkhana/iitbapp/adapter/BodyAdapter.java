@@ -17,12 +17,12 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.data.Body;
 
 
-public class BodyCardAdapter extends RecyclerView.Adapter<BodyCardAdapter.ViewHolder>{
+public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder>{
 
     private List<Body> bodyList;
     private ItemClickListener itemClickListener;
     private Context context;
-    public BodyCardAdapter( List<Body> bodyList, ItemClickListener itemClickListener){
+    public BodyAdapter(List<Body> bodyList, ItemClickListener itemClickListener){
         this.bodyList = bodyList;
         this.itemClickListener = itemClickListener;
     }
