@@ -38,10 +38,11 @@ import in.ac.iitb.gymkhana.iitbapp.fragment.MapFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MessMenuFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MyEventsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.NotificationsFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragment.PTCellFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.PeopleFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.PlacementBlogFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.ProfileFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.TimetableFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.TrainingBlogFragment;
 
 import static in.ac.iitb.gymkhana.iitbapp.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
 import static in.ac.iitb.gymkhana.iitbapp.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
@@ -202,9 +203,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 MyEventsFragment myeventsFragment = new MyEventsFragment();
                 updateFragment(myeventsFragment);
                 break;
-            case R.id.nav_pt_cell:
-                PTCellFragment ptcellFragment = new PTCellFragment();
-                updateFragment(ptcellFragment);
+            case R.id.nav_placement_blog:
+                PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
+                updateFragment(placementBlogFragment);
+                break;
+            case R.id.nav_training_blog:
+                TrainingBlogFragment trainingBlogFragment = new TrainingBlogFragment();
+                updateFragment(trainingBlogFragment);
                 break;
             case R.id.nav_mess_menu:
                 MessMenuFragment messmenuFragment = new MessMenuFragment();

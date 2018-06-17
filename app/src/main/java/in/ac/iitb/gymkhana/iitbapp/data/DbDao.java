@@ -7,9 +7,6 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-/**
- * Created by mrunz on 13/3/18.
- */
 @Dao
 public interface DbDao {
     @Query("SELECT * FROM events")
@@ -26,6 +23,12 @@ public interface DbDao {
 
     @Query("SELECT * FROM roles")
     List<Role> getAllRoles();
+
+    @Query("SELECT * FROM placementBlogPosts")
+    List<PlacementBlogPost> getAllPlacementBlogPosts();
+
+    @Query("SELECT * FROM trainingBlogPosts")
+    List<TrainingBlogPost> getAllTrainingBlogPosts();
 
     @Query("SELECT * FROM bodies WHERE id == :id")
     public Body[] getBody(String id);
@@ -75,6 +78,18 @@ public interface DbDao {
     @Insert
     void insertRole(Role role);
 
+    @Insert
+    void insertPlacementBlogPost(PlacementBlogPost post);
+
+    @Insert
+    void insertPlacementBlogPosts(List<PlacementBlogPost> posts);
+
+    @Insert
+    void insertTrainingBlogPost(TrainingBlogPost post);
+
+    @Insert
+    void insertTrainingBlogPosts(List<TrainingBlogPost> posts);
+
     @Delete
     void deleteEvent(Event event);
 
@@ -104,4 +119,10 @@ public interface DbDao {
 
     @Query("DELETE from roles")
     void deleteRoles();
+
+    @Query("DELETE from placementBlogPosts")
+    void deletePlacementBlogPosts();
+
+    @Query("DELETE from trainingBlogPosts")
+    void deleteTrainingBlogPosts();
 }

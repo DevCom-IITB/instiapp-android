@@ -13,10 +13,16 @@
             android:id="@+id/nav_my_events"
             android:icon="@drawable/ic_event"
             android:title="My Events" />
+
         <item
-            android:id="@+id/nav_pt_cell"
+            android:id="@+id/nav_placement_blog"
             android:icon="@drawable/ic_work_black_48dp"
-            android:title="PT Cell" />
+            android:title="Placement Blog" />
+
+        <item
+            android:id="@+id/nav_training_blog"
+            android:icon="@drawable/ic_work_black_48dp"
+            android:title="Training Blog" />
 
         <item
             android:id="@+id/nav_mess_menu"
