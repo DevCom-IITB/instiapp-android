@@ -48,6 +48,12 @@ public class User {
     @ColumnInfo(name = "followed_bodies_id")
     @SerializedName("followed_bodies_id")
     List<String> userFollowedBodiesID;
+    @ColumnInfo(name = "roles")
+    @SerializedName("roles")
+    List<Role>userRoles;
+    @ColumnInfo(name="institute_roles")
+    @SerializedName("institute_roles")
+    List<Role>userInstituteRoles;
     @ColumnInfo(name = "website_url")
     @SerializedName("website_url")
     String userWebsiteURL;
@@ -55,7 +61,7 @@ public class User {
     @SerializedName("ldap_id")
     String userLDAPId;
 
-    public User(String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, String userWebsiteURL, String userLDAPID) {
+    public User(String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, List<Role> userRoles, List<Role> userInstituteRoles, String userWebsiteURL, String userLDAPId) {
         this.userID = userID;
         this.userName = userName;
         this.userProfilePictureUrl = userProfilePictureUrl;
@@ -67,8 +73,10 @@ public class User {
         this.userAbout = userAbout;
         this.userFollowedBodies = userFollowedBodies;
         this.userFollowedBodiesID = userFollowedBodiesID;
+        this.userRoles = userRoles;
+        this.userInstituteRoles = userInstituteRoles;
         this.userWebsiteURL = userWebsiteURL;
-        this.userLDAPId = userLDAPID;
+        this.userLDAPId = userLDAPId;
     }
 
     public static User fromString(String json) {
@@ -161,6 +169,22 @@ public class User {
 
     public void setUserFollowedBodiesID(List<String> userFollowedBodiesID) {
         this.userFollowedBodiesID = userFollowedBodiesID;
+    }
+
+    public List<Role> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(List<Role> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    public List<Role> getUserInstituteRoles() {
+        return userInstituteRoles;
+    }
+
+    public void setUserInstituteRoles(List<Role> userInstituteRoles) {
+        this.userInstituteRoles = userInstituteRoles;
     }
 
     public String getUserWebsiteURL() {
