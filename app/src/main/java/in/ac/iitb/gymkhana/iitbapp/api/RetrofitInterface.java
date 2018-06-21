@@ -8,6 +8,7 @@ import in.ac.iitb.gymkhana.iitbapp.api.model.ImageUploadRequest;
 import in.ac.iitb.gymkhana.iitbapp.api.model.ImageUploadResponse;
 import in.ac.iitb.gymkhana.iitbapp.api.model.LoginResponse;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedResponse;
+import in.ac.iitb.gymkhana.iitbapp.data.HostelMessMenu;
 import in.ac.iitb.gymkhana.iitbapp.data.PlacementBlogPost;
 import in.ac.iitb.gymkhana.iitbapp.data.TrainingBlogPost;
 import in.ac.iitb.gymkhana.iitbapp.data.User;
@@ -47,6 +48,8 @@ public interface RetrofitInterface {
     @GET("training-blog")
     Call<List<TrainingBlogPost>> getTrainingBlogFeed(@Header("Cookie") String sessionID);
 
+    @GET("mess")
+    Call<List<HostelMessMenu>> getInstituteMessMenu(@Header("Cookie") String sessionID);
 //    @POST("getNotifications/")
 //    Call<NotificationsResponse> getNotifications(@Body NotificationsRequest notificationsRequest);
 }

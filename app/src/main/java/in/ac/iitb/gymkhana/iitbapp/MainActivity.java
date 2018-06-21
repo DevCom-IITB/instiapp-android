@@ -212,8 +212,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 updateFragment(trainingBlogFragment);
                 break;
             case R.id.nav_mess_menu:
-                MessMenuFragment messmenuFragment = new MessMenuFragment();
-                updateFragment(messmenuFragment);
+                MessMenuFragment messMenuFragment = new MessMenuFragment();
+                updateFragment(messMenuFragment);
                 break;
             case R.id.nav_gc_rankings:
                 GCRankingsFragment gcrankingsFragment = new GCRankingsFragment();
@@ -269,6 +269,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             bundle = new Bundle();
         }
         bundle.putString(Constants.SESSION_ID, session.pref.getString(Constants.SESSION_ID, "Error"));
+        if (fragment instanceof MessMenuFragment)
+            bundle.putString(Constants.USER_HOSTEL, currentUser.getHostel());
         fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
         if (fragment instanceof FeedFragment)

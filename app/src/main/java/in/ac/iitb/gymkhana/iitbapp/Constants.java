@@ -8,6 +8,7 @@ public class Constants {
     public static final String NOTIFICATIONS_RESPONSE_JSON = "notifications_json";
     public static final String EVENT_JSON = "event_json";
     public static final String USER_ID = "user_id";
+    public static final String USER_HOSTEL = "user_hostel";
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public static final String PREF_NAME = "LoggedInPref";

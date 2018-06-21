@@ -12,4 +12,24 @@
     <string name="Cancel">Cancel</string>
     <string name="gps_network_not_enabled">Location is not enabled. Please turn on your location from the settings.</string>
     <string name="open_location_settings">Open Location Settings</string>
+
+    <string-array name="hostels_array">
+        <item>Hostel 1</item>
+        <item>Hostel 2</item>
+        <item>Hostel 3</item>
+        <item>Hostel 4</item>
+        <item>Hostel 5</item>
+        <item>Hostel 6</item>
+        <item>Hostel 7</item>
+        <item>Hostel 8</item>
+        <item>Hostel 9</item>
+        <item>Hostel 10</item>
+        <item>Hostel 11</item>
+        <item>Hostel 12</item>
+        <item>Hostel 13</item>
+        <item>Hostel 14</item>
+        <item>Hostel 15</item>
+        <item>Hostel 16</item>
+        <item>Tansa House</item>
+    </string-array>
 </resources>

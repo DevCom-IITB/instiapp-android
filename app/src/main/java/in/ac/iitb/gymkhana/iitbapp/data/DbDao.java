@@ -30,6 +30,9 @@ public interface DbDao {
     @Query("SELECT * FROM trainingBlogPosts")
     List<TrainingBlogPost> getAllTrainingBlogPosts();
 
+    @Query("SELECT * FROM hostelMessMenus")
+    List<HostelMessMenu> getAllHostelMessMenus();
+
     @Query("SELECT * FROM bodies WHERE id == :id")
     public Body[] getBody(String id);
 
@@ -47,6 +50,9 @@ public interface DbDao {
 
     @Query("SELECT COUNT(*) from roles")
     int countRoles();
+
+    @Query("SELECT COUNT(*) from hostelMessMenus")
+    int countHostelMessMenus();
 
     @Insert
     void insertEvents(List<Event> events);
@@ -90,6 +96,12 @@ public interface DbDao {
     @Insert
     void insertTrainingBlogPosts(List<TrainingBlogPost> posts);
 
+    @Insert
+    void insertHostelMessMenu(HostelMessMenu hostelMessMenu);
+
+    @Insert
+    void insertHostelMessMenus(List<HostelMessMenu> hostelMessMenus);
+
     @Delete
     void deleteEvent(Event event);
 
@@ -125,4 +137,7 @@ public interface DbDao {
 
     @Query("DELETE from trainingBlogPosts")
     void deleteTrainingBlogPosts();
+
+    @Query("DELETE from hostelMessMenus")
+    void deleteHostelMessMenus();
 }

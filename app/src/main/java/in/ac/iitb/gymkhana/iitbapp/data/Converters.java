@@ -11,10 +11,6 @@ import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.List;
 
-/**
- * Created by mrunz on 14/3/18.
- */
-
 public class Converters {
     @TypeConverter
     public static List<Event> eventsfromString(String value) {
@@ -73,16 +69,16 @@ public class Converters {
     }
 
     @TypeConverter
-    public static List<Role> rolesfromString(String value){
-        Type listType = new TypeToken<List<Role>>(){
+    public static List<Role> rolesfromString(String value) {
+        Type listType = new TypeToken<List<Role>>() {
         }.getType();
         return new Gson().fromJson(value, listType);
     }
 
     @TypeConverter
-    public static String stringfromRoles(List<Role> list){
-        Gson gson =  new Gson();
-        String json=  gson.toJson(list);
+    public static String stringfromRoles(List<Role> list) {
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
         return json;
     }
 
@@ -105,24 +101,24 @@ public class Converters {
     }
 
     @TypeConverter
-    public static Body bodyfromString(String value){
-        Type listType = new TypeToken<Body>(){
+    public static Body bodyfromString(String value) {
+        Type listType = new TypeToken<Body>() {
         }.getType();
-        return new Gson().fromJson(value,listType);
+        return new Gson().fromJson(value, listType);
     }
 
     @TypeConverter
-    public static String stringfromBody(Body body){
+    public static String stringfromBody(Body body) {
         Gson gson = new Gson();
         String json = gson.toJson(body);
         return json;
     }
 
     @TypeConverter
-    public static List<String> stringsfromString(String value){
-        Type listType = new TypeToken<List<String>>(){
+    public static List<String> stringsfromString(String value) {
+        Type listType = new TypeToken<List<String>>() {
         }.getType();
-        return new Gson().fromJson(value,listType);
+        return new Gson().fromJson(value, listType);
     }
 
     @TypeConverter
@@ -132,4 +128,17 @@ public class Converters {
         return json;
     }
 
+    @TypeConverter
+    public static List<MessMenu> messMenusfromString(String value) {
+        Type listType = new TypeToken<List<MessMenu>>() {
+        }.getType();
+        return new Gson().fromJson(value, listType);
+    }
+
+    @TypeConverter
+    public static String stringfromMessMenus(List<MessMenu> list) {
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        return json;
+    }
 }
