@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -26,7 +25,6 @@ import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
 import in.ac.iitb.gymkhana.iitbapp.data.HostelMessMenu;
-import in.ac.iitb.gymkhana.iitbapp.data.MessMenu;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -131,7 +129,6 @@ public class MessMenuFragment extends BaseFragment {
                 return hostelMessMenu;
             }
         }
-        Toast.makeText(getContext(), "Could not retrieve your hostel menu. Please contact your mess secretary/councillor.", Toast.LENGTH_LONG).show();
         return null;
     }
 
@@ -169,7 +166,8 @@ public class MessMenuFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(HostelMessMenu hostelMessMenu) {
-            displayMessMenu(hostelMessMenu);
+            if (hostelMessMenu != null)
+                displayMessMenu(hostelMessMenu);
         }
     }
 }
