@@ -19,4 +19,5 @@ public class Constants {
     public static final int STATUS_GOING = 2;
     public static final int STATUS_INTERESTED = 1;
     public static final int STATUS_NOT_GOING = 0;
+    public static final String BODY_JSON= "body_json";
 }
