@@ -33,11 +33,14 @@ public interface DbDao {
     @Query("SELECT * FROM hostelMessMenus")
     List<HostelMessMenu> getAllHostelMessMenus();
 
-    @Query("SELECT * FROM bodies WHERE id == :id")
-    public Body[] getBody(String id);
+    @Query("SELECT * FROM news")
+    List<NewsArticle> getAllNewsArticles();
 
     @Query("SELECT COUNT(*) from events")
     int countEvents();
+
+    @Query("SELECT * FROM bodies WHERE id == :id")
+    public Body[] getBody(String id);
 
     @Query("SELECT COUNT(*) from venues")
     int countVenues();
@@ -102,6 +105,12 @@ public interface DbDao {
     @Insert
     void insertHostelMessMenus(List<HostelMessMenu> hostelMessMenus);
 
+    @Insert
+    void insertNewsArticle(NewsArticle newsArticle);
+
+    @Insert
+    void insertNewsArticles(List<NewsArticle> newsArticles);
+
     @Delete
     void deleteEvent(Event event);
 
@@ -140,4 +149,7 @@ public interface DbDao {
 
     @Query("DELETE from hostelMessMenus")
     void deleteHostelMessMenus();
+
+    @Query("DELETE from news")
+    void deleteNewsArticles();
 }

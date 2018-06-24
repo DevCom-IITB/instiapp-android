@@ -37,6 +37,7 @@ import in.ac.iitb.gymkhana.iitbapp.fragment.GCRankingsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MapFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MessMenuFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MyEventsFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.NewsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.NotificationsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.PeopleFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.PlacementBlogFragment;
@@ -202,6 +203,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_my_events:
                 MyEventsFragment myeventsFragment = new MyEventsFragment();
                 updateFragment(myeventsFragment);
+                break;
+            case R.id.nav_news:
+                NewsFragment newsFragment = new NewsFragment();
+                updateFragment(newsFragment);
                 break;
             case R.id.nav_placement_blog:
                 PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
