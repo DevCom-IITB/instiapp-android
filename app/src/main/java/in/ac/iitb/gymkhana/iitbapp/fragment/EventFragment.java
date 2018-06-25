@@ -102,7 +102,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
         StringBuilder eventVenueName = new StringBuilder();
 
         for (Venue venue : event.getEventVenues()) {
-            eventVenueName.append(", ").append(venue.getVenueName());
+            eventVenueName.append(", ").append(venue.getVenueShortName());
         }
 
        /* if(((LinearLayout) getActivity().findViewById(R.id.body_container)).getChildCount() == 0) {

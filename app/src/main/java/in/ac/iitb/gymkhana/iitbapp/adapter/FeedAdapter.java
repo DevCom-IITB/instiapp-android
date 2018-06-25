@@ -63,7 +63,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         }
         StringBuilder eventVenueName = new StringBuilder();
         for (Venue venue : currentEvent.getEventVenues()) {
-            eventVenueName.append(", ").append(venue.getVenueName());
+            eventVenueName.append(", ").append(venue.getVenueShortName());
         }
         if (!eventVenueName.toString().equals(""))
             viewHolder.eventVenue.setText(eventVenueName.toString().substring(2));
