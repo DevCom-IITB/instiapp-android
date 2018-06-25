@@ -39,15 +39,11 @@ public class BodyCardFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param arg_body Body passed.
      * @return A new instance of fragment BodyCardFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BodyCardFragment newInstance(Body arg_body) {
+    public static BodyCardFragment newInstance() {
         BodyCardFragment fragment = new BodyCardFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_BODY, new Gson().toJson(arg_body));
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -62,27 +58,6 @@ public class BodyCardFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.body_card_layout);
-        ImageView bodyAvatar = (ImageView) getView().findViewById(R.id.body_card_avatar);
-        TextView bodyName = (TextView) getView().findViewById(R.id.body_card_name);
-        TextView bodyDescription = (TextView) getView().findViewById(R.id.body_card_description);
-
-        bodyName.setText(body.getBodyName());
-        bodyDescription.setText(body.getBodyShortDescription());
-        Picasso.with(getContext()).load(body.getBodyImageURL()).into(bodyAvatar);
-
-        linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /* Show the next fragment and destroy the page */
-                BodyFragment bodyFragment = BodyFragment.newInstance(body);
-                bodyFragment.setArguments(getArguments());
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
-                ft.addToBackStack(bodyFragment.getTag());
-                ft.commit();
-            }
-        });
     }
 
 
