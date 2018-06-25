@@ -1,18 +1,27 @@
 package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
+import in.ac.iitb.gymkhana.iitbapp.ShareURLMaker;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
@@ -20,6 +29,7 @@ import in.ac.iitb.gymkhana.iitbapp.data.Body;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.noties.markwon.Markwon;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -102,12 +112,41 @@ public class BodyFragment extends Fragment {
         });
     }
 
-    private void displayBody(Body body) {
+    private void displayBody(final Body body) {
         TextView bodyName = (TextView) getView().findViewById(R.id.body_name);
         TextView bodyDescription = (TextView) getView().findViewById(R.id.body_description);
+        ImageView eventPicture = (ImageView) getActivity().findViewById(R.id.body_picture);
+        ImageButton webBodyButton = getActivity().findViewById(R.id.web_body_button);
+        ImageButton shareBodyButton = getActivity().findViewById(R.id.share_body_button);
 
         bodyName.setText(body.getBodyName());
-        bodyDescription.setText(body.getBodyDescription());
+        Markwon.setMarkdown(bodyDescription, body.getBodyDescription());
+        Picasso.with(getContext()).load(body.getBodyImageURL()).into(eventPicture);
+
+        if (body.getBodyWebsiteURL() != null && !body.getBodyWebsiteURL().isEmpty())
+        {
+            webBodyButton.setVisibility(View.VISIBLE);
+            webBodyButton.setOnClickListener(new View.OnClickListener() {
+                String bodywebURL = body.getBodyWebsiteURL();
+                @Override
+                public void onClick(View view) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(bodywebURL));
+                    startActivity(browserIntent);
+                }
+            });
+        }
+
+        shareBodyButton.setOnClickListener(new View.OnClickListener() {
+            String shareUrl = ShareURLMaker.getBodyURL(body);
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
+                i.putExtra(Intent.EXTRA_TEXT, shareUrl);
+                startActivity(Intent.createChooser(i, "Share URL"));
+            }
+        });
     }
 
     @Override
