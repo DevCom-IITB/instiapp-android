@@ -163,24 +163,6 @@
                     android:text="Interested"
                     android:textColor="@color/colorGray" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginTop="10dp"
-                    android:background="#aaa">
-
-                </View>
-
-                <Button
-                    android:id="@+id/not_going_button"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="0dp"
-                    android:layout_weight="1"
-                    android:text="Not Going"
-                    android:textColor="@color/colorGray" />
             </LinearLayout>
 
             <View

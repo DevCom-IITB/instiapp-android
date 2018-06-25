@@ -64,6 +64,9 @@ public interface DbDao {
     @Insert
     void insertEvent(Event event);
 
+    @Update
+    void updateEvent(Event event);
+
     @Insert
     void insertBodies(List<Body> bodies);
 

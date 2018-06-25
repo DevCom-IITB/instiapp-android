@@ -3,6 +3,7 @@ package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -28,11 +29,13 @@ import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
+import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.ShareURLMaker;
 import in.ac.iitb.gymkhana.iitbapp.adapter.BodyAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
+import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
 import in.ac.iitb.gymkhana.iitbapp.data.Body;
 import in.ac.iitb.gymkhana.iitbapp.data.Venue;
@@ -44,7 +47,7 @@ import ru.noties.markwon.Markwon;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EventFragment extends BaseFragment implements View.OnClickListener {
+public class EventFragment extends BaseFragment {
     Event event;
     Button goingButton;
     Button interestedButton;
@@ -52,6 +55,7 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
     ImageButton shareEventButton;
     ImageButton webEventButton;
     RecyclerView bodyRecyclerView;
+    private AppDatabase appDatabase;
     String TAG = "EventFragment";
 
     public EventFragment() {
@@ -70,6 +74,9 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
     public void onStart() {
         super.onStart();
 
+        /* Initialize */
+        appDatabase = AppDatabase.getAppDatabase(getContext());
+
         Bundle bundle = getArguments();
         String eventJson = bundle.getString(Constants.EVENT_JSON);
         Log.d(TAG, "onStart: " + eventJson);
@@ -86,7 +93,6 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
         TextView eventDescription = (TextView) getActivity().findViewById(R.id.event_page_description);
         goingButton = getActivity().findViewById(R.id.going_button);
         interestedButton = getActivity().findViewById(R.id.interested_button);
-        notGoingButton = getActivity().findViewById(R.id.not_going_button);
         shareEventButton = getActivity().findViewById(R.id.share_event_button);
         webEventButton = getActivity().findViewById(R.id.web_event_button);
 
@@ -124,9 +130,14 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
 
         if (!eventVenueName.toString().equals(""))
             eventVenue.setText(eventVenueName.toString().substring(2));
-        goingButton.setOnClickListener(this);
-        interestedButton.setOnClickListener(this);
-        notGoingButton.setOnClickListener(this);
+
+        interestedButton.setOnClickListener(getUESOnClickListener(1));
+
+        goingButton.setOnClickListener(getUESOnClickListener(2));
+
+        interestedButton.setBackgroundColor(getResources().getColor(event.getEventUserUes() == 1 ? R.color.colorAccent : R.color.colorWhite));
+        goingButton.setBackgroundColor(getResources().getColor(event.getEventUserUes() == 2 ? R.color.colorAccent : R.color.colorWhite));
+
         shareEventButton.setOnClickListener(new View.OnClickListener() {
             String shareUrl = ShareURLMaker.getEventURL(event);
             @Override
@@ -152,38 +163,38 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
       }
     }
 
-    @Override
-    public void onClick(View view) {
-        goingButton.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-        interestedButton.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-        notGoingButton.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-        view.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        int status = 0;
-        switch (view.getId()) {
-            case R.id.going_button:
-                status = Constants.STATUS_GOING;
-                break;
-            case R.id.interested_button:
-                status = Constants.STATUS_INTERESTED;
-                break;
-            case R.id.not_going_button:
-                status = Constants.STATUS_NOT_GOING;
-                break;
-        }
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.updateUserEventStatus("sessionid=" + getArguments().getString(Constants.SESSION_ID), event.getEventID(), status).enqueue(new Callback<Void>() {
+    View.OnClickListener getUESOnClickListener(final int status) {
+        return new View.OnClickListener() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    //TODO: Set flag for details updated so as to not try again when connected
-                }
-            }
+            public void onClick(View view) {
+                final int endStatus = event.getEventUserUes() == status ? 0 : status;
+                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                retrofitInterface.updateUserEventStatus(((MainActivity) getActivity()).getSessionIDHeader(), event.getEventID(), endStatus).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            event.setEventUserUes(endStatus);
+                            new updateDbEvent().execute(event);
+                            interestedButton.setBackgroundColor(getResources().getColor(endStatus == 1 ? R.color.colorAccent : R.color.colorWhite));
+                            goingButton.setBackgroundColor(getResources().getColor(endStatus == 2 ? R.color.colorAccent : R.color.colorWhite));
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                //TODO: Store the status offline and update when connected
-                Toast.makeText(getContext(), "Network Error", Toast.LENGTH_LONG).show();
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(getContext(), "Network Error", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
-        });
+        };
     }
+
+    private class updateDbEvent extends AsyncTask<Event, Void, Integer> {
+        @Override
+        protected Integer doInBackground(Event... event) {
+            appDatabase.dbDao().updateEvent(event[0]);
+            return 1;
+        }
+    }
+
 }
