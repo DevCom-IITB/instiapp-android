@@ -121,7 +121,6 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
            public void onItemClick(View v, int position) {
                Body body = bodyList.get(position);
                BodyFragment bodyFragment = BodyFragment.newInstance(body);
-               bodyFragment.setArguments(getArguments());
                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
                ft.addToBackStack(bodyFragment.getTag());
