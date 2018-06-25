@@ -3,6 +3,7 @@ package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -127,10 +128,38 @@ public class BodyFragment extends Fragment {
         ImageView eventPicture = (ImageView) getActivity().findViewById(R.id.body_picture);
         ImageButton webBodyButton = getActivity().findViewById(R.id.web_body_button);
         ImageButton shareBodyButton = getActivity().findViewById(R.id.share_body_button);
+        final Button followButton = getActivity().findViewById(R.id.follow_button);
 
+        /* Set body information */
         bodyName.setText(body.getBodyName());
         Markwon.setMarkdown(bodyDescription, body.getBodyDescription());
         Picasso.with(getContext()).load(body.getBodyImageURL()).into(eventPicture);
+
+        /* Check if user is already following
+         * Initialize follow button */
+        followButton.setBackgroundColor(getResources().getColor(body.getBodyUserFollows() ? R.color.colorAccent : R.color.colorWhite));
+
+        followButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                retrofitInterface.updateBodyFollowing(((MainActivity) getActivity()).getSessionIDHeader(), body.getBodyID(), body.getBodyUserFollows() ? 0:1).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            body.setBodyUserFollows(!body.getBodyUserFollows());
+                            new updateDbBody().execute(body);
+                            followButton.setBackgroundColor(getResources().getColor(body.getBodyUserFollows() ? R.color.colorAccent : R.color.colorWhite));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(getContext(), "Network Error", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
 
         /* Initialize web button */
         if (body.getBodyWebsiteURL() != null && !body.getBodyWebsiteURL().isEmpty())
@@ -178,6 +207,14 @@ public class BodyFragment extends Fragment {
         });
         eventRecyclerView.setAdapter(eventAdapter);
         eventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    private class updateDbBody extends AsyncTask<Body, Void, Integer> {
+        @Override
+        protected Integer doInBackground(Body... body) {
+            appDatabase.dbDao().updateBody(body[0]);
+            return 1;
+        }
     }
 
     @Override

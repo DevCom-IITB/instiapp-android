@@ -49,8 +49,11 @@ public class Body {
     @ColumnInfo(name = "blog_url")
     @SerializedName("blog_url")
     String bodyBlogURL;
+    @ColumnInfo(name = "user_follows")
+    @SerializedName("user_follows")
+    Boolean bodyUserFollows;
 
-    public Body(String bodyID, String bodyStrID, String bodyName, String bodyShortDescription, String bodyDescription, String bodyImageURL, List<Body> bodyChildren, List<Body> bodyParents, List<Event> bodyEvents, int bodyFollowersCount, String bodyWebsiteURL, String bodyBlogURL) {
+    public Body(String bodyID, String bodyStrID, String bodyName, String bodyShortDescription, String bodyDescription, String bodyImageURL, List<Body> bodyChildren, List<Body> bodyParents, List<Event> bodyEvents, int bodyFollowersCount, String bodyWebsiteURL, String bodyBlogURL, Boolean bodyUserFollows) {
         this.bodyID = bodyID;
         this.bodyStrID = bodyStrID;
         this.bodyName = bodyName;
@@ -63,6 +66,7 @@ public class Body {
         this.bodyFollowersCount = bodyFollowersCount;
         this.bodyWebsiteURL = bodyWebsiteURL;
         this.bodyBlogURL = bodyBlogURL;
+        this.bodyUserFollows = bodyUserFollows;
     }
 
     public String getBodyID() {
@@ -161,4 +165,11 @@ public class Body {
         this.bodyBlogURL = bodyBlogURL;
     }
 
+    public Boolean getBodyUserFollows() {
+        return bodyUserFollows;
+    }
+
+    public void setBodyUserFollows(Boolean bodyUserFollows) {
+        this.bodyUserFollows = bodyUserFollows;
+    }
 }
