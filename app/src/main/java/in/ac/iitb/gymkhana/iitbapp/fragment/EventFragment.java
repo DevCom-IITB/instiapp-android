@@ -147,18 +147,18 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
                 startActivity(Intent.createChooser(i, "Share URL"));
             }
         });
-       if (event.getEventWebsiteURL() != null)
+       if (event.getEventWebsiteURL() != null && !event.getEventWebsiteURL().isEmpty())
       {
-        webEventButton.setVisibility(View.VISIBLE);
+          webEventButton.setVisibility(View.VISIBLE);
+          webEventButton.setOnClickListener(new View.OnClickListener() {
+              String eventwebURL = event.getEventWebsiteURL();
+              @Override
+              public void onClick(View view) {
+                  Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(eventwebURL));
+                  startActivity(browserIntent);
+              }
+          });
       }
-        webEventButton.setOnClickListener(new View.OnClickListener() {
-           String eventwebURL = event.getEventWebsiteURL();
-            @Override
-            public void onClick(View view) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(eventwebURL));
-                startActivity(browserIntent);
-            }
-        });
     }
 
     @Override
