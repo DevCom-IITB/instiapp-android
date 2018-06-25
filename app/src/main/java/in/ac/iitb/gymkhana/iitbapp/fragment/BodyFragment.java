@@ -29,6 +29,7 @@ import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.ShareURLMaker;
 import in.ac.iitb.gymkhana.iitbapp.adapter.BodyAdapter;
+import in.ac.iitb.gymkhana.iitbapp.adapter.EventAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
@@ -157,6 +158,26 @@ public class BodyFragment extends Fragment {
                 startActivity(Intent.createChooser(i, "Share URL"));
             }
         });
+
+        /* Initialize events */
+        final List<Event> eventList = body.getBodyEvents();
+        RecyclerView eventRecyclerView = (RecyclerView) getActivity().findViewById(R.id.event_card_recycler_view);
+        EventAdapter eventAdapter = new EventAdapter(eventList, new ItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                Event event = eventList.get(position);
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.EVENT_JSON, new Gson().toJson(event));
+                EventFragment eventFragment = new EventFragment();
+                eventFragment.setArguments(bundle);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
+                ft.addToBackStack(eventFragment.getTag());
+                ft.commit();
+            }
+        });
+        eventRecyclerView.setAdapter(eventAdapter);
+        eventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     @Override

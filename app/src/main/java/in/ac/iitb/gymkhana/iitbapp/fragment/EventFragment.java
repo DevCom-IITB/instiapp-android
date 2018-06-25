@@ -105,17 +105,8 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
             eventVenueName.append(", ").append(venue.getVenueName());
         }
 
-       /* if(((LinearLayout) getActivity().findViewById(R.id.body_container)).getChildCount() == 0) {
-            for (Body body : event.getEventBodies()) {
-                Fragment bodyCardFragment = BodyCardFragment.newInstance(body);
-                getChildFragmentManager().beginTransaction()
-                        .add(R.id.body_container, bodyCardFragment, getTag())
-                        .disallowAddToBackStack()
-                        .commit();
-            }
-        }*/
        final List<Body> bodyList = event.getEventBodies();
-       bodyRecyclerView= (RecyclerView) getActivity().findViewById(R.id.body_card_recycler_view);
+       bodyRecyclerView = (RecyclerView) getActivity().findViewById(R.id.body_card_recycler_view);
        BodyAdapter bodyAdapter = new BodyAdapter(bodyList, new ItemClickListener() {
            @Override
            public void onItemClick(View v, int position) {
