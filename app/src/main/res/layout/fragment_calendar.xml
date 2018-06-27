@@ -1,41 +1,66 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/calendar_layout"
-    android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E0E0E0"
-    android:theme="@style/CalendarTheme">
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/calendar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#E0E0E0"
+            android:theme="@style/CalendarTheme"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <!-- TODO: Update blank fragment layout -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="#00BCD4" />
+
+                <CalendarView
+
+                    android:id="@+id/simpleCalendarView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:focusedMonthDateColor="#000000"
+                    android:unfocusedMonthDateColor="#FFFFFF" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/simpleCalendarView"
+                    android:layout_marginBottom="19.5dp"
+                    android:layout_marginTop="19.5dp"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/simpleCalendarView"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/round_text_box"
+                    android:gravity="center"
+                    android:text="# Events Today" />
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/calendar_event_card_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:nestedScrollingEnabled="false" />
 
 
-    <!-- TODO: Update blank fragment layout -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#00BCD4" />
+        </LinearLayout>
 
-    <CalendarView
 
-        android:id="@+id/simpleCalendarView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:focusedMonthDateColor="#000000"
-        android:unfocusedMonthDateColor="#FFFFFF" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/simpleCalendarView"
-        android:layout_marginBottom="19.5dp"
-        android:layout_marginTop="19.5dp"
-        android:background="@android:color/darker_gray" />
-
-    <TextView
-        android:layout_width="120dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/simpleCalendarView"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/round_text_box"
-        android:gravity="center"
-        android:text="# Events Today" />
+    </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -45,6 +70,5 @@
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_input_add" />
-
 
 </RelativeLayout>
