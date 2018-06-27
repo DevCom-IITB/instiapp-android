@@ -21,7 +21,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">#ecf833</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@android:color/darker_gray</item>
         <item name="android:textColorPrimaryInverse">@android:color/darker_gray</item>
         <item name="android:windowBackground">@android:color/darker_gray</item>
