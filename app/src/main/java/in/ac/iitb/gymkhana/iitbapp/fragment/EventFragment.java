@@ -121,6 +121,8 @@ public class EventFragment extends BaseFragment implements View.OnClickListener 
            public void onItemClick(View v, int position) {
                Body body = bodyList.get(position);
                BodyFragment bodyFragment = BodyFragment.newInstance(body);
+               Bundle arguments=getArguments();
+               arguments.putString(Constants.BODY_JSON,new Gson().toJson(body));
                bodyFragment.setArguments(getArguments());
                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
