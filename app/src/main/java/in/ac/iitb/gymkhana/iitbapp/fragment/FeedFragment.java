@@ -30,6 +30,7 @@ import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedResponse;
 import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
+import in.ac.iitb.gymkhana.iitbapp.data.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,6 +44,7 @@ public class FeedFragment extends BaseFragment {
     private SwipeRefreshLayout feedSwipeRefreshLayout;
     private AppDatabase appDatabase;
     private FloatingActionButton fab;
+    private User userData;
 
     public FeedFragment() {
         // Required empty public constructor
@@ -57,18 +59,23 @@ public class FeedFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
+//        if (userData.getUserGoingEvents().size() != 0){
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AddEventFragment addEventFragment = new AddEventFragment();
+                    addEventFragment.setArguments(getArguments());
+                    FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                    ft.replace(R.id.relative_layout, addEventFragment);
+                    ft.addToBackStack("addEvent");
+                    ft.commit();
+                }
+            });
+//        }
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddEventFragment addEventFragment = new AddEventFragment();
-                addEventFragment.setArguments(getArguments());
-                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                ft.replace(R.id.relative_layout, addEventFragment);
-                ft.addToBackStack("addEvent");
-                ft.commit();
-            }
-        });
+
         return view;
     }
 

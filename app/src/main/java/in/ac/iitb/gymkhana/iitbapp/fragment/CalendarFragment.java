@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
+import in.ac.iitb.gymkhana.iitbapp.data.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +23,7 @@ public class CalendarFragment extends BaseFragment {
     FloatingActionButton fab;
     private View view;
     private Toast toast;
+    private User userData;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -53,15 +55,21 @@ public class CalendarFragment extends BaseFragment {
 
             }
         });
-        fab.setOnClickListener(new View.OnClickListener() {
-
-
-            @Override
-            public void onClick(View v) {
-                AddEventFragment addEventFragment = new AddEventFragment();
-                ((MainActivity) getActivity()).updateFragment(addEventFragment);
-            }
-        });
+        fab.setVisibility(View.GONE);
+        if (userData.getUserGoingEvents().size() != 0){
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AddEventFragment addEventFragment = new AddEventFragment();
+                    addEventFragment.setArguments(getArguments());
+                    FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                    ft.replace(R.id.relative_layout, addEventFragment);
+                    ft.addToBackStack("addEvent");
+                    ft.commit();
+                }
+            });
+        }
         return view;
 
     }

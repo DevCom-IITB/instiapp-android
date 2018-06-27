@@ -2,7 +2,9 @@ package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.R;
+import in.ac.iitb.gymkhana.iitbapp.adapter.ProfileAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.User;
@@ -26,6 +29,9 @@ import retrofit2.Response;
 public class ProfileFragment extends BaseFragment {
     User user;
 
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -35,8 +41,12 @@ public class ProfileFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        tabLayout = (TabLayout)view.findViewById(R.id.profile_tabs);
+        viewPager = (ViewPager)view.findViewById(R.id.profile_view_pager);
+        viewPager.setAdapter(new ProfileAdapter(getChildFragmentManager()));
+        tabLayout.setupWithViewPager(viewPager);
+        return view;    }
 
     @Override
     public void onStart() {
