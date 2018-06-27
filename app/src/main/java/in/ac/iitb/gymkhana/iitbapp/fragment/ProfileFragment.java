@@ -3,6 +3,9 @@ package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +14,16 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import in.ac.iitb.gymkhana.iitbapp.Constants;
+import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.R;
+import in.ac.iitb.gymkhana.iitbapp.adapter.RoleAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
+import in.ac.iitb.gymkhana.iitbapp.data.Body;
+import in.ac.iitb.gymkhana.iitbapp.data.Role;
 import in.ac.iitb.gymkhana.iitbapp.data.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,6 +76,24 @@ public class ProfileFragment extends BaseFragment {
         TextView userRollNumberTextView = getActivity().findViewById(R.id.user_rollno_profile);
         TextView userEmailIDTextView = getActivity().findViewById(R.id.user_email_profile);
         TextView userContactNumberTextView = getActivity().findViewById(R.id.user_contact_no_profile);
+
+        final List<Role> roleList = user.getUserRoles();
+        RecyclerView userRoleRecyclerView = getActivity().findViewById(R.id.role_recycler_view);
+        RoleAdapter roleAdapter = new RoleAdapter(roleList, new ItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                Role role = roleList.get(position);
+                Body roleBody = role.getRoleBodyDetails();
+                BodyFragment bodyFragment = BodyFragment.newInstance(roleBody);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
+                ft.addToBackStack(bodyFragment.getTag());
+                ft.commit();
+
+            }
+        });
+        userRoleRecyclerView.setAdapter(roleAdapter);
+        userRoleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         Picasso.with(getContext()).load(user.getUserProfilePictureUrl()).into(userProfilePictureImageView);
         userNameTextView.setText(user.getUserName());
