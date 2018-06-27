@@ -16,11 +16,14 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
@@ -65,14 +68,7 @@ public class CalendarFragment extends BaseFragment {
         simpleCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-
-
-                if (toast != null) {
-                    toast.cancel();
-                }
                 String sdate = dayOfMonth + "/" + (month + 1) + "/" + year;
-                toast = Toast.makeText(getContext(), "Date: (" + sdate + ")", Toast.LENGTH_LONG);
-                toast.show();
                 try {
                     Date showDate = new SimpleDateFormat("dd/M/yyyy").parse(sdate);
                     showEventsForDate(showDate);
@@ -97,19 +93,42 @@ public class CalendarFragment extends BaseFragment {
     }
 
     private void updateEvents() {
+        String ISO_FORMAT = "yyyy-MM-dd HH:mm:ss";
+        final TimeZone utc = TimeZone.getTimeZone("UTC");
+        final SimpleDateFormat isoFormatter = new SimpleDateFormat(ISO_FORMAT);
+        isoFormatter.setTimeZone(utc);
+
+        final Date today = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        final Date oneMonthBackDate = cal.getTime();
+        cal.add(Calendar.MONTH, 2);
+        final Date oneMonthOnDate = cal.getTime();
+
+        final String oneMonthBack = isoFormatter.format(oneMonthBackDate).toString();
+        final String oneMonthOn = isoFormatter.format(oneMonthOnDate).toString();
+
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getNewsFeed(((MainActivity)getActivity()).getSessionIDHeader()).enqueue(new Callback<NewsFeedResponse>() {
+        retrofitInterface.getEventsBetweenDates(((MainActivity)getActivity()).getSessionIDHeader(), oneMonthBack, oneMonthOn).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
                     NewsFeedResponse newsFeedResponse = response.body();
                     events = newsFeedResponse.getEvents();
+                    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                    try {
+                        Date todayWithZeroTime = formatter.parse(formatter.format(today));
+                        showEventsForDate(todayWithZeroTime);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<NewsFeedResponse> call, Throwable t) {
                 //Network Error
+                Toast.makeText(getContext(), "Failed to fetch events!", Toast.LENGTH_SHORT).show();
             }
         });
     }
