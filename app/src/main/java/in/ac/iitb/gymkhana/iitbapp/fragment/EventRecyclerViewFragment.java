@@ -28,6 +28,7 @@ import in.ac.iitb.gymkhana.iitbapp.data.Event;
  * create an instance of this fragment.
  */
 public class EventRecyclerViewFragment extends Fragment {
+    private static final String TAG = "EventRecyclerViewFragment";
     private static final String ARG_EVENT= "events";
 
     private RecyclerView recyclerView;

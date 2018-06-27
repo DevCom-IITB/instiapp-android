@@ -29,6 +29,7 @@ import in.ac.iitb.gymkhana.iitbapp.data.Body;
  * create an instance of this fragment.
  */
 public class BodyRecyclerViewFragment extends Fragment {
+    private static final String TAG = "BodyRecyclerViewFragment";
     private static final String ARG_BODY = "bodies";
 
     private RecyclerView recyclerView;

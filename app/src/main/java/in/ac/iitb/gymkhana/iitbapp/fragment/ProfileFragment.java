@@ -2,8 +2,10 @@ package in.ac.iitb.gymkhana.iitbapp.fragment;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,9 +22,11 @@ import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.adapter.RoleAdapter;
+import in.ac.iitb.gymkhana.iitbapp.adapter.TabAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.Body;
+import in.ac.iitb.gymkhana.iitbapp.data.Event;
 import in.ac.iitb.gymkhana.iitbapp.data.Role;
 import in.ac.iitb.gymkhana.iitbapp.data.User;
 import retrofit2.Call;
@@ -95,10 +99,30 @@ public class ProfileFragment extends BaseFragment {
         userRoleRecyclerView.setAdapter(roleAdapter);
         userRoleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        /*final List<Body> bodyList = user.getUserFollowedBodies();
+        final List<Event> eventList = user.getUserGoingEvents();
+        final List<Event> eventInterestedList = user.getUserInterestedEvents();
+        eventList.removeAll(eventInterestedList);
+        eventList.addAll(eventInterestedList);
+        BodyRecyclerViewFragment frag1 = BodyRecyclerViewFragment.newInstance(bodyList);
+        EventRecyclerViewFragment frag2 = EventRecyclerViewFragment.newInstance(eventList);
+        TabAdapter tabAdapter = new TabAdapter(getFragmentManager());
+        tabAdapter.addFragment(frag1,"Following");
+        tabAdapter.addFragment(frag2, "Events");
+        // Set up the ViewPager with the sections adapter.
+        ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.viewPager);
+        viewPager.setAdapter(tabAdapter);
+
+
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);*/
+
         Picasso.with(getContext()).load(user.getUserProfilePictureUrl()).into(userProfilePictureImageView);
         userNameTextView.setText(user.getUserName());
         userRollNumberTextView.setText(user.getUserRollNumber());
         userEmailIDTextView.setText(user.getUserEmail());
         userContactNumberTextView.setText(user.getUserContactNumber());
     }
+
+
 }
