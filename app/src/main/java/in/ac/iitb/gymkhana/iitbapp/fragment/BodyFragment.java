@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,13 +48,14 @@ import ru.noties.markwon.Markwon;
 public class BodyFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_BODY = "body";
+
 
     private AppDatabase appDatabase;
     String TAG = "BodyFragment";
 
     // TODO: Rename and change types of parameters
     private Body min_body;
+    private SwipeRefreshLayout bodySwipeRefreshLayout;
 
 
     public BodyFragment() {
@@ -71,7 +73,7 @@ public class BodyFragment extends Fragment {
     public static BodyFragment newInstance(Body arg_body) {
         BodyFragment fragment = new BodyFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_BODY, new Gson().toJson(arg_body));
+        args.putString(Constants.BODY_JSON, new Gson().toJson(arg_body));
         fragment.setArguments(args);
         return fragment;
     }
@@ -80,7 +82,7 @@ public class BodyFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            min_body = new Gson().fromJson(getArguments().getString(ARG_BODY), Body.class);
+            min_body = new Gson().fromJson(getArguments().getString(Constants.BODY_JSON), Body.class);
         }
     }
 
@@ -97,6 +99,13 @@ public class BodyFragment extends Fragment {
         } else {
             updateBody();
         }
+        bodySwipeRefreshLayout=getActivity().findViewById(R.id.body_swipe_refresh_layout);
+        bodySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateBody();
+            }
+        });
     }
 
     private void updateBody() {
@@ -110,11 +119,13 @@ public class BodyFragment extends Fragment {
                     appDatabase.dbDao().insertBody(body);
 
                     displayBody(body);
+                    bodySwipeRefreshLayout.setRefreshing(false);
                 }
             }
 
             @Override
             public void onFailure(Call<Body> call, Throwable t) {
+                bodySwipeRefreshLayout.setRefreshing(false);
                 // Network Error
             }
         });

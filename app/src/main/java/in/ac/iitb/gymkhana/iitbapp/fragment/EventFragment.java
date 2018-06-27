@@ -108,7 +108,7 @@ public class EventFragment extends BaseFragment {
         StringBuilder eventVenueName = new StringBuilder();
 
         for (Venue venue : event.getEventVenues()) {
-            eventVenueName.append(", ").append(venue.getVenueName());
+            eventVenueName.append(", ").append(venue.getVenueShortName());
         }
 
        final List<Body> bodyList = event.getEventBodies();
