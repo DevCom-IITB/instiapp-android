@@ -8,7 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.R;
@@ -47,7 +53,22 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         NewsArticle article = newsArticles.get(position);
         Markwon.setMarkdown(holder.articleTitle, article.getTitle());
-        holder.articlePublished.setText(article.getPublished());
+        holder.articleBody.setText(article.getBody().getBodyName());
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.US);
+            Date publishedDate = dateFormat.parse(article.getPublished());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(publishedDate);
+            DateFormat displayFormat;
+            if (calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
+                displayFormat = new SimpleDateFormat("EEE, MMM d, HH:mm", Locale.US);
+            } else {
+                displayFormat = new SimpleDateFormat("EEE, MMM d, ''yy, HH:mm", Locale.US);
+            }
+            holder.articlePublished.setText(displayFormat.format(publishedDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         Markwon.setMarkdown(holder.articleContent, article.getContent());
     }
 
@@ -58,6 +79,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView articleTitle;
+        private TextView articleBody;
         private TextView articlePublished;
         private TextView articleContent;
 
@@ -65,6 +87,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             super(itemView);
 
             articleTitle = (TextView) itemView.findViewById(R.id.article_title);
+            articleBody = (TextView) itemView.findViewById(R.id.article_body);
             articlePublished = (TextView) itemView.findViewById(R.id.article_published);
             articleContent = (TextView) itemView.findViewById(R.id.article_content);
         }
