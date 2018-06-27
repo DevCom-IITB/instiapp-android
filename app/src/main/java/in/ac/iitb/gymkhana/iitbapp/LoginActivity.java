@@ -3,6 +3,7 @@ package in.ac.iitb.gymkhana.iitbapp;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     private AuthorizationService mAuthService;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private boolean isReceiverRegistered;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,17 +164,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleAuthorizationResponse(@NonNull Intent intent) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Logging In");
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
         AuthorizationResponse response = AuthorizationResponse.fromIntent(intent);
         AuthorizationException error = AuthorizationException.fromIntent(intent);
 
         if (response != null) {
             authCode = response.authorizationCode;
             Log.d(TAG, "Received AuthorizationResponse: " + "AuthCode: " + authCode);
-            Toast.makeText(this,
-                    "AuthCode: " + authCode, Toast.LENGTH_SHORT)
-                    .show();
             if (checkPlayServices()) {
-
                 Intent registerIntent = new Intent(this, RegistrationIntentService.class);
                 startService(registerIntent);
             }
@@ -234,7 +237,7 @@ public class LoginActivity extends AppCompatActivity {
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);
-
+                    progressDialog.dismiss();
                     //Save credentials in AccountManager to keep user logged in
                     //Go to MainActivity
                 }
