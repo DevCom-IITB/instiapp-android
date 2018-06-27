@@ -1,5 +1,7 @@
 package in.ac.iitb.gymkhana.iitbapp.api;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.api.model.EventCreateRequest;
@@ -31,11 +33,17 @@ public interface RetrofitInterface {
     @GET("events")
     Call<NewsFeedResponse> getNewsFeed(@Header("Cookie") String sessionId);
 
+    @GET("events")
+    Call<NewsFeedResponse> getEventsBetweenDates(@Header("Cookie") String sessionId, @Query("start") String start, @Query("end") String end);
+
     @GET("users/{uuid}")
     Call<User> getUser(@Header("Cookie") String sessionId, @Path("uuid") String uuid);
 
     @GET("bodies/{uuid}")
     Call<in.ac.iitb.gymkhana.iitbapp.data.Body> getBody(@Header("Cookie") String sessionId, @Path("uuid") String uuid);
+
+    @GET("bodies/{bodyID}/follow")
+    Call<Void> updateBodyFollowing(@Header("Cookie") String sessionID, @Path("bodyID") String eventID, @Query("action") int action);
 
     @POST("upload")
     Call<ImageUploadResponse> uploadImage(@Header("Cookie") String sessionID, @Body ImageUploadRequest imageUploadRequest);

@@ -5,14 +5,38 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+
+import in.ac.iitb.gymkhana.iitbapp.Constants;
+import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
+import in.ac.iitb.gymkhana.iitbapp.adapter.FeedAdapter;
+import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
+import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
+import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedResponse;
+import in.ac.iitb.gymkhana.iitbapp.data.Event;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +46,7 @@ public class CalendarFragment extends BaseFragment {
     FloatingActionButton fab;
     private View view;
     private Toast toast;
+    private List<Event> events;
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -39,18 +64,17 @@ public class CalendarFragment extends BaseFragment {
         simpleCalendarView.setFirstDayOfWeek(1); // set Sunday as the first day of the week
 
         simpleCalendarView.setWeekNumberColor(getResources().getColor(R.color.colorCalendarWeek));//setWeekNumberColor
+
         simpleCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-
-
-                if (toast != null) {
-                    toast.cancel();
+                String sdate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                try {
+                    Date showDate = new SimpleDateFormat("dd/M/yyyy").parse(sdate);
+                    showEventsForDate(showDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-                toast = Toast.makeText(getContext(), "Date: (" + dayOfMonth + "/" + (month + 1) + "/" + year + ")", Toast.LENGTH_LONG);
-                toast.show();
-
-
             }
         });
         fab.setOnClickListener(new View.OnClickListener() {
@@ -62,8 +86,81 @@ public class CalendarFragment extends BaseFragment {
                 ((MainActivity) getActivity()).updateFragment(addEventFragment);
             }
         });
+
+        updateEvents();
         return view;
 
+    }
+
+    private void updateEvents() {
+        String ISO_FORMAT = "yyyy-MM-dd HH:mm:ss";
+        final TimeZone utc = TimeZone.getTimeZone("UTC");
+        final SimpleDateFormat isoFormatter = new SimpleDateFormat(ISO_FORMAT);
+        isoFormatter.setTimeZone(utc);
+
+        final Date today = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        final Date oneMonthBackDate = cal.getTime();
+        cal.add(Calendar.MONTH, 2);
+        final Date oneMonthOnDate = cal.getTime();
+
+        final String oneMonthBack = isoFormatter.format(oneMonthBackDate).toString();
+        final String oneMonthOn = isoFormatter.format(oneMonthOnDate).toString();
+
+        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        retrofitInterface.getEventsBetweenDates(((MainActivity)getActivity()).getSessionIDHeader(), oneMonthBack, oneMonthOn).enqueue(new Callback<NewsFeedResponse>() {
+            @Override
+            public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
+                if (response.isSuccessful()) {
+                    NewsFeedResponse newsFeedResponse = response.body();
+                    events = newsFeedResponse.getEvents();
+                    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                    try {
+                        Date todayWithZeroTime = formatter.parse(formatter.format(today));
+                        showEventsForDate(todayWithZeroTime);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NewsFeedResponse> call, Throwable t) {
+                //Network Error
+                Toast.makeText(getContext(), "Failed to fetch events!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showEventsForDate(Date date) {
+
+        final List<Event> filteredEvents = new ArrayList<Event>();
+        for( Event event : events) {
+            Date nextDay = new Date(date.getTime() + (1000 * 60 * 60 * 24));
+            Timestamp start = event.getEventStartTime();
+            if (start.after(date) && start.before(nextDay)) {
+                filteredEvents.add(event);
+            }
+        }
+
+        RecyclerView eventRecyclerView = (RecyclerView) getActivity().findViewById(R.id.calendar_event_card_recycler_view);
+        FeedAdapter eventAdapter = new FeedAdapter(filteredEvents, new ItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                Event event = filteredEvents.get(position);
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.EVENT_JSON, new Gson().toJson(event));
+                EventFragment eventFragment = new EventFragment();
+                eventFragment.setArguments(bundle);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
+                ft.addToBackStack(eventFragment.getTag());
+                ft.commit();
+            }
+        });
+        eventRecyclerView.setAdapter(eventAdapter);
+        eventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
 }
