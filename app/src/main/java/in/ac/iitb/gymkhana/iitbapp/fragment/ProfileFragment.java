@@ -99,7 +99,7 @@ public class ProfileFragment extends BaseFragment {
         userRoleRecyclerView.setAdapter(roleAdapter);
         userRoleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        /*final List<Body> bodyList = user.getUserFollowedBodies();
+        final List<Body> bodyList = user.getUserFollowedBodies();
         final List<Event> eventList = user.getUserGoingEvents();
         final List<Event> eventInterestedList = user.getUserInterestedEvents();
         eventList.removeAll(eventInterestedList);
@@ -115,7 +115,7 @@ public class ProfileFragment extends BaseFragment {
 
 
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);*/
+        tabLayout.setupWithViewPager(viewPager);
 
         Picasso.with(getContext()).load(user.getUserProfilePictureUrl()).into(userProfilePictureImageView);
         userNameTextView.setText(user.getUserName());
