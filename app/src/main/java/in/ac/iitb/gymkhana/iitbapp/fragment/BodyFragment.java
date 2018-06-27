@@ -204,6 +204,7 @@ public class BodyFragment extends Fragment {
                 EventFragment eventFragment = new EventFragment();
                 eventFragment.setArguments(bundle);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
                 ft.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
                 ft.addToBackStack(eventFragment.getTag());
                 ft.commit();
