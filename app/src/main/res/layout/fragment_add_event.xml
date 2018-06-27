@@ -30,14 +30,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#EEEEEE"
-                    android:src="@drawable/ic_input_add" />
+                    android:src="@drawable/ic_input_add"
+                    android:tint="@android:color/black" />
             </RelativeLayout>
 
             <EditText
                 android:id="@+id/et_eventName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#81d2cb"
+                android:background="@color/colorPrimary"
                 android:hint="Event Name"
                 android:padding="16dp"
                 android:paddingBottom="16dp"
