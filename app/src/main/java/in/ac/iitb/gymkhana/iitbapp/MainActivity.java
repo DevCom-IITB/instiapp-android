@@ -24,8 +24,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
+import in.ac.iitb.gymkhana.iitbapp.api.UnsafeOkHttpClient;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsResponse;
 import in.ac.iitb.gymkhana.iitbapp.data.User;
 import in.ac.iitb.gymkhana.iitbapp.fragment.AboutFragment;
@@ -118,7 +120,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ImageView profilePictureImageView = header.findViewById(R.id.user_profile_picture_nav_header);
         nameTextView.setText(currentUser.getUserName());
         rollNoTextView.setText(currentUser.getUserRollNumber());
-        Picasso.with(this).load(currentUser.getUserProfilePictureUrl()).into(profilePictureImageView);
+
+        Picasso.Builder picassoBuilder = new Picasso.Builder(this);
+        picassoBuilder.downloader(
+            new OkHttp3Downloader((
+                UnsafeOkHttpClient.getUnsafeOkHttpClient()
+            )
+        ));
+        Picasso picasso = picassoBuilder.build();
+
+        picasso.load(currentUser.getUserProfilePictureUrl()).into(profilePictureImageView);
     }
 
 //    private void fetchNotifications() {
