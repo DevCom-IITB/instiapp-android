@@ -29,7 +29,7 @@ import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
-import in.ac.iitb.gymkhana.iitbapp.adapter.EventAdapter;
+import in.ac.iitb.gymkhana.iitbapp.adapter.FeedAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedResponse;
@@ -145,7 +145,7 @@ public class CalendarFragment extends BaseFragment {
         }
 
         RecyclerView eventRecyclerView = (RecyclerView) getActivity().findViewById(R.id.calendar_event_card_recycler_view);
-        EventAdapter eventAdapter = new EventAdapter(filteredEvents, new ItemClickListener() {
+        FeedAdapter eventAdapter = new FeedAdapter(filteredEvents, new ItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
                 Event event = filteredEvents.get(position);

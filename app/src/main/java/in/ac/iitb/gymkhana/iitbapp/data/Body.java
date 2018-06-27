@@ -51,7 +51,7 @@ public class Body {
     String bodyBlogURL;
     @ColumnInfo(name = "user_follows")
     @SerializedName("user_follows")
-    Boolean bodyUserFollows;
+    boolean bodyUserFollows;
 
     public Body(String bodyID, String bodyStrID, String bodyName, String bodyShortDescription, String bodyDescription, String bodyImageURL, List<Body> bodyChildren, List<Body> bodyParents, List<Event> bodyEvents, int bodyFollowersCount, String bodyWebsiteURL, String bodyBlogURL, Boolean bodyUserFollows) {
         this.bodyID = bodyID;
@@ -165,11 +165,11 @@ public class Body {
         this.bodyBlogURL = bodyBlogURL;
     }
 
-    public Boolean getBodyUserFollows() {
+    public boolean getBodyUserFollows() {
         return bodyUserFollows;
     }
 
-    public void setBodyUserFollows(Boolean bodyUserFollows) {
+    public void setBodyUserFollows(boolean bodyUserFollows) {
         this.bodyUserFollows = bodyUserFollows;
     }
 }

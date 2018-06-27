@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +28,7 @@ import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.ShareURLMaker;
-import in.ac.iitb.gymkhana.iitbapp.adapter.BodyAdapter;
-import in.ac.iitb.gymkhana.iitbapp.adapter.EventAdapter;
+import in.ac.iitb.gymkhana.iitbapp.adapter.FeedAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
@@ -191,7 +189,7 @@ public class BodyFragment extends Fragment {
         /* Initialize events */
         final List<Event> eventList = body.getBodyEvents();
         RecyclerView eventRecyclerView = (RecyclerView) getActivity().findViewById(R.id.event_card_recycler_view);
-        EventAdapter eventAdapter = new EventAdapter(eventList, new ItemClickListener() {
+        FeedAdapter eventAdapter = new FeedAdapter(eventList, new ItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
                 Event event = eventList.get(position);

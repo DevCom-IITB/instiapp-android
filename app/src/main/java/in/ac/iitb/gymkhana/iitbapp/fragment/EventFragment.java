@@ -36,8 +36,8 @@ import in.ac.iitb.gymkhana.iitbapp.adapter.BodyAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
-import in.ac.iitb.gymkhana.iitbapp.data.Event;
 import in.ac.iitb.gymkhana.iitbapp.data.Body;
+import in.ac.iitb.gymkhana.iitbapp.data.Event;
 import in.ac.iitb.gymkhana.iitbapp.data.Venue;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -135,8 +135,8 @@ public class EventFragment extends BaseFragment {
 
         goingButton.setOnClickListener(getUESOnClickListener(2));
 
-        interestedButton.setBackgroundColor(getResources().getColor(event.getEventUserUes() == 1 ? R.color.colorAccent : R.color.colorWhite));
-        goingButton.setBackgroundColor(getResources().getColor(event.getEventUserUes() == 2 ? R.color.colorAccent : R.color.colorWhite));
+        interestedButton.setBackgroundColor(getResources().getColor(event.getEventUserUes() == Constants.STATUS_INTERESTED ? R.color.colorAccent : R.color.colorWhite));
+        goingButton.setBackgroundColor(getResources().getColor(event.getEventUserUes() == Constants.STATUS_GOING ? R.color.colorAccent : R.color.colorWhite));
 
         shareEventButton.setOnClickListener(new View.OnClickListener() {
             String shareUrl = ShareURLMaker.getEventURL(event);
@@ -175,8 +175,8 @@ public class EventFragment extends BaseFragment {
                         if (response.isSuccessful()) {
                             event.setEventUserUes(endStatus);
                             new updateDbEvent().execute(event);
-                            interestedButton.setBackgroundColor(getResources().getColor(endStatus == 1 ? R.color.colorAccent : R.color.colorWhite));
-                            goingButton.setBackgroundColor(getResources().getColor(endStatus == 2 ? R.color.colorAccent : R.color.colorWhite));
+                            interestedButton.setBackgroundColor(getResources().getColor(endStatus == Constants.STATUS_INTERESTED ? R.color.colorAccent : R.color.colorWhite));
+                            goingButton.setBackgroundColor(getResources().getColor(endStatus == Constants.STATUS_GOING ? R.color.colorAccent : R.color.colorWhite));
                         }
                     }
 
