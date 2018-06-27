@@ -9,7 +9,7 @@
             android:id="@+id/calendar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#E0E0E0"
+            android:background="#fafafa"
             android:theme="@style/CalendarTheme"
             android:orientation="vertical">
 
@@ -21,7 +21,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:background="#00BCD4" />
+                    android:background="@color/colorPrimary" />
 
                 <CalendarView
 
@@ -46,7 +46,8 @@
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/round_text_box"
                     android:gravity="center"
-                    android:text="# Events Today" />
+                    android:text="# Events Today"
+                    android:textColor="@color/primaryTextColor"/>
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
