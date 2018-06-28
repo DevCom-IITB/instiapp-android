@@ -291,7 +291,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager manager = getSupportFragmentManager();
         if (fragment instanceof FeedFragment)
             manager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
         FragmentTransaction transaction = manager.beginTransaction();
+
+        /* Animate only for ProfileFragment */
+        if (fragment instanceof ProfileFragment) {
+            transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+        }
+
         transaction.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());
         transaction.addToBackStack(fragment.getTag()).commit();
     }

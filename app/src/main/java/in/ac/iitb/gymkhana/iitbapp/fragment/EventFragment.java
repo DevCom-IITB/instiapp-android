@@ -119,6 +119,7 @@ public class EventFragment extends BaseFragment {
                Body body = bodyList.get(position);
                BodyFragment bodyFragment = BodyFragment.newInstance(body);
                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+               ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
                ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
                ft.addToBackStack(bodyFragment.getTag());
                ft.commit();
