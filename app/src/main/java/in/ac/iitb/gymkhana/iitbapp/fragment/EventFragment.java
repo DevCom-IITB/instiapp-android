@@ -51,9 +51,9 @@ public class EventFragment extends BaseFragment {
     Event event;
     Button goingButton;
     Button interestedButton;
-    Button notGoingButton;
-    ImageButton shareEventButton;
+    ImageButton navigateButton;
     ImageButton webEventButton;
+    ImageButton shareEventButton;
     RecyclerView bodyRecyclerView;
     private AppDatabase appDatabase;
     String TAG = "EventFragment";
@@ -93,8 +93,9 @@ public class EventFragment extends BaseFragment {
         TextView eventDescription = (TextView) getActivity().findViewById(R.id.event_page_description);
         goingButton = getActivity().findViewById(R.id.going_button);
         interestedButton = getActivity().findViewById(R.id.interested_button);
-        shareEventButton = getActivity().findViewById(R.id.share_event_button);
+        navigateButton = getActivity().findViewById(R.id.navigate_button);
         webEventButton = getActivity().findViewById(R.id.web_event_button);
+        shareEventButton = getActivity().findViewById(R.id.share_event_button);
 
         Picasso.with(getContext()).load(event.getEventImageURL()).into(eventPicture);
         eventTitle.setText(event.getEventName());
@@ -111,21 +112,22 @@ public class EventFragment extends BaseFragment {
             eventVenueName.append(", ").append(venue.getVenueShortName());
         }
 
-       final List<Body> bodyList = event.getEventBodies();
-       bodyRecyclerView = (RecyclerView) getActivity().findViewById(R.id.body_card_recycler_view);
-       BodyAdapter bodyAdapter = new BodyAdapter(bodyList, new ItemClickListener() {
-           @Override
-           public void onItemClick(View v, int position) {
-               Body body = bodyList.get(position);
-               BodyFragment bodyFragment = BodyFragment.newInstance(body);
-               FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-               ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
-               ft.addToBackStack(bodyFragment.getTag());
-               ft.commit();
-           }
-       });
-       bodyRecyclerView.setAdapter(bodyAdapter);
-       bodyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        final List<Body> bodyList = event.getEventBodies();
+        bodyRecyclerView = (RecyclerView) getActivity().findViewById(R.id.body_card_recycler_view);
+        BodyAdapter bodyAdapter = new BodyAdapter(bodyList, new ItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                Body body = bodyList.get(position);
+                BodyFragment bodyFragment = BodyFragment.newInstance(body);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+                ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
+                ft.addToBackStack(bodyFragment.getTag());
+                ft.commit();
+            }
+        });
+        bodyRecyclerView.setAdapter(bodyAdapter);
+        bodyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
         if (!eventVenueName.toString().equals(""))
@@ -138,8 +140,20 @@ public class EventFragment extends BaseFragment {
         interestedButton.setBackgroundColor(getResources().getColor(event.getEventUserUes() == Constants.STATUS_INTERESTED ? R.color.colorAccent : R.color.colorWhite));
         goingButton.setBackgroundColor(getResources().getColor(event.getEventUserUes() == Constants.STATUS_GOING ? R.color.colorAccent : R.color.colorWhite));
 
+        navigateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Venue primaryVenue = event.getEventVenues().get(0);
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + primaryVenue.getVenueLatitude() + "," + primaryVenue.getVenueLongitude() + "(" + primaryVenue.getVenueName() + ")");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
+
         shareEventButton.setOnClickListener(new View.OnClickListener() {
             String shareUrl = ShareURLMaker.getEventURL(event);
+
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(Intent.ACTION_SEND);
@@ -149,18 +163,18 @@ public class EventFragment extends BaseFragment {
                 startActivity(Intent.createChooser(i, "Share URL"));
             }
         });
-       if (event.getEventWebsiteURL() != null && !event.getEventWebsiteURL().isEmpty())
-      {
-          webEventButton.setVisibility(View.VISIBLE);
-          webEventButton.setOnClickListener(new View.OnClickListener() {
-              String eventwebURL = event.getEventWebsiteURL();
-              @Override
-              public void onClick(View view) {
-                  Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(eventwebURL));
-                  startActivity(browserIntent);
-              }
-          });
-      }
+        if (event.getEventWebsiteURL() != null && !event.getEventWebsiteURL().isEmpty()) {
+            webEventButton.setVisibility(View.VISIBLE);
+            webEventButton.setOnClickListener(new View.OnClickListener() {
+                String eventwebURL = event.getEventWebsiteURL();
+
+                @Override
+                public void onClick(View view) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(eventwebURL));
+                    startActivity(browserIntent);
+                }
+            });
+        }
     }
 
     View.OnClickListener getUESOnClickListener(final int status) {
