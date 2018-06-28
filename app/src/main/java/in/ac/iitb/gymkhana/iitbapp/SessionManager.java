@@ -9,7 +9,7 @@ import android.util.Log;
 import in.ac.iitb.gymkhana.iitbapp.data.User;
 
 public class SessionManager {
-    SharedPreferences pref;
+    public SharedPreferences pref;
     Editor editor;
     Context context;
     int PRIVATE_MODE = 0;
