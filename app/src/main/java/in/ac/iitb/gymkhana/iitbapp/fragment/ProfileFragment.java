@@ -119,12 +119,13 @@ public class ProfileFragment extends BaseFragment {
         eventList.addAll(eventInterestedList);
         BodyRecyclerViewFragment frag1 = BodyRecyclerViewFragment.newInstance(bodyList);
         EventRecyclerViewFragment frag2 = EventRecyclerViewFragment.newInstance(eventList);
-        TabAdapter tabAdapter = new TabAdapter(getFragmentManager());
+        TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
         tabAdapter.addFragment(frag1,"Following");
         tabAdapter.addFragment(frag2, "Events");
         // Set up the ViewPager with the sections adapter.
         ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.viewPager);
         viewPager.setAdapter(tabAdapter);
+        viewPager.setOffscreenPageLimit(2);
 
 
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
