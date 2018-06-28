@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.adapter.RoleAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
+import in.ac.iitb.gymkhana.iitbapp.api.UnsafeOkHttpClient;
 import in.ac.iitb.gymkhana.iitbapp.data.Body;
 import in.ac.iitb.gymkhana.iitbapp.data.Role;
 import in.ac.iitb.gymkhana.iitbapp.data.User;
@@ -95,7 +97,15 @@ public class ProfileFragment extends BaseFragment {
         userRoleRecyclerView.setAdapter(roleAdapter);
         userRoleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Picasso.with(getContext()).load(user.getUserProfilePictureUrl()).into(userProfilePictureImageView);
+        Picasso.Builder picassoBuilder = new Picasso.Builder(getContext());
+        picassoBuilder.downloader(
+                new OkHttp3Downloader((
+                        UnsafeOkHttpClient.getUnsafeOkHttpClient()
+                )
+                ));
+        Picasso picasso = picassoBuilder.build();
+
+        picasso.load(user.getUserProfilePictureUrl()).into(userProfilePictureImageView);
         userNameTextView.setText(user.getUserName());
         userRollNumberTextView.setText(user.getUserRollNumber());
         userEmailIDTextView.setText(user.getUserEmail());

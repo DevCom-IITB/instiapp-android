@@ -51,21 +51,18 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<PlacementBlogAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         PlacementBlogPost post = posts.get(position);
         Markwon.setMarkdown(holder.postTitle, post.getTitle());
-        try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.US);
-            Date publishedDate = dateFormat.parse(post.getPublished());
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(publishedDate);
-            DateFormat displayFormat;
-            if (calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
-                displayFormat = new SimpleDateFormat("EEE, MMM d, HH:mm", Locale.US);
-            } else {
-                displayFormat = new SimpleDateFormat("EEE, MMM d, ''yy, HH:mm", Locale.US);
-            }
-            holder.postPublished.setText(displayFormat.format(publishedDate));
-        } catch (ParseException e) {
-            holder.postPublished.setText(post.getPublished());
+
+        Date publishedDate = post.getPublished();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(publishedDate);
+        DateFormat displayFormat;
+        if (calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
+            displayFormat = new SimpleDateFormat("EEE, MMM d, HH:mm", Locale.US);
+        } else {
+            displayFormat = new SimpleDateFormat("EEE, MMM d, ''yy, HH:mm", Locale.US);
         }
+        holder.postPublished.setText(displayFormat.format(publishedDate));
+
         Markwon.setMarkdown(holder.postContent, post.getContent());
     }
 

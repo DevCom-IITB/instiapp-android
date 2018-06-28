@@ -6,6 +6,8 @@ import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.sql.Timestamp;
+
 @Entity(tableName = "trainingBlogPosts")
 
 public class TrainingBlogPost {
@@ -31,9 +33,9 @@ public class TrainingBlogPost {
 
     @ColumnInfo(name = "published")
     @SerializedName("published")
-    private String published;
+    private Timestamp published;
 
-    public TrainingBlogPost(String postID, String link, String title, String content, String published) {
+    public TrainingBlogPost(String postID, String link, String title, String content, Timestamp published) {
         this.postID = postID;
         this.link = link;
         this.title = title;
@@ -73,11 +75,11 @@ public class TrainingBlogPost {
         this.content = content;
     }
 
-    public String getPublished() {
+    public Timestamp getPublished() {
         return published;
     }
 
-    public void setPublished(String published) {
+    public void setPublished(Timestamp published) {
         this.published = published;
     }
 }

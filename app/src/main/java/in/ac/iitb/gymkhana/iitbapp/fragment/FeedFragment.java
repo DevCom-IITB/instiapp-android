@@ -64,6 +64,7 @@ public class FeedFragment extends BaseFragment {
                 AddEventFragment addEventFragment = new AddEventFragment();
                 addEventFragment.setArguments(getArguments());
                 FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
                 ft.replace(R.id.relative_layout, addEventFragment);
                 ft.addToBackStack("addEvent");
                 ft.commit();
@@ -146,6 +147,7 @@ public class FeedFragment extends BaseFragment {
                 eventFragment.setArguments(bundle);
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
                 transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
                 transaction.addToBackStack(eventFragment.getTag()).commit();
             }
