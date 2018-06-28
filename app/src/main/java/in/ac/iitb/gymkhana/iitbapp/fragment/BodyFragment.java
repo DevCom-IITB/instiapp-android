@@ -93,12 +93,7 @@ public class BodyFragment extends Fragment {
         /* Initialize */
         appDatabase = AppDatabase.getAppDatabase(getContext());
 
-        Body[] inLocalDb = appDatabase.dbDao().getBody(min_body.getBodyID());
-        if (inLocalDb.length > 0) {
-            displayBody(inLocalDb[0]);
-        } else {
-            updateBody();
-        }
+        new getDbBody().execute(min_body.getBodyID());
         bodySwipeRefreshLayout=getActivity().findViewById(R.id.body_swipe_refresh_layout);
         bodySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -116,7 +111,7 @@ public class BodyFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Body body = response.body();
 
-                    appDatabase.dbDao().insertBody(body);
+                    new insertDbBody().execute(body);
 
                     displayBody(body);
                     bodySwipeRefreshLayout.setRefreshing(false);
@@ -209,6 +204,7 @@ public class BodyFragment extends Fragment {
                 EventFragment eventFragment = new EventFragment();
                 eventFragment.setArguments(bundle);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
                 ft.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
                 ft.addToBackStack(eventFragment.getTag());
                 ft.commit();
@@ -223,6 +219,30 @@ public class BodyFragment extends Fragment {
         protected Integer doInBackground(Body... body) {
             appDatabase.dbDao().updateBody(body[0]);
             return 1;
+        }
+    }
+
+    private class insertDbBody extends AsyncTask<Body, Void, Integer> {
+        @Override
+        protected Integer doInBackground(Body... body) {
+            appDatabase.dbDao().insertBody(body[0]);
+            return 1;
+        }
+    }
+
+    private class getDbBody extends AsyncTask<String, Void, Body[]> {
+        @Override
+        protected Body[] doInBackground(String... id) {
+            return appDatabase.dbDao().getBody(min_body.getBodyID());
+        }
+
+        @Override
+        protected void onPostExecute(Body[] result) {
+            if (result.length > 0) {
+                displayBody(result[0]);
+            } else {
+                updateBody();
+            }
         }
     }
 

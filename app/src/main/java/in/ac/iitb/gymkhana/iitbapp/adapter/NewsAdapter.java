@@ -54,21 +54,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         NewsArticle article = newsArticles.get(position);
         Markwon.setMarkdown(holder.articleTitle, article.getTitle());
         holder.articleBody.setText(article.getBody().getBodyName());
-        try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.US);
-            Date publishedDate = dateFormat.parse(article.getPublished());
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(publishedDate);
-            DateFormat displayFormat;
-            if (calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
-                displayFormat = new SimpleDateFormat("EEE, MMM d, HH:mm", Locale.US);
-            } else {
-                displayFormat = new SimpleDateFormat("EEE, MMM d, ''yy, HH:mm", Locale.US);
-            }
-            holder.articlePublished.setText(displayFormat.format(publishedDate));
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+        Date publishedDate = article.getPublished();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(publishedDate);
+        DateFormat displayFormat;
+        if (calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
+            displayFormat = new SimpleDateFormat("EEE, MMM d, HH:mm", Locale.US);
+        } else {
+            displayFormat = new SimpleDateFormat("EEE, MMM d, ''yy, HH:mm", Locale.US);
         }
+        holder.articlePublished.setText(displayFormat.format(publishedDate));
+
         Markwon.setMarkdown(holder.articleContent, article.getContent());
     }
 
