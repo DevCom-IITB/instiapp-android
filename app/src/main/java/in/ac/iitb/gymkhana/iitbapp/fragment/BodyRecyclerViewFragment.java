@@ -30,7 +30,7 @@ import in.ac.iitb.gymkhana.iitbapp.data.Body;
  */
 public class BodyRecyclerViewFragment extends Fragment {
     private static final String TAG = "BodyRecyclerViewFragment";
-    private static final String ARG_BODY = "bodies";
+
 
     private RecyclerView recyclerView;
     private BodyAdapter bodyAdapter;
@@ -42,10 +42,10 @@ public class BodyRecyclerViewFragment extends Fragment {
     }
 
     // TODO: Rename and change types and number of parameters
-    public static BodyRecyclerViewFragment newInstance(List<Body> arg_bodyList) {
+    public static BodyRecyclerViewFragment newInstance(List<Body> bodyList) {
         BodyRecyclerViewFragment fragment = new BodyRecyclerViewFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_BODY, new Gson().toJson(arg_bodyList));
+        args.putString(Constants.BODY_LIST_JSON, new Gson().toJson(bodyList));
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,7 +54,8 @@ public class BodyRecyclerViewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            bodyList = new Gson().fromJson(getArguments().getString(ARG_BODY), new TypeToken<List<Body>>(){}.getType());
+            bodyList = new Gson().fromJson(getArguments().getString(Constants.BODY_LIST_JSON
+            ), new TypeToken<List<Body>>(){}.getType());
         }
     }
 

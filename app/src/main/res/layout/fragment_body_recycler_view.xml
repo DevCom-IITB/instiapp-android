@@ -6,7 +6,6 @@
     android:orientation="vertical"
     tools:context=".fragment.BodyRecyclerViewFragment">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/body_recycler_view"

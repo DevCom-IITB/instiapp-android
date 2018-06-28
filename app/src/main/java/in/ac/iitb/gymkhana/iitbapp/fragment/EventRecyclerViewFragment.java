@@ -29,7 +29,7 @@ import in.ac.iitb.gymkhana.iitbapp.data.Event;
  */
 public class EventRecyclerViewFragment extends Fragment {
     private static final String TAG = "EventRecyclerViewFragment";
-    private static final String ARG_EVENT= "events";
+
 
     private RecyclerView recyclerView;
     private FeedAdapter feedAdapter;
@@ -41,10 +41,10 @@ public class EventRecyclerViewFragment extends Fragment {
     }
 
     // TODO: Rename and change types and number of parameters
-    public static EventRecyclerViewFragment newInstance(List<Event> arg_eventList) {
+    public static EventRecyclerViewFragment newInstance(List<Event> eventList) {
         EventRecyclerViewFragment fragment = new EventRecyclerViewFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_EVENT, new Gson().toJson(arg_eventList));
+        args.putString(Constants.EVENT_LIST_JSON, new Gson().toJson(eventList));
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,7 +53,7 @@ public class EventRecyclerViewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            eventList = new Gson().fromJson(getArguments().getString(ARG_EVENT), new TypeToken<List<Event>>(){}.getType());
+            eventList = new Gson().fromJson(getArguments().getString(Constants.EVENT_LIST_JSON), new TypeToken<List<Event>>(){}.getType());
         }
     }
 
