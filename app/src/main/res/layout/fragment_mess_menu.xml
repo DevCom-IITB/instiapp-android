@@ -9,7 +9,10 @@
         android:id="@+id/hostel_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp" />
+        android:background="@color/colorPrimary"
+        android:theme="@style/AppTheme"
+        android:paddingLeft="16dp"
+        android:paddingBottom="12dp"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/mess_menu_swipe_refresh_layout"
@@ -20,8 +23,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/mess_menu_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="8dp" />
+            android:layout_height="match_parent" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
