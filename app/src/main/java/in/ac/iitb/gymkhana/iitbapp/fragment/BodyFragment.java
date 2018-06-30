@@ -92,7 +92,7 @@ public class BodyFragment extends Fragment {
 
         /* Initialize */
         appDatabase = AppDatabase.getAppDatabase(getContext());
-
+        displayBody(min_body);
         new getDbBody().execute(min_body.getBodyID());
         bodySwipeRefreshLayout=getActivity().findViewById(R.id.body_swipe_refresh_layout);
         bodySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -136,8 +136,14 @@ public class BodyFragment extends Fragment {
 
         /* Set body information */
         bodyName.setText(body.getBodyName());
-        Markwon.setMarkdown(bodyDescription, body.getBodyDescription());
         Picasso.with(getContext()).load(body.getBodyImageURL()).into(eventPicture);
+
+        /* Return if it's a min body */
+        if (body.getBodyDescription() == null) {
+            return;
+        }
+
+        Markwon.setMarkdown(bodyDescription, body.getBodyDescription());
 
         /* Check if user is already following
          * Initialize follow button */
