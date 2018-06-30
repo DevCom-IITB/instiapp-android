@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void initPicasso() {
         Picasso.Builder builder = new Picasso.Builder(getApplicationContext());
         builder.downloader(new OkHttp3Downloader((
-                UnsafeOkHttpClient.getUnsafeOkHttpClient()
+                UnsafeOkHttpClient.getUnsafeOkHttpClient(getApplicationContext())
         )));
         Picasso built = builder.build();
         built.setIndicatorsEnabled(false);
