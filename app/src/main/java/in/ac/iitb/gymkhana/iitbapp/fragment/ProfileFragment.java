@@ -97,15 +97,7 @@ public class ProfileFragment extends BaseFragment {
         userRoleRecyclerView.setAdapter(roleAdapter);
         userRoleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Picasso.Builder picassoBuilder = new Picasso.Builder(getContext());
-        picassoBuilder.downloader(
-                new OkHttp3Downloader((
-                        UnsafeOkHttpClient.getUnsafeOkHttpClient()
-                )
-                ));
-        Picasso picasso = picassoBuilder.build();
-
-        picasso.load(user.getUserProfilePictureUrl()).into(userProfilePictureImageView);
+        Picasso.with(getContext()).load(user.getUserProfilePictureUrl()).into(userProfilePictureImageView);
         userNameTextView.setText(user.getUserName());
         userRollNumberTextView.setText(user.getUserRollNumber());
         userEmailIDTextView.setText(user.getUserEmail());
