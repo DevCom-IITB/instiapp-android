@@ -7,8 +7,8 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:layout_marginTop="4dp"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="4dp">
+    card_view:cardCornerRadius="1dp"
+    card_view:cardElevation="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
