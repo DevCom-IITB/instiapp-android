@@ -47,7 +47,7 @@
                     android:background="@drawable/round_text_box"
                     android:gravity="center"
                     android:text="# Events Today"
-                    android:textColor="@color/primaryTextColor"/>
+                    android:textColor="@color/secondaryTextColor"/>
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -70,6 +70,6 @@
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_input_add"
-        android:tint="@android:color/white" />
+        android:tint="@android:color/black" />
 
 </RelativeLayout>
