@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initPicasso();
+        try { initPicasso(); } catch (IllegalStateException ignored) {}
         setContentView(R.layout.activity_main);
         session = new SessionManager(getApplicationContext());
         session.checkLogin();
