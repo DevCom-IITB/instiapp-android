@@ -7,12 +7,9 @@
     </style>
 
     <style name="CalendarTheme" parent="@style/AppTheme.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">#ecf833</item>
-        <item name="android:colorBackground">?attr/colorButtonNormal</item>
-        <item name="android:textColorPrimaryInverse">@android:color/darker_gray</item>
+        <item name="colorAccent">@color/colorSecondary</item>
+        <item name="android:textColorPrimaryInverse">@color/secondaryTextColor</item>
         <item name="android:windowBackground">?android:attr/colorButtonNormal</item>
     </style>
 
