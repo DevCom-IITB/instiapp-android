@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -19,6 +20,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -60,51 +63,53 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
     }
 
+    private class WvClient extends WebViewClient
+    {
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError er) {
+            handler.proceed();
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
+            /* Capture redirect */
+            if (url.startsWith(redirectUri)) {
+                /* Show progress dialog */
+                progressDialog = new ProgressDialog(LoginActivity.this);
+                progressDialog.setMessage("Logging In");
+                progressDialog.setCancelable(false);
+                progressDialog.setIndeterminate(true);
+                progressDialog.show();
+
+                /* Get auth code from query */
+                String query = Uri.parse(url).getQuery();
+                authCode = query.substring(query.lastIndexOf("=") + 1);
+                login(authCode, redirectUri, authCode);
+                return true;
+            }
+
+            /* Guest Login */
+            if (url.startsWith(guestUri)) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                return true;
+            }
+
+            /* Load URL */
+            view.loadUrl(url);
+            return false;
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
 
         WebView webview = (WebView)  findViewById(R.id.login_webview);
-        webview.loadUrl("file:///android_asset/login.html");
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setDomStorageEnabled(true);
-
-        webview.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-                /* Capture redirect */
-                if (url.startsWith(redirectUri)) {
-                    /* Show progress dialog */
-                    progressDialog = new ProgressDialog(LoginActivity.this);
-                    progressDialog.setMessage("Logging In");
-                    progressDialog.setCancelable(false);
-                    progressDialog.setIndeterminate(true);
-                    progressDialog.show();
-
-                    /* Get auth code from query */
-                    String query = Uri.parse(url).getQuery();
-                    authCode = query.substring(query.lastIndexOf("=") + 1);
-                    login(authCode, redirectUri, authCode);
-                    return true;
-                }
-
-                /* Guest Login */
-                if (url.startsWith(guestUri)) {
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
-
-                /* Load URL */
-                view.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        view.loadUrl(url);
-                    }
-                }, 500);
-                return false;
-            }
-        });
+        webview.setWebViewClient(new WvClient());
+        webview.loadUrl("file:///android_asset/login.html");
     }
 
     private void login(String authorizationCode, final String redirectURI, String gcmID) {
