@@ -93,28 +93,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
         registerReceiver();
-
-        Button ldapLogin = (Button) findViewById(R.id.ldap_login);
-        ldapLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "Initiating auth");
-
-                AuthorizationServiceConfiguration config = new AuthorizationServiceConfiguration(mAuthEndpoint, mTokenEndpoint);
-
-                makeAuthRequest(config);
-            }
-        });
-        Button guestLogin = (Button) findViewById(R.id.guest_login);
-        guestLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO This is for debug purposes, change once SSO is implemented
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
     }
 
     @Override

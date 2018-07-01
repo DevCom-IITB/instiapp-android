@@ -1,14 +1,71 @@
 <html>
+<head>
+    <style>
+        .logodiv {
+            width: 45%;
+            margin: 0 auto;
+            margin-top: 25%;
+            text-align: center;
+        }
+        .logo {
+            width: 100%;
+        }
+        .app-name {
+            margin-top: 10px;
+            font-weight: 200;
+            font-size: 1.5em;
+        }
+        .gap {
+            height: 35%;
+        }
+        .logindiv {
+            margin: 0 auto;
+            width: 100%;
+            text-align: center;
+        }
+        
+        a {color: black;}
+        a:link {color: black;}      /* unvisited link */
+        a:visited {color: black;}   /* visited link */
+        a:hover {color: black;}     /* mouse over link */
+        a:active {color: black;}    /* selected link */
+
+        .login {
+            font-size: 1.05em;
+            padding: 10px 28%;
+            border-radius: 4px;
+            background-color: rgb(255, 215, 64);
+            text-decoration: none;
+        }
+
+        .guest {
+            text-decoration: none;
+            font-weight: 200;
+            line-height: 1.7em;
+            font-size: 1.05em;
+        }
+    </style>
+</head>
+
 <body>
-  <table>
-    <tr>
-      <td>
-        Hello World<br>
-        <a href="https://gymkhana.iitb.ac.in/sso/account/login/?next=/sso/oauth/authorize/%3Fclient_id%3DvR1pU7wXWyve1rUkg0fMS6StL1Kr6paoSmRIiLXJ%26response_type%3Dcode%26scope%3Dbasic%2520profile%2520picture%2520sex%2520ldap%2520phone%2520insti_address%2520program%2520secondary_emails%26redirect_uri=https://redirecturi">
-        :LOGIN:
+
+    <div class="logodiv">
+        <img src="lotus.png" class="logo">
+        <div class="app-name">InstiApp</div>
+    </div>
+
+    <div class="gap"></div>
+    
+    <div class="logindiv">
+        <a class="login" href="https://gymkhana.iitb.ac.in/sso/account/login/?next=/sso/oauth/authorize/%3Fclient_id%3DvR1pU7wXWyve1rUkg0fMS6StL1Kr6paoSmRIiLXJ%26response_type%3Dcode%26scope%3Dbasic%2520profile%2520picture%2520sex%2520ldap%2520phone%2520insti_address%2520program%2520secondary_emails%26redirect_uri=https://redirecturi">
+            LOG IN VIA SSO
         </a>
-      </td>
-    </tr>
-  </table>
+        <br><br>
+        or
+        <br>
+        <a class="guest" href="https://guesturi">
+            Continue as a Guest
+        </a>
+    </div>
 </body>
 </html>

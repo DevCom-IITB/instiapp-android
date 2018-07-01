@@ -4,25 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <Button
-        android:id="@+id/guest_login"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_gravity="center"
-        android:text="Guest Login" />
-
-    <Button
-        android:id="@+id/ldap_login"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_gravity="center"
-        android:text="LDAP login" />
-
     <WebView
         android:id="@+id/login_webview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
     </WebView>
 
 
