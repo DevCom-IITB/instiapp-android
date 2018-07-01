@@ -76,13 +76,12 @@ public class LoginActivity extends AppCompatActivity {
             /* Capture redirect */
             if (url.startsWith(redirectUri)) {
                 /* Show progress dialog */
-                if (progressDialog.isShowing()) {
-                    progressDialog.dismiss();
-                }
                 progressDialog.setMessage("Logging In");
                 progressDialog.setCancelable(false);
                 progressDialog.setIndeterminate(true);
-                progressDialog.show();
+                if (!progressDialog.isShowing()) {
+                    progressDialog.show();
+                }
 
                 /* Get auth code from query */
                 String query = Uri.parse(url).getQuery();
