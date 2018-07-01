@@ -144,6 +144,14 @@ public class LoginActivity extends AppCompatActivity {
                     login(authCode, redirectUri.toString(), authCode);
                     return true;
                 }
+
+                /* Guest Login */
+                if (url.startsWith("https://guesturi")) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+
                 /* Load URL */
                 view.loadUrl(url);
                 return false;

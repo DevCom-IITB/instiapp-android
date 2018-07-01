@@ -1,6 +1,18 @@
+<!DOCTYPE HTML>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        a {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
         .logodiv {
             width: 45%;
             margin: 0 auto;
@@ -15,9 +27,14 @@
             font-weight: 200;
             font-size: 1.5em;
         }
-        .gap {
-            height: 35%;
+        
+        .lowerdiv {
+            position: fixed;
+            bottom: 8%;
+            left: 0;
+            width: 100%;
         }
+        
         .logindiv {
             margin: 0 auto;
             width: 100%;
@@ -53,19 +70,19 @@
         <img src="lotus.png" class="logo">
         <div class="app-name">InstiApp</div>
     </div>
-
-    <div class="gap"></div>
     
-    <div class="logindiv">
-        <a class="login" href="https://gymkhana.iitb.ac.in/sso/account/login/?next=/sso/oauth/authorize/%3Fclient_id%3DvR1pU7wXWyve1rUkg0fMS6StL1Kr6paoSmRIiLXJ%26response_type%3Dcode%26scope%3Dbasic%2520profile%2520picture%2520sex%2520ldap%2520phone%2520insti_address%2520program%2520secondary_emails%26redirect_uri=https://redirecturi">
-            LOG IN VIA SSO
-        </a>
-        <br><br>
-        or
-        <br>
-        <a class="guest" href="https://guesturi">
-            Continue as a Guest
-        </a>
+    <div class="lowerdiv">
+        <div class="logindiv">
+            <a class="login" href="https://gymkhana.iitb.ac.in/sso/account/login/?next=/sso/oauth/authorize/%3Fclient_id%3DvR1pU7wXWyve1rUkg0fMS6StL1Kr6paoSmRIiLXJ%26response_type%3Dcode%26scope%3Dbasic%2520profile%2520picture%2520sex%2520ldap%2520phone%2520insti_address%2520program%2520secondary_emails%26redirect_uri=https://redirecturi">
+                LOG IN VIA SSO
+            </a>
+            <br><br>
+            or
+            <br>
+            <a class="guest" href="https://guesturi">
+                Continue as a Guest
+            </a>
+        </div>
     </div>
 </body>
 </html>
