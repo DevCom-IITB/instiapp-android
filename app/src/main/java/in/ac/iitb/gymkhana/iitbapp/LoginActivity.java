@@ -19,6 +19,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -43,16 +46,11 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final String CLIENT_ID = "vR1pU7wXWyve1rUkg0fMS6StL1Kr6paoSmRIiLXJ";
-    private final Uri redirectUri = Uri.parse("https://redirecturi");
-    private final Uri mAuthEndpoint = Uri.parse("http://gymkhana.iitb.ac.in/sso/oauth/authorize/");
-    private final Uri mTokenEndpoint = Uri.parse("http://gymkhana.iitb.ac.in/sso/oauth/token/");
+    private final String redirectUri = "https://redirecturi";
+    private final String guestUri = "https://guesturi";
     public String authCode = null;
     SessionManager session;
     Context mContext = this;
-    private AuthorizationService mAuthService;
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
-    private boolean isReceiverRegistered;
     private ProgressDialog progressDialog;
 
     @Override
@@ -60,169 +58,46 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         session = new SessionManager(mContext);
         setContentView(R.layout.activity_login);
-        mAuthService = new AuthorizationService(this);
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                boolean sentToken = sharedPreferences.getBoolean(Constants.SENT_TOKEN_TO_SERVER, false);
-                if (sentToken) {
-                    String token = intent.getStringExtra("Token");
-                    Log.d(TAG, "Going to login with :" + authCode + "\n" + token);
-                    //************
-                    //TODO Remove following 6 lines after the server is hosted
-                    String gcmRegId = token;
-//                    session.createLoginSession(gcmRegId);
-//                    Intent i = new Intent(mContext, MainActivity.class);
-//                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    startActivity(i);
-
-
-                    //**************
-                    login(authCode, redirectUri.toString(), gcmRegId);
-
-                } else {
-
-                }
-            }
-        };
-        registerReceiver();
-
-        Button ldapLogin = (Button) findViewById(R.id.ldap_login);
-        ldapLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "Initiating auth");
-
-                AuthorizationServiceConfiguration config = new AuthorizationServiceConfiguration(mAuthEndpoint, mTokenEndpoint);
-
-                makeAuthRequest(config);
-            }
-        });
-        Button guestLogin = (Button) findViewById(R.id.guest_login);
-        guestLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO This is for debug purposes, change once SSO is implemented
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        checkIntent(intent);
-    }
-
-    private void checkIntent(@Nullable Intent intent) {
-        if (intent != null) {
-            Log.d(TAG, "Intent Received");
-            String action = intent.getAction();
-            if (action != null) {
-                switch (action) {
-                    case "HANDLE_AUTHORIZATION_RESPONSE": {
-                        handleAuthorizationResponse(intent);
-
-                    }
-                    break;
-                    default:
-                        Log.d(TAG, intent.getAction());
-
-                }
-            }
-        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        checkIntent(getIntent());
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver();
-        Log.d(TAG, "On Resume");
-    }
+        WebView webview = (WebView)  findViewById(R.id.login_webview);
+        webview.loadUrl("file:///android_asset/login.html");
 
-    @Override
-    protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
-        isReceiverRegistered = false;
-        super.onPause();
-    }
+        webview.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                /* Capture redirect */
+                if (url.startsWith(redirectUri)) {
+                    /* Show progress dialog */
+                    progressDialog = new ProgressDialog(LoginActivity.this);
+                    progressDialog.setMessage("Logging In");
+                    progressDialog.setCancelable(false);
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.show();
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mAuthService.dispose();
-    }
+                    /* Get auth code from query */
+                    String query = Uri.parse(url).getQuery();
+                    authCode = query.substring(query.lastIndexOf("=") + 1);
+                    login(authCode, redirectUri, authCode);
+                    return true;
+                }
 
-    private void handleAuthorizationResponse(@NonNull Intent intent) {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Logging In");
-        progressDialog.setCancelable(false);
-        progressDialog.setIndeterminate(true);
-        progressDialog.show();
-        AuthorizationResponse response = AuthorizationResponse.fromIntent(intent);
-        AuthorizationException error = AuthorizationException.fromIntent(intent);
+                /* Guest Login */
+                if (url.startsWith(guestUri)) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
 
-        if (response != null) {
-            authCode = response.authorizationCode;
-            Log.d(TAG, "Received AuthorizationResponse: " + "AuthCode: " + authCode);
-            if (checkPlayServices()) {
-                Intent registerIntent = new Intent(this, RegistrationIntentService.class);
-                startService(registerIntent);
+                /* Load URL */
+                view.loadUrl(url);
+                return false;
             }
-
-//
-
-        } else {
-            Log.i(TAG, "Authorization failed: " + error.getMessage());
-            Toast.makeText(this,
-                    "Authorization failed", Toast.LENGTH_LONG)
-                    .show();
-        }
-    }
-
-    private void makeAuthRequest(@NonNull AuthorizationServiceConfiguration serviceConfig) {
-
-        AuthorizationRequest authRequest = new AuthorizationRequest.Builder(
-                serviceConfig,
-                CLIENT_ID,
-                "code",
-                redirectUri)
-                .setScope("basic profile picture sex ldap phone insti_address program secondary_emails")
-                .build();
-
-        Log.d(TAG, "Making auth request");
-        String action = "HANDLE_AUTHORIZATION_RESPONSE";
-        Intent postAuthorizationIntent = new Intent(action);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, authRequest.hashCode(), postAuthorizationIntent, 0);
-
-        mAuthService.performAuthorizationRequest(
-                authRequest,
-                pendingIntent,
-                mAuthService.createCustomTabsIntentBuilder()
-                        .setToolbarColor(getCustomTabColor())
-                        .build());
-    }
-
-    //TODO: Change the color of Chrome custom tabs based on app theme color
-    @TargetApi(Build.VERSION_CODES.M)
-    @SuppressWarnings("deprecation")
-    private int getCustomTabColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return getColor(R.color.colorPrimaryDark);
-        } else {
-            return getResources().getColor(R.color.colorPrimaryDark);
-        }
+        });
     }
 
     private void login(String authorizationCode, final String redirectURI, String gcmID) {
@@ -250,15 +125,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void registerReceiver() {
-        if (!isReceiverRegistered) {
-            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                    new IntentFilter(Constants.REGISTRATION_COMPLETE));
-            isReceiverRegistered = true;
-        }
-    }
-
 
     private boolean checkPlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
