@@ -66,10 +66,12 @@ public class LoginActivity extends AppCompatActivity {
 
         WebView webview = (WebView)  findViewById(R.id.login_webview);
         webview.loadUrl("file:///android_asset/login.html");
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.getSettings().setDomStorageEnabled(true);
 
         webview.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
                 /* Capture redirect */
                 if (url.startsWith(redirectUri)) {
                     /* Show progress dialog */
@@ -94,7 +96,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 /* Load URL */
-                view.loadUrl(url);
+                view.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.loadUrl(url);
+                    }
+                }, 500);
                 return false;
             }
         });
