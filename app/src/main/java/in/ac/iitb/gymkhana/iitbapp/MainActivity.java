@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try { initPicasso(); } catch (IllegalStateException ignored) {}
         setContentView(R.layout.activity_main);
         session = new SessionManager(getApplicationContext());
         session.checkLogin();
@@ -121,15 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         nameTextView.setText(currentUser.getUserName());
         rollNoTextView.setText(currentUser.getUserRollNumber());
 
-        Picasso.Builder picassoBuilder = new Picasso.Builder(this);
-        picassoBuilder.downloader(
-            new OkHttp3Downloader((
-                UnsafeOkHttpClient.getUnsafeOkHttpClient()
-            )
-        ));
-        Picasso picasso = picassoBuilder.build();
-
-        picasso.load(currentUser.getUserProfilePictureUrl()).into(profilePictureImageView);
+        Picasso.with(this).load(currentUser.getUserProfilePictureUrl()).into(profilePictureImageView);
     }
 
 //    private void fetchNotifications() {
@@ -325,6 +318,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public String getSessionIDHeader() {
         return "sessionid=" + session.getSessionID();
+    }
+
+    public void initPicasso() {
+        Picasso.Builder builder = new Picasso.Builder(getApplicationContext());
+        builder.downloader(new OkHttp3Downloader((
+                UnsafeOkHttpClient.getUnsafeOkHttpClient(getApplicationContext())
+        )));
+        Picasso built = builder.build();
+        // TODO Set these to false before launch
+        built.setIndicatorsEnabled(true);
+        built.setLoggingEnabled(true);
+        Picasso.setSingletonInstance(built);
     }
 
     @Override
