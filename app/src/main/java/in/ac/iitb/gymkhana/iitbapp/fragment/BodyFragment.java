@@ -7,10 +7,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,9 +55,8 @@ public class BodyFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
 
-    private AppDatabase appDatabase;
     String TAG = "BodyFragment";
-
+    private AppDatabase appDatabase;
     // TODO: Rename and change types of parameters
     private Body min_body;
     private SwipeRefreshLayout bodySwipeRefreshLayout;
@@ -100,7 +98,7 @@ public class BodyFragment extends Fragment {
         appDatabase = AppDatabase.getAppDatabase(getContext());
         displayBody(min_body);
         new getDbBody().execute(min_body.getBodyID());
-        bodySwipeRefreshLayout=getActivity().findViewById(R.id.body_swipe_refresh_layout);
+        bodySwipeRefreshLayout = getActivity().findViewById(R.id.body_swipe_refresh_layout);
         bodySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -111,7 +109,7 @@ public class BodyFragment extends Fragment {
 
     private void updateBody() {
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getBody(((MainActivity)getActivity()).getSessionIDHeader(), min_body.getBodyID()).enqueue(new Callback<Body>() {
+        retrofitInterface.getBody(((MainActivity) getActivity()).getSessionIDHeader(), min_body.getBodyID()).enqueue(new Callback<Body>() {
             @Override
             public void onResponse(Call<Body> call, Response<Body> response) {
                 if (response.isSuccessful()) {
@@ -159,7 +157,7 @@ public class BodyFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-                retrofitInterface.updateBodyFollowing(((MainActivity) getActivity()).getSessionIDHeader(), body.getBodyID(), body.getBodyUserFollows() ? 0:1).enqueue(new Callback<Void>() {
+                retrofitInterface.updateBodyFollowing(((MainActivity) getActivity()).getSessionIDHeader(), body.getBodyID(), body.getBodyUserFollows() ? 0 : 1).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
@@ -178,11 +176,11 @@ public class BodyFragment extends Fragment {
         });
 
         /* Initialize web button */
-        if (body.getBodyWebsiteURL() != null && !body.getBodyWebsiteURL().isEmpty())
-        {
+        if (body.getBodyWebsiteURL() != null && !body.getBodyWebsiteURL().isEmpty()) {
             webBodyButton.setVisibility(View.VISIBLE);
             webBodyButton.setOnClickListener(new View.OnClickListener() {
                 String bodywebURL = body.getBodyWebsiteURL();
+
                 @Override
                 public void onClick(View view) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(bodywebURL));
@@ -194,6 +192,7 @@ public class BodyFragment extends Fragment {
         /* Initialize share button */
         shareBodyButton.setOnClickListener(new View.OnClickListener() {
             String shareUrl = ShareURLMaker.getBodyURL(body);
+
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(Intent.ACTION_SEND);
@@ -230,7 +229,7 @@ public class BodyFragment extends Fragment {
         final List<User> users = new ArrayList();
         for (Role role : roles) {
             if (role.getRoleUsersDetail() != null) {
-                for (User user: role.getRoleUsersDetail()) {
+                for (User user : role.getRoleUsersDetail()) {
                     user.setCurrentRole(role.getRoleName());
                     users.add(user);
                 }
@@ -280,7 +279,9 @@ public class BodyFragment extends Fragment {
         childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    /** Open body fragment for a body */
+    /**
+     * Open body fragment for a body
+     */
     private void openBody(Body body) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BODY_JSON, new Gson().toJson(body));
@@ -291,6 +292,13 @@ public class BodyFragment extends Fragment {
         ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
         ft.addToBackStack(bodyFragment.getTag());
         ft.commit();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_body, container, false);
     }
 
     private class updateDbBody extends AsyncTask<Body, Void, Integer> {
@@ -323,13 +331,6 @@ public class BodyFragment extends Fragment {
                 updateBody();
             }
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_body, container, false);
     }
 
 }

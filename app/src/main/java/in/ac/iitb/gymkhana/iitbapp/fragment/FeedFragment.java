@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -115,25 +114,6 @@ public class FeedFragment extends BaseFragment {
         });
     }
 
-    private class updateDatabase extends AsyncTask<List<Event>, Void, Integer> {
-        @Override
-        protected Integer doInBackground(List<Event>... events) {
-            appDatabase.dbDao().deleteEvents();
-            appDatabase.dbDao().insertEvents(events[0]);
-            return 1;
-        }
-    }
-
-    private class showEventsFromDB extends AsyncTask<String, Void, List<Event>> {
-        @Override
-        protected List<Event> doInBackground(String... events) {
-            return appDatabase.dbDao().getAllEvents();
-        }
-        protected void onPostExecute(List<Event> result) {
-            displayEvents(result);
-        }
-    }
-
     private void displayEvents(final List<Event> events) {
         final FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
             @Override
@@ -164,5 +144,25 @@ public class FeedFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    private class updateDatabase extends AsyncTask<List<Event>, Void, Integer> {
+        @Override
+        protected Integer doInBackground(List<Event>... events) {
+            appDatabase.dbDao().deleteEvents();
+            appDatabase.dbDao().insertEvents(events[0]);
+            return 1;
+        }
+    }
+
+    private class showEventsFromDB extends AsyncTask<String, Void, List<Event>> {
+        @Override
+        protected List<Event> doInBackground(String... events) {
+            return appDatabase.dbDao().getAllEvents();
+        }
+
+        protected void onPostExecute(List<Event> result) {
+            displayEvents(result);
+        }
     }
 }

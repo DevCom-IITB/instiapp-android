@@ -47,24 +47,6 @@ public class MessMenuAdapter extends RecyclerView.Adapter<MessMenuAdapter.ViewHo
         return messMenus.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView day;
-        private TextView breakfast;
-        private TextView lunch;
-        private TextView snacks;
-        private TextView dinner;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            day = itemView.findViewById(R.id.day_text_view);
-            breakfast = itemView.findViewById(R.id.breakfast_text_view);
-            lunch = itemView.findViewById(R.id.lunch_text_view);
-            snacks = itemView.findViewById(R.id.snacks_text_view);
-            dinner = itemView.findViewById(R.id.dinner_text_view);
-        }
-    }
-
     private String generateDayString(int day) {
         switch (day) {
             case 1:
@@ -83,6 +65,24 @@ public class MessMenuAdapter extends RecyclerView.Adapter<MessMenuAdapter.ViewHo
                 return "Sunday";
             default:
                 throw new RuntimeException("DayIndexOutOfBounds: " + day);
+        }
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView day;
+        private TextView breakfast;
+        private TextView lunch;
+        private TextView snacks;
+        private TextView dinner;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            day = itemView.findViewById(R.id.day_text_view);
+            breakfast = itemView.findViewById(R.id.breakfast_text_view);
+            lunch = itemView.findViewById(R.id.lunch_text_view);
+            snacks = itemView.findViewById(R.id.snacks_text_view);
+            dinner = itemView.findViewById(R.id.dinner_text_view);
         }
     }
 }

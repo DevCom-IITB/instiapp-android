@@ -33,23 +33,23 @@
                 android:id="@+id/article_body"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
                 android:textColor="#000000"
-                android:textSize="17sp"
-                android:fontFamily="sans-serif-light" />
+                android:textSize="17sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
                 android:text=" | "
-                android:textSize="17sp"
-                android:fontFamily="sans-serif-light" />
+                android:textSize="17sp" />
 
             <TextView
                 android:id="@+id/article_published"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="17sp"
-                android:fontFamily="sans-serif-light" />
+                android:fontFamily="sans-serif-light"
+                android:textSize="17sp" />
         </LinearLayout>
 
         <TextView

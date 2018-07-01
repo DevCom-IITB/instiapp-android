@@ -18,12 +18,13 @@ import in.ac.iitb.gymkhana.iitbapp.data.Body;
 import in.ac.iitb.gymkhana.iitbapp.data.Role;
 
 
-public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.ViewHolder>{
+public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.ViewHolder> {
 
     private List<Role> roleList;
     private ItemClickListener itemClickListener;
     private Context context;
-    public RoleAdapter(List<Role> roleList, ItemClickListener itemClickListener){
+
+    public RoleAdapter(List<Role> roleList, ItemClickListener itemClickListener) {
         this.roleList = roleList;
         this.itemClickListener = itemClickListener;
     }
@@ -32,13 +33,13 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.ViewHolder>{
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         View v = LayoutInflater.from(context)
-                .inflate(R.layout.role_card,parent,false);
+                .inflate(R.layout.role_card, parent, false);
         final ViewHolder postViewHolder = new ViewHolder(v);
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                itemClickListener.onItemClick(view,postViewHolder.getAdapterPosition());
+                itemClickListener.onItemClick(view, postViewHolder.getAdapterPosition());
             }
         });
 
@@ -58,10 +59,10 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.ViewHolder>{
 
     @Override
     public int getItemCount() {
-        return  roleList.size();
+        return roleList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder  {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView bodyName;
         public TextView role;
         public ImageView image;
@@ -72,7 +73,6 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.ViewHolder>{
             role = (TextView) itemView.findViewById(R.id.role_card_role);
             image = (ImageView) itemView.findViewById(R.id.role_card_avatar);
         }
-
 
 
     }

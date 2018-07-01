@@ -55,7 +55,8 @@ public class BodyRecyclerViewFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             bodyList = new Gson().fromJson(getArguments().getString(Constants.BODY_LIST_JSON
-            ), new TypeToken<List<Body>>(){}.getType());
+            ), new TypeToken<List<Body>>() {
+            }.getType());
         }
     }
 
@@ -69,8 +70,8 @@ public class BodyRecyclerViewFragment extends Fragment {
             public void onItemClick(View v, int position) {
                 Body body = bodyList.get(position);
                 BodyFragment bodyFragment = new BodyFragment();
-                Bundle arguments=getArguments();
-                arguments.putString(Constants.BODY_JSON,new Gson().toJson(body));
+                Bundle arguments = getArguments();
+                arguments.putString(Constants.BODY_JSON, new Gson().toJson(body));
                 bodyFragment.setArguments(getArguments());
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());

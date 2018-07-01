@@ -58,14 +58,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = "MainActivity";
     SessionManager session;
     NotificationsResponse notificationsResponse;
+    FeedFragment feedFragment;
     private User currentUser;
     private boolean showNotifications = false;
-    FeedFragment feedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try { initPicasso(); } catch (IllegalStateException ignored) {}
+        try {
+            initPicasso();
+        } catch (IllegalStateException ignored) {
+        }
         setContentView(R.layout.activity_main);
         session = new SessionManager(getApplicationContext());
         session.checkLogin();

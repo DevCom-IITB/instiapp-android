@@ -1,7 +1,5 @@
 package in.ac.iitb.gymkhana.iitbapp.api;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.api.model.EventCreateRequest;

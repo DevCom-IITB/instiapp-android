@@ -17,12 +17,13 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.data.Body;
 
 
-public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder>{
+public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
 
     private List<Body> bodyList;
     private ItemClickListener itemClickListener;
     private Context context;
-    public BodyAdapter(List<Body> bodyList, ItemClickListener itemClickListener){
+
+    public BodyAdapter(List<Body> bodyList, ItemClickListener itemClickListener) {
         this.bodyList = bodyList;
         this.itemClickListener = itemClickListener;
     }
@@ -31,13 +32,13 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder>{
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         View v = LayoutInflater.from(context)
-                .inflate(R.layout.body_card_view,parent,false);
+                .inflate(R.layout.body_card_view, parent, false);
         final ViewHolder postViewHolder = new ViewHolder(v);
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                itemClickListener.onItemClick(view,postViewHolder.getAdapterPosition());
+                itemClickListener.onItemClick(view, postViewHolder.getAdapterPosition());
             }
         });
 
@@ -56,10 +57,10 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder>{
 
     @Override
     public int getItemCount() {
-       return  bodyList.size();
+        return bodyList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder  {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
         public TextView description;
         public ImageView image;
@@ -70,7 +71,6 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder>{
             description = (TextView) itemView.findViewById(R.id.body_card_description);
             image = (ImageView) itemView.findViewById(R.id.body_card_avatar);
         }
-
 
 
     }

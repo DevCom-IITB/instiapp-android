@@ -53,7 +53,8 @@ public class EventRecyclerViewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            eventList = new Gson().fromJson(getArguments().getString(Constants.EVENT_LIST_JSON), new TypeToken<List<Event>>(){}.getType());
+            eventList = new Gson().fromJson(getArguments().getString(Constants.EVENT_LIST_JSON), new TypeToken<List<Event>>() {
+            }.getType());
         }
     }
 
@@ -67,8 +68,8 @@ public class EventRecyclerViewFragment extends Fragment {
             public void onItemClick(View v, int position) {
                 Event event = eventList.get(position);
                 EventFragment eventFragment = new EventFragment();
-                Bundle arguments=getArguments();
-                arguments.putString(Constants.EVENT_JSON,new Gson().toJson(event));
+                Bundle arguments = getArguments();
+                arguments.putString(Constants.EVENT_JSON, new Gson().toJson(event));
                 eventFragment.setArguments(getArguments());
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());

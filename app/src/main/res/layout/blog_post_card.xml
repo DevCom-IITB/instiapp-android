@@ -20,9 +20,9 @@
             android:id="@+id/post_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
             android:textColor="#000000"
-            android:textSize="22sp"
-            android:fontFamily="sans-serif-light" />
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/post_published"

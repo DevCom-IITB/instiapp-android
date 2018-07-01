@@ -14,8 +14,6 @@ import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.R;
-import in.ac.iitb.gymkhana.iitbapp.data.Body;
-import in.ac.iitb.gymkhana.iitbapp.data.Role;
 import in.ac.iitb.gymkhana.iitbapp.data.User;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
@@ -23,7 +21,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private List<User> userList;
     private ItemClickListener itemClickListener;
     private Context context;
-    public UserAdapter(List<User> userList, ItemClickListener itemClickListener){
+
+    public UserAdapter(List<User> userList, ItemClickListener itemClickListener) {
         this.userList = userList;
         this.itemClickListener = itemClickListener;
     }
@@ -32,13 +31,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         View v = LayoutInflater.from(context)
-                .inflate(R.layout.role_card, parent,false);
+                .inflate(R.layout.role_card, parent, false);
         final ViewHolder postViewHolder = new ViewHolder(v);
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                itemClickListener.onItemClick(view,postViewHolder.getAdapterPosition());
+                itemClickListener.onItemClick(view, postViewHolder.getAdapterPosition());
             }
         });
 
@@ -56,10 +55,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return  userList.size();
+        return userList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder  {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView userName;
         public TextView role;
         public ImageView image;

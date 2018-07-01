@@ -109,7 +109,7 @@ public class CalendarFragment extends BaseFragment {
         final String oneMonthOn = isoFormatter.format(oneMonthOnDate).toString();
 
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getEventsBetweenDates(((MainActivity)getActivity()).getSessionIDHeader(), oneMonthBack, oneMonthOn).enqueue(new Callback<NewsFeedResponse>() {
+        retrofitInterface.getEventsBetweenDates(((MainActivity) getActivity()).getSessionIDHeader(), oneMonthBack, oneMonthOn).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
@@ -136,7 +136,7 @@ public class CalendarFragment extends BaseFragment {
     private void showEventsForDate(Date date) {
 
         final List<Event> filteredEvents = new ArrayList<Event>();
-        for( Event event : events) {
+        for (Event event : events) {
             Date nextDay = new Date(date.getTime() + (1000 * 60 * 60 * 24));
             Timestamp start = event.getEventStartTime();
             if (start.after(date) && start.before(nextDay)) {

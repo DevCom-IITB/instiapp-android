@@ -6,7 +6,6 @@ import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
-
 import java.util.List;
 
 @Entity(tableName = "roles")
@@ -17,40 +16,40 @@ public class Role {
     @PrimaryKey(autoGenerate = true)
     int db_id;
 
-    @ColumnInfo(name="id")
+    @ColumnInfo(name = "id")
     @SerializedName("id")
     String roleID;
 
-    @ColumnInfo(name="name")
+    @ColumnInfo(name = "name")
     @SerializedName("name")
     String roleName;
 
-    @ColumnInfo(name="inheritable")
+    @ColumnInfo(name = "inheritable")
     @SerializedName("inheritable")
     boolean roleInheritable;
 
-    @ColumnInfo(name="body")
+    @ColumnInfo(name = "body")
     @SerializedName("body")
     String roleBody;
 
-    @ColumnInfo(name="body_detail")
+    @ColumnInfo(name = "body_detail")
     @SerializedName("body_detail")
     Body roleBodyDetails;
 
-    @ColumnInfo(name="bodies")
+    @ColumnInfo(name = "bodies")
     @SerializedName("bodies")
     List<Body> roleBodies;
 
 
-    @ColumnInfo(name="permissions")
+    @ColumnInfo(name = "permissions")
     @SerializedName("permissions")
     List<String> rolePermissions;
 
-    @ColumnInfo(name="users")
+    @ColumnInfo(name = "users")
     @SerializedName("users")
     List<String> roleUsers;
 
-    @ColumnInfo(name="users_detail")
+    @ColumnInfo(name = "users_detail")
     @SerializedName("users_detail")
     List<User> roleUsersDetail;
 

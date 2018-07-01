@@ -4,7 +4,6 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -51,10 +50,10 @@ public class User {
     List<String> userFollowedBodiesID;
     @ColumnInfo(name = "roles")
     @SerializedName("roles")
-    List<Role>userRoles;
-    @ColumnInfo(name="institute_roles")
+    List<Role> userRoles;
+    @ColumnInfo(name = "institute_roles")
     @SerializedName("institute_roles")
-    List<Role>userInstituteRoles;
+    List<Role> userInstituteRoles;
     @ColumnInfo(name = "website_url")
     @SerializedName("website_url")
     String userWebsiteURL;
@@ -65,7 +64,9 @@ public class User {
     @SerializedName("hostel")
     String hostel;
 
-    /** Not in database */
+    /**
+     * Not in database
+     */
     @Ignore
     String currentRole;
 
