@@ -120,7 +120,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         nameTextView.setText(currentUser.getUserName());
         rollNoTextView.setText(currentUser.getUserRollNumber());
 
-        Picasso.with(this).load(currentUser.getUserProfilePictureUrl()).into(profilePictureImageView);
+        Picasso.with(this)
+                .load(currentUser.getUserProfilePictureUrl())
+                .resize(200, 0)
+                .placeholder(R.drawable.user_placeholder)
+                .into(profilePictureImageView);
     }
 
 //    private void fetchNotifications() {
