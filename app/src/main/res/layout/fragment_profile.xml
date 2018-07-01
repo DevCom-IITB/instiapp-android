@@ -68,7 +68,7 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorWhite"
             android:visibility="invisible">
 
             <android.support.design.widget.TabItem
