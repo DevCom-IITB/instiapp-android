@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
@@ -30,11 +32,14 @@ import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.ShareURLMaker;
 import in.ac.iitb.gymkhana.iitbapp.adapter.FeedAdapter;
+import in.ac.iitb.gymkhana.iitbapp.adapter.UserAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
 import in.ac.iitb.gymkhana.iitbapp.data.Body;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
+import in.ac.iitb.gymkhana.iitbapp.data.Role;
+import in.ac.iitb.gymkhana.iitbapp.data.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -212,6 +217,35 @@ public class BodyFragment extends Fragment {
         });
         eventRecyclerView.setAdapter(eventAdapter);
         eventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        final List<Role> roles = body.getBodyRoles();
+        final List<User> users = new ArrayList();
+        for (Role role : roles) {
+            if (role.getRoleUsersDetail() != null) {
+                for (User user: role.getRoleUsersDetail()) {
+                    user.setCurrentRole(role.getRoleName());
+                    users.add(user);
+                }
+            }
+        }
+        RecyclerView userRecyclerView = (RecyclerView) getActivity().findViewById(R.id.people_card_recycler_view);
+        UserAdapter userAdapter = new UserAdapter(users, new ItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                User user = users.get(position);
+                /*Bundle bundle = new Bundle();
+                bundle.putString(Constants.EVENT_JSON, new Gson().toJson(event));
+                EventFragment eventFragment = new EventFragment();
+                eventFragment.setArguments(bundle);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+                ft.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
+                ft.addToBackStack(eventFragment.getTag());
+                ft.commit();*/
+            }
+        });
+        userRecyclerView.setAdapter(userAdapter);
+        userRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private class updateDbBody extends AsyncTask<Body, Void, Integer> {
