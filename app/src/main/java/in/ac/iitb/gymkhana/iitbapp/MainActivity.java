@@ -30,21 +30,17 @@ import com.squareup.picasso.Picasso;
 import in.ac.iitb.gymkhana.iitbapp.api.UnsafeOkHttpClient;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsResponse;
 import in.ac.iitb.gymkhana.iitbapp.data.User;
-import in.ac.iitb.gymkhana.iitbapp.fragment.AboutFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragment.CMSFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.CalendarFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragment.ContactsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.FeedFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragment.GCRankingsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MapFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MessMenuFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MyEventsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.NewsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.NotificationsFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragment.PeopleFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.PlacementBlogFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.ProfileFragment;
-import in.ac.iitb.gymkhana.iitbapp.fragment.TimetableFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.QLinksFragment;
+import in.ac.iitb.gymkhana.iitbapp.fragment.SettingsFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.TrainingBlogFragment;
 
 import static in.ac.iitb.gymkhana.iitbapp.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
@@ -58,13 +54,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = "MainActivity";
     SessionManager session;
     NotificationsResponse notificationsResponse;
+    FeedFragment feedFragment;
     private User currentUser;
     private boolean showNotifications = false;
-    FeedFragment feedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            initPicasso();
+        } catch (IllegalStateException ignored) {
+        }
         setContentView(R.layout.activity_main);
         session = new SessionManager(getApplicationContext());
         session.checkLogin();
@@ -121,15 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         nameTextView.setText(currentUser.getUserName());
         rollNoTextView.setText(currentUser.getUserRollNumber());
 
-        Picasso.Builder picassoBuilder = new Picasso.Builder(this);
-        picassoBuilder.downloader(
-            new OkHttp3Downloader((
-                UnsafeOkHttpClient.getUnsafeOkHttpClient()
-            )
-        ));
-        Picasso picasso = picassoBuilder.build();
-
-        picasso.load(currentUser.getUserProfilePictureUrl()).into(profilePictureImageView);
+        Picasso.with(this).load(currentUser.getUserProfilePictureUrl()).into(profilePictureImageView);
     }
 
 //    private void fetchNotifications() {
@@ -231,21 +223,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 MessMenuFragment messMenuFragment = new MessMenuFragment();
                 updateFragment(messMenuFragment);
                 break;
-            case R.id.nav_gc_rankings:
-                GCRankingsFragment gcrankingsFragment = new GCRankingsFragment();
-                updateFragment(gcrankingsFragment);
-                break;
             case R.id.nav_calendar:
                 CalendarFragment calendarFragment = new CalendarFragment();
                 updateFragment(calendarFragment);
                 break;
-            case R.id.nav_cms:
-                CMSFragment cmsFragment = new CMSFragment();
-                updateFragment(cmsFragment);
-                break;
-            case R.id.nav_timetable:
-                TimetableFragment timetableFragment = new TimetableFragment();
-                updateFragment(timetableFragment);
+            case R.id.nav_qlinks:
+                QLinksFragment qLinksFragment = new QLinksFragment();
+                updateFragment(qLinksFragment);
                 break;
             case R.id.nav_map:
                 MapFragment mapFragment = new MapFragment();
@@ -258,18 +242,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 break;
 
-            case R.id.nav_contacts:
-                ContactsFragment contactsFragment = new ContactsFragment();
-                updateFragment(contactsFragment);
-                break;
-            case R.id.nav_about:
-                AboutFragment aboutFragment = new AboutFragment();
-                updateFragment(aboutFragment);
-                break;
-
-            case R.id.nav_people:
-                PeopleFragment peopleFragment = new PeopleFragment();
-                updateFragment(peopleFragment);
+            case R.id.nav_settings:
+                SettingsFragment settingsFragment = new SettingsFragment();
+                updateFragment(settingsFragment);
                 break;
         }
 
@@ -325,6 +300,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public String getSessionIDHeader() {
         return "sessionid=" + session.getSessionID();
+    }
+
+    public void initPicasso() {
+        Picasso.Builder builder = new Picasso.Builder(getApplicationContext());
+        builder.downloader(new OkHttp3Downloader((
+                UnsafeOkHttpClient.getUnsafeOkHttpClient(getApplicationContext())
+        )));
+        Picasso built = builder.build();
+        // TODO Set these to false before launch
+        built.setIndicatorsEnabled(true);
+        built.setLoggingEnabled(true);
+        Picasso.setSingletonInstance(built);
     }
 
     @Override

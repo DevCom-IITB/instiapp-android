@@ -1,8 +1,9 @@
-<RelativeLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,8 +11,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#fafafa"
-            android:theme="@style/CalendarTheme"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:theme="@style/CalendarTheme">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -47,7 +48,7 @@
                     android:background="@drawable/round_text_box"
                     android:gravity="center"
                     android:text="# Events Today"
-                    android:textColor="@color/primaryTextColor"/>
+                    android:textColor="@color/secondaryTextColor" />
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -70,6 +71,6 @@
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_input_add"
-        android:tint="@android:color/white" />
+        android:tint="@android:color/black" />
 
 </RelativeLayout>

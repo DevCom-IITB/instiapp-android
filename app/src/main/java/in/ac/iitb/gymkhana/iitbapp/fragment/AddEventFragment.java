@@ -6,16 +6,13 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.ImageViewCompat;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,10 +27,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -98,17 +98,6 @@ public class AddEventFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static String convertImageToString(Bitmap imageBitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        if (imageBitmap != null) {
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 60, stream);
-            byte[] byteArray = stream.toByteArray();
-            return Base64.encodeToString(byteArray, Base64.DEFAULT);
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -133,14 +122,13 @@ public class AddEventFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
 
-                Calendar calendar = Calendar.getInstance();
+                final Calendar calendar = Calendar.getInstance();
                 int mYear = calendar.get(Calendar.YEAR);
                 int mMonth = calendar.get(Calendar.MONTH);
                 int mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
                 final int mHour = calendar.get(Calendar.HOUR_OF_DAY);
                 final int mMin = calendar.get(Calendar.MINUTE);
-                long millis = calendar.getTimeInMillis();
 
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
@@ -150,57 +138,25 @@ public class AddEventFragment extends BaseFragment {
                         TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                start.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":" + minute);
+                                timestamp_start = makeTimestamp(year, month, dayOfMonth, hourOfDay, minute);
+                                if (timestamp_start.after(new Timestamp(Calendar.getInstance().getTimeInMillis()))) {
+                                    if (timestamp_end == null || timestamp_end.after(timestamp_start)) {
+                                        start.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":" + minute);
+                                        enableEndDatePicker(year, month, dayOfMonth, hourOfDay, minute);
+                                    }
+                                } else {
+                                    Toast.makeText(getContext(), "Start Time cannot be in the past", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }, mHour, mMin, true);
                         timePickerDialog.show();
                     }
                 }, mYear, mMonth, mDay);
-
-
                 datePickerDialog.show();
-                timestamp_start = new Timestamp(millis);
-
             }
 
         });
 
-
-        end.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Calendar calendar = Calendar.getInstance();
-                int mYear = calendar.get(Calendar.YEAR);
-                int mMonth = calendar.get(Calendar.MONTH);
-                int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                final int mHour = calendar.get(Calendar.HOUR_OF_DAY);
-                final int mMin = calendar.get(Calendar.MINUTE);
-                long millis = calendar.getTimeInMillis();
-
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                end.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":" + minute);
-                            }
-                        }, mHour, mMin, true);
-                        timePickerDialog.show();
-                    }
-                }, mYear, mMonth, mDay);
-
-
-                datePickerDialog.show();
-                timestamp_end = new Timestamp(millis);
-
-            }
-
-        });
         if (cb_permission.isChecked()) {
             publicStatus = 1;
         } else publicStatus = 0;
@@ -248,6 +204,45 @@ public class AddEventFragment extends BaseFragment {
         return view;
     }
 
+    private void enableEndDatePicker(final int startYear, final int startMonth, final int startDayOfMonth, final int startHourOfDay, final int startMinute) {
+        end.setEnabled(true);
+        end.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                timestamp_end = makeTimestamp(year, month, dayOfMonth, hourOfDay, minute);
+                                if (timestamp_end.after(timestamp_start))
+                                    end.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":" + minute);
+                                else {
+                                    Toast.makeText(getContext(), "End Time cannot be before Start Time", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }, startHourOfDay, startMinute, true);
+                        timePickerDialog.show();
+                    }
+                }, startYear, startMonth, startDayOfMonth);
+                datePickerDialog.show();
+            }
+        });
+    }
+
+    public static Timestamp makeTimestamp(int year, int month, int day, int hour, int minute) {
+        Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DATE, day);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+
+        return new Timestamp(cal.getTimeInMillis());
+    }
+
     private void sendImage() {
         progressDialog.setMessage("Uploading Image");
         ImageUploadRequest imageUploadRequest = new ImageUploadRequest(base64Image);
@@ -293,53 +288,8 @@ public class AddEventFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-            eventPictureImageView.setImageBitmap(getScaledBitmap(picturePath, imageButton.getWidth(), imageButton.getHeight()));
-            eventPictureImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            base64Image = convertImageToString(getScaledBitmap(picturePath, 800, 800));
-            Log.d(TAG, "onActivityResult: " + base64Image);
+            ImageViewCompat.setImageTintList(eventPictureImageView, null);
+            Picasso.with(getContext()).load(selectedImage).into(eventPictureImageView);
         }
-    }
-
-    private Bitmap getScaledBitmap(String picturePath, int width, int height) {
-        BitmapFactory.Options sizeOptions = new BitmapFactory.Options();
-        sizeOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(picturePath, sizeOptions);
-
-        int inSampleSize = calculateInSampleSize(sizeOptions, width, height);
-
-        sizeOptions.inJustDecodeBounds = false;
-        sizeOptions.inSampleSize = inSampleSize;
-
-        return BitmapFactory.decodeFile(picturePath, sizeOptions);
-    }
-
-    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            // Calculate ratios of height and width to requested height and
-            // width
-            final int heightRatio = Math.round((float) height / (float) reqHeight);
-            final int widthRatio = Math.round((float) width / (float) reqWidth);
-
-            // Choose the smallest ratio as inSampleSize value, this will
-            // guarantee
-            // a final image with both dimensions larger than or equal to the
-            // requested height and width.
-            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-        }
-
-        return inSampleSize;
     }
 }

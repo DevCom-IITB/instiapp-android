@@ -55,8 +55,8 @@ public class EventFragment extends BaseFragment {
     ImageButton webEventButton;
     ImageButton shareEventButton;
     RecyclerView bodyRecyclerView;
-    private AppDatabase appDatabase;
     String TAG = "EventFragment";
+    private AppDatabase appDatabase;
 
     public EventFragment() {
         // Required empty public constructor
@@ -112,22 +112,22 @@ public class EventFragment extends BaseFragment {
             eventVenueName.append(", ").append(venue.getVenueShortName());
         }
 
-       final List<Body> bodyList = event.getEventBodies();
-       bodyRecyclerView = (RecyclerView) getActivity().findViewById(R.id.body_card_recycler_view);
-       BodyAdapter bodyAdapter = new BodyAdapter(bodyList, new ItemClickListener() {
-           @Override
-           public void onItemClick(View v, int position) {
-               Body body = bodyList.get(position);
-               BodyFragment bodyFragment = BodyFragment.newInstance(body);
-               FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-               ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-               ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
-               ft.addToBackStack(bodyFragment.getTag());
-               ft.commit();
-           }
-       });
-       bodyRecyclerView.setAdapter(bodyAdapter);
-       bodyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        final List<Body> bodyList = event.getEventBodies();
+        bodyRecyclerView = (RecyclerView) getActivity().findViewById(R.id.body_card_recycler_view);
+        BodyAdapter bodyAdapter = new BodyAdapter(bodyList, new ItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                Body body = bodyList.get(position);
+                BodyFragment bodyFragment = BodyFragment.newInstance(body);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+                ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
+                ft.addToBackStack(bodyFragment.getTag());
+                ft.commit();
+            }
+        });
+        bodyRecyclerView.setAdapter(bodyAdapter);
+        bodyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
         if (!eventVenueName.toString().equals(""))

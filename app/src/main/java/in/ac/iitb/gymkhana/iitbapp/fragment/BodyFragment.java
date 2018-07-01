@@ -7,9 +7,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.Constants;
@@ -29,12 +30,16 @@ import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.MainActivity;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.ShareURLMaker;
+import in.ac.iitb.gymkhana.iitbapp.adapter.BodyAdapter;
 import in.ac.iitb.gymkhana.iitbapp.adapter.FeedAdapter;
+import in.ac.iitb.gymkhana.iitbapp.adapter.UserAdapter;
 import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
 import in.ac.iitb.gymkhana.iitbapp.data.Body;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
+import in.ac.iitb.gymkhana.iitbapp.data.Role;
+import in.ac.iitb.gymkhana.iitbapp.data.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,9 +55,8 @@ public class BodyFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
 
-    private AppDatabase appDatabase;
     String TAG = "BodyFragment";
-
+    private AppDatabase appDatabase;
     // TODO: Rename and change types of parameters
     private Body min_body;
     private SwipeRefreshLayout bodySwipeRefreshLayout;
@@ -92,9 +96,9 @@ public class BodyFragment extends Fragment {
 
         /* Initialize */
         appDatabase = AppDatabase.getAppDatabase(getContext());
-
+        displayBody(min_body);
         new getDbBody().execute(min_body.getBodyID());
-        bodySwipeRefreshLayout=getActivity().findViewById(R.id.body_swipe_refresh_layout);
+        bodySwipeRefreshLayout = getActivity().findViewById(R.id.body_swipe_refresh_layout);
         bodySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -105,7 +109,7 @@ public class BodyFragment extends Fragment {
 
     private void updateBody() {
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getBody(((MainActivity)getActivity()).getSessionIDHeader(), min_body.getBodyID()).enqueue(new Callback<Body>() {
+        retrofitInterface.getBody(((MainActivity) getActivity()).getSessionIDHeader(), min_body.getBodyID()).enqueue(new Callback<Body>() {
             @Override
             public void onResponse(Call<Body> call, Response<Body> response) {
                 if (response.isSuccessful()) {
@@ -136,8 +140,14 @@ public class BodyFragment extends Fragment {
 
         /* Set body information */
         bodyName.setText(body.getBodyName());
-        Markwon.setMarkdown(bodyDescription, body.getBodyDescription());
         Picasso.with(getContext()).load(body.getBodyImageURL()).into(eventPicture);
+
+        /* Return if it's a min body */
+        if (body.getBodyDescription() == null) {
+            return;
+        }
+
+        Markwon.setMarkdown(bodyDescription, body.getBodyDescription());
 
         /* Check if user is already following
          * Initialize follow button */
@@ -147,7 +157,7 @@ public class BodyFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-                retrofitInterface.updateBodyFollowing(((MainActivity) getActivity()).getSessionIDHeader(), body.getBodyID(), body.getBodyUserFollows() ? 0:1).enqueue(new Callback<Void>() {
+                retrofitInterface.updateBodyFollowing(((MainActivity) getActivity()).getSessionIDHeader(), body.getBodyID(), body.getBodyUserFollows() ? 0 : 1).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
@@ -166,11 +176,11 @@ public class BodyFragment extends Fragment {
         });
 
         /* Initialize web button */
-        if (body.getBodyWebsiteURL() != null && !body.getBodyWebsiteURL().isEmpty())
-        {
+        if (body.getBodyWebsiteURL() != null && !body.getBodyWebsiteURL().isEmpty()) {
             webBodyButton.setVisibility(View.VISIBLE);
             webBodyButton.setOnClickListener(new View.OnClickListener() {
                 String bodywebURL = body.getBodyWebsiteURL();
+
                 @Override
                 public void onClick(View view) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(bodywebURL));
@@ -182,6 +192,7 @@ public class BodyFragment extends Fragment {
         /* Initialize share button */
         shareBodyButton.setOnClickListener(new View.OnClickListener() {
             String shareUrl = ShareURLMaker.getBodyURL(body);
+
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(Intent.ACTION_SEND);
@@ -212,6 +223,82 @@ public class BodyFragment extends Fragment {
         });
         eventRecyclerView.setAdapter(eventAdapter);
         eventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        /* Get users from roles */
+        final List<Role> roles = body.getBodyRoles();
+        final List<User> users = new ArrayList();
+        for (Role role : roles) {
+            if (role.getRoleUsersDetail() != null) {
+                for (User user : role.getRoleUsersDetail()) {
+                    user.setCurrentRole(role.getRoleName());
+                    users.add(user);
+                }
+            }
+        }
+
+        /* Initialize People */
+        RecyclerView userRecyclerView = (RecyclerView) getActivity().findViewById(R.id.people_card_recycler_view);
+        UserAdapter userAdapter = new UserAdapter(users, new ItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                User user = users.get(position);
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.USER_ID, user.getUserID());
+                ProfileFragment profileFragment = new ProfileFragment();
+                profileFragment.setArguments(bundle);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+                ft.replace(R.id.framelayout_for_fragment, profileFragment, profileFragment.getTag());
+                ft.addToBackStack(profileFragment.getTag());
+                ft.commit();
+            }
+        });
+        userRecyclerView.setAdapter(userAdapter);
+        userRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        /* Initialize Parent bodies */
+        RecyclerView parentsRecyclerView = (RecyclerView) getActivity().findViewById(R.id.parentorg_card_recycler_view);
+        BodyAdapter parentAdapter = new BodyAdapter(body.getBodyParents(), new ItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                openBody(body.getBodyParents().get(position));
+            }
+        });
+        parentsRecyclerView.setAdapter(parentAdapter);
+        parentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        /* Initialize child bodies */
+        RecyclerView childrenRecyclerView = (RecyclerView) getActivity().findViewById(R.id.org_card_recycler_view);
+        BodyAdapter childrenAdapter = new BodyAdapter(body.getBodyChildren(), new ItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                openBody(body.getBodyChildren().get(position));
+            }
+        });
+        childrenRecyclerView.setAdapter(childrenAdapter);
+        childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    /**
+     * Open body fragment for a body
+     */
+    private void openBody(Body body) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.BODY_JSON, new Gson().toJson(body));
+        BodyFragment bodyFragment = new BodyFragment();
+        bodyFragment.setArguments(bundle);
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+        ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
+        ft.addToBackStack(bodyFragment.getTag());
+        ft.commit();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_body, container, false);
     }
 
     private class updateDbBody extends AsyncTask<Body, Void, Integer> {
@@ -244,13 +331,6 @@ public class BodyFragment extends Fragment {
                 updateBody();
             }
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_body, container, false);
     }
 
 }
