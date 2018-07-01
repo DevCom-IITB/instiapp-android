@@ -126,12 +126,28 @@
                 android:textColor="#777"
                 android:textSize="16sp" />
 
+            <TextView
+                android:text="Events"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-light" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/event_card_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:nestedScrollingEnabled="false" />
+
+            <TextView
+                android:text="Organizations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-light" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/org_card_recycler_view"
@@ -140,12 +156,28 @@
                 android:layout_marginTop="10dp"
                 android:nestedScrollingEnabled="false" />
 
+            <TextView
+                android:text="People"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-light" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/people_card_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:nestedScrollingEnabled="false" />
+
+            <TextView
+                android:text="Part of"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-light" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/parentorg_card_recycler_view"
