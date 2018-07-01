@@ -30,8 +30,6 @@ import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedResponse;
 import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
-import in.ac.iitb.gymkhana.iitbapp.SessionManager;
-import in.ac.iitb.gymkhana.iitbapp.data.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,8 +43,6 @@ public class MyEventsFragment extends BaseFragment {
     private SwipeRefreshLayout feedSwipeRefreshLayout;
     private AppDatabase appDatabase;
     private FloatingActionButton fab;
-    public User currentuser;
-    public SessionManager session;
 
     public MyEventsFragment() {
         // Required empty public constructor
@@ -76,30 +72,28 @@ public class MyEventsFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        session = new SessionManager(getContext());
-        currentuser = User.fromString(session.pref.getString(Constants.CURRENT_USER, "Error"));
         appDatabase = AppDatabase.getAppDatabase(getContext());
-        new showEvents().execute();
+       new showEvents().execute();
 
-        feedSwipeRefreshLayout = getActivity().findViewById(R.id.feed_swipe_refresh_layout);
+        feedSwipeRefreshLayout = getActivity().findViewById(R.id.my_events_feed_swipe_refresh_layout);
         feedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                update();
+                updateOnRefresh();
                 feedSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
 
-    private void update(){
+    private void updateOnRefresh(){
+
         List<Event> temp =  appDatabase.dbDao().getAllEvents();
-        List<Event> eve ;
-        eve = currentuser.getUserGoingEvents();
-        eve.clear();
+        List<Event> eventsfollowing = appDatabase.dbDao().getAllEvents();
+        eventsfollowing.clear();
         int k= temp.size();
         for(int i=0; i<k; i++)
-        { if (temp.get(i).getEventUserUes() != 0) eve.add(temp.get(i)); }
-        displayEvents(eve);
+        { if (temp.get(i).getEventUserUes() != 0) eventsfollowing.add(temp.get(i)); }
+        displayEvents(eventsfollowing);
 
     }
 
@@ -107,16 +101,15 @@ public class MyEventsFragment extends BaseFragment {
 
         @Override
         protected List<Event> doInBackground(String... events) {
-      //      ev = currentuser.getUserGoingEvents();
-      //      ev.addAll(currentuser.getUserInterestedEvents());
-      //      return ev;
-           List<Event> temp =  appDatabase.dbDao().getAllEvents();
-            List<Event> eve ; eve = currentuser.getUserGoingEvents(); eve.clear();
-            int k= temp.size();
+
+            List<Event> temp =  appDatabase.dbDao().getAllEvents();
+            List<Event> eventsfollowing = appDatabase.dbDao().getAllEvents();
+             eventsfollowing.clear();
+             int k= temp.size();
             for(int i=0; i<k; i++)
-            { if (temp.get(i).getEventUserUes() != 0) eve.add(temp.get(i)); }
-            return eve;
-        }
+            { if (temp.get(i).getEventUserUes() != 0) eventsfollowing.add(temp.get(i)); }
+            return eventsfollowing;
+            }
         protected void onPostExecute(List<Event> result) {
             displayEvents(result);
         }
@@ -143,7 +136,7 @@ public class MyEventsFragment extends BaseFragment {
             @Override
             public void run(Activity pActivity) {
                 try {
-                    feedRecyclerView = getActivity().findViewById(R.id.feed_recycler_view);
+                    feedRecyclerView = getActivity().findViewById(R.id.my_events_feed_recycler_view);
                     feedRecyclerView.setAdapter(feedAdapter);
                     feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 } catch (NullPointerException e) {
