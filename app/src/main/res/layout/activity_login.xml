@@ -19,5 +19,11 @@
         android:layout_gravity="center"
         android:text="LDAP login" />
 
+    <WebView
+        android:id="@+id/login_webview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </WebView>
+
 
 </LinearLayout>

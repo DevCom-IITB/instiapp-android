@@ -19,6 +19,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -58,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         session = new SessionManager(mContext);
         setContentView(R.layout.activity_login);
         mAuthService = new AuthorizationService(this);
@@ -140,6 +144,34 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        WebView webview = (WebView)  findViewById(R.id.login_webview);
+        webview.loadUrl("file:///android_asset/login.html");
+
+        webview.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                /* Capture redirect */
+                if (url.startsWith(redirectUri.toString())) {
+                    /* Show progress dialog */
+                    progressDialog = new ProgressDialog(LoginActivity.this);
+                    progressDialog.setMessage("Logging In");
+                    progressDialog.setCancelable(false);
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.show();
+
+                    /* Get auth code from query */
+                    String query = Uri.parse(url).getQuery();
+                    authCode = query.substring(query.lastIndexOf("=") + 1);
+                    login(authCode, redirectUri.toString(), authCode);
+                    return true;
+                }
+                /* Load URL */
+                view.loadUrl(url);
+                return false;
+            }
+        });
+
         checkIntent(getIntent());
     }
 
