@@ -2,6 +2,7 @@ package in.ac.iitb.gymkhana.iitbapp.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.util.Log;
 
@@ -63,6 +64,10 @@ public class User {
     @ColumnInfo(name = "hostel")
     @SerializedName("hostel")
     String hostel;
+
+    /** Not in database */
+    @Ignore
+    String currentRole;
 
     public User(int db_id, String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, List<Role> userRoles, List<Role> userInstituteRoles, String userWebsiteURL, String userLDAPId, String hostel) {
         this.db_id = db_id;
@@ -214,6 +219,14 @@ public class User {
 
     public void setHostel(String hostel) {
         this.hostel = hostel;
+    }
+
+    public String getCurrentRole() {
+        return currentRole;
+    }
+
+    public void setCurrentRole(String currentRole) {
+        this.currentRole = currentRole;
     }
 
     @Override

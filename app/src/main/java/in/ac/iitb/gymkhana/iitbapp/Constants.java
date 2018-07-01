@@ -7,6 +7,7 @@ public class Constants {
     public static final int RESULT_LOAD_IMAGE = 11;
     public static final String NOTIFICATIONS_RESPONSE_JSON = "notifications_json";
     public static final String EVENT_JSON = "event_json";
+    public static final String EVENT_LIST_JSON = "event_list_json";
     public static final String USER_ID = "user_id";
     public static final String USER_HOSTEL = "user_hostel";
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
@@ -19,5 +20,6 @@ public class Constants {
     public static final int STATUS_GOING = 2;
     public static final int STATUS_INTERESTED = 1;
     public static final int STATUS_NOT_GOING = 0;
-    public static final String BODY_JSON= "body_json";
+    public static final String BODY_JSON = "body_json";
+    public static final String BODY_LIST_JSON = "body_list_json";
 }
