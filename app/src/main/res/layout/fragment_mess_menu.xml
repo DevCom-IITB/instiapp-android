@@ -1,29 +1,46 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.MessMenuFragment">
+    android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/hostel_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:paddingBottom="12dp"
-        android:paddingLeft="16dp"
-        android:theme="@style/AppTheme" />
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/mess_menu_swipe_refresh_layout"
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.MessMenuFragment">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/mess_menu_recycler_view"
+        <Spinner
+            android:id="@+id/hostel_spinner"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:paddingBottom="12dp"
+            android:paddingLeft="16dp"
+            android:theme="@style/AppTheme" />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
-</LinearLayout>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/mess_menu_swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.MessMenuFragment">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/mess_menu_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
+</RelativeLayout>

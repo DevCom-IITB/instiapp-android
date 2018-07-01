@@ -17,7 +17,6 @@ public class SessionManager {
     public SessionManager(Context context) {
         this.context = context;
         pref = context.getSharedPreferences(Constants.PREF_NAME, PRIVATE_MODE);
-        editor = pref.edit();
     }
 
     public void checkLogin() {
@@ -34,6 +33,7 @@ public class SessionManager {
 
     public void createLoginSession(String gcmId, User currentUser, String sessionID) {
         Log.d("SessionManager", "GcmId being stored");
+        editor = pref.edit();
         editor.putBoolean(Constants.IS_LOGGED_IN, true);
         editor.putString(Constants.GCM_ID, gcmId);
         editor.putString(Constants.CURRENT_USER, currentUser.toString());
@@ -47,5 +47,10 @@ public class SessionManager {
 
     public boolean isLoggedIn() {
         return pref.getBoolean(Constants.IS_LOGGED_IN, false);
+    }
+
+    public void logout() {
+        editor = pref.edit();
+        editor.clear().commit();
     }
 }

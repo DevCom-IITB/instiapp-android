@@ -173,6 +173,8 @@ public class CalendarFragment extends BaseFragment {
         });
         eventRecyclerView.setAdapter(eventAdapter);
         eventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
 }

@@ -81,6 +81,9 @@ public class ProfileFragment extends BaseFragment {
         TextView userEmailIDTextView = getActivity().findViewById(R.id.user_email_profile);
         TextView userContactNumberTextView = getActivity().findViewById(R.id.user_contact_no_profile);
 
+        /** Show tabs */
+        getActivity().findViewById(R.id.tab_layout).setVisibility(View.VISIBLE);
+
         final List<Role> roleList = user.getUserRoles();
         RecyclerView userRoleRecyclerView = getActivity().findViewById(R.id.role_recycler_view);
         RoleAdapter roleAdapter = new RoleAdapter(roleList, new ItemClickListener() {
@@ -90,6 +93,7 @@ public class ProfileFragment extends BaseFragment {
                 Body roleBody = role.getRoleBodyDetails();
                 BodyFragment bodyFragment = BodyFragment.newInstance(roleBody);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
                 ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
                 ft.addToBackStack(bodyFragment.getTag());
                 ft.commit();
@@ -99,7 +103,11 @@ public class ProfileFragment extends BaseFragment {
         userRoleRecyclerView.setAdapter(roleAdapter);
         userRoleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Picasso.with(getContext()).load(user.getUserProfilePictureUrl()).into(userProfilePictureImageView);
+        Picasso.with(getContext())
+                .load(user.getUserProfilePictureUrl())
+                .resize(800, 0)
+                .placeholder(R.drawable.user_placeholder)
+                .into(userProfilePictureImageView);
 
         final List<Body> bodyList = user.getUserFollowedBodies();
         final List<Event> eventList = user.getUserGoingEvents();
@@ -123,6 +131,8 @@ public class ProfileFragment extends BaseFragment {
         userRollNumberTextView.setText(user.getUserRollNumber());
         userEmailIDTextView.setText(user.getUserEmail());
         userContactNumberTextView.setText(user.getUserContactNumber());
+
+        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
 

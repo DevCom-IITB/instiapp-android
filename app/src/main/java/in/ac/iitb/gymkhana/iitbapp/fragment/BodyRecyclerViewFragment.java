@@ -74,6 +74,7 @@ public class BodyRecyclerViewFragment extends Fragment {
                 arguments.putString(Constants.BODY_JSON, new Gson().toJson(body));
                 bodyFragment.setArguments(getArguments());
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
                 ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
                 ft.addToBackStack(bodyFragment.getTag());
                 ft.commit();

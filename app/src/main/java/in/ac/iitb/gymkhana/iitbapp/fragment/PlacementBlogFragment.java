@@ -111,6 +111,7 @@ public class PlacementBlogFragment extends BaseFragment {
                 }
             }
         });
+        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
     private void openWebURL(String URL) {
