@@ -10,14 +10,19 @@
             android:icon="@drawable/ic_dashboard_black_48dp"
             android:title="Feed" />
         <item
+            android:id="@+id/nav_news"
+            android:icon="@drawable/baseline_rss_feed_black_48"
+            android:title="News" />
+
+        <item
             android:id="@+id/nav_my_events"
             android:icon="@drawable/ic_event"
             android:title="My Events" />
 
         <item
-            android:id="@+id/nav_news"
-            android:icon="@drawable/baseline_rss_feed_black_48"
-            android:title="News" />
+            android:id="@+id/nav_mess_menu"
+            android:icon="@drawable/ic_restaurant_black_48dp"
+            android:title="Mess Menu" />
 
         <item
             android:id="@+id/nav_placement_blog"
@@ -30,46 +35,24 @@
             android:title="Training Blog" />
 
         <item
-            android:id="@+id/nav_mess_menu"
-            android:icon="@drawable/ic_restaurant_black_48dp"
-            android:title="Mess Menu" />
-        <item
-            android:id="@+id/nav_gc_rankings"
-            android:icon="@drawable/ic_equalizer_black_48dp"
-            android:title="GC Rankings" />
-        <item
             android:id="@+id/nav_calendar"
             android:icon="@drawable/ic_date_range_black_48dp"
             android:title="Calendar" />
-        <item
-            android:id="@+id/nav_timetable"
-            android:icon="@drawable/ic_web_black_48dp"
-            android:title="Timetable" />
-        <item
-            android:id="@+id/nav_cms"
-            android:icon="@drawable/ic_announcement_black_48dp"
-            android:title="CMS" />
+
         <item
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_map_black_48dp"
             android:title="Map" />
-        <item
-            android:id="@+id/nav_people"
-            android:icon="@drawable/ic_supervisor_account_black_48dp"
-            android:title="People" />
-    </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_contacts"
-                android:icon="@drawable/ic_phone"
-                android:title="Contacts" />
-            <item
-                android:id="@+id/nav_about"
-                android:icon="@drawable/ic_info_black_48dp"
-                android:title="About" />
-        </menu>
-    </item>
+        <item
+            android:id="@+id/nav_qlinks"
+            android:icon="@drawable/ic_announcement_black_48dp"
+            android:title="Quick Links" />
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_info_black_48dp"
+            android:title="Settings" />
+    </group>
 
 </menu>
