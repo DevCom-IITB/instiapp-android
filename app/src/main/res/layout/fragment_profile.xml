@@ -16,14 +16,15 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/user_profile_picture_profile"
-                android:layout_width="135dp"
-                android:layout_height="99dp"
-                android:layout_margin="32dp" />
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="20dp"
+                android:layout_marginRight="15dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
                 <TextView
