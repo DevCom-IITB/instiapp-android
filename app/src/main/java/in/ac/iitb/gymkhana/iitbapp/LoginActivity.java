@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         session = new SessionManager(mContext);
         setContentView(R.layout.activity_login);
+        progressDialog = new ProgressDialog(LoginActivity.this);
     }
 
     private class WvClient extends WebViewClient
@@ -75,7 +76,9 @@ public class LoginActivity extends AppCompatActivity {
             /* Capture redirect */
             if (url.startsWith(redirectUri)) {
                 /* Show progress dialog */
-                progressDialog = new ProgressDialog(LoginActivity.this);
+                if (progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
                 progressDialog.setMessage("Logging In");
                 progressDialog.setCancelable(false);
                 progressDialog.setIndeterminate(true);
@@ -95,9 +98,22 @@ public class LoginActivity extends AppCompatActivity {
                 return true;
             }
 
+            if (!progressDialog.isShowing()) {
+                progressDialog.setMessage("Loading");
+                progressDialog.setCancelable(false);
+                progressDialog.setIndeterminate(true);
+                progressDialog.show();
+            }
             /* Load URL */
             view.loadUrl(url);
             return false;
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
         }
     }
 
