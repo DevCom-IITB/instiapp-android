@@ -277,6 +277,8 @@ public class BodyFragment extends Fragment {
         });
         childrenRecyclerView.setAdapter(childrenAdapter);
         childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
     /**

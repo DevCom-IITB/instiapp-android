@@ -144,6 +144,7 @@ public class FeedFragment extends BaseFragment {
                 }
             }
         });
+        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
     private class updateDatabase extends AsyncTask<List<Event>, Void, Integer> {

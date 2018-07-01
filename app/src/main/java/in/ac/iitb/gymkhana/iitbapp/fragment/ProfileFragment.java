@@ -123,6 +123,8 @@ public class ProfileFragment extends BaseFragment {
         userRollNumberTextView.setText(user.getUserRollNumber());
         userEmailIDTextView.setText(user.getUserEmail());
         userContactNumberTextView.setText(user.getUserContactNumber());
+
+        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
 

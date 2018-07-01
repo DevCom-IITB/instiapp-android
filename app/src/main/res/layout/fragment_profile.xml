@@ -1,88 +1,104 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.ProfileFragment">
+    android:layout_height="match_parent">
 
     <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/user_profile_picture_profile"
-            android:layout_width="135dp"
-            android:layout_height="99dp"
-            android:layout_margin="32dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.ProfileFragment">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/user_name_profile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/user_profile_picture_profile"
+                android:layout_width="135dp"
+                android:layout_height="99dp"
+                android:layout_margin="32dp" />
 
-            <TextView
-                android:id="@+id/user_rollno_profile"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:textSize="16sp" />
+                android:layout_marginTop="32dp"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/user_email_profile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/user_name_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/user_contact_no_profile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/user_rollno_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/user_email_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/user_contact_no_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/role_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimaryDark">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/following_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Following" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/events_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Events" />
+
+        </android.support.design.widget.TabLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/role_recycler_view"
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:gravity="center" >
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/colorPrimaryDark">
-
-        <android.support.design.widget.TabItem
-            android:id="@+id/following_tab"
+        <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Following" />
-
-        <android.support.design.widget.TabItem
-            android:id="@+id/events_tab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Events" />
-
-    </android.support.design.widget.TabLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>
+            android:indeterminate="true" />
+    </RelativeLayout>
+</RelativeLayout>
