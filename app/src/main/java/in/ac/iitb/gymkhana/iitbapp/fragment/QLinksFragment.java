@@ -12,10 +12,10 @@ import in.ac.iitb.gymkhana.iitbapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CMSFragment extends BaseFragment {
+public class QLinksFragment extends BaseFragment {
 
 
-    public CMSFragment() {
+    public QLinksFragment() {
         // Required empty public constructor
     }
 
@@ -24,7 +24,7 @@ public class CMSFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cms, container, false);
+        return inflater.inflate(R.layout.fragment_qlinks, container, false);
     }
 
 }
