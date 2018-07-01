@@ -93,6 +93,7 @@ public class ProfileFragment extends BaseFragment {
                 Body roleBody = role.getRoleBodyDetails();
                 BodyFragment bodyFragment = BodyFragment.newInstance(roleBody);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
                 ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
                 ft.addToBackStack(bodyFragment.getTag());
                 ft.commit();
