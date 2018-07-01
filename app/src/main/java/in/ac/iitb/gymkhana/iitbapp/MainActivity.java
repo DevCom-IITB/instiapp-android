@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bundle.putString(Constants.SESSION_ID, session.pref.getString(Constants.SESSION_ID, "Error"));
         if (fragment instanceof MessMenuFragment)
             bundle.putString(Constants.USER_HOSTEL, currentUser.getHostel());
-        if (fragment instanceof SettingsFragment)
+        if (fragment instanceof SettingsFragment && session.isLoggedIn())
             bundle.putString(Constants.USER_ID, currentUser.getUserID());
         fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
