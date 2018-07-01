@@ -81,6 +81,9 @@ public class ProfileFragment extends BaseFragment {
         TextView userEmailIDTextView = getActivity().findViewById(R.id.user_email_profile);
         TextView userContactNumberTextView = getActivity().findViewById(R.id.user_contact_no_profile);
 
+        /** Show tabs */
+        getActivity().findViewById(R.id.tab_layout).setVisibility(View.VISIBLE);
+
         final List<Role> roleList = user.getUserRoles();
         RecyclerView userRoleRecyclerView = getActivity().findViewById(R.id.role_recycler_view);
         RoleAdapter roleAdapter = new RoleAdapter(roleList, new ItemClickListener() {
