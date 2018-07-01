@@ -33,6 +33,7 @@ import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -97,17 +98,6 @@ public class AddEventFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static String convertImageToString(Bitmap imageBitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        if (imageBitmap != null) {
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 60, stream);
-            byte[] byteArray = stream.toByteArray();
-            return Base64.encodeToString(byteArray, Base64.DEFAULT);
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -139,7 +129,7 @@ public class AddEventFragment extends BaseFragment {
 
                 final int mHour = calendar.get(Calendar.HOUR_OF_DAY);
                 final int mMin = calendar.get(Calendar.MINUTE);
-                long millis = calendar.getTimeInMillis();
+                final long millis = calendar.getTimeInMillis();
 
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
@@ -150,6 +140,8 @@ public class AddEventFragment extends BaseFragment {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 start.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":" + minute);
+                                enableEndDatePicker(year, month, dayOfMonth, hourOfDay, minute, millis);
+                                end.setEnabled(true);
                             }
                         }, mHour, mMin, true);
                         timePickerDialog.show();
@@ -164,42 +156,6 @@ public class AddEventFragment extends BaseFragment {
 
         });
 
-
-        end.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Calendar calendar = Calendar.getInstance();
-                int mYear = calendar.get(Calendar.YEAR);
-                int mMonth = calendar.get(Calendar.MONTH);
-                int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                final int mHour = calendar.get(Calendar.HOUR_OF_DAY);
-                final int mMin = calendar.get(Calendar.MINUTE);
-                long millis = calendar.getTimeInMillis();
-
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                end.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":" + minute);
-                            }
-                        }, mHour, mMin, true);
-                        timePickerDialog.show();
-                    }
-                }, mYear, mMonth, mDay);
-
-
-                datePickerDialog.show();
-                timestamp_end = new Timestamp(millis);
-
-            }
-
-        });
         if (cb_permission.isChecked()) {
             publicStatus = 1;
         } else publicStatus = 0;
@@ -245,6 +201,43 @@ public class AddEventFragment extends BaseFragment {
             }
         });
         return view;
+    }
+
+    private void enableEndDatePicker(final int startYear, final int startMonth, final int startDayOfMonth, final int startHourOfDay, final int startMinute, long startMillis) {
+        end.setEnabled(true);
+        end.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                end.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":" + minute);
+                                timestamp_end = makeTimestamp(year, month, dayOfMonth, hourOfDay, minute);
+                            }
+                        }, startHourOfDay, startMinute, true);
+                        timePickerDialog.show();
+                    }
+                }, startYear, startMonth, startDayOfMonth);
+
+                datePickerDialog.show();
+            }
+        });
+    }
+
+    public static Timestamp makeTimestamp(int year, int month, int day, int hour, int minute) {
+        Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month - 1);
+        cal.set(Calendar.DATE, day);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+
+        // now convert GregorianCalendar object to Timestamp object
+        return new Timestamp(cal.getTimeInMillis());
     }
 
     private void sendImage() {

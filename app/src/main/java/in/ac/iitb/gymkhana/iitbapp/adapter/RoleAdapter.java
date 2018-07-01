@@ -1,6 +1,7 @@
 package in.ac.iitb.gymkhana.iitbapp.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.ViewHolder> {
         this.itemClickListener = itemClickListener;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
