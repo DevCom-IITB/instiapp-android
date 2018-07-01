@@ -233,15 +233,15 @@ public class BodyFragment extends Fragment {
             @Override
             public void onItemClick(View v, int position) {
                 User user = users.get(position);
-                /*Bundle bundle = new Bundle();
-                bundle.putString(Constants.EVENT_JSON, new Gson().toJson(event));
-                EventFragment eventFragment = new EventFragment();
-                eventFragment.setArguments(bundle);
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.USER_ID, user.getUserID());
+                ProfileFragment profileFragment = new ProfileFragment();
+                profileFragment.setArguments(bundle);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                ft.addToBackStack(eventFragment.getTag());
-                ft.commit();*/
+                ft.replace(R.id.framelayout_for_fragment, profileFragment, profileFragment.getTag());
+                ft.addToBackStack(profileFragment.getTag());
+                ft.commit();
             }
         });
         userRecyclerView.setAdapter(userAdapter);
