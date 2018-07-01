@@ -130,6 +130,14 @@ public class BodyFragment extends Fragment {
         });
     }
 
+    private void setVisibleIfHasElements(int[] viewIds, List list) {
+        if (list != null && list.size() > 0) {
+            for (int viewId: viewIds){
+                getActivity().findViewById(viewId).setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     private void displayBody(final Body body) {
         TextView bodyName = (TextView) getView().findViewById(R.id.body_name);
         TextView bodyDescription = (TextView) getView().findViewById(R.id.body_description);
@@ -137,6 +145,12 @@ public class BodyFragment extends Fragment {
         ImageButton webBodyButton = getActivity().findViewById(R.id.web_body_button);
         ImageButton shareBodyButton = getActivity().findViewById(R.id.share_body_button);
         final Button followButton = getActivity().findViewById(R.id.follow_button);
+
+        /* Show relevant card titles */
+        setVisibleIfHasElements(new int[]{R.id.body_events_title, R.id.event_card_recycler_view}, body.getBodyEvents());
+        setVisibleIfHasElements(new int[]{R.id.body_orgs_title, R.id.org_card_recycler_view}, body.getBodyChildren());
+        setVisibleIfHasElements(new int[]{R.id.body_parents_title, R.id.parentorg_card_recycler_view}, body.getBodyParents());
+        setVisibleIfHasElements(new int[]{R.id.body_people_title, R.id.people_card_recycler_view}, body.getBodyRoles());
 
         /* Set body information */
         bodyName.setText(body.getBodyName());
