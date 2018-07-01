@@ -14,9 +14,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.ImageViewCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.PixelCopy;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,6 +31,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
@@ -293,53 +297,8 @@ public class AddEventFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-            eventPictureImageView.setImageBitmap(getScaledBitmap(picturePath, imageButton.getWidth(), imageButton.getHeight()));
-            eventPictureImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            base64Image = convertImageToString(getScaledBitmap(picturePath, 800, 800));
-            Log.d(TAG, "onActivityResult: " + base64Image);
+            ImageViewCompat.setImageTintList(eventPictureImageView, null);
+            Picasso.with(getContext()).load(selectedImage).into(eventPictureImageView);
         }
-    }
-
-    private Bitmap getScaledBitmap(String picturePath, int width, int height) {
-        BitmapFactory.Options sizeOptions = new BitmapFactory.Options();
-        sizeOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(picturePath, sizeOptions);
-
-        int inSampleSize = calculateInSampleSize(sizeOptions, width, height);
-
-        sizeOptions.inJustDecodeBounds = false;
-        sizeOptions.inSampleSize = inSampleSize;
-
-        return BitmapFactory.decodeFile(picturePath, sizeOptions);
-    }
-
-    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            // Calculate ratios of height and width to requested height and
-            // width
-            final int heightRatio = Math.round((float) height / (float) reqHeight);
-            final int widthRatio = Math.round((float) width / (float) reqWidth);
-
-            // Choose the smallest ratio as inSampleSize value, this will
-            // guarantee
-            // a final image with both dimensions larger than or equal to the
-            // requested height and width.
-            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-        }
-
-        return inSampleSize;
     }
 }

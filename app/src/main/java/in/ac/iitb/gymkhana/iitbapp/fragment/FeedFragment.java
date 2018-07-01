@@ -58,6 +58,14 @@ public class FeedFragment extends BaseFragment {
 
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
+        feedSwipeRefreshLayout = view.findViewById(R.id.feed_swipe_refresh_layout);
+        feedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateFeed();
+            }
+        });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,14 +89,6 @@ public class FeedFragment extends BaseFragment {
         new showEventsFromDB().execute();
 
         updateFeed();
-
-        feedSwipeRefreshLayout = getActivity().findViewById(R.id.feed_swipe_refresh_layout);
-        feedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                updateFeed();
-            }
-        });
     }
 
     private void updateFeed() {
