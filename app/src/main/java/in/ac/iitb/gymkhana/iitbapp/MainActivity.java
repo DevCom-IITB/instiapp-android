@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         session = new SessionManager(getApplicationContext());
         session.checkLogin();
-        Toast.makeText(getApplicationContext(), "Log In status: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
