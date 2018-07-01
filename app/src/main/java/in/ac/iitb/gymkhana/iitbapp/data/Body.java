@@ -52,8 +52,11 @@ public class Body {
     @ColumnInfo(name = "user_follows")
     @SerializedName("user_follows")
     boolean bodyUserFollows;
+    @ColumnInfo(name = "roles")
+    @SerializedName("roles")
+    List<Role> bodyRoles;
 
-    public Body(String bodyID, String bodyStrID, String bodyName, String bodyShortDescription, String bodyDescription, String bodyImageURL, List<Body> bodyChildren, List<Body> bodyParents, List<Event> bodyEvents, int bodyFollowersCount, String bodyWebsiteURL, String bodyBlogURL, Boolean bodyUserFollows) {
+    public Body(String bodyID, String bodyStrID, String bodyName, String bodyShortDescription, String bodyDescription, String bodyImageURL, List<Body> bodyChildren, List<Body> bodyParents, List<Event> bodyEvents, int bodyFollowersCount, String bodyWebsiteURL, String bodyBlogURL, boolean bodyUserFollows, List<Role> bodyRoles) {
         this.bodyID = bodyID;
         this.bodyStrID = bodyStrID;
         this.bodyName = bodyName;
@@ -67,6 +70,7 @@ public class Body {
         this.bodyWebsiteURL = bodyWebsiteURL;
         this.bodyBlogURL = bodyBlogURL;
         this.bodyUserFollows = bodyUserFollows;
+        this.bodyRoles = bodyRoles;
     }
 
     public String getBodyID() {
@@ -171,5 +175,13 @@ public class Body {
 
     public void setBodyUserFollows(boolean bodyUserFollows) {
         this.bodyUserFollows = bodyUserFollows;
+    }
+
+    public List<Role> getBodyRoles() {
+        return bodyRoles;
+    }
+
+    public void setBodyRoles(List<Role> bodyRoles) {
+        this.bodyRoles = bodyRoles;
     }
 }

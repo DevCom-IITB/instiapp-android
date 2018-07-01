@@ -50,11 +50,11 @@ public class Role {
     @SerializedName("users")
     List<String> roleUsers;
 
-    @ColumnInfo(name="users_details")
-    @SerializedName("users_details")
-    List<User> roleUsersDetails;
+    @ColumnInfo(name="users_detail")
+    @SerializedName("users_detail")
+    List<User> roleUsersDetail;
 
-    public Role(String roleID, String roleName, boolean roleInheritable, String roleBody, Body roleBodyDetails, List<Body> roleBodies, List<String> rolePermissions, List<String> roleUsers, List<User> roleUsersDetails) {
+    public Role(String roleID, String roleName, boolean roleInheritable, String roleBody, Body roleBodyDetails, List<Body> roleBodies, List<String> rolePermissions, List<String> roleUsers, List<User> roleUsersDetail) {
         this.roleID = roleID;
         this.roleName = roleName;
         this.roleInheritable = roleInheritable;
@@ -63,7 +63,7 @@ public class Role {
         this.roleBodies = roleBodies;
         this.rolePermissions = rolePermissions;
         this.roleUsers = roleUsers;
-        this.roleUsersDetails = roleUsersDetails;
+        this.roleUsersDetail = roleUsersDetail;
     }
 
     public String getRoleID() {
@@ -130,11 +130,11 @@ public class Role {
         this.roleUsers = roleUsers;
     }
 
-    public List<User> getRoleUsersDetails() {
-        return roleUsersDetails;
+    public List<User> getRoleUsersDetail() {
+        return roleUsersDetail;
     }
 
-    public void setRoleUsersDetails(List<User> roleUsersDetails) {
-        this.roleUsersDetails = roleUsersDetails;
+    public void setRoleUsersDetail(List<User> roleUsersDetail) {
+        this.roleUsersDetail = roleUsersDetail;
     }
 }
