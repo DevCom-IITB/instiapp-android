@@ -46,12 +46,12 @@
 
         <item
             android:id="@+id/nav_qlinks"
-            android:icon="@drawable/ic_announcement_black_48dp"
+            android:icon="@drawable/ic_link_black_24dp"
             android:title="Quick Links" />
 
         <item
             android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_info_black_48dp"
+            android:icon="@drawable/ic_settings_black_24dp"
             android:title="Settings" />
     </group>
 
