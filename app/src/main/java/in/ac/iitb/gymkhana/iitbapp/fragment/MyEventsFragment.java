@@ -39,8 +39,8 @@ import retrofit2.Response;
  */
 public class MyEventsFragment extends BaseFragment {
 
-    private RecyclerView feedRecyclerView;
-    private SwipeRefreshLayout feedSwipeRefreshLayout;
+    private RecyclerView MyEventsfeedRecyclerView;
+    private SwipeRefreshLayout MyEventsfeedSwipeRefreshLayout;
     private AppDatabase appDatabase;
     private FloatingActionButton fab;
 
@@ -75,12 +75,12 @@ public class MyEventsFragment extends BaseFragment {
         appDatabase = AppDatabase.getAppDatabase(getContext());
        new showEvents().execute();
 
-        feedSwipeRefreshLayout = getActivity().findViewById(R.id.my_events_feed_swipe_refresh_layout);
-        feedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        MyEventsfeedSwipeRefreshLayout = getActivity().findViewById(R.id.my_events_feed_swipe_refresh_layout);
+        MyEventsfeedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 updateOnRefresh();
-                feedSwipeRefreshLayout.setRefreshing(false);
+                MyEventsfeedSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -136,9 +136,9 @@ public class MyEventsFragment extends BaseFragment {
             @Override
             public void run(Activity pActivity) {
                 try {
-                    feedRecyclerView = getActivity().findViewById(R.id.my_events_feed_recycler_view);
-                    feedRecyclerView.setAdapter(feedAdapter);
-                    feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    MyEventsfeedRecyclerView = getActivity().findViewById(R.id.my_events_feed_recycler_view);
+                    MyEventsfeedRecyclerView.setAdapter(feedAdapter);
+                    MyEventsfeedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
