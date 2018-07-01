@@ -72,6 +72,7 @@ public class MyEventsFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+
         appDatabase = AppDatabase.getAppDatabase(getContext());
        new showEvents().execute();
 
@@ -87,13 +88,7 @@ public class MyEventsFragment extends BaseFragment {
 
     private void updateOnRefresh(){
 
-        List<Event> temp =  appDatabase.dbDao().getAllEvents();
-        List<Event> eventsfollowing = appDatabase.dbDao().getAllEvents();
-        eventsfollowing.clear();
-        int k= temp.size();
-        for(int i=0; i<k; i++)
-        { if (temp.get(i).getEventUserUes() != 0) eventsfollowing.add(temp.get(i)); }
-        displayEvents(eventsfollowing);
+        new showEvents().execute();
 
     }
 
