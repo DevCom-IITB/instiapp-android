@@ -103,7 +103,11 @@ public class ProfileFragment extends BaseFragment {
         userRoleRecyclerView.setAdapter(roleAdapter);
         userRoleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Picasso.with(getContext()).load(user.getUserProfilePictureUrl()).resize(800, 0).into(userProfilePictureImageView);
+        Picasso.with(getContext())
+                .load(user.getUserProfilePictureUrl())
+                .resize(800, 0)
+                .placeholder(R.drawable.user_placeholder)
+                .into(userProfilePictureImageView);
 
         final List<Body> bodyList = user.getUserFollowedBodies();
         final List<Event> eventList = user.getUserGoingEvents();
