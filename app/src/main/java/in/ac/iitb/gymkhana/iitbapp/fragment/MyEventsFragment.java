@@ -67,7 +67,7 @@ public class MyEventsFragment extends BaseFragment {
         super.onStart();
 
         appDatabase = AppDatabase.getAppDatabase(getContext());
-       new showEvents().execute();
+        new showEvents().execute();
 
         myEventsFeedSwipeRefreshLayout = getActivity().findViewById(R.id.my_events_feed_swipe_refresh_layout);
         myEventsFeedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -79,28 +79,10 @@ public class MyEventsFragment extends BaseFragment {
         });
     }
 
-    private void updateOnRefresh(){
+    private void updateOnRefresh() {
 
         new showEvents().execute();
 
-    }
-
-    private class showEvents extends AsyncTask<String, Void, List<Event>> {
-
-        @Override
-        protected List<Event> doInBackground(String... events) {
-
-            List<Event> temp =  appDatabase.dbDao().getAllEvents();
-            List<Event> eventsfollowing = appDatabase.dbDao().getAllEvents();
-             eventsfollowing.clear();
-             int k= temp.size();
-            for(int i=0; i<k; i++)
-            { if (temp.get(i).getEventUserUes() != 0) eventsfollowing.add(temp.get(i)); }
-            return eventsfollowing;
-            }
-        protected void onPostExecute(List<Event> result) {
-            displayEvents(result);
-        }
     }
 
     private void displayEvents(final List<Event> events) {
@@ -132,5 +114,25 @@ public class MyEventsFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    private class showEvents extends AsyncTask<String, Void, List<Event>> {
+
+        @Override
+        protected List<Event> doInBackground(String... events) {
+
+            List<Event> temp = appDatabase.dbDao().getAllEvents();
+            List<Event> eventsfollowing = appDatabase.dbDao().getAllEvents();
+            eventsfollowing.clear();
+            int k = temp.size();
+            for (int i = 0; i < k; i++) {
+                if (temp.get(i).getEventUserUes() != 0) eventsfollowing.add(temp.get(i));
+            }
+            return eventsfollowing;
+        }
+
+        protected void onPostExecute(List<Event> result) {
+            displayEvents(result);
+        }
     }
 }

@@ -77,11 +77,11 @@
 
                 <TextView
                     android:id="@+id/tv_end"
-                    android:enabled="false"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="?attr/editTextBackground"
+                    android:enabled="false"
                     android:gravity="bottom"
                     android:hint="To  "
                     android:paddingRight="6dp"
