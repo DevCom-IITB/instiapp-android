@@ -30,6 +30,7 @@ import com.squareup.picasso.Picasso;
 import in.ac.iitb.gymkhana.iitbapp.api.UnsafeOkHttpClient;
 import in.ac.iitb.gymkhana.iitbapp.api.model.NotificationsResponse;
 import in.ac.iitb.gymkhana.iitbapp.data.User;
+import in.ac.iitb.gymkhana.iitbapp.fragment.AboutFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.CalendarFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.FeedFragment;
 import in.ac.iitb.gymkhana.iitbapp.fragment.MapFragment;
@@ -245,6 +246,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_settings:
                 SettingsFragment settingsFragment = new SettingsFragment();
                 updateFragment(settingsFragment);
+                //Checking the about fragment
+                //AboutFragment aboutFragment = new AboutFragment();
+                //updateFragment(aboutFragment);
                 break;
         }
 
