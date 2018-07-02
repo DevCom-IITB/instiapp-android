@@ -74,10 +74,5 @@ public class AboutFragment extends BaseFragment {
         Picasso.with(getContext()).load("https://insti.app/team-pics/ranveer.jpg").into(ranveerimg);
         Picasso.with(getContext()).load("https://insti.app/team-pics/amangour.jpg").into(amangourimg);
         Picasso.with(getContext()).load("https://insti.app/team-pics/wncc.jpg").into(wnccimg);
-
-
-
-
-
     }
 }
