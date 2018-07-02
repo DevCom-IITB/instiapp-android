@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.EventFragment">
+    tools:context="app.insti.fragment.EventFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -19,10 +19,9 @@
             <ImageView
                 android:id="@+id/event_picture_2"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="300dp"
                 android:adjustViewBounds="true"
-                android:scaleType="fitCenter" />
+                android:scaleType="centerCrop" />
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
