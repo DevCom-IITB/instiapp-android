@@ -115,7 +115,7 @@ public class BodyFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Body body = response.body();
 
-                    new insertDbBody().execute(body);
+                    new updateDbBody().execute(body);
 
                     displayBody(body);
                     bodySwipeRefreshLayout.setRefreshing(false);
@@ -320,15 +320,11 @@ public class BodyFragment extends Fragment {
     private class updateDbBody extends AsyncTask<Body, Void, Integer> {
         @Override
         protected Integer doInBackground(Body... body) {
-            appDatabase.dbDao().updateBody(body[0]);
-            return 1;
-        }
-    }
-
-    private class insertDbBody extends AsyncTask<Body, Void, Integer> {
-        @Override
-        protected Integer doInBackground(Body... body) {
-            appDatabase.dbDao().insertBody(body[0]);
+            if (appDatabase.dbDao().getBody(body[0].getBodyID()).length > 0) {
+                appDatabase.dbDao().updateBody(body[0]);
+            } else {
+                appDatabase.dbDao().insertBody(body[0]);
+            }
             return 1;
         }
     }
