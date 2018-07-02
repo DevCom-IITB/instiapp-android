@@ -115,6 +115,8 @@ public class MyEventsFragment extends BaseFragment {
                 }
             }
         });
+
+        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
     private class showEvents extends AsyncTask<String, Void, List<Event>> {
