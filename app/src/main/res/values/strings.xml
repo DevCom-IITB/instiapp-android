@@ -12,6 +12,9 @@
     <string name="Cancel">Cancel</string>
     <string name="gps_network_not_enabled">Location is not enabled. Please turn on your location from the settings.</string>
     <string name="open_location_settings">Open Location Settings</string>
+    <string name="django_api"> <a href="https://github.com/wncc/IITBapp"> Django API</a></string>
+    <string name="android_app"> <a href= "https://github.com/wncc/InstiApp"> Android App</a></string>
+    <string name="angular_pwa"> <a href= "https://github.com/pulsejet/iitb-app-angular"> Angular PWA </a></string>
 
     <string-array name="hostels_array">
         <item>Hostel 1</item>
