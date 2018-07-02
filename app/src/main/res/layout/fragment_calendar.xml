@@ -41,13 +41,14 @@
                     android:background="@android:color/darker_gray" />
 
                 <TextView
+                    android:id="@+id/number_of_events"
                     android:layout_width="120dp"
                     android:layout_height="40dp"
                     android:layout_below="@id/simpleCalendarView"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/round_text_box"
                     android:gravity="center"
-                    android:text="# Events Today"
+                    android:text="No Events"
                     android:textColor="@color/secondaryTextColor" />
             </RelativeLayout>
 
@@ -77,7 +78,7 @@
         android:id="@+id/loadingPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center" >
+        android:gravity="center">
 
         <ProgressBar
             android:layout_width="wrap_content"

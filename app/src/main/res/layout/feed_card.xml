@@ -78,7 +78,9 @@
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:text="LH 101" />
+                        android:text="LH 101"
+                        android:scrollHorizontally="true"
+                        android:maxLines="1"/>
                 </LinearLayout>
 
             </LinearLayout>

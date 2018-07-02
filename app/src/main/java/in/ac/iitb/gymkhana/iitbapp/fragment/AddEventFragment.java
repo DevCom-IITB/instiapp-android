@@ -113,6 +113,17 @@ public class AddEventFragment extends BaseFragment {
         }
     }
 
+    public static Timestamp makeTimestamp(int year, int month, int day, int hour, int minute) {
+        Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DATE, day);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+
+        return new Timestamp(cal.getTimeInMillis());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -245,17 +256,6 @@ public class AddEventFragment extends BaseFragment {
                 datePickerDialog.show();
             }
         });
-    }
-
-    public static Timestamp makeTimestamp(int year, int month, int day, int hour, int minute) {
-        Calendar cal = new GregorianCalendar();
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DATE, day);
-        cal.set(Calendar.HOUR_OF_DAY, hour);
-        cal.set(Calendar.MINUTE, minute);
-
-        return new Timestamp(cal.getTimeInMillis());
     }
 
     private void sendImage() {

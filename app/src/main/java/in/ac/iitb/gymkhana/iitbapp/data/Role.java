@@ -3,6 +3,7 @@ package in.ac.iitb.gymkhana.iitbapp.data;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -12,10 +13,8 @@ import java.util.List;
 
 
 public class Role {
-
-    @PrimaryKey(autoGenerate = true)
-    int db_id;
-
+    @NonNull()
+    @PrimaryKey()
     @ColumnInfo(name = "id")
     @SerializedName("id")
     String roleID;

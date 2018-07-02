@@ -15,7 +15,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import in.ac.iitb.gymkhana.iitbapp.ActivityBuffer;
 import in.ac.iitb.gymkhana.iitbapp.Constants;
@@ -25,6 +28,7 @@ import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
 import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
 import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
 import in.ac.iitb.gymkhana.iitbapp.data.HostelMessMenu;
+import in.ac.iitb.gymkhana.iitbapp.data.MessMenu;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -133,7 +137,29 @@ public class MessMenuFragment extends BaseFragment {
     }
 
     private void displayMessMenu(HostelMessMenu hostelMessMenu) {
-        final MessMenuAdapter messMenuAdapter = new MessMenuAdapter(hostelMessMenu.getMessMenus());
+        /* Skip if we're already destroyed */
+        if (getActivity() == null) return;
+
+        List<MessMenu> messMenus = hostelMessMenu.getMessMenus();
+
+        /* Sort by day starting today
+         * This could have been done in a much simpler way with Java 8 :(
+         * Don't try to fix this */
+        final List<MessMenu> sortedMenus = new ArrayList();
+        final Calendar calendar = Calendar.getInstance(Locale.UK);
+        int today = calendar.get(Calendar.DAY_OF_WEEK) - 2;
+        if (today == -1) { today = 6; }
+
+        for (int i = 0; i < 7; i++) {
+            final int day = (today + i) % 7 + 1;
+            for(MessMenu menu : messMenus) {
+                if(menu.getDay() == day) {
+                    sortedMenus.add(menu);
+                }
+            }
+        }
+
+        final MessMenuAdapter messMenuAdapter = new MessMenuAdapter(sortedMenus);
         getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
             @Override
             public void run(Activity pActivity) {
