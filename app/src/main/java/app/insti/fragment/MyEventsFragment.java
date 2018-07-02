@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.ActivityBuffer;
@@ -103,6 +104,7 @@ public class MyEventsFragment extends BaseFragment {
                 eventFragment.setArguments(bundle);
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
                 transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
                 transaction.addToBackStack(eventFragment.getTag()).commit();
             }
@@ -119,21 +121,15 @@ public class MyEventsFragment extends BaseFragment {
                 }
             }
         });
+
+        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
     private class showEvents extends AsyncTask<String, Void, List<Event>> {
 
         @Override
         protected List<Event> doInBackground(String... events) {
-
-            List<Event> temp = appDatabase.dbDao().getAllEvents();
-            List<Event> eventsfollowing = appDatabase.dbDao().getAllEvents();
-            eventsfollowing.clear();
-            int k = temp.size();
-            for (int i = 0; i < k; i++) {
-                if (temp.get(i).getEventUserUes() != 0) eventsfollowing.add(temp.get(i));
-            }
-            return eventsfollowing;
+            return appDatabase.dbDao().getFollowingEvents();
         }
 
         protected void onPostExecute(List<Event> result) {
