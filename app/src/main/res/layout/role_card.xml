@@ -44,7 +44,10 @@
                 android:id="@+id/role_card_role"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Role" />
+                android:text="Role"
+                android:scrollHorizontally="true"
+                android:ellipsize="end"
+                android:maxLines="1" />
 
         </LinearLayout>
     </LinearLayout>

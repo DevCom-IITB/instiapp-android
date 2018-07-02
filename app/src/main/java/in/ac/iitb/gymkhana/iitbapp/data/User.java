@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -12,9 +13,8 @@ import java.util.List;
 
 @Entity(tableName = "users")
 public class User {
-    @PrimaryKey(autoGenerate = true)
-    int db_id;
-
+    @NonNull()
+    @PrimaryKey()
     @ColumnInfo(name = "id")
     @SerializedName("id")
     String userID;
@@ -70,8 +70,7 @@ public class User {
     @Ignore
     String currentRole;
 
-    public User(int db_id, String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, List<Role> userRoles, List<Role> userInstituteRoles, String userWebsiteURL, String userLDAPId, String hostel) {
-        this.db_id = db_id;
+    public User(@NonNull String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, List<Role> userRoles, List<Role> userInstituteRoles, String userWebsiteURL, String userLDAPId, String hostel) {
         this.userID = userID;
         this.userName = userName;
         this.userProfilePictureUrl = userProfilePictureUrl;

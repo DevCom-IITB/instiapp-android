@@ -72,7 +72,11 @@ public class SettingsFragment extends Fragment {
         ImageView userProfilePictureImageView = getActivity().findViewById(R.id.user_card_avatar);
         TextView userNameTextView = getActivity().findViewById(R.id.user_card_name);
 
-        Picasso.with(getContext()).load(user.getUserProfilePictureUrl()).into(userProfilePictureImageView);
+        Picasso.with(getContext())
+                .load(user.getUserProfilePictureUrl())
+                .resize(800, 0)
+                .placeholder(R.drawable.user_placeholder)
+                .into(userProfilePictureImageView);
         userNameTextView.setText(user.getUserName());
 
         Button updateProfileButton = getActivity().findViewById(R.id.settings_update_profile);

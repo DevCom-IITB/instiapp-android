@@ -42,6 +42,7 @@ public class FeedFragment extends BaseFragment {
     private SwipeRefreshLayout feedSwipeRefreshLayout;
     private AppDatabase appDatabase;
     private FloatingActionButton fab;
+    private boolean freshEventsDisplayed = false;
 
     public FeedFragment() {
         // Required empty public constructor
@@ -98,6 +99,7 @@ public class FeedFragment extends BaseFragment {
                 if (response.isSuccessful()) {
                     NewsFeedResponse newsFeedResponse = response.body();
                     List<Event> events = newsFeedResponse.getEvents();
+                    freshEventsDisplayed = true;
                     displayEvents(events);
 
                     new updateDatabase().execute(events);
@@ -115,6 +117,9 @@ public class FeedFragment extends BaseFragment {
     }
 
     private void displayEvents(final List<Event> events) {
+        /* Skip if we're already destroyed */
+        if (getActivity() == null) return;
+
         final FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
@@ -163,7 +168,9 @@ public class FeedFragment extends BaseFragment {
         }
 
         protected void onPostExecute(List<Event> result) {
-            displayEvents(result);
+            if (!freshEventsDisplayed) {
+                displayEvents(result);
+            }
         }
     }
 }

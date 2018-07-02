@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -134,6 +135,8 @@ public class CalendarFragment extends BaseFragment {
     }
 
     private void showEventsForDate(Date date) {
+        /* Skip if we're already destroyed */
+        if (getActivity() == null) return;
 
         final List<Event> filteredEvents = new ArrayList<Event>();
         for (Event event : events) {
@@ -142,6 +145,16 @@ public class CalendarFragment extends BaseFragment {
             if (start.after(date) && start.before(nextDay)) {
                 filteredEvents.add(event);
             }
+        }
+
+        /* Show number of events */
+        TextView noEvents = getActivity().findViewById(R.id.number_of_events);
+        if (filteredEvents.size() == 0) {
+            noEvents.setText("No Events");
+        } else if (filteredEvents.size() == 1) {
+            noEvents.setText("1 Event");
+        } else {
+            noEvents.setText(Integer.toString(filteredEvents.size()) + " Events");
         }
 
         RecyclerView eventRecyclerView = (RecyclerView) getActivity().findViewById(R.id.calendar_event_card_recycler_view);
