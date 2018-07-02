@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import in.ac.iitb.gymkhana.iitbapp.ActivityBuffer;
@@ -120,15 +121,7 @@ public class MyEventsFragment extends BaseFragment {
 
         @Override
         protected List<Event> doInBackground(String... events) {
-
-            List<Event> temp = appDatabase.dbDao().getAllEvents();
-            List<Event> eventsfollowing = appDatabase.dbDao().getAllEvents();
-            eventsfollowing.clear();
-            int k = temp.size();
-            for (int i = 0; i < k; i++) {
-                if (temp.get(i).getEventUserUes() != 0) eventsfollowing.add(temp.get(i));
-            }
-            return eventsfollowing;
+            return appDatabase.dbDao().getFollowingEvents();
         }
 
         protected void onPostExecute(List<Event> result) {

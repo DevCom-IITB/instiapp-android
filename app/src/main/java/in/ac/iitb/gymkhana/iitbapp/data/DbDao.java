@@ -13,6 +13,9 @@ public interface DbDao {
     @Query("SELECT * FROM events")
     List<Event> getAllEvents();
 
+    @Query("SELECT * FROM events WHERE user_ues <> 0")
+    List<Event> getFollowingEvents();
+
     @Query("SELECT * FROM bodies")
     List<Body> getAllBodies();
 
