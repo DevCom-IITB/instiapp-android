@@ -238,8 +238,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Loc
         googleMap.setMinZoomPreference(14.5f);
         // Position the map's camera near Mumbai
         LatLng iitb = new LatLng(19.1334, 72.9133);
-        googleMap.addMarker(new MarkerOptions().position(iitb)
-                .title("Marker in IITB"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(iitb));
     }
 
