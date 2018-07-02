@@ -104,6 +104,7 @@ public class MyEventsFragment extends BaseFragment {
                 eventFragment.setArguments(bundle);
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
                 transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
                 transaction.addToBackStack(eventFragment.getTag()).commit();
             }
