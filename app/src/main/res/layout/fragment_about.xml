@@ -16,13 +16,15 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/core_developers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:text="TextView" />
+                android:text="Core Developers"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -33,6 +35,7 @@
 
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/varunimg"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:layout_gravity="center"
@@ -40,6 +43,7 @@
                     android:src="https://insti.app/team-pics/varun.jpg" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/sajalimg"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:layout_gravity="center"
@@ -57,29 +61,37 @@
 
 
                 <TextView
+                    android:id="@+id/varun"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginRight="10dp"
                     android:gravity="center"
-                    android:layout_marginRight="67.5dp" />
+                    android:text="Varun Patil"
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/sajal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="50dp"
                     android:gravity="center"
-                    android:layout_marginLeft="67.5dp" />
+                    android:text="Sajal Narang"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/ideation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:text="TextView" />
+                android:text="Ideation"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -93,14 +105,14 @@
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:layout_gravity="center"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="60dp"
                     android:src="https://insti.app/team-pics/nihal.jpg" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="60dp"
                     android:src="https://insti.app/team-pics/ydidwania.jpg" />
 
             </LinearLayout>
@@ -114,22 +126,26 @@
 
 
                 <TextView
+                    android:id="@+id/nihal_singh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="40dp"
                     android:gravity="center"
-                    android:layout_marginRight="67.5dp" />
+                    android:text="Nihal Singh"
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/ydidwania"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="90dp"
                     android:gravity="center"
-                    android:layout_marginLeft="67.5dp" />
+                    android:text="Yashvardhan Didwania"
+                    android:textStyle="bold" />
 
             </LinearLayout>
-
-
 
 
             <LinearLayout
@@ -144,14 +160,14 @@
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:layout_gravity="center"
-                    android:layout_marginRight="30dp"
+                    android:layout_marginRight="60dp"
                     android:src="https://insti.app/team-pics/cheeku.jpg" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="60dp"
                     android:src="https://insti.app/team-pics/sarthak.jpg" />
 
             </LinearLayout>
@@ -165,29 +181,37 @@
 
 
                 <TextView
+                    android:id="@+id/kumar_ayush"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
                     android:gravity="center"
-                    android:layout_marginRight="67.5dp" />
+                    android:text="Kumar Ayush"
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/skhandelwal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="80dp"
                     android:gravity="center"
-                    android:layout_marginLeft="67.5dp" />
+                    android:text="Sarthak Khandelwal"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/design"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginTop="20dp"
-                android:text="TextView" />
+                android:gravity="center"
+                android:text="Design"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="75dp"
@@ -197,28 +221,31 @@
                 android:src="https://insti.app/team-pics/soham.jpg" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/skhadtare"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginTop="10dp"
-                android:text="TextView" />
+                android:gravity="center"
+                android:text="Soham Khadtare"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/developers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginTop="20dp"
-                android:text="TextView" />
+                android:gravity="center"
+                android:text="Developers"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_marginTop="20dp"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -246,34 +273,44 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_marginTop="20dp"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/mrunzz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="1dp"
+                    android:gravity="center"
+                    android:text="Mrunmayi Mungekar"
+                    android:textSize="14dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/owais"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:layout_marginRight="115dp" />
+                    android:text="Owais Chunawala"
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/hrushikesh"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
                     android:gravity="center"
-                    android:layout_marginLeft="115dp" />
+                    android:text="Hrushikesh Bodas"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_marginTop="20dp"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -301,43 +338,54 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_marginTop="20dp"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/yashkhem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="115dp"
+                    android:gravity="center"
+                    android:text="Yash Khemchandani"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/bavish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:layout_marginRight="115dp" />
+                    android:text="Bavish Kulur"
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/mayu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="115dp"
                     android:gravity="center"
-                    android:layout_marginLeft="115dp" />
+                    android:text="Mayuresh Bhattu"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/alumni"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginTop="20dp"
-                android:text="TextView" />
+                android:gravity="center"
+                android:text="Alumni"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_marginTop="20dp"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -365,26 +413,35 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_marginTop="20dp"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/tomar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="115dp"
+                    android:gravity="center"
+                    android:text="Abhijeet Tomar"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/bijoy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:layout_marginRight="115dp" />
+                    android:text="Bijoy Singh Kochar"
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/dheerendra"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="115dp"
                     android:gravity="center"
-                    android:layout_marginLeft="115dp" />
+                    android:text="Dheerendra Rathore"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -421,88 +478,106 @@
 
 
                 <TextView
+                    android:id="@+id/ranveer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginRight="67.5dp"
                     android:gravity="center"
-                    android:layout_marginRight="67.5dp" />
+                    android:text="Ranveer Aggarwal"
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/amangour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="67.5dp"
                     android:gravity="center"
-                    android:layout_marginLeft="67.5dp" />
+                    android:text="Aman Gour"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/testing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginTop="20dp"
-                android:text="TextView" />
+                android:gravity="center"
+                android:text="Testing"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="75dp"
                 android:layout_height="75dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:src="https://insti.app/team-pics/soham.jpg" />
+                android:src="https://insti.app/team-pics/wncc.jpg" />
 
             <TextView
                 android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginTop="10dp"
+                android:gravity="center"
                 android:text="TextView" />
 
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/join_us"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginTop="25dp"
-                android:text="TextView" />
+                android:gravity="center"
+                android:text="Join Us"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/django"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginTop="10dp"
-                android:text="TextView" />
+                android:autoLink="web"
+                android:gravity="center"
+                android:text="@string/django_api"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginTop="5dp"
-                android:text="TextView" />
+                android:autoLink="web"
+                android:gravity="center"
+                android:text="@string/android_app"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView12"
+                android:id="@+id/angular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginTop="5dp"
-                android:text="TextView" />
-
-
-
-
+                android:autoLink="web"
+                android:gravity="center"
+                android:text="@string/angular_pwa"
+                android:textStyle="bold" />
 
 
         </LinearLayout>
 
     </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </RelativeLayout>
 </LinearLayout>
