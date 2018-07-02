@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.support.v7.widget.AppCompatButton;
 import android.widget.TextView;
 
 import in.ac.iitb.gymkhana.iitbapp.R;
@@ -70,7 +69,6 @@ public class QLinksFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.fragment_qlinks, container, false);
-        super.onCreate(savedInstanceState);
         return view;
     }
 
