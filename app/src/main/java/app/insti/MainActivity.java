@@ -333,4 +333,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
+
+    public boolean createEventAccess() {
+        if (currentUser == null || currentUser.getUserRoles() == null || currentUser.getUserRoles().size() == 0)
+            return false;
+        return true;
+    }
 }

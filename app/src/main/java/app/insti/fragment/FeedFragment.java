@@ -22,6 +22,7 @@ import java.util.List;
 import app.insti.ActivityBuffer;
 import app.insti.Constants;
 import app.insti.ItemClickListener;
+import app.insti.MainActivity;
 import app.insti.R;
 import app.insti.adapter.FeedAdapter;
 import app.insti.api.RetrofitInterface;
@@ -84,6 +85,10 @@ public class FeedFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        if (((MainActivity)getActivity()).createEventAccess()) {
+            fab.setVisibility(View.VISIBLE);
+        }
 
         appDatabase = AppDatabase.getAppDatabase(getContext());
         new showEventsFromDB().execute();
