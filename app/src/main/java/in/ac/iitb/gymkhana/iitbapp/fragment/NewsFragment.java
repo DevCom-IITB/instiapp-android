@@ -94,6 +94,9 @@ public class NewsFragment extends BaseFragment {
     }
 
     private void displayNews(final List<NewsArticle> result) {
+        /* Skip if we're already destroyed */
+        if (getActivity() == null) return;
+
         final NewsAdapter newsAdapter = new NewsAdapter(result, new ItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {

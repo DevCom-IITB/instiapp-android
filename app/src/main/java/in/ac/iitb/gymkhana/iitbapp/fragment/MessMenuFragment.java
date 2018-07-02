@@ -137,6 +137,9 @@ public class MessMenuFragment extends BaseFragment {
     }
 
     private void displayMessMenu(HostelMessMenu hostelMessMenu) {
+        /* Skip if we're already destroyed */
+        if (getActivity() == null) return;
+
         List<MessMenu> messMenus = hostelMessMenu.getMessMenus();
 
         /* Sort by day starting today

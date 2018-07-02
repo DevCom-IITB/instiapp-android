@@ -139,6 +139,9 @@ public class BodyFragment extends Fragment {
     }
 
     private void displayBody(final Body body) {
+        /* Skip if we're already destroyed */
+        if (getView() == null) return;
+
         TextView bodyName = (TextView) getView().findViewById(R.id.body_name);
         TextView bodyDescription = (TextView) getView().findViewById(R.id.body_description);
         ImageView eventPicture = (ImageView) getActivity().findViewById(R.id.body_picture);
