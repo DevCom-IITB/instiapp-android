@@ -2,13 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.TrainingBlogFragment">
+    tools:context="app.insti.fragment.TrainingBlogFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/training_feed_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.TrainingBlogFragment">
+        tools:context="app.insti.fragment.TrainingBlogFragment">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/training_feed_recycler_view"

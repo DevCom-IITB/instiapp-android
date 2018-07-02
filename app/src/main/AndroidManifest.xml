@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-    package="in.ac.iitb.gymkhana.iitbapp">
+    package="app.insti">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -26,6 +26,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar">
@@ -37,6 +38,7 @@
         </activity>
         <activity
             android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask">
 
             <intent-filter>
@@ -74,21 +76,21 @@
         </receiver>
 
         <service
-            android:name="in.ac.iitb.gymkhana.iitbapp.gcm.MyGcmListenerService"
+            android:name="app.insti.gcm.MyGcmListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name="in.ac.iitb.gymkhana.iitbapp.gcm.MyInstanceIDListenerService"
+            android:name="app.insti.gcm.MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-            android:name="in.ac.iitb.gymkhana.iitbapp.gcm.RegistrationIntentService"
+            android:name="app.insti.gcm.RegistrationIntentService"
             android:exported="false"></service>
 
 
