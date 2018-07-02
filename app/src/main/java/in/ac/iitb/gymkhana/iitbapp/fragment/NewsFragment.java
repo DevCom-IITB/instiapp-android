@@ -37,6 +37,7 @@ public class NewsFragment extends BaseFragment {
     private RecyclerView newsRecyclerView;
     private SwipeRefreshLayout newsSwipeRefreshLayout;
     private AppDatabase appDatabase;
+    private boolean freshNewsDisplayed = false;
 
     public NewsFragment() {
         // Required empty public constructor
@@ -75,6 +76,7 @@ public class NewsFragment extends BaseFragment {
             public void onResponse(Call<List<NewsArticle>> call, Response<List<NewsArticle>> response) {
                 if (response.isSuccessful()) {
                     List<NewsArticle> articles = response.body();
+                    freshNewsDisplayed = true;
                     displayNews(articles);
 
                     new updateDatabase().execute(articles);
@@ -134,7 +136,9 @@ public class NewsFragment extends BaseFragment {
         }
 
         protected void onPostExecute(List<NewsArticle> result) {
-            displayNews(result);
+            if (!freshNewsDisplayed) {
+                displayNews(result);
+            }
         }
     }
 }

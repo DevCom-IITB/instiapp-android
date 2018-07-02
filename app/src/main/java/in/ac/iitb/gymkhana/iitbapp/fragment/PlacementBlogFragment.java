@@ -37,6 +37,7 @@ public class PlacementBlogFragment extends BaseFragment {
     private RecyclerView placementFeedRecyclerView;
     private SwipeRefreshLayout feedSwipeRefreshLayout;
     private AppDatabase appDatabase;
+    private boolean freshBlogDisplayed = false;
 
 
     public PlacementBlogFragment() {
@@ -76,6 +77,7 @@ public class PlacementBlogFragment extends BaseFragment {
             public void onResponse(Call<List<PlacementBlogPost>> call, Response<List<PlacementBlogPost>> response) {
                 if (response.isSuccessful()) {
                     List<PlacementBlogPost> posts = response.body();
+                    freshBlogDisplayed = true;
                     displayPlacementFeed(posts);
 
                     new updateDatabase().execute(posts);
@@ -135,7 +137,9 @@ public class PlacementBlogFragment extends BaseFragment {
         }
 
         protected void onPostExecute(List<PlacementBlogPost> result) {
-            displayPlacementFeed(result);
+            if (!freshBlogDisplayed) {
+                displayPlacementFeed(result);
+            }
         }
     }
 }
