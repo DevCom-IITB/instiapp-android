@@ -86,7 +86,7 @@ public class FeedFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
 
-        if (((MainActivity)getActivity()).createEventAccess()) {
+        if (((MainActivity) getActivity()).createEventAccess()) {
             fab.setVisibility(View.VISIBLE);
         }
 
@@ -154,7 +154,9 @@ public class FeedFragment extends BaseFragment {
                 }
             }
         });
-        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+        View view = getActivity().findViewById(R.id.loadingPanel);
+        if (view != null)
+            view.setVisibility(View.GONE);
     }
 
     private class updateDatabase extends AsyncTask<List<Event>, Void, Integer> {
