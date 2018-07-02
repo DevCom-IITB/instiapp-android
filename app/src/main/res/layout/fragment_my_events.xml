@@ -8,7 +8,7 @@
         android:id="@+id/my_events_feed_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.MyEventsFragment">
+        tools:context="app.insti.fragment.MyEventsFragment">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/my_events_feed_recycler_view"

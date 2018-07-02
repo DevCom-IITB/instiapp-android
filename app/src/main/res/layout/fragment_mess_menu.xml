@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.MessMenuFragment">
+        tools:context="app.insti.fragment.MessMenuFragment">
 
         <Spinner
             android:id="@+id/hostel_spinner"
@@ -21,7 +21,7 @@
             android:id="@+id/mess_menu_swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.MessMenuFragment">
+            tools:context="app.insti.fragment.MessMenuFragment">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/mess_menu_recycler_view"

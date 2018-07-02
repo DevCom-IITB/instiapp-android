@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="in.ac.iitb.gymkhana.iitbapp.fragment.EventFragment">
+    tools:context="app.insti.fragment.EventFragment">
 
     <ScrollView
         android:layout_width="match_parent"
