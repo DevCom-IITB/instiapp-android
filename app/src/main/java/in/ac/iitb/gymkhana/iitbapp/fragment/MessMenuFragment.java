@@ -146,6 +146,7 @@ public class MessMenuFragment extends BaseFragment {
                 }
             }
         });
+        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
     private class updateDatabase extends AsyncTask<List<HostelMessMenu>, Void, Integer> {

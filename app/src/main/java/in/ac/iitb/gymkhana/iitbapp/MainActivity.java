@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         session = new SessionManager(getApplicationContext());
         session.checkLogin();
-        Toast.makeText(getApplicationContext(), "Log In status: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -122,7 +121,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         nameTextView.setText(currentUser.getUserName());
         rollNoTextView.setText(currentUser.getUserRollNumber());
 
-        Picasso.with(this).load(currentUser.getUserProfilePictureUrl()).into(profilePictureImageView);
+        Picasso.with(this)
+                .load(currentUser.getUserProfilePictureUrl())
+                .resize(200, 0)
+                .placeholder(R.drawable.user_placeholder)
+                .into(profilePictureImageView);
     }
 
 //    private void fetchNotifications() {
@@ -266,6 +269,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bundle.putString(Constants.SESSION_ID, session.pref.getString(Constants.SESSION_ID, "Error"));
         if (fragment instanceof MessMenuFragment)
             bundle.putString(Constants.USER_HOSTEL, currentUser.getHostel());
+        if (fragment instanceof SettingsFragment && session.isLoggedIn())
+            bundle.putString(Constants.USER_ID, currentUser.getUserID());
         fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
         if (fragment instanceof FeedFragment)

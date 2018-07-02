@@ -61,6 +61,9 @@ public interface RetrofitInterface {
     @GET("news")
     Call<List<NewsArticle>> getNews(@Header("Cookie") String sessionID);
 
+    @GET("logout")
+    Call<Void> logout(@Header("Cookie") String sessionID);
+
 //    @POST("getNotifications/")
 //    Call<NotificationsResponse> getNotifications(@Body NotificationsRequest notificationsRequest);
 }
