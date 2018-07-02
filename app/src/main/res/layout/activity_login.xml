@@ -1,19 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="2">
 
-    <WebView
-        android:id="@+id/login_webview"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="false"
-        android:layout_alignWithParentIfMissing="false"></WebView>
+        android:orientation="vertical"
+        android:layout_weight="1">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="199dp"
+            android:contentDescription="InstiApp"
+            android:paddingLeft="100dp"
+            android:paddingRight="100dp"
+            android:layout_marginBottom="15dp"
+            android:scaleType="fitEnd"
+            app:srcCompat="@drawable/lotus" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="InstiApp"
+            android:textAlignment="center"
+            android:textSize="28sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:layout_weight="1">
+
+        <EditText
+            android:id="@+id/login_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="LDAP ID" />
+
+        <EditText
+            android:id="@+id/login_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:hint="Password" />
+
+        <Button
+            android:id="@+id/login_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:textColor="@color/primaryTextColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Log In" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="or"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/login_guest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Continue as a Guest"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
+            android:paddingTop="5dp" />
+    </LinearLayout>
 
 </LinearLayout>

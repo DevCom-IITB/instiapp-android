@@ -4,14 +4,16 @@ package in.ac.iitb.gymkhana.iitbapp;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.net.http.SslError;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -27,9 +29,6 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private final String redirectUri = "https://redirecturi";
-    private final String guestUri = "https://guesturi";
-    public String authCode = null;
     SessionManager session;
     Context mContext = this;
     private ProgressDialog progressDialog;
@@ -46,21 +45,52 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        WebView webview = (WebView) findViewById(R.id.login_webview);
-        webview.getSettings().setJavaScriptEnabled(true);
-        webview.getSettings().setDomStorageEnabled(true);
-        webview.setWebViewClient(new WvClient());
-        webview.loadUrl("file:///android_asset/login.html");
+        final Button loginButton = findViewById(R.id.login_button);
+        final EditText usernameEditText = findViewById(R.id.login_username);
+        final EditText passwordEditText = findViewById(R.id.login_password);
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!progressDialog.isShowing()) {
+                    progressDialog.setMessage("Logging In");
+                    progressDialog.setCancelable(false);
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.show();
+                }
+                login(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+            }
+        });
+
+        passwordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    loginButton.performClick();
+                }
+                return false;
+            }
+        });
+
+        final TextView guestView = findViewById(R.id.login_guest);
+        guestView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
-    private void login(String authorizationCode, final String redirectURI, String gcmID) {
+    private void login(final String username, final String password) {
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.login(authorizationCode, redirectURI, gcmID).enqueue(new Callback<LoginResponse>() {
+        retrofitInterface.passwordLogin(username, password).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
                     Log.d(TAG, "Login request successful");
-                    session.createLoginSession(redirectURI, response.body().getUser(), response.body().getSessionID());
+                    session.createLoginSession(username, response.body().getUser(), response.body().getSessionID());
                     Intent i = new Intent(mContext, MainActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -68,6 +98,9 @@ public class LoginActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                     //Save credentials in AccountManager to keep user logged in
                     //Go to MainActivity
+                } else {
+                    Toast.makeText(LoginActivity.this, "Authorization Failed!", Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
                 }
                 //Server error
             }
@@ -93,57 +126,6 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
         return true;
-    }
-
-    private class WvClient extends WebViewClient {
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError er) {
-            handler.proceed();
-        }
-
-        @Override
-        public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-            /* Capture redirect */
-            if (url.startsWith(redirectUri)) {
-                /* Show progress dialog */
-                progressDialog.setMessage("Logging In");
-                progressDialog.setCancelable(false);
-                progressDialog.setIndeterminate(true);
-                if (!progressDialog.isShowing()) {
-                    progressDialog.show();
-                }
-
-                /* Get auth code from query */
-                String query = Uri.parse(url).getQuery();
-                authCode = query.substring(query.lastIndexOf("=") + 1);
-                login(authCode, redirectUri, authCode);
-                return true;
-            }
-
-            /* Guest Login */
-            if (url.startsWith(guestUri)) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                return true;
-            }
-
-            if (!progressDialog.isShowing()) {
-                progressDialog.setMessage("Loading");
-                progressDialog.setCancelable(false);
-                progressDialog.setIndeterminate(true);
-                progressDialog.show();
-            }
-            /* Load URL */
-            view.loadUrl(url);
-            return false;
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-        }
     }
 
 }
