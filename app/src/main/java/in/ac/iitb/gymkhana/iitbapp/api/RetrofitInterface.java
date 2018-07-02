@@ -25,6 +25,9 @@ public interface RetrofitInterface {
     @GET("login")
     Call<LoginResponse> login(@Query("code") String AUTH_CODE, @Query("redir") String redirectURI, @Query("fcm_id") String fcmID);
 
+    @GET("pass-login")
+    Call<LoginResponse> passwordLogin(@Query("username") String username, @Query("password") String password);
+
     @POST("events")
     Call<EventCreateResponse> createEvent(@Header("Cookie") String sessionId, @Body EventCreateRequest eventCreateRequest);
 
