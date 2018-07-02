@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -25,22 +24,16 @@ import in.ac.iitb.gymkhana.iitbapp.Constants;
 import in.ac.iitb.gymkhana.iitbapp.ItemClickListener;
 import in.ac.iitb.gymkhana.iitbapp.R;
 import in.ac.iitb.gymkhana.iitbapp.adapter.FeedAdapter;
-import in.ac.iitb.gymkhana.iitbapp.api.RetrofitInterface;
-import in.ac.iitb.gymkhana.iitbapp.api.ServiceGenerator;
-import in.ac.iitb.gymkhana.iitbapp.api.model.NewsFeedResponse;
 import in.ac.iitb.gymkhana.iitbapp.data.AppDatabase;
 import in.ac.iitb.gymkhana.iitbapp.data.Event;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MyEventsFragment extends BaseFragment {
 
-    private RecyclerView MyEventsfeedRecyclerView;
-    private SwipeRefreshLayout MyEventsfeedSwipeRefreshLayout;
+    private RecyclerView myEventsFeedRecyclerView;
+    private SwipeRefreshLayout myEventsFeedSwipeRefreshLayout;
     private AppDatabase appDatabase;
     private FloatingActionButton fab;
 
@@ -76,12 +69,12 @@ public class MyEventsFragment extends BaseFragment {
         appDatabase = AppDatabase.getAppDatabase(getContext());
        new showEvents().execute();
 
-        MyEventsfeedSwipeRefreshLayout = getActivity().findViewById(R.id.my_events_feed_swipe_refresh_layout);
-        MyEventsfeedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        myEventsFeedSwipeRefreshLayout = getActivity().findViewById(R.id.my_events_feed_swipe_refresh_layout);
+        myEventsFeedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 updateOnRefresh();
-                MyEventsfeedSwipeRefreshLayout.setRefreshing(false);
+                myEventsFeedSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -131,9 +124,9 @@ public class MyEventsFragment extends BaseFragment {
             @Override
             public void run(Activity pActivity) {
                 try {
-                    MyEventsfeedRecyclerView = getActivity().findViewById(R.id.my_events_feed_recycler_view);
-                    MyEventsfeedRecyclerView.setAdapter(feedAdapter);
-                    MyEventsfeedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    myEventsFeedRecyclerView = getActivity().findViewById(R.id.my_events_feed_recycler_view);
+                    myEventsFeedRecyclerView.setAdapter(feedAdapter);
+                    myEventsFeedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
