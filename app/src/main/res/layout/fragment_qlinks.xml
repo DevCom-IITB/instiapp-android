@@ -1,13 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="app.insti.fragment.QLinksFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="   CMS" android:textSize="25sp" />
 
+        <TextView
+            android:id="@+id/button_CMS" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CMS"/>
+        <TextView
+            android:id="@+id/button_CMSMaint" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CMS - Maintainance"/>
+        <TextView
+            android:id="@+id/button_CMSNet" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CMS - Network"/>
+        <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="   Academics" android:textSize="25sp" />
+        <TextView
+            android:id="@+id/button_ASC" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ASC"/>
+        <TextView
+            android:id="@+id/button_ASCExt" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="External ASC"/>
+        <TextView
+            android:id="@+id/button_Moodle" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Moodle"/>
+        <TextView
+            android:id="@+id/button_Internship" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Internship Login"/>
+        <TextView
+            android:id="@+id/button_Placement" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Placement Login"/>
+        <TextView
+            android:id="@+id/button_Library" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Central Library"/>
+        <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="   Calender" android:textSize="25sp"/>
+        <TextView
+            android:id="@+id/button_Acad_calender" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Academic Calender"/>
+        <TextView
+            android:id="@+id/button_Acad_timetable" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Academic Timetable"/>
+        <TextView
+            android:id="@+id/button_Holidays" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Holidays List"/>
+        <TextView
+            android:id="@+id/button_Circulars" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Circulars"/>
+        <TextView
+            android:id="@+id/button_Courselist" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CMS Maintainance"/>
+        <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="   Services" android:textSize="25sp"/>
+        <TextView
+            android:id="@+id/button_GPO" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="GPO"/>
+        <TextView
+            android:id="@+id/button_CAMP" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CAMP"/>
+        <TextView
+            android:id="@+id/button_MSStore" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Microsoft Store"/>
+        <TextView
+            android:id="@+id/button_BigHomeCloud" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BigHome Cloud"/>
+        <TextView
+            android:id="@+id/button_FTP" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="FTP"/>
+        <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="   Miscellaneous" android:textSize="25sp"/>
+        <TextView
+            android:id="@+id/button_Intercom" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Intercom Extensions"/>
+        <TextView
+            android:id="@+id/button_Hospital" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hospital"/>
+        <TextView
+            android:id="@+id/button_VPN" android:textSize="@dimen/quick_links_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="VPN Guide"/>
+
+
+    </LinearLayout>
+    </ScrollView>
 </FrameLayout>
