@@ -317,9 +317,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 UnsafeOkHttpClient.getUnsafeOkHttpClient(getApplicationContext())
         )));
         Picasso built = builder.build();
-        // TODO Set these to false before launch
-        built.setIndicatorsEnabled(true);
-        built.setLoggingEnabled(true);
+        built.setIndicatorsEnabled(false);
+        built.setLoggingEnabled(false);
         Picasso.setSingletonInstance(built);
     }
 
