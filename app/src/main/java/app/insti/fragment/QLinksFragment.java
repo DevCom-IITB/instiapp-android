@@ -38,7 +38,6 @@ public class QLinksFragment extends BaseFragment {
         TextView CAMP = getActivity().findViewById(R.id.button_CAMP);
         TextView MSStore = getActivity().findViewById(R.id.button_MSStore);
         TextView BigHome = getActivity().findViewById(R.id.button_BigHomeCloud);
-        TextView FTP = getActivity().findViewById(R.id.button_FTP);
         TextView Intercom = getActivity().findViewById(R.id.button_Intercom);
         TextView Hospital = getActivity().findViewById(R.id.button_Hospital);
         TextView VPN = getActivity().findViewById(R.id.button_VPN);
@@ -61,7 +60,6 @@ public class QLinksFragment extends BaseFragment {
         CAMP.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("https://camp.iitb.ac.in/");  } });
         MSStore.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("http://msstore.iitb.ac.in/");  } });
         BigHome.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("https://home.iitb.ac.in/");  } });
-        FTP.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("ftp://ftp.iitb.ac.in/");  } });
         Intercom.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("https://portal.iitb.ac.in/TelephoneDirectory/");  } });
         Hospital.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("http://www.iitb.ac.in/hospital/");  } });
         VPN.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("https://www.cc.iitb.ac.in/engservices/engaccessingiitffromoutside/19-vpn");  } });
