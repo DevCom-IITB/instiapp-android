@@ -5,5 +5,6 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="quick_links_size">18dp</dimen>
+    <dimen name="quick_links_size">18sp</dimen>
+    <dimen name="links_margin_start">7dp</dimen>
 </resources>
