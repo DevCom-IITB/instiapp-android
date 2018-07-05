@@ -1,14 +1,20 @@
 package app.insti.fragment;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import app.insti.R;
@@ -74,5 +80,23 @@ public class AboutFragment extends BaseFragment {
         Picasso.with(getContext()).load("https://insti.app/team-pics/ranveer.jpg").into(ranveerimg);
         Picasso.with(getContext()).load("https://insti.app/team-pics/amangour.jpg").into(amangourimg);
         Picasso.with(getContext()).load("https://insti.app/team-pics/wncc.jpg").into(wnccimg);
+
+        /* Map TextView ids to links */
+        final Map<Integer, String> joinUs = new HashMap<Integer, String>() {{;
+            put(R.id.django, "https://github.com/wncc/IITBapp");
+            put(R.id.android, "https://github.com/wncc/InstiApp");
+            put(R.id.angular, "https://github.com/pulsejet/iitb-app-angular");
+        }};
+
+        for (final Map.Entry<Integer, String> entry : joinUs.entrySet()) {
+            getActivity().findViewById(entry.getKey()).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri uriUrl = Uri.parse(entry.getValue());
+                    Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                    startActivity(launchBrowser);
+                }
+            });
+        }
     }
 }
