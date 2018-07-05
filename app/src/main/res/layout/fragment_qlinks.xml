@@ -105,11 +105,11 @@
             android:layout_width="match_parent" android:layout_marginStart="@dimen/links_margin_start"
             android:layout_height="wrap_content"
             android:text="BigHome Cloud"/>
-        <TextView
-            android:id="@+id/button_FTP" android:textSize="@dimen/quick_links_size"
-            android:layout_width="match_parent" android:layout_marginStart="@dimen/links_margin_start"
-            android:layout_height="wrap_content"
-            android:text="FTP"/>
+        <!--<TextView-->
+            <!--android:id="@+id/button_FTP" android:textSize="@dimen/quick_links_size"-->
+            <!--android:layout_width="match_parent" android:layout_marginStart="@dimen/links_margin_start"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="FTP"/>-->
         <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="   Miscellaneous" android:textSize="25sp" android:textStyle="bold"/>
         <TextView
             android:id="@+id/button_Intercom" android:textSize="@dimen/quick_links_size"
