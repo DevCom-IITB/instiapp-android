@@ -1,14 +1,20 @@
 package app.insti.fragment;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import app.insti.R;
@@ -35,44 +41,51 @@ public class AboutFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        CircleImageView varunimg = getActivity().findViewById(R.id.varunimg);
-        CircleImageView sajalimg = getActivity().findViewById(R.id.sajalimg);
-        CircleImageView nihalimg = getActivity().findViewById(R.id.nihalimg);
-        CircleImageView ydidwaniaimg = getActivity().findViewById(R.id.ydidwaniaimg);
-        CircleImageView cheekuimg = getActivity().findViewById(R.id.cheekuimg);
-        CircleImageView sarthakimg = getActivity().findViewById(R.id.sarthakimg);
-        CircleImageView sohamimg = getActivity().findViewById(R.id.sohamimg);
-        CircleImageView mrunmayiimg = getActivity().findViewById(R.id.mrunmayiimg);
-        CircleImageView owaisimg = getActivity().findViewById(R.id.owaisimg);
-        CircleImageView hrushikeshimg = getActivity().findViewById(R.id.hrushikeshimg);
-        CircleImageView yashkhemimg = getActivity().findViewById(R.id.yashkhemimg);
-        CircleImageView bavishimg = getActivity().findViewById(R.id.bavishimg);
-        CircleImageView mayuimg = getActivity().findViewById(R.id.mayuimg);
-        CircleImageView tomarimg = getActivity().findViewById(R.id.tomarimg);
-        CircleImageView bijoyimg = getActivity().findViewById(R.id.bijoyimg);
-        CircleImageView dheerendraimg = getActivity().findViewById(R.id.dheerendraimg);
-        CircleImageView ranveerimg = getActivity().findViewById(R.id.ranveerimg);
-        CircleImageView amangourimg = getActivity().findViewById(R.id.amangourimg);
-        CircleImageView wnccimg = getActivity().findViewById(R.id.wnccimg);
+        /* Map CircleImageView ids to image URLs */
+        final Map<Integer, String> team = new HashMap<Integer, String>() {{
+            put(R.id.varunimg, "varun.jpg");
+            put(R.id.sajalimg, "sajal.jpg");
+            put(R.id.nihalimg, "nihal.jpg");
+            put(R.id.ydidwaniaimg, "ydidwania.jpg");
+            put(R.id.cheekuimg, "cheeku.jpg");
+            put(R.id.sarthakimg, "sarthak.jpg");
+            put(R.id.sohamimg, "soham.jpg");
+            put(R.id.mrunmayiimg, "mrunmayi.jpg");
+            put(R.id.owaisimg, "owais.jpg");
+            put(R.id.hrushikeshimg, "hrushikesh.jpg");
+            put(R.id.yashkhemimg, "yashkhem.jpg");
+            put(R.id.bavishimg, "bavish.jpg");
+            put(R.id.mayuimg, "mayu.jpg");
+            put(R.id.tomarimg, "tomar.jpg");
+            put(R.id.bijoyimg, "bijoy.jpg");
+            put(R.id.dheerendraimg, "dheerendra.jpg");
+            put(R.id.ranveerimg, "ranveer.jpg");
+            put(R.id.amangourimg, "amangour.jpg");
+            put(R.id.wnccimg, "wncc.jpg");
+        }};
 
-        Picasso.with(getContext()).load("https://insti.app/team-pics/varun.jpg").into(varunimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/sajal.jpg").into(sajalimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/nihal.jpg").into(nihalimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/ydidwania.jpg").into(ydidwaniaimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/cheeku.jpg").into(cheekuimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/sarthak.jpg").into(sarthakimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/soham.jpg").into(sohamimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/mrunmayi.jpg").into(mrunmayiimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/owais.jpg").into(owaisimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/hrushikesh.jpg").into(hrushikeshimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/yashkhem.jpg").into(yashkhemimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/bavish.jpg").into(bavishimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/mayu.jpg").into(mayuimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/tomar.jpg").into(tomarimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/bijoy.jpg").into(bijoyimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/dheerendra.jpg").into(dheerendraimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/ranveer.jpg").into(ranveerimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/amangour.jpg").into(amangourimg);
-        Picasso.with(getContext()).load("https://insti.app/team-pics/wncc.jpg").into(wnccimg);
+        /* Show team pics */
+        for (final Map.Entry<Integer, String> entry : team.entrySet()) {
+            CircleImageView circleImageView = getActivity().findViewById(entry.getKey());
+            Picasso.with(getContext()).load("https://insti.app/team-pics/" + entry.getValue()).into(circleImageView);
+        }
+
+        /* Map TextView ids to links */
+        final Map<Integer, String> joinUs = new HashMap<Integer, String>() {{;
+            put(R.id.django, "https://github.com/wncc/IITBapp");
+            put(R.id.android, "https://github.com/wncc/InstiApp");
+            put(R.id.angular, "https://github.com/pulsejet/iitb-app-angular");
+        }};
+
+        for (final Map.Entry<Integer, String> entry : joinUs.entrySet()) {
+            getActivity().findViewById(entry.getKey()).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri uriUrl = Uri.parse(entry.getValue());
+                    Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                    startActivity(launchBrowser);
+                }
+            });
+        }
     }
 }
