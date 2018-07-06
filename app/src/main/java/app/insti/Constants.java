@@ -22,4 +22,6 @@ public class Constants {
     public static final int STATUS_NOT_GOING = 0;
     public static final String BODY_JSON = "body_json";
     public static final String BODY_LIST_JSON = "body_list_json";
+
+    public static final String LOGIN_MESSAGE = "Please login to continue!";
 }

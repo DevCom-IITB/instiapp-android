@@ -27,7 +27,7 @@
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_input_add"
         android:tint="@android:color/black"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/loadingPanel"

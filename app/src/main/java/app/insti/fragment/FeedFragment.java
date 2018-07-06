@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,9 @@ public class FeedFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Feed");
+
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
 
         feedSwipeRefreshLayout = view.findViewById(R.id.feed_swipe_refresh_layout);
@@ -87,7 +91,8 @@ public class FeedFragment extends BaseFragment {
         super.onStart();
 
         if (((MainActivity) getActivity()).createEventAccess()) {
-            fab.setVisibility(View.VISIBLE);
+            /* TODO: Uncomment the following line when Add Event is completed */
+            // fab.setVisibility(View.VISIBLE);
         }
 
         appDatabase = AppDatabase.getAppDatabase(getContext());

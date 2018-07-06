@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ImageViewCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -131,6 +132,9 @@ public class AddEventFragment extends BaseFragment {
 
         view = inflater.inflate(R.layout.fragment_add_event, container, false);
         ButterKnife.bind(this, view);
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Add Event");
 
         eventPictureImageView = view.findViewById(R.id.ib_eventImage);
         progressDialog = new ProgressDialog(getContext());

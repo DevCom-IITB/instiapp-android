@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,6 +83,9 @@ public class EventFragment extends BaseFragment {
         Log.d(TAG, "onStart: " + eventJson);
         event = new Gson().fromJson(eventJson, Event.class);
         inflateViews(event);
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(event.getEventName());
     }
 
     private void inflateViews(final Event event) {
