@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +78,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Loc
     @Override
     public void onStart() {
         super.onStart();
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Map");
+
         locationButton = (FloatingActionButton) getActivity().findViewById(R.id.location_button);
         locationButton.setImageResource(R.drawable.ic_my_location_black_24dp);
         locationButton.getDrawable().setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark), PorterDuff.Mode.SRC_IN);

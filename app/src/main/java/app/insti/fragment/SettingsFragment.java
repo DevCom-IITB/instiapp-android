@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,9 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Settings");
+
         Bundle bundle = getArguments();
 
         String userID = bundle.getString(Constants.USER_ID);

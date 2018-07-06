@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,10 @@ public class QLinksFragment extends BaseFragment {
 
     public void onStart(){
         super.onStart();
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Quick Links");
+
         TextView CMS =  getActivity().findViewById(R.id.button_CMS);
         TextView CMSMaint = getActivity().findViewById(R.id.button_CMSMaint);
         TextView CMSNet = getActivity().findViewById(R.id.button_CMSNet);

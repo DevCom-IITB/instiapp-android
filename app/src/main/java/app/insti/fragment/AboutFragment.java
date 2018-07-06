@@ -3,6 +3,7 @@ package app.insti.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,10 @@ public class AboutFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("About");
+
         CircleImageView varunimg = getActivity().findViewById(R.id.varunimg);
         CircleImageView sajalimg = getActivity().findViewById(R.id.sajalimg);
         CircleImageView nihalimg = getActivity().findViewById(R.id.nihalimg);
