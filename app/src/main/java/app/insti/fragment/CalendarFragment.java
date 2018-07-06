@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,10 @@ public class CalendarFragment extends BaseFragment {
 
         view = inflater.inflate(R.layout.fragment_calendar, container, false);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Calendar");
+
         final CalendarView simpleCalendarView = (CalendarView) view.findViewById(R.id.simpleCalendarView); // get the reference of CalendarView
         simpleCalendarView.setFirstDayOfWeek(1); // set Sunday as the first day of the week
 

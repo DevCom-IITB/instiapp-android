@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,9 @@ public class NotificationsFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Notifications");
 
         Bundle bundle = getArguments();
         String notificationsResponseJson = bundle.getString(Constants.NOTIFICATIONS_RESPONSE_JSON);
