@@ -208,20 +208,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 updateFragment(feedFragment);
                 break;
             case R.id.nav_my_events:
-                MyEventsFragment myeventsFragment = new MyEventsFragment();
-                updateFragment(myeventsFragment);
+                if (session.isLoggedIn()) {
+                    MyEventsFragment myeventsFragment = new MyEventsFragment();
+                    updateFragment(myeventsFragment);
+                } else {
+                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.nav_news:
                 NewsFragment newsFragment = new NewsFragment();
                 updateFragment(newsFragment);
                 break;
             case R.id.nav_placement_blog:
-                PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
-                updateFragment(placementBlogFragment);
+                if (session.isLoggedIn()) {
+                    PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
+                    updateFragment(placementBlogFragment);
+                } else {
+                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.nav_training_blog:
-                TrainingBlogFragment trainingBlogFragment = new TrainingBlogFragment();
-                updateFragment(trainingBlogFragment);
+                if (session.isLoggedIn()) {
+                    TrainingBlogFragment trainingBlogFragment = new TrainingBlogFragment();
+                    updateFragment(trainingBlogFragment);
+                }
+                else{
+                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.nav_mess_menu:
                 MessMenuFragment messMenuFragment = new MessMenuFragment();
@@ -317,9 +330,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 UnsafeOkHttpClient.getUnsafeOkHttpClient(getApplicationContext())
         )));
         Picasso built = builder.build();
-        // TODO Set these to false before launch
-        built.setIndicatorsEnabled(true);
-        built.setLoggingEnabled(true);
+        built.setIndicatorsEnabled(false);
+        built.setLoggingEnabled(false);
         Picasso.setSingletonInstance(built);
     }
 

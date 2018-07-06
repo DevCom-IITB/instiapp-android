@@ -91,7 +91,8 @@ public class FeedFragment extends BaseFragment {
         super.onStart();
 
         if (((MainActivity) getActivity()).createEventAccess()) {
-            fab.setVisibility(View.VISIBLE);
+            /* TODO: Uncomment the following line when Add Event is completed */
+            // fab.setVisibility(View.VISIBLE);
         }
 
         appDatabase = AppDatabase.getAppDatabase(getContext());
