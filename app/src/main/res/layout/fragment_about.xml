@@ -430,7 +430,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:gravity="center"
-                    android:text="Abhijeet Tomar"
+                    android:text="Abhijit Tomar"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
@@ -451,7 +451,7 @@
                     android:layout_marginStart="25dp"
                     android:gravity="center"
                     android:textSize="13sp"
-                    android:text="Dheerendra Rathore"
+                    android:text="Dheerendra Rathor"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -463,16 +463,15 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/amangourimg"
+                    android:id="@+id/ranveerimg"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:layout_gravity="center"
                     android:layout_marginEnd="45dp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/ranveerimg"
+                    android:id="@+id/amangourimg"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:layout_gravity="center"
