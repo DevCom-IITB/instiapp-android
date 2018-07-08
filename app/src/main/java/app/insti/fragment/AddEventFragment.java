@@ -314,7 +314,7 @@ public class AddEventFragment extends BaseFragment {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             ImageViewCompat.setImageTintList(eventPictureImageView, null);
-            Picasso.with(getContext()).load(selectedImage).into(eventPictureImageView);
+            Picasso.get().load(selectedImage).into(eventPictureImageView);
             base64Image = convertImageToString(getScaledBitmap(picturePath, 800, 800));
             Log.d(TAG, "onActivityResult: " + base64Image);
         }

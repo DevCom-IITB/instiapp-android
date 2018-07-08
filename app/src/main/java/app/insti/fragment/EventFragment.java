@@ -101,7 +101,7 @@ public class EventFragment extends BaseFragment {
         webEventButton = getActivity().findViewById(R.id.web_event_button);
         shareEventButton = getActivity().findViewById(R.id.share_event_button);
 
-        Picasso.with(getContext()).load(event.getEventImageURL()).into(eventPicture);
+        Picasso.get().load(event.getEventImageURL()).into(eventPicture);
         eventTitle.setText(event.getEventName());
         Markwon.setMarkdown(eventDescription, event.getEventDescription());
         Timestamp timestamp = event.getEventStartTime();
