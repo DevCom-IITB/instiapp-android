@@ -24,13 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import app.insti.api.UnsafeOkHttpClient;
 import app.insti.api.model.NotificationsResponse;
 import app.insti.data.User;
-import app.insti.fragment.AboutFragment;
 import app.insti.fragment.CalendarFragment;
 import app.insti.fragment.FeedFragment;
 import app.insti.fragment.MapFragment;
@@ -121,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         nameTextView.setText(currentUser.getUserName());
         rollNoTextView.setText(currentUser.getUserRollNumber());
 
-        Picasso.with(this)
+        Picasso.get()
                 .load(currentUser.getUserProfilePictureUrl())
                 .resize(200, 0)
                 .placeholder(R.drawable.user_placeholder)
@@ -326,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void initPicasso() {
         Picasso.Builder builder = new Picasso.Builder(getApplicationContext());
-        builder.downloader(new OkHttp3Downloader((
+        builder.downloader(new com.squareup.picasso.OkHttp3Downloader((
                 UnsafeOkHttpClient.getUnsafeOkHttpClient(getApplicationContext())
         )));
         Picasso built = builder.build();

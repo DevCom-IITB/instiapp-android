@@ -161,7 +161,7 @@ public class BodyFragment extends Fragment {
 
         /* Set body information */
         bodyName.setText(body.getBodyName());
-        Picasso.with(getContext()).load(body.getBodyImageURL()).into(eventPicture);
+        Picasso.get().load(body.getBodyImageURL()).into(eventPicture);
 
         /* Return if it's a min body */
         if (body.getBodyDescription() == null) {
