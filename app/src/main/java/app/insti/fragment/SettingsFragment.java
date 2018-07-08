@@ -76,7 +76,7 @@ public class SettingsFragment extends Fragment {
         ImageView userProfilePictureImageView = getActivity().findViewById(R.id.user_card_avatar);
         TextView userNameTextView = getActivity().findViewById(R.id.user_card_name);
 
-        Picasso.with(getContext())
+        Picasso.get()
                 .load(user.getUserProfilePictureUrl())
                 .resize(800, 0)
                 .placeholder(R.drawable.user_placeholder)

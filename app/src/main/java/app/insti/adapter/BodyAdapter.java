@@ -51,7 +51,7 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
         Body body = bodyList.get(position);
         holder.name.setText(body.getBodyName());
         holder.description.setText(body.getBodyShortDescription());
-        Picasso.with(context).load(body.getBodyImageURL()).into(holder.image);
+        Picasso.get().load(body.getBodyImageURL()).into(holder.image);
 
     }
 

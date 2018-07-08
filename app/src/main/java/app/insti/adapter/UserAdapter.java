@@ -49,7 +49,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         User user = userList.get(position);
         holder.userName.setText(user.getUserName());
         holder.role.setText(user.getCurrentRole());
-        Picasso.with(context)
+        Picasso.get()
                 .load(user.getUserProfilePictureUrl())
                 .resize(150, 0)
                 .placeholder(R.drawable.user_placeholder)

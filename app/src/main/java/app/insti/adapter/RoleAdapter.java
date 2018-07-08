@@ -55,7 +55,7 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.ViewHolder> {
         Body roleBody = role.getRoleBodyDetails();
         holder.bodyName.setText(roleBody.getBodyName());
         holder.role.setText(role.getRoleName());
-        Picasso.with(context).load(roleBody.getBodyImageURL()).into(holder.image);
+        Picasso.get().load(roleBody.getBodyImageURL()).into(holder.image);
 
     }
 

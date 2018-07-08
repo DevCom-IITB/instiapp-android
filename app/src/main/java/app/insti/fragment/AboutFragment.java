@@ -72,7 +72,7 @@ public class AboutFragment extends BaseFragment {
         /* Show team pics */
         for (final Map.Entry<Integer, String> entry : team.entrySet()) {
             CircleImageView circleImageView = getActivity().findViewById(entry.getKey());
-            Picasso.with(getContext()).load("https://insti.app/team-pics/" + entry.getValue()).into(circleImageView);
+            Picasso.get().load("https://insti.app/team-pics/" + entry.getValue()).into(circleImageView);
         }
 
         /* Map TextView ids to links */

@@ -108,7 +108,7 @@ public class ProfileFragment extends BaseFragment {
         userRoleRecyclerView.setAdapter(roleAdapter);
         userRoleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Picasso.with(getContext())
+        Picasso.get()
                 .load(user.getUserProfilePictureUrl())
                 .resize(800, 0)
                 .placeholder(R.drawable.user_placeholder)
