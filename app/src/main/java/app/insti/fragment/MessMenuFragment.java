@@ -83,7 +83,9 @@ public class MessMenuFragment extends BaseFragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 16)
-                    displayMenu("Tansa");
+                    displayMenu("tansa");
+                else if (i == 17)
+                    displayMenu("qip");
                 else
                     displayMenu(Integer.toString(i + 1));
             }
@@ -94,8 +96,10 @@ public class MessMenuFragment extends BaseFragment {
             }
         });
 
-        if (hostel.equals("Tansa"))
+        if (hostel.equals("tansa"))
             hostelSpinner.setSelection(16);
+        else if (hostel.equals("qip"))
+            hostelSpinner.setSelection(17);
         else
             hostelSpinner.setSelection(Integer.parseInt(hostel) - 1);
     }
