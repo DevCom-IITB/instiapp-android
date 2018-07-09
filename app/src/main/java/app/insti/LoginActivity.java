@@ -5,7 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,6 +32,8 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    public static final String USERNAME_ERROR = "Username cannot be blank";
+    public static final String PASSWORD_ERROR = "Password cannot be blank";
     SessionManager session;
     Context mContext = this;
     private ProgressDialog progressDialog;
@@ -48,17 +53,64 @@ public class LoginActivity extends AppCompatActivity {
         final Button loginButton = findViewById(R.id.login_button);
         final EditText usernameEditText = findViewById(R.id.login_username);
         final EditText passwordEditText = findViewById(R.id.login_password);
+        final TextInputLayout usernameLayout = findViewById(R.id.login_username_layout);
+        final TextInputLayout passwordLayout = findViewById(R.id.login_password_layout);
+
+        usernameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (usernameEditText.getText().toString().equals("")) {
+                    usernameLayout.setError(USERNAME_ERROR);
+                } else {
+                    usernameLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        passwordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (passwordEditText.getText().toString().equals("")) {
+                    passwordLayout.setError(PASSWORD_ERROR);
+                } else {
+                    passwordLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!progressDialog.isShowing()) {
-                    progressDialog.setMessage("Logging In");
-                    progressDialog.setCancelable(false);
-                    progressDialog.setIndeterminate(true);
-                    progressDialog.show();
+                String username = usernameEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+                if (username.equals("")) {
+                    usernameLayout.setError(USERNAME_ERROR);
+                    return;
                 }
-                login(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+                if (password.equals("")) {
+                    passwordLayout.setError(PASSWORD_ERROR);
+                    return;
+                }
+                login(username, password);
             }
         });
 
@@ -84,6 +136,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(final String username, final String password) {
+        if (!progressDialog.isShowing()) {
+            progressDialog.setMessage("Logging In");
+            progressDialog.setCancelable(false);
+            progressDialog.setIndeterminate(true);
+            progressDialog.show();
+        }
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
         retrofitInterface.passwordLogin(username, password).enqueue(new Callback<LoginResponse>() {
             @Override
