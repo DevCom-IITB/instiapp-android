@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     android:weightSum="2">
 
@@ -10,16 +12,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="199dp"
+            android:layout_marginBottom="15dp"
             android:contentDescription="InstiApp"
             android:paddingLeft="100dp"
             android:paddingRight="100dp"
-            android:layout_marginBottom="15dp"
             android:scaleType="fitEnd"
             app:srcCompat="@drawable/lotus" />
 
@@ -34,35 +36,45 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:padding="20dp"
-        android:layout_weight="1">
+        android:padding="20dp">
 
-        <EditText
-            android:id="@+id/login_username"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="LDAP ID" />
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/login_password"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/login_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="LDAP ID"
+                android:inputType="text" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPassword"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:hint="Password" />
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPassword" />
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/login_button"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:textColor="@color/primaryTextColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Log In" />
+            android:text="Log In"
+            android:textColor="@color/primaryTextColor" />
 
         <TextView
             android:layout_width="match_parent"
@@ -74,11 +86,11 @@
             android:id="@+id/login_guest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="5dp"
             android:text="Continue as a Guest"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
-            android:paddingTop="5dp" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle" />
     </LinearLayout>
 
 </LinearLayout>
