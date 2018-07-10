@@ -186,11 +186,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_notifications) {
+        if (id == R.id.action_notifications) {
             showNotifications = true;
 //            fetchNotifications();
             return true;
-        }*/
+        }
         return super.onOptionsItemSelected(item);
     }
 
