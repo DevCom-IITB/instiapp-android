@@ -27,7 +27,6 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import app.insti.api.UnsafeOkHttpClient;
-import app.insti.api.model.NotificationsResponse;
 import app.insti.data.User;
 import app.insti.fragment.CalendarFragment;
 import app.insti.fragment.FeedFragment;
@@ -52,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static final String TAG = "MainActivity";
     SessionManager session;
-    NotificationsResponse notificationsResponse;
     FeedFragment feedFragment;
     private User currentUser;
     private boolean showNotifications = false;
@@ -124,38 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .resize(200, 0)
                 .placeholder(R.drawable.user_placeholder)
                 .into(profilePictureImageView);
-    }
-
-//    private void fetchNotifications() {
-//        NotificationsRequest notificationsRequest = new NotificationsRequest(0, 20);
-//        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-//        retrofitInterface.getNotifications(notificationsRequest).enqueue(new Callback<NotificationsResponse>() {
-//            @Override
-//            public void onResponse(Call<NotificationsResponse> call, Response<NotificationsResponse> response) {
-//                if (response.isSuccessful()) {
-//                    notificationsResponse = response.body();
-//                    if (showNotifications) {
-//                        showNotifications();
-//                        showNotifications = false;
-//                    }
-//                }
-//                //Server Error
-//            }
-//
-//            @Override
-//            public void onFailure(Call<NotificationsResponse> call, Throwable t) {
-//                //Network Error
-//            }
-//        });
-//    }
-
-    public void showNotifications() {
-        String notificationsResponseJson = new Gson().toJson(notificationsResponse);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.NOTIFICATIONS_RESPONSE_JSON, notificationsResponseJson);
-        NotificationsFragment notificationsFragment = new NotificationsFragment();
-        notificationsFragment.setArguments(bundle);
-        updateFragment(notificationsFragment);
     }
 
     @Override

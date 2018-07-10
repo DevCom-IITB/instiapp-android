@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -24,8 +23,6 @@ import app.insti.R;
 import app.insti.adapter.NotificationsAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
-import app.insti.api.model.AppNotification;
-import app.insti.api.model.NotificationsResponse;
 import app.insti.data.Notification;
 import retrofit2.Call;
 import retrofit2.Callback;

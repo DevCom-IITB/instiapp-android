@@ -15,7 +15,6 @@ import java.util.List;
 
 import app.insti.ItemClickListener;
 import app.insti.R;
-import app.insti.api.model.AppNotification;
 import app.insti.data.Event;
 import app.insti.data.Notification;
 
