@@ -75,6 +75,12 @@ public class NotificationsFragment extends BaseFragment {
     }
 
     private void showNotifications(final List<Notification> notifications) {
+        /* Check if activity is done with */
+        if (getActivity() == null) return;
+
+        /* Hide loader */
+        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+
         NotificationsAdapter notificationsAdapter = new NotificationsAdapter(notifications, new ItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
