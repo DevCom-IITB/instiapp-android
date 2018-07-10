@@ -115,6 +115,20 @@ public class Converters {
     }
 
     @TypeConverter
+    public static Object objectFromString(String value) {
+        Type listType = new TypeToken<Object>() {
+        }.getType();
+        return new Gson().fromJson(value, listType);
+    }
+
+    @TypeConverter
+    public static String stringFromObject(Object object) {
+        Gson gson = new Gson();
+        String json = gson.toJson(object);
+        return json;
+    }
+
+    @TypeConverter
     public static List<String> stringsfromString(String value) {
         Type listType = new TypeToken<List<String>>() {
         }.getType();
