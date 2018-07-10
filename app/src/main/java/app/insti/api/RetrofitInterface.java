@@ -10,6 +10,7 @@ import app.insti.api.model.LoginResponse;
 import app.insti.api.model.NewsFeedResponse;
 import app.insti.data.HostelMessMenu;
 import app.insti.data.NewsArticle;
+import app.insti.data.Notification;
 import app.insti.data.PlacementBlogPost;
 import app.insti.data.TrainingBlogPost;
 import app.insti.data.User;
@@ -63,6 +64,9 @@ public interface RetrofitInterface {
 
     @GET("news")
     Call<List<NewsArticle>> getNews(@Header("Cookie") String sessionID);
+
+    @GET("notifications")
+    Call<List<Notification>> getNotifications(@Header("Cookie") String sessionID);
 
     @GET("logout")
     Call<Void> logout(@Header("Cookie") String sessionID);
