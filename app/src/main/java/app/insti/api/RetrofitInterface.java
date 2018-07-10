@@ -68,6 +68,9 @@ public interface RetrofitInterface {
     @GET("notifications")
     Call<List<Notification>> getNotifications(@Header("Cookie") String sessionID);
 
+    @GET("notifications/read/{notificationID}")
+    Call<Void> markNotificationRead(@Header("Cookie") String sessionID, @Path("notificationID") Integer notificationID);
+
     @GET("logout")
     Call<Void> logout(@Header("Cookie") String sessionID);
 

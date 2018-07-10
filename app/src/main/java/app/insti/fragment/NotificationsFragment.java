@@ -70,9 +70,7 @@ public class NotificationsFragment extends BaseFragment {
             }
 
             @Override
-            public void onFailure(Call<List<Notification>> call, Throwable t) {
-
-            }
+            public void onFailure(Call<List<Notification>> call, Throwable t) { }
         });
     }
 
@@ -82,6 +80,16 @@ public class NotificationsFragment extends BaseFragment {
             public void onItemClick(View v, int position) {
                 /* Get the notification */
                 Notification notification = notifications.get(position);
+
+                /* Mark notification read */
+                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                String sessId = ((MainActivity)getActivity()).getSessionIDHeader();
+                retrofitInterface.markNotificationRead(sessId, notification.getNotificationId()).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) { }
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) { }
+                });
 
                 /* Open event */
                 if (notification.getNotificationActorType().contains("event")) {
