@@ -88,12 +88,12 @@ public class NotificationsFragment extends BaseFragment {
                 /* Mark notification read */
                 RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
                 String sessId = ((MainActivity)getActivity()).getSessionIDHeader();
-                /*retrofitInterface.markNotificationRead(sessId, notification.getNotificationId()).enqueue(new Callback<Void>() {
+                retrofitInterface.markNotificationRead(sessId, notification.getNotificationId()).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) { }
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) { }
-                });*/
+                });
 
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
@@ -117,10 +117,19 @@ public class NotificationsFragment extends BaseFragment {
                     transaction.replace(R.id.framelayout_for_fragment, newsFragment, tag);
                     newsFragment.setArguments(bundle);
                 } else if (notification.getNotificationActorType().contains("blogentry")) {
-                    PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
-                    placementBlogFragment.setArguments(bundle);
-                    tag = placementBlogFragment.getTag();
-                    transaction.replace(R.id.framelayout_for_fragment, placementBlogFragment, tag);
+                    Gson gson = new Gson();
+                    PlacementBlogPost post = gson.fromJson(gson.toJson(notification.getNotificationActor()), PlacementBlogPost.class);
+                    if (post.getLink().contains("training")) {
+                        TrainingBlogFragment trainingBlogFragment = new TrainingBlogFragment();
+                        trainingBlogFragment.setArguments(bundle);
+                        tag = trainingBlogFragment.getTag();
+                        transaction.replace(R.id.framelayout_for_fragment, trainingBlogFragment, tag);
+                    } else {
+                        PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
+                        placementBlogFragment.setArguments(bundle);
+                        tag = placementBlogFragment.getTag();
+                        transaction.replace(R.id.framelayout_for_fragment, placementBlogFragment, tag);
+                    }
                 }
 
                 transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
