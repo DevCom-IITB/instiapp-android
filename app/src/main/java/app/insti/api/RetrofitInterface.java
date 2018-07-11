@@ -13,6 +13,7 @@ import app.insti.data.NewsArticle;
 import app.insti.data.PlacementBlogPost;
 import app.insti.data.TrainingBlogPost;
 import app.insti.data.User;
+import app.insti.data.Venue;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -33,6 +34,9 @@ public interface RetrofitInterface {
 
     @GET("events")
     Call<NewsFeedResponse> getNewsFeed(@Header("Cookie") String sessionId);
+
+    @GET("locations")
+    Call<List<Venue>> getAllVenues();
 
     @GET("events")
     Call<NewsFeedResponse> getEventsBetweenDates(@Header("Cookie") String sessionId, @Query("start") String start, @Query("end") String end);

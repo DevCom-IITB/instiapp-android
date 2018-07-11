@@ -69,6 +69,12 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import app.insti.R;
+import app.insti.api.RetrofitInterface;
+import app.insti.api.ServiceGenerator;
+import app.insti.data.Venue;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapFragment extends Fragment implements TextWatcher,
         TextView.OnEditorActionListener, AdapterView.OnItemClickListener, View.OnFocusChangeListener,
@@ -160,12 +166,31 @@ public class MapFragment extends Fragment implements TextWatcher,
     @Override
     public void onStart() {
         super.onStart();
-        setUpDrawer();
 
         /* Set title */
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("InstiMap");
 
+        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        retrofitInterface.getAllVenues().enqueue(new Callback<List<Venue>>() {
+            @Override
+            public void onResponse(Call<List<Venue>> call, Response<List<Venue>> response) {
+                if (response.isSuccessful()) {
+                    Locations mLocations = new Locations(response.body());
+                    data = mLocations.data;
+                    markerlist = new ArrayList<com.mrane.data.Marker>(data.values());
+                    setUpDrawer();
+                    setupMap();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Venue>> call, Throwable t) { }
+        });
+
+    }
+
+    private void setupMap() {
         newSmallCard = (LinearLayout) getActivity().findViewById(R.id.new_small_card);
         slidingLayout = (SlidingUpPanelLayout) getActivity().findViewById(R.id.sliding_layout);
         placeNameTextView = (TextView) getActivity().findViewById(R.id.place_name);
@@ -177,9 +202,6 @@ public class MapFragment extends Fragment implements TextWatcher,
 
         slidingLayout.post(setAnchor());
 
-        Locations mLocations = new Locations(getContext());
-        data = mLocations.data;
-        markerlist = new ArrayList<com.mrane.data.Marker>(data.values());
         initShowDefault();
         initImageUri();
 
@@ -236,7 +258,6 @@ public class MapFragment extends Fragment implements TextWatcher,
                 addMarkerClick(v);
             }
         });
-
     }
 
     private void setUpDrawer() {

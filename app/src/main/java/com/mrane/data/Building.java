@@ -9,4 +9,11 @@ public class Building extends Marker {
 		this.children = children;
 	}
 
+	public String[] getChildren() {
+		return children;
+	}
+
+	public void setChildren(String[] children) {
+		this.children = children;
+	}
 }
