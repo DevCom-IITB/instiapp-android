@@ -64,13 +64,13 @@ public interface RetrofitInterface {
     Call<List<PlacementBlogPost>> getPlacementBlogFeed(@Header("Cookie") String sessionID, @Query("from") int from,@Query("num") int num);
 
     @GET("training-blog")
-    Call<List<TrainingBlogPost>> getTrainingBlogFeed(@Header("Cookie") String sessionID);
+    Call<List<TrainingBlogPost>> getTrainingBlogFeed(@Header("Cookie") String sessionID, @Query("from") int from,@Query("num") int num);
 
     @GET("mess")
     Call<List<HostelMessMenu>> getInstituteMessMenu(@Header("Cookie") String sessionID);
 
     @GET("news")
-    Call<List<NewsArticle>> getNews(@Header("Cookie") String sessionID);
+    Call<List<NewsArticle>> getNews(@Header("Cookie") String sessionID, @Query("from") int from,@Query("num") int num);
 
     @GET("notifications")
     Call<List<Notification>> getNotifications(@Header("Cookie") String sessionID);

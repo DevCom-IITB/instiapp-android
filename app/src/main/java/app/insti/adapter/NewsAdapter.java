@@ -3,9 +3,11 @@ package app.insti.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -18,9 +20,12 @@ import java.util.Locale;
 import app.insti.ItemClickListener;
 import app.insti.R;
 import app.insti.data.NewsArticle;
+import app.insti.fragment.NewsFragment;
 import ru.noties.markwon.Markwon;
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final int VIEW_ITEM = 1;
+    private final int VIEW_PROG = 0;
 
     private List<NewsArticle> newsArticles;
     private Context context;
@@ -31,46 +36,71 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         this.itemClickListener = itemClickListener;
     }
 
+    public List<NewsArticle> getNewsArticles() {
+        return newsArticles;
+    }
+
+    public void setNewsArticles(List<NewsArticle> newsArticles) {
+        this.newsArticles = newsArticles;
+    }
+
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View newsArticleView = inflater.inflate(R.layout.news_article_card, parent, false);
+        if (viewType == VIEW_ITEM) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View postView = inflater.inflate(R.layout.news_article_card, parent, false);
 
-        final NewsAdapter.ViewHolder articleViewHolder = new NewsAdapter.ViewHolder(newsArticleView);
-        newsArticleView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                itemClickListener.onItemClick(v, articleViewHolder.getAdapterPosition());
-            }
-        });
-        return articleViewHolder;
+            final NewsAdapter.ViewHolder postViewHolder = new NewsAdapter.ViewHolder(postView);
+            postView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemClickListener.onItemClick(v, postViewHolder.getAdapterPosition());
+                }
+            });
+            return postViewHolder;
+        } else {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View loadView = inflater.inflate(R.layout.blog_load_item, parent, false);
+            final NewsAdapter.ViewHolder postViewHolder = new NewsAdapter.ViewHolder(loadView);
+            return new NewsAdapter.ProgressViewHolder(loadView);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        NewsArticle article = newsArticles.get(position);
-        Markwon.setMarkdown(holder.articleTitle, article.getTitle());
-        holder.articleBody.setText(article.getBody().getBodyName());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder recyclerHolder, int position) {
+        if (recyclerHolder instanceof ViewHolder) {
+            ViewHolder holder = (ViewHolder) recyclerHolder;
+            NewsArticle article = newsArticles.get(position);
+            Markwon.setMarkdown(holder.articleTitle, article.getTitle());
+            holder.articleBody.setText(article.getBody().getBodyName());
 
-        Date publishedDate = article.getPublished();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(publishedDate);
-        DateFormat displayFormat;
-        if (calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
-            displayFormat = new SimpleDateFormat("EEE, MMM d, HH:mm", Locale.US);
+            Date publishedDate = article.getPublished();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(publishedDate);
+            DateFormat displayFormat;
+            if (calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
+                displayFormat = new SimpleDateFormat("EEE, MMM d, HH:mm", Locale.US);
+            } else {
+                displayFormat = new SimpleDateFormat("EEE, MMM d, ''yy, HH:mm", Locale.US);
+            }
+            holder.articlePublished.setText(displayFormat.format(publishedDate));
+
+            Markwon.setMarkdown(holder.articleContent, article.getContent());
         } else {
-            displayFormat = new SimpleDateFormat("EEE, MMM d, ''yy, HH:mm", Locale.US);
+            ((ProgressViewHolder) recyclerHolder).progressBar.setIndeterminate(true);
         }
-        holder.articlePublished.setText(displayFormat.format(publishedDate));
+    }
 
-        Markwon.setMarkdown(holder.articleContent, article.getContent());
+    @Override
+    public int getItemViewType(int position) {
+        return newsArticles.size() > position ? VIEW_ITEM : VIEW_PROG;
     }
 
     @Override
     public int getItemCount() {
-        return newsArticles.size();
+        return NewsFragment.showLoader ? (newsArticles.size() + 1) : newsArticles.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -86,6 +116,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             articleBody = (TextView) itemView.findViewById(R.id.article_body);
             articlePublished = (TextView) itemView.findViewById(R.id.article_published);
             articleContent = (TextView) itemView.findViewById(R.id.article_content);
+        }
+    }
+
+    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+        public ProgressViewHolder(View v) {
+            super(v);
+            progressBar = (ProgressBar)v.findViewById(R.id.blog_load_item);
         }
     }
 }

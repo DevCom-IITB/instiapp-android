@@ -25,6 +25,7 @@ import ru.noties.markwon.Markwon;
 public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
+
     public List<PlacementBlogPost> getPosts() {
         return posts;
     }
@@ -44,8 +45,8 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType==VIEW_ITEM){
-            context = parent.getContext();
+        context = parent.getContext();
+        if (viewType == VIEW_ITEM) {
             LayoutInflater inflater = LayoutInflater.from(context);
             View postView = inflater.inflate(R.layout.blog_post_card, parent, false);
 
@@ -57,29 +58,29 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
             });
             return postViewHolder;
-        }
-        else{
-            LayoutInflater inflater=LayoutInflater.from(context);
-            View loadView=inflater.inflate(R.layout.blog_load_item,parent,false);
+        } else {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View loadView = inflater.inflate(R.layout.blog_load_item, parent, false);
             final PlacementBlogAdapter.ViewHolder postViewHolder = new PlacementBlogAdapter.ViewHolder(loadView);
             return new PlacementBlogAdapter.ProgressViewHolder(loadView);
         }
     }
+
     @Override
     public int getItemViewType(int position) {
-        Log.d("position", String.valueOf(position));
-        return posts.size()> position ? VIEW_ITEM : VIEW_PROG;
+        return posts.size() > position ? VIEW_ITEM : VIEW_PROG;
     }
+
     @Override
     public int getItemCount() {
-        return PlacementBlogFragment.showLoader? (posts.size()+1):posts.size();
+        return PlacementBlogFragment.showLoader ? (posts.size() + 1) : posts.size();
     }
 
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder recycleholder, int position) {
-        if(recycleholder instanceof ViewHolder){
-            ViewHolder holder=(ViewHolder)recycleholder;
+    public void onBindViewHolder(RecyclerView.ViewHolder recyclerHolder, int position) {
+        if (recyclerHolder instanceof ViewHolder) {
+            ViewHolder holder = (ViewHolder) recyclerHolder;
             PlacementBlogPost post = posts.get(position);
             Markwon.setMarkdown(holder.postTitle, post.getTitle());
 
@@ -95,9 +96,8 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
             holder.postPublished.setText(displayFormat.format(publishedDate));
 
             Markwon.setMarkdown(holder.postContent, post.getContent());
-        }
-        else{
-            ((ProgressViewHolder)recycleholder).progressBar.setIndeterminate(true);
+        } else {
+            ((ProgressViewHolder) recyclerHolder).progressBar.setIndeterminate(true);
         }
     }
 
@@ -115,11 +115,13 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
             postContent = (TextView) itemView.findViewById(R.id.post_content);
         }
     }
+
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
         public ProgressBar progressBar;
+
         public ProgressViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar)v.findViewById(R.id.blog_load_item);
+            progressBar = (ProgressBar) v.findViewById(R.id.blog_load_item);
         }
     }
 

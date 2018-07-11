@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.ActivityBuffer;
@@ -39,6 +40,7 @@ public class TrainingBlogFragment extends BaseFragment {
     private SwipeRefreshLayout feedSwipeRefreshLayout;
     private AppDatabase appDatabase;
     private boolean freshBlogDisplayed = false;
+    public static boolean showLoader = true;
 
 
     public TrainingBlogFragment() {
@@ -76,7 +78,7 @@ public class TrainingBlogFragment extends BaseFragment {
 
     private void updateTrainingFeed() {
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getTrainingBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<List<TrainingBlogPost>>() {
+        retrofitInterface.getTrainingBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), 0, 20).enqueue(new Callback<List<TrainingBlogPost>>() {
             @Override
             public void onResponse(Call<List<TrainingBlogPost>> call, Response<List<TrainingBlogPost>> response) {
                 if (response.isSuccessful()) {
@@ -115,6 +117,43 @@ public class TrainingBlogFragment extends BaseFragment {
                     trainingFeedRecyclerView = getActivity().findViewById(R.id.training_feed_recycler_view);
                     trainingFeedRecyclerView.setAdapter(trainingBlogAdapter);
                     trainingFeedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    trainingFeedRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        //                        multiple calls should not be made
+                        boolean loading = false;
+
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            if (dy > 0) {
+                                LinearLayoutManager layoutManager = (LinearLayoutManager) trainingFeedRecyclerView.getLayoutManager();
+                                if (((layoutManager.getChildCount() + layoutManager.findFirstVisibleItemPosition()) > (layoutManager.getItemCount() - 5)) && (!loading)) {
+                                    loading = true;
+                                    View v = getActivity().findViewById(R.id.training_feed_swipe_refresh_layout);
+                                    RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                                    retrofitInterface.getTrainingBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), layoutManager.getItemCount(), 10).enqueue(new Callback<List<TrainingBlogPost>>() {
+                                        @Override
+                                        public void onResponse(Call<List<TrainingBlogPost>> call, Response<List<TrainingBlogPost>> response) {
+
+                                            loading = false;
+                                            List<TrainingBlogPost> blogPosts = (ArrayList<TrainingBlogPost>) trainingBlogAdapter.getPosts();
+                                            blogPosts.addAll(response.body());
+                                            if (response.body().size() == 0) {
+                                                showLoader = false;
+                                            }
+                                            trainingBlogAdapter.setPosts(blogPosts);
+                                            trainingBlogAdapter.notifyDataSetChanged();
+//                                            new updateDatabase().execute(blogPosts);
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<List<TrainingBlogPost>> call, Throwable t) {
+                                            loading = false;
+                                        }
+                                    });
+                                }
+
+                            }
+                        }
+                    });
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }

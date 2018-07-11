@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.ActivityBuffer;
@@ -39,6 +40,7 @@ public class NewsFragment extends BaseFragment {
     private SwipeRefreshLayout newsSwipeRefreshLayout;
     private AppDatabase appDatabase;
     private boolean freshNewsDisplayed = false;
+    public static boolean showLoader = true;
 
     public NewsFragment() {
         // Required empty public constructor
@@ -75,7 +77,7 @@ public class NewsFragment extends BaseFragment {
 
     private void updateNews() {
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getNews("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<List<NewsArticle>>() {
+        retrofitInterface.getNews("sessionid=" + getArguments().getString(Constants.SESSION_ID), 0, 20).enqueue(new Callback<List<NewsArticle>>() {
             @Override
             public void onResponse(Call<List<NewsArticle>> call, Response<List<NewsArticle>> response) {
                 if (response.isSuccessful()) {
@@ -116,6 +118,43 @@ public class NewsFragment extends BaseFragment {
                     newsRecyclerView = getActivity().findViewById(R.id.news_recycler_view);
                     newsRecyclerView.setAdapter(newsAdapter);
                     newsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    newsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        //                        multiple calls should not be made
+                        boolean loading = false;
+
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            if (dy > 0) {
+                                LinearLayoutManager layoutManager = (LinearLayoutManager) newsRecyclerView.getLayoutManager();
+                                if (((layoutManager.getChildCount() + layoutManager.findFirstVisibleItemPosition()) > (layoutManager.getItemCount() - 5)) && (!loading)) {
+                                    loading = true;
+                                    View v = getActivity().findViewById(R.id.training_feed_swipe_refresh_layout);
+                                    RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                                    retrofitInterface.getNews("sessionid=" + getArguments().getString(Constants.SESSION_ID), layoutManager.getItemCount(), 10).enqueue(new Callback<List<NewsArticle>>() {
+                                        @Override
+                                        public void onResponse(Call<List<NewsArticle>> call, Response<List<NewsArticle>> response) {
+
+                                            loading = false;
+                                            List<NewsArticle> newsArticles = (ArrayList<NewsArticle>) newsAdapter.getNewsArticles();
+                                            newsArticles.addAll(response.body());
+                                            if (response.body().size() == 0) {
+                                                showLoader = false;
+                                            }
+                                            newsAdapter.setNewsArticles(newsArticles);
+                                            newsAdapter.notifyDataSetChanged();
+//                                            new updateDatabase().execute(blogPosts);
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<List<NewsArticle>> call, Throwable t) {
+                                            loading = false;
+                                        }
+                                    });
+                                }
+
+                            }
+                        }
+                    });
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
