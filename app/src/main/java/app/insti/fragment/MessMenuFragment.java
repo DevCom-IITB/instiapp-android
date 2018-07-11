@@ -146,7 +146,7 @@ public class MessMenuFragment extends BaseFragment {
 
     private void displayMessMenu(HostelMessMenu hostelMessMenu) {
         /* Skip if we're already destroyed */
-        if (getActivity() == null) return;
+        if (getActivity() == null || getView() == null) return;
 
         List<MessMenu> messMenus = hostelMessMenu.getMessMenus();
 

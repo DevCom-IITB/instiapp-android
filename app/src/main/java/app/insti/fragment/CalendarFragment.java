@@ -145,7 +145,7 @@ public class CalendarFragment extends BaseFragment {
 
     private void showEventsForDate(Date date) {
         /* Skip if we're already destroyed */
-        if (getActivity() == null) return;
+        if (getActivity() == null || getView() == null) return;
 
         final List<Event> filteredEvents = new ArrayList<Event>();
         for (Event event : events) {

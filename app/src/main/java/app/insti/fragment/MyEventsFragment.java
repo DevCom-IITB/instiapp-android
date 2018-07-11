@@ -98,7 +98,7 @@ public class MyEventsFragment extends BaseFragment {
 
     private void displayEvents(final List<Event> events) {
         /* Check if already destroyed */
-        if (getActivity() == null) return;
+        if (getActivity() == null || getView() == null) return;
 
         final FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
             @Override

@@ -100,7 +100,7 @@ public class PlacementBlogFragment extends BaseFragment {
 
     private void displayPlacementFeed(final List<PlacementBlogPost> result) {
         /* Skip if we're already destroyed */
-        if (getActivity() == null) return;
+        if (getActivity() == null || getView() == null) return;
 
         final PlacementBlogAdapter placementBlogAdapter = new PlacementBlogAdapter(result, new ItemClickListener() {
             @Override
