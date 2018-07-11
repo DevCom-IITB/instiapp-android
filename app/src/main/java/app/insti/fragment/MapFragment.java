@@ -116,13 +116,10 @@ public class MapFragment extends Fragment implements TextWatcher,
     private final long DELAY_INIT_LAYOUT = 250;
     private Toast toast;
     private String message = "Sorry, no such place in our data.";
-    private static final String JSONUrl = "http://home.iitb.ac.in/~madhu.kiran/data.json";
-    private static final String JSONFILE = "data.json";
     public static final PointF MAP_CENTER = new PointF(2971f, 1744f);
     public static final long DURATION_INIT_MAP_ANIM = 500;
     public static final String FONT_SEMIBOLD = "rigascreen_bold.ttf";
     public static final String FONT_REGULAR = "rigascreen_regular.ttf";
-    public static final String FONT_LIGHT = "roboto_light.ttf";
     public static final int SOUND_ID_RESULT = 0;
     public static final int SOUND_ID_ADD = 1;
     public static final int SOUND_ID_REMOVE = 2;
