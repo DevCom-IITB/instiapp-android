@@ -104,7 +104,9 @@ public class NewsFragment extends BaseFragment {
         final NewsAdapter newsAdapter = new NewsAdapter(result, new ItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                openWebURL(result.get(position).getLink());
+                String link = result.get(position).getLink();
+                if (link != null && !link.isEmpty())
+                    openWebURL(link);
             }
         });
         getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
