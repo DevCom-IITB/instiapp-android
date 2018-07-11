@@ -191,6 +191,10 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void setupMap() {
+        if (getView() == null) {
+            return;
+        }
+
         newSmallCard = (LinearLayout) getActivity().findViewById(R.id.new_small_card);
         slidingLayout = (SlidingUpPanelLayout) getActivity().findViewById(R.id.sliding_layout);
         placeNameTextView = (TextView) getActivity().findViewById(R.id.place_name);
@@ -258,6 +262,8 @@ public class MapFragment extends Fragment implements TextWatcher,
                 addMarkerClick(v);
             }
         });
+
+        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
     private void setUpDrawer() {
