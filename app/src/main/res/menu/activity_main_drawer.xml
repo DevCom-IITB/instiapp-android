@@ -32,7 +32,7 @@
         <item
             android:id="@+id/nav_training_blog"
             android:icon="@drawable/ic_work_black_48dp"
-            android:title="Training Blog" />
+            android:title="Internship Blog" />
 
         <item
             android:id="@+id/nav_calendar"
