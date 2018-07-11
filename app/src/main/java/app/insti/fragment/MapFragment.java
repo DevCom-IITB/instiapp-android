@@ -229,7 +229,14 @@ public class MapFragment extends Fragment implements TextWatcher,
 
         initSoundPool();
         setFonts();
-        toast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
+
+        getActivity().findViewById(R.id.add_marker_icon).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addMarkerClick(v);
+            }
+        });
+
     }
 
     private void setUpDrawer() {

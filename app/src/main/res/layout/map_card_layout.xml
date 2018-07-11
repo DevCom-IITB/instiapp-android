@@ -37,7 +37,6 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="Search"
                 android:cropToPadding="true"
-                android:onClick="addMarkerClick"
                 android:padding="8dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/lock_all_off" />
