@@ -17,7 +17,7 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@drawable/user_placeholder" />
+        app:srcCompat="@drawable/user_placeholder" />
 
     <TextView
         android:id="@+id/user_name_nav_header"
