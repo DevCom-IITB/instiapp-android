@@ -11,6 +11,7 @@
         android:id="@+id/new_small_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/small_card_bg"
         android:orientation="horizontal" >
 
         <ImageView
@@ -21,6 +22,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:minHeight="@dimen/hidden_card_height"
             android:paddingBottom="8dp" >
 
             <ImageButton
@@ -36,7 +38,8 @@
                 android:cropToPadding="true"
                 android:onClick="addMarkerClick"
                 android:padding="8dp"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:src="@drawable/lock_all_off" />
 
             <TextView
                 android:id="@+id/place_name"
@@ -51,7 +54,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
-                android:textSize="8dp" >
+                android:textSize="@dimen/place_name_text_size" >
             </TextView>
 
             <TextView
@@ -64,16 +67,17 @@
                 android:fontFamily="sans_serif_light"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:text="Search"
-                android:textColor="@color/colorWhite"
-                android:textSize="18dp" />
+                android:text=""
+                android:textColor="@color/secondaryTextColor"
+                android:textSize="@dimen/place_sub_head_text_size" />
         </RelativeLayout>
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/new_expand_container"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:background="@color/list_item_gray_even" >
 
         <com.mrane.navigation.EndDetectScrollView
             android:id="@+id/new_expanded_place_card_scroll"
@@ -124,18 +128,20 @@
 
             <View
                 android:layout_width="12dp"
-                android:layout_height="20dp"
+                android:layout_height="@dimen/expanded_card_height"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="0dp"
                 android:alpha="0.5"
+                android:background="@color/transparent_black"
                 android:paddingLeft="0dp" />
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="8dp"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true"
+            android:background="@drawable/shadow_gradient" />
     </RelativeLayout>
 </LinearLayout>
