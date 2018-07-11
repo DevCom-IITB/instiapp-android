@@ -114,6 +114,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
+                passwordEditText.setText("");
+                passwordLayout.setError(null);
                 if (username.equals("")) {
                     usernameLayout.setError(USERNAME_ERROR);
                     return;
