@@ -20,6 +20,13 @@ import app.insti.data.PlacementBlogPost;
 import ru.noties.markwon.Markwon;
 
 public class PlacementBlogAdapter extends RecyclerView.Adapter<PlacementBlogAdapter.ViewHolder> {
+    public List<PlacementBlogPost> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<PlacementBlogPost> posts) {
+        this.posts = posts;
+    }
 
     private List<PlacementBlogPost> posts;
     private Context context;

@@ -2,6 +2,7 @@ package app.insti.fragment;
 
 
 import android.app.Activity;
+import android.app.LauncherActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -11,10 +12,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.util.ListUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.ActivityBuffer;
@@ -76,7 +81,7 @@ public class PlacementBlogFragment extends BaseFragment {
 
     private void updatePlacementFeed() {
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getPlacementBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<List<PlacementBlogPost>>() {
+        retrofitInterface.getPlacementBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID),0,20).enqueue(new Callback<List<PlacementBlogPost>>() {
             @Override
             public void onResponse(Call<List<PlacementBlogPost>> call, Response<List<PlacementBlogPost>> response) {
                 if (response.isSuccessful()) {
@@ -115,6 +120,36 @@ public class PlacementBlogFragment extends BaseFragment {
                     placementFeedRecyclerView = getActivity().findViewById(R.id.placement_feed_recycler_view);
                     placementFeedRecyclerView.setAdapter(placementBlogAdapter);
                     placementFeedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    placementFeedRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//                        multiple calls should not be made
+                        boolean loading=false;
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            if(dy>0){
+                                LinearLayoutManager layoutManager= (LinearLayoutManager) placementFeedRecyclerView.getLayoutManager();
+                                if(((layoutManager.getChildCount()+layoutManager.findFirstVisibleItemPosition())>(layoutManager.getItemCount()-5))&&(!loading)){
+                                    loading=true;
+                                    RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                                    retrofitInterface.getPlacementBlogFeed("sessionid=" +getArguments().getString(Constants.SESSION_ID),layoutManager.getItemCount(),10).enqueue(new Callback<List<PlacementBlogPost>>() {
+                                        @Override
+                                        public void onResponse(Call<List<PlacementBlogPost>> call, Response<List<PlacementBlogPost>> response) {
+                                            loading=false;
+                                            List<PlacementBlogPost> blogPosts= (ArrayList<PlacementBlogPost>) placementBlogAdapter.getPosts();
+                                            blogPosts.addAll(response.body());
+                                            placementBlogAdapter.setPosts(blogPosts);
+                                            placementBlogAdapter.notifyDataSetChanged();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<List<PlacementBlogPost>> call, Throwable t) {
+                                            loading=false;
+                                        }
+                                    });
+                                }
+
+                            }
+                        }
+                    });
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }

@@ -57,7 +57,7 @@ public interface RetrofitInterface {
     Call<Void> updateUserEventStatus(@Header("Cookie") String sessionID, @Path("eventID") String eventID, @Query("status") int status);
 
     @GET("placement-blog")
-    Call<List<PlacementBlogPost>> getPlacementBlogFeed(@Header("Cookie") String sessionID);
+    Call<List<PlacementBlogPost>> getPlacementBlogFeed(@Header("Cookie") String sessionID, @Query("from") int from,@Query("num") int num);
 
     @GET("training-blog")
     Call<List<TrainingBlogPost>> getTrainingBlogFeed(@Header("Cookie") String sessionID);
