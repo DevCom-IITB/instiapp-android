@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -23,6 +24,11 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
+        <!-- FCM styling -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_lotusgray" />
 
         <activity
             android:name=".MainActivity"
@@ -45,11 +51,6 @@
                 <action android:name="HANDLE_AUTHORIZATION_RESPONSE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <!-- <intent-filter>
-                 <action android:name="android.intent.action.MAIN" />
-
-                 &lt;!&ndash;<category android:name="android.intent.category.LAUNCHER" />&ndash;&gt;
-             </intent-filter>-->
 
         </activity>
         <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
@@ -76,23 +77,11 @@
         </receiver>
 
         <service
-            android:name="app.insti.gcm.MyGcmListenerService"
-            android:exported="false">
+            android:name=".InstiAppFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-        <service
-            android:name="app.insti.gcm.MyInstanceIDListenerService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID" />
-            </intent-filter>
-        </service>
-        <service
-            android:name="app.insti.gcm.RegistrationIntentService"
-            android:exported="false"></service>
-
 
     </application>
 

@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "306601329049",
-    "firebase_url": "https://iitb-app-5c0aa.firebaseio.com",
-    "project_id": "iitb-app-5c0aa",
-    "storage_bucket": "iitb-app-5c0aa.appspot.com"
+    "project_number": "259853447628",
+    "firebase_url": "https://astral-theory-207617.firebaseio.com",
+    "project_id": "astral-theory-207617",
+    "storage_bucket": "astral-theory-207617.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:306601329049:android:950a72a311331b9c",
+        "mobilesdk_app_id": "1:259853447628:android:efaea50ea28ccfec",
         "android_client_info": {
           "package_name": "app.insti"
         }
       },
       "oauth_client": [
         {
-          "client_id": "306601329049-6v597vrdv0nbi15ehpehq8hiaek8unqp.apps.googleusercontent.com",
+          "client_id": "259853447628-be3teletcqtfpfddj9qnk0bqj221h2mo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC1oThCMZN3JMnK6MUTJRjkp47q1K_gnTA"
+          "current_key": "AIzaSyB8B7N-3hnW_u4jOXHLRUzbMl6To3aDyJo"
         }
       ],
       "services": {

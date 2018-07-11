@@ -10,6 +10,7 @@ import app.insti.api.model.LoginResponse;
 import app.insti.api.model.NewsFeedResponse;
 import app.insti.data.HostelMessMenu;
 import app.insti.data.NewsArticle;
+import app.insti.data.Notification;
 import app.insti.data.PlacementBlogPost;
 import app.insti.data.TrainingBlogPost;
 import app.insti.data.User;
@@ -27,6 +28,9 @@ public interface RetrofitInterface {
 
     @GET("pass-login")
     Call<LoginResponse> passwordLogin(@Query("username") String username, @Query("password") String password);
+
+    @GET("pass-login")
+    Call<LoginResponse> passwordLogin(@Query("username") String username, @Query("password") String password, @Query("fcm_id") String fcmId);
 
     @POST("events")
     Call<EventCreateResponse> createEvent(@Header("Cookie") String sessionId, @Body EventCreateRequest eventCreateRequest);
@@ -63,6 +67,12 @@ public interface RetrofitInterface {
 
     @GET("news")
     Call<List<NewsArticle>> getNews(@Header("Cookie") String sessionID);
+
+    @GET("notifications")
+    Call<List<Notification>> getNotifications(@Header("Cookie") String sessionID);
+
+    @GET("notifications/read/{notificationID}")
+    Call<Void> markNotificationRead(@Header("Cookie") String sessionID, @Path("notificationID") Integer notificationID);
 
     @GET("logout")
     Call<Void> logout(@Header("Cookie") String sessionID);

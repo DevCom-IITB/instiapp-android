@@ -27,7 +27,6 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import app.insti.api.UnsafeOkHttpClient;
-import app.insti.api.model.NotificationsResponse;
 import app.insti.data.User;
 import app.insti.fragment.CalendarFragment;
 import app.insti.fragment.FeedFragment;
@@ -52,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static final String TAG = "MainActivity";
     SessionManager session;
-    NotificationsResponse notificationsResponse;
     FeedFragment feedFragment;
     private User currentUser;
     private boolean showNotifications = false;
@@ -126,38 +124,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .into(profilePictureImageView);
     }
 
-//    private void fetchNotifications() {
-//        NotificationsRequest notificationsRequest = new NotificationsRequest(0, 20);
-//        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-//        retrofitInterface.getNotifications(notificationsRequest).enqueue(new Callback<NotificationsResponse>() {
-//            @Override
-//            public void onResponse(Call<NotificationsResponse> call, Response<NotificationsResponse> response) {
-//                if (response.isSuccessful()) {
-//                    notificationsResponse = response.body();
-//                    if (showNotifications) {
-//                        showNotifications();
-//                        showNotifications = false;
-//                    }
-//                }
-//                //Server Error
-//            }
-//
-//            @Override
-//            public void onFailure(Call<NotificationsResponse> call, Throwable t) {
-//                //Network Error
-//            }
-//        });
-//    }
-
-    public void showNotifications() {
-        String notificationsResponseJson = new Gson().toJson(notificationsResponse);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.NOTIFICATIONS_RESPONSE_JSON, notificationsResponseJson);
-        NotificationsFragment notificationsFragment = new NotificationsFragment();
-        notificationsFragment.setArguments(bundle);
-        updateFragment(notificationsFragment);
-    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -180,17 +146,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_notifications) {
+        if (id == R.id.action_notifications) {
             showNotifications = true;
-//            fetchNotifications();
+            NotificationsFragment notificationsFragment = new NotificationsFragment();
+            updateFragment(notificationsFragment);
             return true;
-        }*/
+        }
         return super.onOptionsItemSelected(item);
     }
 

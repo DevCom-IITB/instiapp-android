@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
@@ -142,8 +143,19 @@ public class LoginActivity extends AppCompatActivity {
             progressDialog.setIndeterminate(true);
             progressDialog.show();
         }
+
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.passwordLogin(username, password).enqueue(new Callback<LoginResponse>() {
+        Call<LoginResponse> call;
+
+        /* This can be null if play services is hung */
+        if (FirebaseInstanceId.getInstance().getToken() == null) {
+            call = retrofitInterface.passwordLogin(username, password);
+        } else {
+            call = retrofitInterface.passwordLogin(username, password, FirebaseInstanceId.getInstance().getToken());
+        }
+
+        /* Log in the user */
+        call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
