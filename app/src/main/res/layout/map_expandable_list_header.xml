@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:orientation="vertical"
+    android:background="#F5F5F5" >
+    <ImageView 
+        android:id="@+id/group_color"
+        android:layout_width="12dp"
+        android:layout_height="56dp"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="0dp"
+        android:layout_marginLeft="0dp"
+        android:cropToPadding="true"/>
+    <ImageView
+        android:id="@+id/icon_expand"
+        android:layout_width="32dp"
+        android:layout_height="56dp"
+        android:layout_toRightOf="@id/group_color"
+        android:cropToPadding="true"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:contentDescription="list item"
+        android:visibility="visible" />
+    <TextView
+        android:id="@+id/lblListHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/icon_expand"
+        android:padding="8dp"
+        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft" />
+	<View 
+	    android:layout_width="match_parent"
+	    android:layout_height="1dp"
+	    android:layout_alignParentBottom="true" />
+	<View 
+	    android:layout_width="match_parent"
+	    android:layout_height="1dp"
+	    android:layout_alignParentTop="true" />
+
+</RelativeLayout>

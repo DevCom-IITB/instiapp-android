@@ -7,4 +7,9 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="quick_links_size">18sp</dimen>
     <dimen name="links_margin_start">8dp</dimen>
+
+    <!-- Map -->
+    <dimen name="card_height">360dp</dimen>
+    <dimen name="hidden_card_height">80dp</dimen>
+    <dimen name="expanded_card_height">280dp</dimen>
 </resources>
