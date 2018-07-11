@@ -34,7 +34,8 @@
                 android:paddingTop="8dp"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
-                android:textColor="@color/primaryTextColor" />
+                android:textColor="@color/primaryTextColor"
+                android:textColorHint="@color/primaryTextColor"/>
 
             <TextView
                 android:id="@+id/settings_title"

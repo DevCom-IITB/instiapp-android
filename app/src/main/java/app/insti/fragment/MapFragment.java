@@ -160,9 +160,11 @@ public class MapFragment extends Fragment implements TextWatcher,
     @Override
     public void onStart() {
         super.onStart();
-        // setContentView(R.layout.activity_main);
-        // setUpActionBar();
         setUpDrawer();
+
+        /* Set title */
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("InstiMap");
 
         newSmallCard = (LinearLayout) getActivity().findViewById(R.id.new_small_card);
         slidingLayout = (SlidingUpPanelLayout) getActivity().findViewById(R.id.sliding_layout);
