@@ -55,13 +55,15 @@ public class SettingsFragment extends Fragment {
 
         String userID = bundle.getString(Constants.USER_ID);
 
+        populateViews();
+
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
         retrofitInterface.getUser("sessionid=" + getArguments().getString(Constants.SESSION_ID), userID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
                     user = response.body();
-                    populateViews();
+                    populateUserCard();
                 }
             }
 
@@ -72,7 +74,7 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-    private void populateViews() {
+    private void populateUserCard() {
         ImageView userProfilePictureImageView = getActivity().findViewById(R.id.user_card_avatar);
         TextView userNameTextView = getActivity().findViewById(R.id.user_card_name);
 
@@ -82,7 +84,9 @@ public class SettingsFragment extends Fragment {
                 .placeholder(R.drawable.user_placeholder)
                 .into(userProfilePictureImageView);
         userNameTextView.setText(user.getUserName());
+    }
 
+    private void populateViews() {
         Button updateProfileButton = getActivity().findViewById(R.id.settings_update_profile);
         Button feedbackButton = getActivity().findViewById(R.id.settings_feedback);
         Button aboutButton = getActivity().findViewById(R.id.settings_about);
