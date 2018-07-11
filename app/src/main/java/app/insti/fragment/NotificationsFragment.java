@@ -24,6 +24,7 @@ import app.insti.adapter.NotificationsAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
 import app.insti.data.Notification;
+import app.insti.data.PlacementBlogPost;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,27 +88,43 @@ public class NotificationsFragment extends BaseFragment {
                 /* Mark notification read */
                 RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
                 String sessId = ((MainActivity)getActivity()).getSessionIDHeader();
-                retrofitInterface.markNotificationRead(sessId, notification.getNotificationId()).enqueue(new Callback<Void>() {
+                /*retrofitInterface.markNotificationRead(sessId, notification.getNotificationId()).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) { }
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) { }
-                });
+                });*/
+
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                String tag = "";
+
+                Bundle bundle = getArguments();
+                if (bundle == null) { bundle = new Bundle(); }
+                bundle.putString(Constants.SESSION_ID, ((MainActivity) getActivity()).getSessionIDHeader());
 
                 /* Open event */
                 if (notification.getNotificationActorType().contains("event")) {
                     String eventJson = new Gson().toJson(notification.getNotificationActor());
-                    Bundle bundle = getArguments();
-                    if (bundle == null) bundle = new Bundle();
                     bundle.putString(Constants.EVENT_JSON, eventJson);
                     EventFragment eventFragment = new EventFragment();
                     eventFragment.setArguments(bundle);
-                    FragmentManager manager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                    transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                    transaction.addToBackStack(eventFragment.getTag()).commit();
+                    tag = eventFragment.getTag();
+                    transaction.replace(R.id.framelayout_for_fragment, eventFragment, tag);
+                } else if (notification.getNotificationActorType().contains("newsentry")) {
+                    NewsFragment newsFragment = new NewsFragment();
+                    tag = newsFragment.getTag();
+                    transaction.replace(R.id.framelayout_for_fragment, newsFragment, tag);
+                    newsFragment.setArguments(bundle);
+                } else if (notification.getNotificationActorType().contains("blogentry")) {
+                    PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
+                    placementBlogFragment.setArguments(bundle);
+                    tag = placementBlogFragment.getTag();
+                    transaction.replace(R.id.framelayout_for_fragment, placementBlogFragment, tag);
                 }
+
+                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+                transaction.addToBackStack(tag).commit();
             }
         });
         notificationsRecyclerView = (RecyclerView) getActivity().findViewById(R.id.notifications_recycler_view);
