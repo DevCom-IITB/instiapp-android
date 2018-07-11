@@ -36,4 +36,7 @@
         <item>Tansa House</item>
         <item>QIP</item>
     </string-array>
+
+    <string name="drawer_open">Open the drawer</string>
+    <string name="drawer_close">Close the drawer</string>
 </resources>

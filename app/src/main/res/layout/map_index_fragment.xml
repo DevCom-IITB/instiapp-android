@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ExpandableListView
+        android:id="@+id/index_list"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:divider="@null"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:groupIndicator="@null"
+        android:background="@android:color/transparent"
+        android:transcriptMode="disabled" />
+
+</LinearLayout>

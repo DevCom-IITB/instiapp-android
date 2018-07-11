@@ -100,7 +100,7 @@ public class TrainingBlogFragment extends BaseFragment {
 
     private void displayTrainingFeed(final List<TrainingBlogPost> result) {
         /* Skip if we're already destroyed */
-        if (getActivity() == null) return;
+        if (getActivity() == null || getView() == null) return;
 
         final TrainingBlogAdapter trainingBlogAdapter = new TrainingBlogAdapter(result, new ItemClickListener() {
             @Override

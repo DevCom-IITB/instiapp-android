@@ -14,4 +14,9 @@
     <color name="colorCalendarWeek">#000000</color>
     <color name="colorGray">#757575</color>
     <color name="colorWhite">#FFFFFF</color>
+
+    <!-- Map -->
+    <item name="transparent_black" type="color">#20000000</item>
+    <item name="list_item_gray_even" type="color">#ffe6e6e6</item>
+    <item name="list_item_gray_odd" type="color">#ffececec</item>
 </resources>
