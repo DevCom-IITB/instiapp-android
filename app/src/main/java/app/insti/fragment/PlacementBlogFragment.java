@@ -44,6 +44,7 @@ public class PlacementBlogFragment extends BaseFragment {
     private SwipeRefreshLayout feedSwipeRefreshLayout;
     private AppDatabase appDatabase;
     private boolean freshBlogDisplayed = false;
+    public static  boolean showLoader=true;
 
 
     public PlacementBlogFragment() {
@@ -129,15 +130,21 @@ public class PlacementBlogFragment extends BaseFragment {
                                 LinearLayoutManager layoutManager= (LinearLayoutManager) placementFeedRecyclerView.getLayoutManager();
                                 if(((layoutManager.getChildCount()+layoutManager.findFirstVisibleItemPosition())>(layoutManager.getItemCount()-5))&&(!loading)){
                                     loading=true;
+                                    View v=getActivity().findViewById(R.id.placement_feed_swipe_refresh_layout);
                                     RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
                                     retrofitInterface.getPlacementBlogFeed("sessionid=" +getArguments().getString(Constants.SESSION_ID),layoutManager.getItemCount(),10).enqueue(new Callback<List<PlacementBlogPost>>() {
                                         @Override
                                         public void onResponse(Call<List<PlacementBlogPost>> call, Response<List<PlacementBlogPost>> response) {
+
                                             loading=false;
                                             List<PlacementBlogPost> blogPosts= (ArrayList<PlacementBlogPost>) placementBlogAdapter.getPosts();
                                             blogPosts.addAll(response.body());
+                                            if(response.body().size()==0){
+                                                showLoader=false;
+                                            }
                                             placementBlogAdapter.setPosts(blogPosts);
                                             placementBlogAdapter.notifyDataSetChanged();
+//                                            new updateDatabase().execute(blogPosts);
                                         }
 
                                         @Override
