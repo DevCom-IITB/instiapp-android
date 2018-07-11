@@ -484,6 +484,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         placeColor.setImageDrawable(new ColorDrawable(marker.getColor()));
         getActivity().findViewById(R.id.place_group_color).setBackgroundColor(
                 marker.getColor());
+        getActivity().findViewById(R.id.dragView).setVisibility(View.VISIBLE);
         reCenterMarker(marker);
         cardSlideListener.showCard();
     }

@@ -5,7 +5,8 @@
     android:background="#eeeeee"
     android:clickable="true"
     android:focusable="false"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:visibility="gone">
 
     <LinearLayout
         android:id="@+id/new_small_card"
