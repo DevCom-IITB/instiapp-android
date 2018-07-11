@@ -43,8 +43,19 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         session = new SessionManager(mContext);
+        if (session.isLoggedIn()) {
+            openMainActivity();
+        }
         setContentView(R.layout.activity_login);
         progressDialog = new ProgressDialog(LoginActivity.this);
+    }
+
+    private void openMainActivity() {
+        Intent i = new Intent(mContext, MainActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
+        finish();
     }
 
     @Override
@@ -130,11 +141,7 @@ public class LoginActivity extends AppCompatActivity {
         guestView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
+                openMainActivity();
             }
         });
     }
@@ -164,11 +171,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Log.d(TAG, "Login request successful");
                     session.createLoginSession(username, response.body().getUser(), response.body().getSessionID());
-                    Intent i = new Intent(mContext, MainActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(i);
                     progressDialog.dismiss();
+                    openMainActivity();
                     finish();
                     //Save credentials in AccountManager to keep user logged in
                     //Go to MainActivity
@@ -201,6 +205,5 @@ public class LoginActivity extends AppCompatActivity {
         }
         return true;
     }
-
 }
 
