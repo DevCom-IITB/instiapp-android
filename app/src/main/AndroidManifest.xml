@@ -32,20 +32,19 @@
 
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".LoginActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".LoginActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
 
             <intent-filter>
                 <action android:name="HANDLE_AUTHORIZATION_RESPONSE" />
@@ -76,10 +75,9 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name=".InstiAppFirebaseMessagingService">
+        <service android:name=".InstiAppFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
