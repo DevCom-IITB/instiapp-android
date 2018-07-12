@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -140,5 +141,11 @@ public class ProfileFragment extends BaseFragment {
         getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
-
+    public static ProfileFragment newInstance(String userID) {
+        ProfileFragment fragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.USER_ID, userID);
+        fragment.setArguments(args);
+        return fragment;
+    }
 }

@@ -23,11 +23,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import app.insti.api.UnsafeOkHttpClient;
+import app.insti.data.Body;
 import app.insti.data.User;
+import app.insti.fragment.BodyFragment;
 import app.insti.fragment.CalendarFragment;
 import app.insti.fragment.FeedFragment;
 import app.insti.fragment.MapFragment;
@@ -78,7 +79,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         feedFragment = new FeedFragment();
         updateFragment(feedFragment);
 
-//        fetchNotifications();
+        Intent appLinkIntent = getIntent();
+        handleIntent(appLinkIntent);
+    }
+
+    private void handleIntent(Intent appLinkIntent) {
+        String appLinkAction = appLinkIntent.getAction();
+        String appLinkData = appLinkIntent.getDataString();
+        if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null) {
+            switch (getType(appLinkData)) {
+                case "body":
+                    Body body = new Body(getID(appLinkData));
+                    BodyFragment bodyFragment = BodyFragment.newInstance(body);
+                    updateFragment(bodyFragment);
+                    break;
+                case "user":
+                    ProfileFragment profileFragment = ProfileFragment.newInstance(getID(appLinkData));
+                    updateFragment(profileFragment);
+            }
+        }
+    }
+
+    private String getID(String appLinkData) {
+        if (appLinkData.charAt(appLinkData.length() - 1) == '/')
+            appLinkData = appLinkData.substring(0, appLinkData.length() - 1);
+        switch (getType(appLinkData)) {
+            case "body":
+                return appLinkData.substring(appLinkData.indexOf("org") + 4);
+            case "user":
+                return appLinkData.substring(appLinkData.indexOf("user") + 5);
+        }
+        return null;
+    }
+
+    private String getType(String appLinkData) {
+        if (appLinkData.startsWith("http://insti.app/org/") || appLinkData.startsWith("https://insti.app/org/")) {
+            return "body";
+        } else if (appLinkData.startsWith("http://insti.app/user/") || appLinkData.startsWith("https://insti.app/user/")) {
+            return "user";
+        }
+        return null;
     }
 
     @Override
@@ -192,8 +232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (session.isLoggedIn()) {
                     TrainingBlogFragment trainingBlogFragment = new TrainingBlogFragment();
                     updateFragment(trainingBlogFragment);
-                }
-                else{
+                } else {
                     Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
                 }
                 break;
