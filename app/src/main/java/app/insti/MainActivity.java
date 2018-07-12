@@ -250,13 +250,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_map:
                 MapFragment mapFragment = new MapFragment();
-                if (ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    updateFragment(mapFragment);
-                } else {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_ACCESS_LOCATION);
-                }
+                updateFragment(mapFragment);
                 break;
 
             case R.id.nav_settings:

@@ -31,7 +31,7 @@ Read the [Development Documentation](https://iitbapp1.docs.apiary.io/).
 See the [Frontend Design](https://drive.google.com/open?id=1YJRUvsyqR5QtfWYug_PoBJ08p-criCPo).
 
 ### Contributors
-See [list of contributors](https://github.com/unstablebrainiac/InstiApp/graphs/contributors)
+See [list of contributors](https://github.com/wncc/InstiApp/graphs/contributors)
 
 Release
 -------
