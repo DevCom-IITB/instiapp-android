@@ -1,6 +1,7 @@
 package app.insti.fragment;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
@@ -211,6 +213,7 @@ public class ExploreFragment extends Fragment {
     }
 
     public void updateFragment(Fragment fragment, Bundle bundle) {
+        MainActivity.hideKeyboard(getActivity());
         fragment.setArguments(bundle);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
