@@ -87,6 +87,9 @@ public class SettingsFragment extends Fragment {
     }
 
     private void populateViews() {
+        // Check if we exist
+        if (getActivity() == null || getView() == null) return;
+
         Button updateProfileButton = getActivity().findViewById(R.id.settings_update_profile);
         Button feedbackButton = getActivity().findViewById(R.id.settings_feedback);
         Button aboutButton = getActivity().findViewById(R.id.settings_about);
