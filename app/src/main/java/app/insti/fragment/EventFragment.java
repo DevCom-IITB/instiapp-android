@@ -101,6 +101,11 @@ public class EventFragment extends BaseFragment {
         webEventButton = getActivity().findViewById(R.id.web_event_button);
         shareEventButton = getActivity().findViewById(R.id.share_event_button);
 
+        // Fallback to image of first body if event has no image
+        if (event.getEventImageURL() == null) {
+            event.setEventImageURL(event.getEventBodies().get(0).getBodyImageURL());
+        }
+
         Picasso.get().load(event.getEventImageURL()).into(eventPicture);
         eventTitle.setText(event.getEventName());
         Markwon.setMarkdown(eventDescription, event.getEventDescription());
