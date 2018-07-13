@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         setContentView(R.layout.activity_main);
         session = new SessionManager(getApplicationContext());
-        session.checkLogin();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -345,4 +344,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return false;
         return true;
     }
+
+
 }

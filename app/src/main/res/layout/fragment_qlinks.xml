@@ -96,16 +96,16 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="  Calender"
+                android:text="  Calendar"
                 android:textSize="25sp"
                 android:layout_marginTop="14dp"
                 android:fontFamily="sans-serif-light" />
 
             <TextView
-                android:id="@+id/button_Acad_calender"
+                android:id="@+id/button_Acad_calendar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Academic Calender"
+                android:text="Academic Calendar"
                 android:textSize="@dimen/quick_links_size" />
 
             <TextView
