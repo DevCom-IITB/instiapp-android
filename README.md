@@ -36,6 +36,6 @@ See [list of contributors](https://github.com/wncc/InstiApp/graphs/contributors)
 Release
 -------
 
-The app is still in early stages of development and is not on the Play Store.
+Download the app from the [Play Store](https://play.google.com/store/apps/details?id=app.insti) or visit [insti.app](insti.app)
 
 ###### InstiApp, WnCC are not endorsed by IIT Bombay, the institute.
