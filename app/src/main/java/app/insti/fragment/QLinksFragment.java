@@ -34,7 +34,7 @@ public class QLinksFragment extends BaseFragment {
         TextView Intern = getActivity().findViewById(R.id.button_Internship);
         TextView Placement = getActivity().findViewById(R.id.button_Placement);
         TextView Library = getActivity().findViewById(R.id.button_Library);
-        TextView AcadCal = getActivity().findViewById(R.id.button_Acad_calender);
+        TextView AcadCal = getActivity().findViewById(R.id.button_Acad_calendar);
         TextView AcadTime = getActivity().findViewById(R.id.button_Acad_timetable);
         TextView Holidays = getActivity().findViewById(R.id.button_Holidays);
         TextView Circulars = getActivity().findViewById(R.id.button_Circulars);

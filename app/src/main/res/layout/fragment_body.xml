@@ -103,7 +103,7 @@
                         android:layout_margin="0dp"
                         android:layout_weight="1"
                         android:text="Follow"
-                        android:textColor="@color/colorGray" />
+                        android:textColor="@color/secondaryTextColor" />
                 </LinearLayout>
 
                 <View

@@ -87,10 +87,13 @@ public class SettingsFragment extends Fragment {
     }
 
     private void populateViews() {
-        Button updateProfileButton = getActivity().findViewById(R.id.settings_update_profile);
-        Button feedbackButton = getActivity().findViewById(R.id.settings_feedback);
-        Button aboutButton = getActivity().findViewById(R.id.settings_about);
-        Button logoutButton = getActivity().findViewById(R.id.settings_logout);
+        // Check if we exist
+        if (getActivity() == null || getView() == null) return;
+
+        Button updateProfileButton = getView().findViewById(R.id.settings_update_profile);
+        Button feedbackButton = getView().findViewById(R.id.settings_feedback);
+        Button aboutButton = getView().findViewById(R.id.settings_about);
+        Button logoutButton = getView().findViewById(R.id.settings_logout);
 
         updateProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,30 +121,36 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-                retrofitInterface.logout("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.isSuccessful()) {
-                            SessionManager sessionManager = new SessionManager(getContext());
-                            sessionManager.logout();
-                            Intent intent = new Intent(getContext(), LoginActivity.class);
-                            startActivity(intent);
-                            getActivity().finish();
+        // Logged in user vs Guest
+        final SessionManager sessionManager = new SessionManager(getContext());
+        if (sessionManager.isLoggedIn()) {
+            logoutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                    retrofitInterface.logout("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                sessionManager.logout();
+                                Intent intent = new Intent(getContext(), LoginActivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                            }
+                            //Server Error
                         }
-                        //Server Error
-                    }
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        //Network Error
-                    }
-                });
-            }
-        });
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            //Network Error
+                        }
+                    });
+                }
+            });
+        } else {
+            logoutButton.setVisibility(View.GONE);
+            getView().findViewById(R.id.role_card_layout).setVisibility(View.GONE);
+        }
     }
 
     private void openWebURL(String URL) {

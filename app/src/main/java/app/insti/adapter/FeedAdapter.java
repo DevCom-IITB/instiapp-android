@@ -68,6 +68,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         if (!eventVenueName.toString().equals(""))
             viewHolder.eventVenue.setText(eventVenueName.toString().substring(2));
 
+        // Fallback to image of first body if event has no image
+        if (currentEvent.getEventImageURL() == null) {
+            currentEvent.setEventImageURL(currentEvent.getEventBodies().get(0).getBodyImageURL());
+        }
+
         Picasso.get().load(currentEvent.getEventImageURL()).into(viewHolder.eventPicture);
     }
 
