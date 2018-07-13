@@ -94,6 +94,8 @@ public class ExploreFragment extends Fragment {
                 @Override
                 public void onFailure(Call<List<Body>> call, Throwable t) {}
             });
+        } else {
+            getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         }
 
         // Search on text change in search
@@ -126,6 +128,10 @@ public class ExploreFragment extends Fragment {
     public void doSearch(String query) {
         if (getActivity() == null || getView() == null) return;
 
+        // Show loading spinner
+        getView().findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+
+        // Make request
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
         retrofitInterface.search(sessionId, query).enqueue(new Callback<ExploreResponse>() {
             @Override
