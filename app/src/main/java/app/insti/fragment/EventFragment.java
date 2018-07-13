@@ -207,12 +207,18 @@ public class EventFragment extends BaseFragment {
      * @param count integer count to show in the badge
      * @return spannable to be used as view.setText(spannable)
      */
-    static Spannable getCountBadgeSpannable(String text, int count) {
+    static Spannable getCountBadgeSpannable(String text, Integer count) {
+        // Check for nulls
+        if (count == null) return new SpannableString(text);
+
+        // Make a spannable
         String countString = Integer.toString(count);
         Spannable spannable = new SpannableString(text + " " + countString);
-        spannable.setSpan(new StyleSpan(Typeface.NORMAL), 0, text.length(),Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+        // Set font face and color of badge
         spannable.setSpan(new RelativeSizeSpan(0.75f), text.length(), text.length() + 1 + countString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(Color.DKGRAY), text.length(), text.length() + 1 + countString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
         return spannable;
     }
 
