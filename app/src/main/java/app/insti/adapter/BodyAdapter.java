@@ -71,7 +71,9 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
             description = (TextView) itemView.findViewById(R.id.body_card_description);
             image = (ImageView) itemView.findViewById(R.id.body_card_avatar);
         }
+    }
 
-
+    public void setBodyList(List<Body> bodyList) {
+        this.bodyList = bodyList;
     }
 }

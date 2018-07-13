@@ -30,6 +30,7 @@ import app.insti.data.Body;
 import app.insti.data.User;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.CalendarFragment;
+import app.insti.fragment.ExploreFragment;
 import app.insti.fragment.FeedFragment;
 import app.insti.fragment.MapFragment;
 import app.insti.fragment.MessMenuFragment;
@@ -216,10 +217,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
                 }
                 break;
+
+            case R.id.nav_explore:
+                updateFragment(ExploreFragment.newInstance());
+                break;
+
             case R.id.nav_news:
                 NewsFragment newsFragment = new NewsFragment();
                 updateFragment(newsFragment);
                 break;
+
             case R.id.nav_placement_blog:
                 if (session.isLoggedIn()) {
                     PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
