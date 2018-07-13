@@ -152,7 +152,7 @@
                     android:layout_margin="0dp"
                     android:layout_weight="1"
                     android:text="Going"
-                    android:textColor="@color/colorGray" />
+                    android:textColor="@color/secondaryTextColor" />
 
                 <View
                     android:layout_width="1dp"
@@ -171,7 +171,7 @@
                     android:layout_margin="0dp"
                     android:layout_weight="1"
                     android:text="Interested"
-                    android:textColor="@color/colorGray" />
+                    android:textColor="@color/secondaryTextColor" />
 
             </LinearLayout>
 

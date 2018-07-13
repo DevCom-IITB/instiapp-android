@@ -2,6 +2,8 @@ package app.insti.fragment;
 
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +12,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,6 +108,11 @@ public class EventFragment extends BaseFragment {
         webEventButton = getActivity().findViewById(R.id.web_event_button);
         shareEventButton = getActivity().findViewById(R.id.share_event_button);
 
+        // Fallback to image of first body if event has no image
+        if (event.getEventImageURL() == null) {
+            event.setEventImageURL(event.getEventBodies().get(0).getBodyImageURL());
+        }
+
         Picasso.get().load(event.getEventImageURL()).into(eventPicture);
         eventTitle.setText(event.getEventName());
         Markwon.setMarkdown(eventDescription, event.getEventDescription());
@@ -141,8 +153,7 @@ public class EventFragment extends BaseFragment {
 
         goingButton.setOnClickListener(getUESOnClickListener(2));
 
-        interestedButton.setBackgroundColor(getResources().getColor(event.getEventUserUes() == Constants.STATUS_INTERESTED ? R.color.colorAccent : R.color.colorWhite));
-        goingButton.setBackgroundColor(getResources().getColor(event.getEventUserUes() == Constants.STATUS_GOING ? R.color.colorAccent : R.color.colorWhite));
+        setFollowButtonColors(event.getEventUserUes());
 
         navigateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,6 +192,36 @@ public class EventFragment extends BaseFragment {
         }
     }
 
+    void setFollowButtonColors(int status) {
+        interestedButton.setBackgroundColor(getResources().getColor(status == Constants.STATUS_INTERESTED ? R.color.colorAccent : R.color.colorWhite));
+        goingButton.setBackgroundColor(getResources().getColor(status == Constants.STATUS_GOING ? R.color.colorAccent : R.color.colorWhite));
+
+        // Show badges
+        interestedButton.setText(getCountBadgeSpannable("Interested", event.getEventInterestedCount()));
+        goingButton.setText(getCountBadgeSpannable("Going", event.getEventGoingCount()));
+    }
+
+    /**
+     * Get a spannable with a small count badge to set for an element text
+     * @param text Text to show in the spannable
+     * @param count integer count to show in the badge
+     * @return spannable to be used as view.setText(spannable)
+     */
+    static Spannable getCountBadgeSpannable(String text, Integer count) {
+        // Check for nulls
+        if (count == null) return new SpannableString(text);
+
+        // Make a spannable
+        String countString = Integer.toString(count);
+        Spannable spannable = new SpannableString(text + " " + countString);
+
+        // Set font face and color of badge
+        spannable.setSpan(new RelativeSizeSpan(0.75f), text.length(), text.length() + 1 + countString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(Color.DKGRAY), text.length(), text.length() + 1 + countString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+        return spannable;
+    }
+
     View.OnClickListener getUESOnClickListener(final int status) {
         return new View.OnClickListener() {
             @Override
@@ -193,8 +234,7 @@ public class EventFragment extends BaseFragment {
                         if (response.isSuccessful()) {
                             event.setEventUserUes(endStatus);
                             new updateDbEvent().execute(event);
-                            interestedButton.setBackgroundColor(getResources().getColor(endStatus == Constants.STATUS_INTERESTED ? R.color.colorAccent : R.color.colorWhite));
-                            goingButton.setBackgroundColor(getResources().getColor(endStatus == Constants.STATUS_GOING ? R.color.colorAccent : R.color.colorWhite));
+                            setFollowButtonColors(endStatus);
                         }
                     }
 

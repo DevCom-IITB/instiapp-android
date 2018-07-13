@@ -12,13 +12,15 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="12dp">
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="   CMS"
-                android:textSize="25sp" />
+                android:text="  CMS"
+                android:textSize="25sp"
+                android:fontFamily="sans-serif-light" />
 
             <TextView
                 android:id="@+id/button_CMS"
@@ -44,8 +46,10 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="   Academics"
-                android:textSize="25sp" />
+                android:text="  Academics"
+                android:textSize="25sp"
+                android:layout_marginTop="14dp"
+                android:fontFamily="sans-serif-light" />
 
             <TextView
                 android:id="@+id/button_ASC"
@@ -92,8 +96,10 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="   Calendar"
-                android:textSize="25sp" />
+                android:text="  Calendar"
+                android:textSize="25sp"
+                android:layout_marginTop="14dp"
+                android:fontFamily="sans-serif-light" />
 
             <TextView
                 android:id="@+id/button_Acad_calendar"
@@ -133,8 +139,10 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="   Services"
-                android:textSize="25sp" />
+                android:text="  Services"
+                android:textSize="25sp"
+                android:layout_marginTop="14dp"
+                android:fontFamily="sans-serif-light" />
 
             <TextView
                 android:id="@+id/button_GPO"
@@ -167,8 +175,10 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="   Miscellaneous"
-                android:textSize="25sp" />
+                android:text="  Miscellaneous"
+                android:textSize="25sp"
+                android:layout_marginTop="14dp"
+                android:fontFamily="sans-serif-light" />
 
             <TextView
                 android:id="@+id/button_Intercom"
