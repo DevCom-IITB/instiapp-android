@@ -101,4 +101,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             eventVenue = (TextView) itemView.findViewById(R.id.event_venue);
         }
     }
+
+    public void setPosts(List<Event> posts) {
+        this.posts = posts;
+    }
 }

@@ -74,4 +74,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             image = (ImageView) itemView.findViewById(R.id.role_card_avatar);
         }
     }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
 }

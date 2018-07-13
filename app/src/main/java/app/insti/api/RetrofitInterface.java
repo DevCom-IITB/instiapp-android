@@ -4,6 +4,7 @@ import java.util.List;
 
 import app.insti.api.model.EventCreateRequest;
 import app.insti.api.model.EventCreateResponse;
+import app.insti.api.model.ExploreResponse;
 import app.insti.api.model.ImageUploadRequest;
 import app.insti.api.model.ImageUploadResponse;
 import app.insti.api.model.LoginResponse;
@@ -51,6 +52,9 @@ public interface RetrofitInterface {
     @GET("bodies/{uuid}")
     Call<app.insti.data.Body> getBody(@Header("Cookie") String sessionId, @Path("uuid") String uuid);
 
+    @GET("bodies")
+    Call<List<app.insti.data.Body>> getAllBodies(@Header("Cookie") String sessionId);
+
     @GET("bodies/{bodyID}/follow")
     Call<Void> updateBodyFollowing(@Header("Cookie") String sessionID, @Path("bodyID") String eventID, @Query("action") int action);
 
@@ -81,6 +85,6 @@ public interface RetrofitInterface {
     @GET("logout")
     Call<Void> logout(@Header("Cookie") String sessionID);
 
-//    @POST("getNotifications/")
-//    Call<NotificationsResponse> getNotifications(@Body NotificationsRequest notificationsRequest);
+    @GET("search")
+    Call<ExploreResponse> search(@Header("Cookie") String sessionID, @Query("query") String query);
 }

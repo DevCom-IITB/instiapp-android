@@ -20,6 +20,11 @@
             android:title="My Events" />
 
         <item
+            android:id="@+id/nav_explore"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="Explore" />
+
+        <item
             android:id="@+id/nav_mess_menu"
             android:icon="@drawable/ic_restaurant_black_48dp"
             android:title="Mess Menu" />

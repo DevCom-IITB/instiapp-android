@@ -68,6 +68,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import app.insti.MainActivity;
 import app.insti.R;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
@@ -955,14 +956,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
-        View view = getActivity().getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(getActivity());
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        MainActivity.hideKeyboard(getActivity());
     }
 
     @Override

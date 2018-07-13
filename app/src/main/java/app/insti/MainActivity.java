@@ -1,6 +1,7 @@
 package app.insti;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +32,7 @@ import app.insti.data.Body;
 import app.insti.data.User;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.CalendarFragment;
+import app.insti.fragment.ExploreFragment;
 import app.insti.fragment.FeedFragment;
 import app.insti.fragment.MapFragment;
 import app.insti.fragment.MessMenuFragment;
@@ -215,10 +218,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
                 }
                 break;
+
+            case R.id.nav_explore:
+                updateFragment(ExploreFragment.newInstance());
+                break;
+
             case R.id.nav_news:
                 NewsFragment newsFragment = new NewsFragment();
                 updateFragment(newsFragment);
                 break;
+
             case R.id.nav_placement_blog:
                 if (session.isLoggedIn()) {
                     PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
@@ -345,5 +354,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 }
