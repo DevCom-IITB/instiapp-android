@@ -2,6 +2,8 @@ package app.insti.fragment;
 
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +12,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -188,6 +195,25 @@ public class EventFragment extends BaseFragment {
     void setFollowButtonColors(int status) {
         interestedButton.setBackgroundColor(getResources().getColor(status == Constants.STATUS_INTERESTED ? R.color.colorAccent : R.color.colorWhite));
         goingButton.setBackgroundColor(getResources().getColor(status == Constants.STATUS_GOING ? R.color.colorAccent : R.color.colorWhite));
+
+        // Show badges
+        interestedButton.setText(getCountBadgeSpannable("Interested", event.getEventInterestedCount()));
+        goingButton.setText(getCountBadgeSpannable("Going", event.getEventGoingCount()));
+    }
+
+    /**
+     * Get a spannable with a small count badge to set for an element text
+     * @param text Text to show in the spannable
+     * @param count integer count to show in the badge
+     * @return spannable to be used as view.setText(spannable)
+     */
+    static Spannable getCountBadgeSpannable(String text, int count) {
+        String countString = Integer.toString(count);
+        Spannable spannable = new SpannableString(text + " " + countString);
+        spannable.setSpan(new StyleSpan(Typeface.NORMAL), 0, text.length(),Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        spannable.setSpan(new RelativeSizeSpan(0.75f), text.length(), text.length() + 1 + countString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(Color.DKGRAY), text.length(), text.length() + 1 + countString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        return spannable;
     }
 
     View.OnClickListener getUESOnClickListener(final int status) {
