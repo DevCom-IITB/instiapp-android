@@ -146,8 +146,7 @@ public class EventFragment extends BaseFragment {
 
         goingButton.setOnClickListener(getUESOnClickListener(2));
 
-        interestedButton.setBackgroundColor(getResources().getColor(event.getEventUserUes() == Constants.STATUS_INTERESTED ? R.color.colorAccent : R.color.colorWhite));
-        goingButton.setBackgroundColor(getResources().getColor(event.getEventUserUes() == Constants.STATUS_GOING ? R.color.colorAccent : R.color.colorWhite));
+        setFollowButtonColors(event.getEventUserUes());
 
         navigateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,6 +185,11 @@ public class EventFragment extends BaseFragment {
         }
     }
 
+    void setFollowButtonColors(int status) {
+        interestedButton.setBackgroundColor(getResources().getColor(status == Constants.STATUS_INTERESTED ? R.color.colorAccent : R.color.colorWhite));
+        goingButton.setBackgroundColor(getResources().getColor(status == Constants.STATUS_GOING ? R.color.colorAccent : R.color.colorWhite));
+    }
+
     View.OnClickListener getUESOnClickListener(final int status) {
         return new View.OnClickListener() {
             @Override
@@ -198,8 +202,7 @@ public class EventFragment extends BaseFragment {
                         if (response.isSuccessful()) {
                             event.setEventUserUes(endStatus);
                             new updateDbEvent().execute(event);
-                            interestedButton.setBackgroundColor(getResources().getColor(endStatus == Constants.STATUS_INTERESTED ? R.color.colorAccent : R.color.colorWhite));
-                            goingButton.setBackgroundColor(getResources().getColor(endStatus == Constants.STATUS_GOING ? R.color.colorAccent : R.color.colorWhite));
+                            setFollowButtonColors(endStatus);
                         }
                     }
 
