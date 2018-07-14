@@ -1,21 +1,30 @@
 package app.insti.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -56,12 +65,14 @@ import com.mrane.campusmap.ListFragment;
 import com.mrane.campusmap.SettingsManager;
 import com.mrane.data.Building;
 import com.mrane.data.Locations;
+import com.mrane.data.Marker;
 import com.mrane.data.Room;
 import com.mrane.navigation.CardSlideListener;
 import com.mrane.navigation.SlidingUpPanelLayout;
 import com.mrane.zoomview.CampusMapView;
 import com.mrane.zoomview.SubsamplingScaleImageView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +87,8 @@ import app.insti.data.Venue;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 
 public class MapFragment extends Fragment implements TextWatcher,
         TextView.OnEditorActionListener, AdapterView.OnItemClickListener, View.OnFocusChangeListener,
@@ -126,6 +139,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     public static final int SOUND_ID_REMOVE = 2;
     public SoundPool soundPool;
     public int[] soundPoolIds;
+    Marker user = new Marker("You", "", 0, 0, 1, "");
 
     private Handler mHandler = new Handler() {
         @Override
@@ -179,6 +193,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                     markerlist = new ArrayList<com.mrane.data.Marker>(data.values());
                     setUpDrawer();
                     setupMap();
+                    setupGPS();
                 }
             }
 
@@ -1013,6 +1028,74 @@ public class MapFragment extends Fragment implements TextWatcher,
 
     public SlidingUpPanelLayout getSlidingLayout() {
         return slidingLayout;
+    }
+
+    public void setupGPS() {
+        // Permissions stuff
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+        }
+
+        LocationManager locationManager = (LocationManager)
+        getActivity().getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new MyLocationListener();
+        try {
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, 50, 1, locationListener);
+            campusMapView.addMarker(user);
+        } catch (SecurityException ignored) {
+            Toast.makeText(getContext(), "No permission!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /*---------- Listener class to get coordinates ------------- */
+    private class MyLocationListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location loc) {
+            Toast.makeText(
+                    getActivity().getBaseContext(),
+                    "Location changed: Lat: " + loc.getLatitude() + " Lng: "
+                            + loc.getLongitude(), Toast.LENGTH_SHORT);
+
+            // Set the origin
+            double Xn = 19.134417, Yn = 72.901229, Zn = 1757, Zyn = 501;
+
+            double x = (loc.getLatitude() - Xn) * 1000;
+            double y = (loc.getLongitude() - Yn) * 1000;
+
+            // Pre-trained weights
+            double[] A = {-3.169666704720932, -49.718259508124866, 73.63847451738897, -37.61187280930967, 6.243068985662827, -0.27454570486652585, 5.479168324310082, -2.0423035752734497, 44.1757221052438};
+            int px = (int)(Zn + A[0] + A[1]*x + A[2]*y + A[3]*x*x + A[4]*x*x*y + A[5]*x*x*y*y + A[6]*y*y + A[7]*x*y*y + A[8]*x*y);
+
+            A = new double[] {0.010619520345247447, -14.46472789089445, 61.00432524817795, 12.593699865482979, -1.3923808471860513, 0.05646175191919056, 0.3826096686410426, 0.07802615132849677, -10.35622400664665};
+            int py = (int)(Zyn + A[0] + A[1]*x + A[2]*y + A[3]*x*x + A[4]*x*x*y + A[5]*x*x*y*y + A[6]*y*y + A[7]*x*y*y + A[8]*x*y);
+
+            /*Toast.makeText(
+                    getActivity().getBaseContext(),
+                    "Location changed: Lat: " + px + " Lng: "
+                            + py, Toast.LENGTH_SHORT).show();*/
+
+            if (px > 0 && py > 0 && px < 5430 && py < 5375){
+                user.setPoint(new PointF(px, py));
+                SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
+                if (anim != null) anim.start();
+                campusMapView.invalidate();
+            }
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {}
+
+        @Override
+        public void onProviderEnabled(String provider) {}
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
     }
 }
 
