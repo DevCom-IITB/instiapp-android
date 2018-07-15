@@ -1067,6 +1067,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_LOCATION);
         } else {
+            Toast.makeText(getContext(), "WARNING: Location is in Beta. Use with Caution.", Toast.LENGTH_LONG).show();
             LocationManager locationManager = (LocationManager)
                     getActivity().getSystemService(Context.LOCATION_SERVICE);
             LocationListener locationListener = new MyLocationListener();
