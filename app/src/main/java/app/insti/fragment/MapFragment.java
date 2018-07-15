@@ -1108,6 +1108,7 @@ public class MapFragment extends Fragment implements TextWatcher,
 
             if (px > 0 && py > 0 && px < 5430 && py < 5375){
                 user.setPoint(new PointF(px, py));
+                user.setName("You - " + (int)loc.getAccuracy() + "m");
                 if (followingUser) {
                     SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
                     if (anim != null) anim.start();
