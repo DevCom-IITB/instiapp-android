@@ -144,7 +144,7 @@ public class MapFragment extends Fragment implements TextWatcher,
 
     private boolean GPSIsSetup = false;
     private boolean followingUser = false;
-    private Marker user = new Marker("You", "", 0, 0, 1, "");
+    private Marker user = new Marker("You", "", 0, 0, -10, "");
 
     private Handler mHandler = new Handler() {
         @Override
