@@ -81,6 +81,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import app.insti.Constants;
 import app.insti.MainActivity;
 import app.insti.R;
 import app.insti.api.RetrofitInterface;
@@ -205,6 +206,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     void setupWithData(List<Venue> venues) {
+        if (getView() == null || getActivity() == null) return;
         Locations mLocations = new Locations(venues);
         data = mLocations.data;
         markerlist = new ArrayList<com.mrane.data.Marker>(data.values());
@@ -1059,6 +1061,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     public void setupGPS() {
+        if (getView() == null || getActivity() == null) return;
         // Permissions stuff
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -1089,22 +1092,17 @@ public class MapFragment extends Fragment implements TextWatcher,
         public void onLocationChanged(Location loc) {
             if (getView() == null || getActivity() == null) return;
 
-            Toast.makeText(
-                    getActivity().getBaseContext(),
-                    "Location changed: Lat: " + loc.getLatitude() + " Lng: "
-                            + loc.getLongitude(), Toast.LENGTH_SHORT);
-
             // Set the origin
-            double Xn = 19.134417, Yn = 72.901229, Zn = 1757, Zyn = 501;
+            double Xn = Constants.MAP_Xn, Yn = Constants.MAP_Yn, Zn = Constants.MAP_Zn, Zyn = Constants.MAP_Zyn;
 
             double x = (loc.getLatitude() - Xn) * 1000;
             double y = (loc.getLongitude() - Yn) * 1000;
 
             // Pre-trained weights
-            double[] A = {-3.169666704720932, -49.718259508124866, 73.63847451738897, -37.61187280930967, 6.243068985662827, -0.27454570486652585, 5.479168324310082, -2.0423035752734497, 44.1757221052438};
+            double[] A = Constants.MAP_WEIGHTS_X;
             int px = (int)(Zn + A[0] + A[1]*x + A[2]*y + A[3]*x*x + A[4]*x*x*y + A[5]*x*x*y*y + A[6]*y*y + A[7]*x*y*y + A[8]*x*y);
 
-            A = new double[] {0.010619520345247447, -14.46472789089445, 61.00432524817795, 12.593699865482979, -1.3923808471860513, 0.05646175191919056, 0.3826096686410426, 0.07802615132849677, -10.35622400664665};
+            A = Constants.MAP_WEIGHTS_Y;
             int py = (int)(Zyn + A[0] + A[1]*x + A[2]*y + A[3]*x*x + A[4]*x*x*y + A[5]*x*x*y*y + A[6]*y*y + A[7]*x*y*y + A[8]*x*y);
 
             if (px > 0 && py > 0 && px < 5430 && py < 5375){
