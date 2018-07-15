@@ -736,26 +736,10 @@ public class CampusMapView extends SubsamplingScaleImageView {
 		return scale;
 	}
 
-//	public void setAddedMarkers(String addedMarkerString) {
-//		addedMarkerList = new ArrayList<Marker>();
-//		String[] addedMarkerNames = addedMarkerString.split("###");
-//		for (String s : addedMarkerNames) {
-//			if (!s.equals("")) {
-//				Log.d("test123","names = " + s);
-//				if (data.containsKey(s)) {
-//					addedMarkerList.add(data.get(s));
-//				}
-//			}
-//		}
-//	}
-//
-//	public String getAddedMarkerString() {
-//		String s = "";
-//		for (Marker m : addedMarkerList) {
-//			s = s + m.name + "###";
-//		}
-//		Log.d("test123","addedMarkerStringGen = " + s);
-//		return s;
-//	}
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		MapFragment.getMainActivity().setFollowingUser(false);
+		return super.onTouchEvent(event);
+	}
 
 }

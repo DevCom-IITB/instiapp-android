@@ -141,7 +141,10 @@ public class MapFragment extends Fragment implements TextWatcher,
     public static final int SOUND_ID_REMOVE = 2;
     public SoundPool soundPool;
     public int[] soundPoolIds;
-    Marker user = new Marker("You", "", 0, 0, 1, "");
+
+    private boolean GPSIsSetup = false;
+    private boolean followingUser = false;
+    private Marker user = new Marker("You", "", 0, 0, 1, "");
 
     private Handler mHandler = new Handler() {
         @Override
@@ -219,8 +222,13 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void locate() {
-        setupGPS();
-
+        followingUser = true;
+        if (!GPSIsSetup) {
+            setupGPS();
+        } else if (user != null) {
+            SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
+            if (anim != null) anim.start();
+        }
     }
 
     private void setupMap() {
@@ -1066,6 +1074,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                 locationManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER, 50, 1, locationListener);
                 campusMapView.addMarker(user);
+                GPSIsSetup = true;
             } catch (SecurityException ignored) {
                 Toast.makeText(getContext(), "No permission!", Toast.LENGTH_LONG).show();
             }
@@ -1099,8 +1108,10 @@ public class MapFragment extends Fragment implements TextWatcher,
 
             if (px > 0 && py > 0 && px < 5430 && py < 5375){
                 user.setPoint(new PointF(px, py));
-                SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
-                if (anim != null) anim.start();
+                if (followingUser) {
+                    SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
+                    if (anim != null) anim.start();
+                }
                 campusMapView.invalidate();
             }
         }
@@ -1113,6 +1124,10 @@ public class MapFragment extends Fragment implements TextWatcher,
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {}
+    }
+
+    public void setFollowingUser(boolean followingUser) {
+        this.followingUser = followingUser;
     }
 }
 
