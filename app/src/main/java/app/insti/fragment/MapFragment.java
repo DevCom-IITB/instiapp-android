@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -20,6 +21,7 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -188,18 +190,36 @@ public class MapFragment extends Fragment implements TextWatcher,
             @Override
             public void onResponse(Call<List<Venue>> call, Response<List<Venue>> response) {
                 if (response.isSuccessful()) {
-                    Locations mLocations = new Locations(response.body());
-                    data = mLocations.data;
-                    markerlist = new ArrayList<com.mrane.data.Marker>(data.values());
-                    setUpDrawer();
-                    setupMap();
-                    setupGPS();
+                    setupWithData(response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Venue>> call, Throwable t) { }
+            public void onFailure(Call<List<Venue>> call, Throwable t) {
+                setupWithData(new ArrayList<Venue>());
+            }
         });
+    }
+
+    void setupWithData(List<Venue> venues) {
+        Locations mLocations = new Locations(venues);
+        data = mLocations.data;
+        markerlist = new ArrayList<com.mrane.data.Marker>(data.values());
+        setUpDrawer();
+        setupMap();
+
+        // Setup locate button
+        FloatingActionButton fab = getView().findViewById(R.id.locate_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                locate();
+            }
+        });
+    }
+
+    private void locate() {
+        setupGPS();
 
     }
 
@@ -1038,17 +1058,17 @@ public class MapFragment extends Fragment implements TextWatcher,
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_LOCATION);
-        }
-
-        LocationManager locationManager = (LocationManager)
-        getActivity().getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new MyLocationListener();
-        try {
-            locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, 50, 1, locationListener);
-            campusMapView.addMarker(user);
-        } catch (SecurityException ignored) {
-            Toast.makeText(getContext(), "No permission!", Toast.LENGTH_LONG).show();
+        } else {
+            LocationManager locationManager = (LocationManager)
+                    getActivity().getSystemService(Context.LOCATION_SERVICE);
+            LocationListener locationListener = new MyLocationListener();
+            try {
+                locationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER, 50, 1, locationListener);
+                campusMapView.addMarker(user);
+            } catch (SecurityException ignored) {
+                Toast.makeText(getContext(), "No permission!", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -1057,6 +1077,8 @@ public class MapFragment extends Fragment implements TextWatcher,
 
         @Override
         public void onLocationChanged(Location loc) {
+            if (getView() == null || getActivity() == null) return;
+
             Toast.makeText(
                     getActivity().getBaseContext(),
                     "Location changed: Lat: " + loc.getLatitude() + " Lng: "
@@ -1074,11 +1096,6 @@ public class MapFragment extends Fragment implements TextWatcher,
 
             A = new double[] {0.010619520345247447, -14.46472789089445, 61.00432524817795, 12.593699865482979, -1.3923808471860513, 0.05646175191919056, 0.3826096686410426, 0.07802615132849677, -10.35622400664665};
             int py = (int)(Zyn + A[0] + A[1]*x + A[2]*y + A[3]*x*x + A[4]*x*x*y + A[5]*x*x*y*y + A[6]*y*y + A[7]*x*y*y + A[8]*x*y);
-
-            /*Toast.makeText(
-                    getActivity().getBaseContext(),
-                    "Location changed: Lat: " + px + " Lng: "
-                            + py, Toast.LENGTH_SHORT).show();*/
 
             if (px > 0 && py > 0 && px < 5430 && py < 5375){
                 user.setPoint(new PointF(px, py));
