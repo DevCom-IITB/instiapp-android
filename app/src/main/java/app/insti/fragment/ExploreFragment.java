@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -81,6 +82,9 @@ public class ExploreFragment extends Fragment {
         // Initialize
         sessionId = ((MainActivity) getActivity()).getSessionIDHeader();
         initRecyclerViews();
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Explore");
 
         // Get all bodies
         if (allBodies.size() == 0) {
