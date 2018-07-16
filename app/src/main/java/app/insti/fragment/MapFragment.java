@@ -228,6 +228,9 @@ public class MapFragment extends Fragment implements TextWatcher,
         if (!GPSIsSetup) {
             setupGPS();
         } else if (user != null) {
+            if (!campusMapView.isAddedMarker(user)) {
+                campusMapView.addMarker(user);
+            }
             SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
             if (anim != null) anim.start();
         }
@@ -1077,7 +1080,6 @@ public class MapFragment extends Fragment implements TextWatcher,
             try {
                 locationManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER, 50, 1, locationListener);
-                campusMapView.addMarker(user);
                 GPSIsSetup = true;
             } catch (SecurityException ignored) {
                 Toast.makeText(getContext(), "No permission!", Toast.LENGTH_LONG).show();
@@ -1106,6 +1108,9 @@ public class MapFragment extends Fragment implements TextWatcher,
             int py = (int)(Zyn + A[0] + A[1]*x + A[2]*y + A[3]*x*x + A[4]*x*x*y + A[5]*x*x*y*y + A[6]*y*y + A[7]*x*y*y + A[8]*x*y);
 
             if (px > 0 && py > 0 && px < 5430 && py < 5375){
+                if (!campusMapView.isAddedMarker(user)) {
+                    campusMapView.addMarker(user);
+                }
                 user.setPoint(new PointF(px, py));
                 user.setName("You - " + (int)loc.getAccuracy() + "m");
                 if (followingUser) {
