@@ -30,6 +30,7 @@ import com.squareup.picasso.Picasso;
 import app.insti.api.UnsafeOkHttpClient;
 import app.insti.data.Body;
 import app.insti.data.User;
+import app.insti.fragment.BackHandledFragment;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.CalendarFragment;
 import app.insti.fragment.ExploreFragment;
@@ -50,7 +51,7 @@ import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BackHandledFragment.BackHandlerInterface {
 
 
     private static final String TAG = "MainActivity";
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FeedFragment feedFragment;
     private User currentUser;
     private boolean showNotifications = false;
+    private BackHandledFragment selectedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,13 +170,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (feedFragment != null && feedFragment.isVisible()) {
-            finish();
-        } else {
-            super.onBackPressed();
+        if(selectedFragment == null || !selectedFragment.onBackPressed()) {
+            // Selected fragment did not consume the back press event.
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else if (feedFragment != null && feedFragment.isVisible()) {
+                finish();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -363,5 +368,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void setSelectedFragment(BackHandledFragment backHandledFragment) {
+        this.selectedFragment = backHandledFragment;
     }
 }

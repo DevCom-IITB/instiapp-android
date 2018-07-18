@@ -10,8 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,6 +25,7 @@ import java.util.List;
 import app.insti.ActivityBuffer;
 import app.insti.Constants;
 import app.insti.ItemClickListener;
+import app.insti.MainActivity;
 import app.insti.R;
 import app.insti.adapter.PlacementBlogAdapter;
 import app.insti.api.RetrofitInterface;
@@ -37,6 +42,7 @@ import retrofit2.Response;
 public class PlacementBlogFragment extends BaseFragment {
 
     private RecyclerView placementFeedRecyclerView;
+    private PlacementBlogAdapter placementBlogAdapter;
     private SwipeRefreshLayout feedSwipeRefreshLayout;
     private AppDatabase appDatabase;
     private boolean freshBlogDisplayed = false;
@@ -61,6 +67,8 @@ public class PlacementBlogFragment extends BaseFragment {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Placement Blog");
+
+        setHasOptionsMenu(true);
 
         appDatabase = AppDatabase.getAppDatabase(getContext());
         new PlacementBlogFragment.showPlacementBlogFromDB().execute();
@@ -104,7 +112,7 @@ public class PlacementBlogFragment extends BaseFragment {
         /* Skip if we're already destroyed */
         if (getActivity() == null || getView() == null) return;
 
-        final PlacementBlogAdapter placementBlogAdapter = new PlacementBlogAdapter(result, new ItemClickListener() {
+        placementBlogAdapter = new PlacementBlogAdapter(result, new ItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
                 openWebURL(result.get(position).getLink());
@@ -187,5 +195,43 @@ public class PlacementBlogFragment extends BaseFragment {
                 displayPlacementFeed(result);
             }
         }
+    }
+
+    private class performSearch extends AsyncTask<String, Void, List<PlacementBlogPost>> {
+        @Override
+        protected List<PlacementBlogPost> doInBackground(String... args) {
+            return appDatabase.dbDao().searchPlacementBlogPosts(args[0]);
+        }
+
+        protected void onPostExecute(List<PlacementBlogPost> result) {
+            displayPlacementFeed(result);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search_view_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView sv = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        item.setActionView(sv);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                performSearch(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                System.out.println("tap");
+                return false;
+            }
+        });
+    }
+
+    private void performSearch(String query) {
+        new performSearch().execute("%" + query + "%");
+        showLoader = false;
     }
 }

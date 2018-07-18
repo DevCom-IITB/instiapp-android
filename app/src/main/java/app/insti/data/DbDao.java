@@ -31,6 +31,9 @@ public interface DbDao {
     @Query("SELECT * FROM placementBlogPosts")
     List<PlacementBlogPost> getAllPlacementBlogPosts();
 
+    @Query("SELECT * FROM placementBlogPosts WHERE title LIKE :query OR content LIKE :query")
+    List<PlacementBlogPost> searchPlacementBlogPosts(String query);
+
     @Query("SELECT * FROM trainingBlogPosts")
     List<TrainingBlogPost> getAllTrainingBlogPosts();
 
