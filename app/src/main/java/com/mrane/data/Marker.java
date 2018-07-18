@@ -81,6 +81,10 @@ public class Marker {
 	}
 
 	public static int getColor(int group) {
+		if (group == -10) {
+			return -10;
+		}
+
 		Integer[] yellowGroup = new Integer[] { HOSTELS };
 		Integer[] blueGroup = new Integer[] { DEPARTMENTS, LABS,
 				HALLS_N_AUDITORIUMS };

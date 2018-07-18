@@ -1,21 +1,30 @@
 package app.insti.fragment;
 
-import android.app.Activity;
+import android.Manifest;
 import android.content.Context;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -35,7 +44,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -49,6 +57,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.mrane.campusmap.ExpandableListAdapter;
 import com.mrane.campusmap.FuzzySearchAdapter;
 import com.mrane.campusmap.IndexFragment;
@@ -56,6 +73,7 @@ import com.mrane.campusmap.ListFragment;
 import com.mrane.campusmap.SettingsManager;
 import com.mrane.data.Building;
 import com.mrane.data.Locations;
+import com.mrane.data.Marker;
 import com.mrane.data.Room;
 import com.mrane.navigation.CardSlideListener;
 import com.mrane.navigation.SlidingUpPanelLayout;
@@ -68,6 +86,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import app.insti.Constants;
 import app.insti.MainActivity;
 import app.insti.R;
 import app.insti.api.RetrofitInterface;
@@ -76,6 +95,8 @@ import app.insti.data.Venue;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 
 public class MapFragment extends Fragment implements TextWatcher,
         TextView.OnEditorActionListener, AdapterView.OnItemClickListener, View.OnFocusChangeListener,
@@ -127,6 +148,10 @@ public class MapFragment extends Fragment implements TextWatcher,
     public SoundPool soundPool;
     public int[] soundPoolIds;
 
+    private boolean GPSIsSetup = false;
+    private boolean followingUser = false;
+    private Marker user = new Marker("You", "", 0, 0, -10, "");
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -174,18 +199,46 @@ public class MapFragment extends Fragment implements TextWatcher,
             @Override
             public void onResponse(Call<List<Venue>> call, Response<List<Venue>> response) {
                 if (response.isSuccessful()) {
-                    Locations mLocations = new Locations(response.body());
-                    data = mLocations.data;
-                    markerlist = new ArrayList<com.mrane.data.Marker>(data.values());
-                    setUpDrawer();
-                    setupMap();
+                    setupWithData(response.body());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Venue>> call, Throwable t) { }
+            public void onFailure(Call<List<Venue>> call, Throwable t) {
+                setupWithData(new ArrayList<Venue>());
+            }
         });
+    }
 
+    void setupWithData(List<Venue> venues) {
+        if (getView() == null || getActivity() == null) return;
+        Locations mLocations = new Locations(venues);
+        data = mLocations.data;
+        markerlist = new ArrayList<com.mrane.data.Marker>(data.values());
+        setUpDrawer();
+        setupMap();
+
+        // Setup locate button
+        FloatingActionButton fab = getView().findViewById(R.id.locate_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                locate();
+            }
+        });
+    }
+
+    private void locate() {
+        followingUser = true;
+        if (!GPSIsSetup) {
+            displayLocationSettingsRequest(getContext());
+        } else if (user != null) {
+            if (!campusMapView.isAddedMarker(user)) {
+                campusMapView.addMarker(user);
+            }
+            SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
+            if (anim != null) anim.start();
+        }
     }
 
     private void setupMap() {
@@ -1013,6 +1066,121 @@ public class MapFragment extends Fragment implements TextWatcher,
 
     public SlidingUpPanelLayout getSlidingLayout() {
         return slidingLayout;
+    }
+
+    public void setupGPS() {
+        if (getView() == null || getActivity() == null) return;
+        // Permissions stuff
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+        } else {
+            LocationManager locationManager = (LocationManager)
+                    getActivity().getSystemService(Context.LOCATION_SERVICE);
+            LocationListener locationListener = new MyLocationListener();
+            try {
+                locationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER, 50, 1, locationListener);
+                GPSIsSetup = true;
+                Toast.makeText(getContext(), "WARNING: Location is in Beta. Use with Caution.", Toast.LENGTH_LONG).show();
+            } catch (SecurityException ignored) {
+                Toast.makeText(getContext(), "No permission!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    /*---------- Listener class to get coordinates ------------- */
+    private class MyLocationListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location loc) {
+            if (getView() == null || getActivity() == null) return;
+
+            // Set the origin
+            double Xn = Constants.MAP_Xn, Yn = Constants.MAP_Yn, Zn = Constants.MAP_Zn, Zyn = Constants.MAP_Zyn;
+
+            double x = (loc.getLatitude() - Xn) * 1000;
+            double y = (loc.getLongitude() - Yn) * 1000;
+
+            // Pre-trained weights
+            double[] A = Constants.MAP_WEIGHTS_X;
+            int px = (int)(Zn + A[0] + A[1]*x + A[2]*y + A[3]*x*x + A[4]*x*x*y + A[5]*x*x*y*y + A[6]*y*y + A[7]*x*y*y + A[8]*x*y);
+
+            A = Constants.MAP_WEIGHTS_Y;
+            int py = (int)(Zyn + A[0] + A[1]*x + A[2]*y + A[3]*x*x + A[4]*x*x*y + A[5]*x*x*y*y + A[6]*y*y + A[7]*x*y*y + A[8]*x*y);
+
+            if (px > 0 && py > 0 && px < 5430 && py < 5375){
+                if (!campusMapView.isAddedMarker(user)) {
+                    campusMapView.addMarker(user);
+                }
+                user.setPoint(new PointF(px, py));
+                user.setName("You - " + (int)loc.getAccuracy() + "m");
+                if (followingUser) {
+                    SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
+                    if (anim != null) anim.start();
+                }
+                campusMapView.invalidate();
+            }
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {}
+
+        @Override
+        public void onProviderEnabled(String provider) {}
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
+    }
+
+    public void setFollowingUser(boolean followingUser) {
+        this.followingUser = followingUser;
+    }
+
+    private void displayLocationSettingsRequest(Context context) {
+        if (getView() == null || getActivity() == null) return;
+        LocationRequest mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10 * 1000)
+                .setFastestInterval(1 * 1000);
+        LocationSettingsRequest.Builder settingsBuilder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        settingsBuilder.setAlwaysShow(true);
+        Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(getActivity())
+                .checkLocationSettings(settingsBuilder.build());
+        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+                try {
+                    LocationSettingsResponse result = task.getResult(ApiException.class);
+                    if (result.getLocationSettingsStates().isGpsPresent() &&
+                            result.getLocationSettingsStates().isGpsUsable() &&
+                            result.getLocationSettingsStates().isLocationPresent() &&
+                            result.getLocationSettingsStates().isLocationUsable())
+                    {
+                        setupGPS();
+                    }
+                } catch (ApiException ex) {
+                    switch (ex.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            try {
+                                ResolvableApiException resolvableApiException =
+                                        (ResolvableApiException) ex;
+                                resolvableApiException
+                                        .startResolutionForResult(getActivity(), 87);
+                                setupGPS();
+                            } catch (IntentSender.SendIntentException e) { }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            Toast.makeText(getContext(), "GPS is not enabled!", Toast.LENGTH_LONG);
+                            break;
+                    }
+                }
+            }
+        });
     }
 }
 

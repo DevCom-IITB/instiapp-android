@@ -58,6 +58,7 @@ public class CampusMapView extends SubsamplingScaleImageView {
 	private Bitmap yellowLockedMarker;
 	private Bitmap greenLockedMarker;
 	private Bitmap grayLockedMarker;
+	private Bitmap userMarker;
 	private float pointerWidth = 12;
 	private float highlightedMarkerScale;
 	private Paint paint;
@@ -190,6 +191,11 @@ public class CampusMapView extends SubsamplingScaleImageView {
 				(int) w, (int) h, true);
 		grayLockedMarker = Bitmap.createScaledBitmap(grayLockedMarker, (int) w,
 				(int) h, true);
+
+        userMarker = BitmapFactory.decodeResource(getResources(),
+                drawable.marker_red_s, options);
+        userMarker = Bitmap.createScaledBitmap(userMarker, (int) w,
+                (int) h, true);
 	}
 
 	private void initPaints() {
@@ -541,7 +547,10 @@ public class CampusMapView extends SubsamplingScaleImageView {
 			markerBitmap = grayMarker;
 			if (isAddedMarker(marker))
 				markerBitmap = grayLockedMarker;
-		}
+		} else if (color == -10) {
+            if (isAddedMarker(marker))
+                markerBitmap = userMarker;
+        }
 
 		if (highlightedMarkerScale != 1.0f && isResultMarker(marker)) {
 			float w = markerBitmap.getWidth() * highlightedMarkerScale;
@@ -736,26 +745,10 @@ public class CampusMapView extends SubsamplingScaleImageView {
 		return scale;
 	}
 
-//	public void setAddedMarkers(String addedMarkerString) {
-//		addedMarkerList = new ArrayList<Marker>();
-//		String[] addedMarkerNames = addedMarkerString.split("###");
-//		for (String s : addedMarkerNames) {
-//			if (!s.equals("")) {
-//				Log.d("test123","names = " + s);
-//				if (data.containsKey(s)) {
-//					addedMarkerList.add(data.get(s));
-//				}
-//			}
-//		}
-//	}
-//
-//	public String getAddedMarkerString() {
-//		String s = "";
-//		for (Marker m : addedMarkerList) {
-//			s = s + m.name + "###";
-//		}
-//		Log.d("test123","addedMarkerStringGen = " + s);
-//		return s;
-//	}
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		MapFragment.getMainActivity().setFollowingUser(false);
+		return super.onTouchEvent(event);
+	}
 
 }
