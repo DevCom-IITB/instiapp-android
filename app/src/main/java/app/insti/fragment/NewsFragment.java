@@ -10,8 +10,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,6 +26,7 @@ import java.util.List;
 import app.insti.ActivityBuffer;
 import app.insti.Constants;
 import app.insti.ItemClickListener;
+import app.insti.MainActivity;
 import app.insti.R;
 import app.insti.adapter.NewsAdapter;
 import app.insti.api.RetrofitInterface;
@@ -41,6 +47,7 @@ public class NewsFragment extends BaseFragment {
     private AppDatabase appDatabase;
     private boolean freshNewsDisplayed = false;
     public static boolean showLoader = true;
+    private String searchQuery;
 
     public NewsFragment() {
         // Required empty public constructor
@@ -61,6 +68,8 @@ public class NewsFragment extends BaseFragment {
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("News");
 
+        setHasOptionsMenu(true);
+
         appDatabase = AppDatabase.getAppDatabase(getContext());
         new NewsFragment.showNewsFromDB().execute();
 
@@ -77,7 +86,7 @@ public class NewsFragment extends BaseFragment {
 
     private void updateNews() {
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getNews("sessionid=" + getArguments().getString(Constants.SESSION_ID), 0, 20).enqueue(new Callback<List<NewsArticle>>() {
+        retrofitInterface.getNews("sessionid=" + getArguments().getString(Constants.SESSION_ID), 0, 20, searchQuery).enqueue(new Callback<List<NewsArticle>>() {
             @Override
             public void onResponse(Call<List<NewsArticle>> call, Response<List<NewsArticle>> response) {
                 if (response.isSuccessful()) {
@@ -130,7 +139,7 @@ public class NewsFragment extends BaseFragment {
                                     loading = true;
                                     View v = getActivity().findViewById(R.id.training_feed_swipe_refresh_layout);
                                     RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-                                    retrofitInterface.getNews("sessionid=" + getArguments().getString(Constants.SESSION_ID), layoutManager.getItemCount(), 10).enqueue(new Callback<List<NewsArticle>>() {
+                                    retrofitInterface.getNews("sessionid=" + getArguments().getString(Constants.SESSION_ID), layoutManager.getItemCount(), 10, searchQuery).enqueue(new Callback<List<NewsArticle>>() {
                                         @Override
                                         public void onResponse(Call<List<NewsArticle>> call, Response<List<NewsArticle>> response) {
 
@@ -188,5 +197,42 @@ public class NewsFragment extends BaseFragment {
                 displayNews(result);
             }
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search_view_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView sv = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        item.setActionView(sv);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                performSearch(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText)){
+                    //Text is cleared, do your thing
+                    searchQuery = null;
+                    updateNews();
+                    showLoader = true;
+                    return true;
+                } else if (newText.length() >= 3) {
+                    performSearch(newText);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void performSearch(String query) {
+        searchQuery = query;
+        updateNews();
+        showLoader = false;
     }
 }

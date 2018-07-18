@@ -12,12 +12,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,7 @@ public class PlacementBlogFragment extends BaseFragment {
     private AppDatabase appDatabase;
     private boolean freshBlogDisplayed = false;
     public static boolean showLoader = true;
+    private String searchQuery;
 
 
     public PlacementBlogFragment() {
@@ -86,7 +89,7 @@ public class PlacementBlogFragment extends BaseFragment {
 
     private void updatePlacementFeed() {
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getPlacementBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), 0, 20).enqueue(new Callback<List<PlacementBlogPost>>() {
+        retrofitInterface.getPlacementBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), 0, 20, searchQuery).enqueue(new Callback<List<PlacementBlogPost>>() {
             @Override
             public void onResponse(Call<List<PlacementBlogPost>> call, Response<List<PlacementBlogPost>> response) {
                 if (response.isSuccessful()) {
@@ -137,7 +140,7 @@ public class PlacementBlogFragment extends BaseFragment {
                                     loading = true;
                                     View v = getActivity().findViewById(R.id.placement_feed_swipe_refresh_layout);
                                     RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-                                    retrofitInterface.getPlacementBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), layoutManager.getItemCount(), 10).enqueue(new Callback<List<PlacementBlogPost>>() {
+                                    retrofitInterface.getPlacementBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), layoutManager.getItemCount(), 10, searchQuery).enqueue(new Callback<List<PlacementBlogPost>>() {
                                         @Override
                                         public void onResponse(Call<List<PlacementBlogPost>> call, Response<List<PlacementBlogPost>> response) {
 
@@ -197,17 +200,6 @@ public class PlacementBlogFragment extends BaseFragment {
         }
     }
 
-    private class performSearch extends AsyncTask<String, Void, List<PlacementBlogPost>> {
-        @Override
-        protected List<PlacementBlogPost> doInBackground(String... args) {
-            return appDatabase.dbDao().searchPlacementBlogPosts(args[0]);
-        }
-
-        protected void onPostExecute(List<PlacementBlogPost> result) {
-            displayPlacementFeed(result);
-        }
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_view_menu, menu);
@@ -224,14 +216,24 @@ public class PlacementBlogFragment extends BaseFragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                System.out.println("tap");
+                if (TextUtils.isEmpty(newText)){
+                    //Text is cleared, do your thing
+                    searchQuery = null;
+                    updatePlacementFeed();
+                    showLoader = true;
+                    return true;
+                } else if (newText.length() >= 3) {
+                    performSearch(newText);
+                    return true;
+                }
                 return false;
             }
         });
     }
 
     private void performSearch(String query) {
-        new performSearch().execute("%" + query + "%");
+        searchQuery = query;
+        updatePlacementFeed();
         showLoader = false;
     }
 }

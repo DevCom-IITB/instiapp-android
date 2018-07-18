@@ -10,8 +10,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,6 +26,7 @@ import java.util.List;
 import app.insti.ActivityBuffer;
 import app.insti.Constants;
 import app.insti.ItemClickListener;
+import app.insti.MainActivity;
 import app.insti.R;
 import app.insti.adapter.TrainingBlogAdapter;
 import app.insti.api.RetrofitInterface;
@@ -41,6 +47,7 @@ public class TrainingBlogFragment extends BaseFragment {
     private AppDatabase appDatabase;
     private boolean freshBlogDisplayed = false;
     public static boolean showLoader = true;
+    private String searchQuery;
 
 
     public TrainingBlogFragment() {
@@ -62,6 +69,8 @@ public class TrainingBlogFragment extends BaseFragment {
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Training Blog");
 
+        setHasOptionsMenu(true);
+
         appDatabase = AppDatabase.getAppDatabase(getContext());
         new TrainingBlogFragment.showTrainingBlogFromDB().execute();
 
@@ -78,7 +87,7 @@ public class TrainingBlogFragment extends BaseFragment {
 
     private void updateTrainingFeed() {
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getTrainingBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), 0, 20).enqueue(new Callback<List<TrainingBlogPost>>() {
+        retrofitInterface.getTrainingBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), 0, 20, searchQuery).enqueue(new Callback<List<TrainingBlogPost>>() {
             @Override
             public void onResponse(Call<List<TrainingBlogPost>> call, Response<List<TrainingBlogPost>> response) {
                 if (response.isSuccessful()) {
@@ -129,7 +138,7 @@ public class TrainingBlogFragment extends BaseFragment {
                                     loading = true;
                                     View v = getActivity().findViewById(R.id.training_feed_swipe_refresh_layout);
                                     RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-                                    retrofitInterface.getTrainingBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), layoutManager.getItemCount(), 10).enqueue(new Callback<List<TrainingBlogPost>>() {
+                                    retrofitInterface.getTrainingBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), layoutManager.getItemCount(), 10, searchQuery).enqueue(new Callback<List<TrainingBlogPost>>() {
                                         @Override
                                         public void onResponse(Call<List<TrainingBlogPost>> call, Response<List<TrainingBlogPost>> response) {
 
@@ -187,5 +196,42 @@ public class TrainingBlogFragment extends BaseFragment {
                 displayTrainingFeed(result);
             }
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search_view_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView sv = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        item.setActionView(sv);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                performSearch(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText)){
+                    //Text is cleared, do your thing
+                    searchQuery = null;
+                    updateTrainingFeed();
+                    showLoader = true;
+                    return true;
+                } else if (newText.length() >= 3) {
+                    performSearch(newText);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void performSearch(String query) {
+        searchQuery = query;
+        updateTrainingFeed();
+        showLoader = false;
     }
 }
