@@ -318,8 +318,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return;
             case MY_PERMISSIONS_REQUEST_ACCESS_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    MapFragment mapFragment = new MapFragment();
-                    updateFragment(mapFragment);
+                    MapFragment.getMainActivity().setupGPS();
                 } else {
                     Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
                     toast.show();
