@@ -8,14 +8,14 @@ InstiApp features the Placement Blog, Upcoming Events and general information on
 
 ### Features:
 * Events Directory
+* News
+* Explore
+* Mess Menu
 * Placement Blog
-* Mess Menus
 * Internship Blog
-* Inter Hostel GC rankings
-* Academic Timetable
-* Academic Calendar
-* Complaint Management System
+* Calendar
 * Map
+* Quick Links
 
 A more detailed list of features can be found [here](https://docs.google.com/document/d/1L4wzuw88JrLyBt1DvnjavtAwhJkXgNSIxJG3yBsLwQ0/edit?usp=sharing).
 
