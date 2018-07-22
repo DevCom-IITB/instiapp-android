@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId "app.insti"
         manifestPlaceholders 'appAuthRedirectScheme': 'https'
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 8
         versionName "1.0.3"
