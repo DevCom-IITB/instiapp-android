@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="app.insti.fragment.QuickLinksFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            style="@style/QuickLinksHeading"
+            android:text="CMS" />
+
+        <TextView
+            android:id="@+id/button_CMS"
+            style="@style/QuickLink"
+            android:text="CMS" />
+
+        <TextView
+            android:id="@+id/button_CMSMaint"
+            style="@style/QuickLink"
+            android:text="CMS - Maintainance" />
+
+        <TextView
+            android:id="@+id/button_CMSNet"
+            style="@style/QuickLink"
+            android:text="CMS - Network" />
+
+        <TextView
+            style="@style/QuickLinksHeading"
+            android:text="Academics" />
+
+        <TextView
+            android:id="@+id/button_ASC"
+            style="@style/QuickLink"
+            android:text="ASC" />
+
+        <TextView
+            android:id="@+id/button_ASCExt"
+            style="@style/QuickLink"
+            android:text="External ASC" />
+
+        <TextView
+            android:id="@+id/button_Moodle"
+            style="@style/QuickLink"
+            android:text="Moodle" />
+
+        <TextView
+            android:id="@+id/button_Internship"
+            style="@style/QuickLink"
+            android:text="Internship Login" />
+
+        <TextView
+            android:id="@+id/button_Placement"
+            style="@style/QuickLink"
+            android:text="Placement Login" />
+
+        <TextView
+            android:id="@+id/button_Library"
+            style="@style/QuickLink"
+            android:text="Central Library" />
+
+        <TextView
+            style="@style/QuickLinksHeading"
+            android:text="Calendar" />
+
+        <TextView
+            android:id="@+id/button_Acad_calendar"
+            style="@style/QuickLink"
+            android:text="Academic Calendar" />
+
+        <TextView
+            android:id="@+id/button_Acad_timetable"
+            style="@style/QuickLink"
+            android:text="Academic Timetable" />
+
+        <TextView
+            android:id="@+id/button_Holidays"
+            style="@style/QuickLink"
+            android:text="Holidays List" />
+
+        <TextView
+            android:id="@+id/button_Circulars"
+            style="@style/QuickLink"
+            android:text="Circulars" />
+
+        <TextView
+            android:id="@+id/button_Courselist"
+            style="@style/QuickLink"
+            android:text="CMS Maintainance" />
+
+        <TextView
+            style="@style/QuickLinksHeading"
+            android:text="Services" />
+
+        <TextView
+            android:id="@+id/button_GPO"
+            style="@style/QuickLink"
+            android:text="GPO" />
+
+        <TextView
+            android:id="@+id/button_CAMP"
+            style="@style/QuickLink"
+            android:text="CAMP" />
+
+        <TextView
+            android:id="@+id/button_MSStore"
+            style="@style/QuickLink"
+            android:text="Microsoft Store" />
+
+        <TextView
+            android:id="@+id/button_BigHomeCloud"
+            style="@style/QuickLink"
+            android:text="BigHome Cloud" />
+
+        <TextView
+            style="@style/QuickLinksHeading"
+            android:text="Miscellaneous" />
+
+        <TextView
+            android:id="@+id/button_Intercom"
+            style="@style/QuickLink"
+            android:text="Intercom Extensions" />
+
+        <TextView
+            android:id="@+id/button_Hospital"
+            style="@style/QuickLink"
+            android:text="Hospital" />
+
+        <TextView
+            android:id="@+id/button_VPN"
+            style="@style/QuickLink"
+            android:text="VPN Guide" />
+
+    </LinearLayout>
+</ScrollView>

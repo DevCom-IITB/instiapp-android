@@ -1,16 +1,13 @@
 package app.insti;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -42,7 +39,7 @@ import app.insti.fragment.NewsFragment;
 import app.insti.fragment.NotificationsFragment;
 import app.insti.fragment.PlacementBlogFragment;
 import app.insti.fragment.ProfileFragment;
-import app.insti.fragment.QLinksFragment;
+import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 
@@ -258,8 +255,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 updateFragment(calendarFragment);
                 break;
             case R.id.nav_qlinks:
-                QLinksFragment qLinksFragment = new QLinksFragment();
-                updateFragment(qLinksFragment);
+                QuickLinksFragment quickLinksFragment = new QuickLinksFragment();
+                updateFragment(quickLinksFragment);
                 break;
             case R.id.nav_map:
                 MapFragment mapFragment = new MapFragment();

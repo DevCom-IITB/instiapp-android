@@ -153,7 +153,7 @@ public class MessMenuFragment extends BaseFragment {
         /* Sort by day starting today
          * This could have been done in a much simpler way with Java 8 :(
          * Don't try to fix this */
-        final List<MessMenu> sortedMenus = new ArrayList();
+        final List<MessMenu> sortedMenus = new ArrayList<>();
         final Calendar calendar = Calendar.getInstance(Locale.UK);
         int today = calendar.get(Calendar.DAY_OF_WEEK) - 2;
         if (today == -1) { today = 6; }
