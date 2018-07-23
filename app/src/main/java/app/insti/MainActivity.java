@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         initNavigationView();
         if (session.isLoggedIn()) {
-            currentUser = User.fromString(session.pref.getString(Constants.CURRENT_USER, "Error"));
+            currentUser = User.fromString(session.pref.getString(Constants.CURRENT_USER, ""));
             updateNavigationView();
         }
     }
@@ -299,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (bundle == null) {
             bundle = new Bundle();
         }
-        bundle.putString(Constants.SESSION_ID, session.pref.getString(Constants.SESSION_ID, "Error"));
+        bundle.putString(Constants.SESSION_ID, session.pref.getString(Constants.SESSION_ID, ""));
         if (fragment instanceof MessMenuFragment)
             bundle.putString(Constants.USER_HOSTEL, session.isLoggedIn() && currentUser.getHostel() != null ? currentUser.getHostel() : "1");
         if (fragment instanceof SettingsFragment && session.isLoggedIn())
