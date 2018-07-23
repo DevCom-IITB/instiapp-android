@@ -1,4 +1,4 @@
-package com.iitb.moodindigo.mi2016;
+package app.insti.notifications;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

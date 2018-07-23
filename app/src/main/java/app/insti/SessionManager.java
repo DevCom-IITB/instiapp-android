@@ -36,9 +36,14 @@ public class SessionManager {
         editor = pref.edit();
         editor.putBoolean(Constants.IS_LOGGED_IN, true);
         editor.putString(Constants.GCM_ID, gcmId);
+        editor.putString(Constants.USER_ID, currentUser.getUserID());
         editor.putString(Constants.CURRENT_USER, currentUser.toString());
         editor.putString(Constants.SESSION_ID, sessionID);
         editor.commit();
+    }
+
+    public String getUserID() {
+        return pref.getString(Constants.USER_ID, "");
     }
 
     public String getSessionID() {

@@ -1,4 +1,4 @@
-package com.iitb.moodindigo.mi2016;
+package app.insti.notifications;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -6,20 +6,27 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.iitb.moodindigo.mi2016.ServerConnection.GsonModels;
-
-import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import app.insti.Constants;
+import app.insti.MainActivity;
+import app.insti.R;
+import app.insti.SessionManager;
+import app.insti.api.RetrofitInterface;
+import app.insti.api.ServiceGenerator;
+import app.insti.data.Event;
+import app.insti.data.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class NotificationIntentService extends IntentService {
 
@@ -27,8 +34,8 @@ public class NotificationIntentService extends IntentService {
     private static final String ACTION_DELETE = "ACTION_DELETE";
     private static final String ACTION_NAVIGATE = "ACTION_NAVIGATE";
     private static final String ACTION_NOT_GOING = "ACTION_NOT_GOING";
+    public static final String ACTION_OPEN_EVENT = "ACTION_OPEN_EVENT";
     private static int NOTIFICATION_ID = 1;
-    private SharedPreferences.Editor goingSharedPreferencesEditor;
     private NotificationManager manager;
 
     public NotificationIntentService() {
@@ -63,17 +70,33 @@ public class NotificationIntentService extends IntentService {
             if (ACTION_DELETE.equals(action)) {
                 processDeleteNotification(intent);
             }
-            if ("ACTION_NOT_GOING".equals(action)) {
-                if (Cache.getGoingEventsList() != null) {
-                    GsonModels.Event event = (new Gson().fromJson(intent.getStringExtra("EVENT_JSON"), GsonModels.Event.class));
-                    Cache.removeFromGoingList(event);
-                    goingSharedPreferencesEditor = this.getSharedPreferences("GOING", Context.MODE_PRIVATE).edit();
-                    String goingEventsListJson = (new Gson()).toJson(Cache.getGoingEventsList());
-                    goingSharedPreferencesEditor.putString("GOING_LIST", goingEventsListJson);
-                    goingSharedPreferencesEditor.apply();
-                }
+            if (ACTION_NOT_GOING.equals(action)) {
+                String eventID = intent.getStringExtra(Constants.EVENT_ID);
+                String sessionID = intent.getStringExtra(Constants.SESSION_ID);
+
+                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                retrofitInterface.updateUserEventStatus("sessionid=" + sessionID, eventID, Constants.STATUS_NOT_GOING).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+
+                    }
+                });
                 manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
                 manager.cancel(intent.getIntExtra("NOTIFICATION_ID", -1));
+            }
+            if (ACTION_NAVIGATE.equals(action)) {
+                manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.cancel(intent.getIntExtra("NOTIFICATION_ID", -1));
+                double latitude = intent.getDoubleExtra(Constants.EVENT_LATITUDE, 0);
+                double longitude = intent.getDoubleExtra(Constants.EVENT_LONGITUDE, 0);
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude + "&mode=w");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                startActivity(mapIntent);
             }
         } finally {
             WakefulBroadcastReceiver.completeWakefulIntent(intent);
@@ -85,62 +108,75 @@ public class NotificationIntentService extends IntentService {
     }
 
     private void processStartNotification() {
-        // Do something. For example, fetch fresh data from backend to create a rich notification?
+        SessionManager sessionManager = new SessionManager(this);
+        String userID = sessionManager.getUserID();
+        final String sessionID = sessionManager.getSessionID();
 
-        SharedPreferences goingPreferences = getApplicationContext().getSharedPreferences("GOING", Context.MODE_PRIVATE);
-        String goingList = goingPreferences.getString("GOING_LIST", null);
-        Type type = new TypeToken<List<GsonModels.Event>>() {
-        }.getType();
-        List<GsonModels.Event> goingListGson = (new Gson()).fromJson(goingList, type);
-        if (goingListGson == null) {
-            ;
-        } else {
-            for (int i = 0; i < goingListGson.size(); i++) {
-                GsonModels.Event event = goingListGson.get(i);
-                long timediff = getDateDiff(new Date(), event.getDate(), TimeUnit.MINUTES);
-                if (timediff <= 30 && timediff > 0) { // Change this to 30*10000 for testing
-                    NOTIFICATION_ID = (int) Long.parseLong(event.get_id().substring(6, 11), 16);
-                    final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-                    builder.setContentTitle(event.getTitle())
-                            .setAutoCancel(true)
-                            .setColor(getResources().getColor(R.color.yellow))
-                            .setContentText("Event is about to start in " + getDateDiff(new Date(), event.getDate(), TimeUnit.MINUTES) + ((getDateDiff(new Date(), event.getDate(), TimeUnit.MINUTES) == 1) ? " minute." : " minutes."))
-                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_event_white_24dp))
-                            .setSmallIcon(R.drawable.ic_event_white_24dp);
+        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        retrofitInterface.getUser("sessionid=" + sessionID, userID).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+                    List<Event> goingEventList = user.getUserGoingEvents();
+                    if (goingEventList != null) {
+                        for (Event event : goingEventList) {
+                            long timediff = getDateDiff(new Date(), event.getEventStartTime(), TimeUnit.MINUTES);
+                            if (timediff <= 30 && timediff > 0) { // Change this to 30*10000 for testing
+                                NOTIFICATION_ID = event.getEventID().hashCode();
+                                final NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+                                builder.setContentTitle(event.getEventName())
+                                        .setAutoCancel(true)
+                                        .setColor(getResources().getColor(R.color.colorAccent))
+                                        .setContentText("Event is about to start in " + getDateDiff(new Date(), event.getEventStartTime(), TimeUnit.MINUTES) + ((getDateDiff(new Date(), event.getEventStartTime(), TimeUnit.MINUTES) == 1) ? " minute." : " minutes."))
+                                        .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.lotus_white))
+                                        .setSmallIcon(R.drawable.lotus_white);
 
-                    Intent intent = new Intent(this, MainActivity.class);
-                    intent.setAction("OPEN_EVENT");
-                    String eventJson = (new Gson()).toJson(event);
-                    intent.putExtra("EVENT_JSON", eventJson);
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                intent.setAction(ACTION_OPEN_EVENT);
+                                intent.putExtra(Constants.SESSION_ID, sessionID);
+                                intent.putExtra(Constants.EVENT_JSON, event.toString());
 
-                    PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                            NOTIFICATION_ID,
-                            intent,
-                            PendingIntent.FLAG_UPDATE_CURRENT);
-                    builder.setContentIntent(pendingIntent);
-                    builder.setDeleteIntent(NotificationEventReceiver.getDeleteIntent(this));
+                                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
+                                        NOTIFICATION_ID,
+                                        intent,
+                                        PendingIntent.FLAG_UPDATE_CURRENT);
+                                builder.setContentIntent(pendingIntent);
+                                builder.setDeleteIntent(NotificationEventReceiver.getDeleteIntent(getApplicationContext()));
 
-                    Intent navigateIntent = new Intent(this, MainActivity.class);
-                    navigateIntent.setAction(ACTION_NAVIGATE);
-                    navigateIntent.putExtra("EVENT_JSON", eventJson);
-                    navigateIntent.putExtra("NOTIFICATION_ID", NOTIFICATION_ID);
-                    PendingIntent navigatePendingIntent = PendingIntent.getActivity(this, 0, navigateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    builder.addAction(R.drawable.ic_navigation_white_24dp, "Navigate", navigatePendingIntent);
+                                Intent navigateIntent = new Intent(getApplicationContext(), NotificationIntentService.class);
+                                navigateIntent.setAction(ACTION_NAVIGATE);
+                                navigateIntent.putExtra(Constants.EVENT_ID, event.getEventID());
+                                navigateIntent.putExtra(Constants.EVENT_LATITUDE, event.getEventVenues().get(0).getVenueLatitude());
+                                navigateIntent.putExtra(Constants.EVENT_LONGITUDE, event.getEventVenues().get(0).getVenueLongitude());
+                                navigateIntent.putExtra("NOTIFICATION_ID", NOTIFICATION_ID);
+                                PendingIntent navigatePendingIntent = PendingIntent.getService(getApplicationContext(), 0, navigateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                builder.addAction(R.drawable.baseline_navigation_white_24, "Navigate", navigatePendingIntent);
 
-                    Intent notGoingIntent = new Intent(this, NotificationIntentService.class);
-                    notGoingIntent.setAction(ACTION_NOT_GOING);
-                    notGoingIntent.putExtra("EVENT_JSON", eventJson);
-                    notGoingIntent.putExtra("NOTIFICATION_ID", NOTIFICATION_ID);
-                    PendingIntent notGoingPendingIntent = PendingIntent.getService(this, 0, notGoingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    builder.addAction(R.drawable.ic_close_white_24dp, "Not Going", notGoingPendingIntent);
+                                Intent notGoingIntent = new Intent(getApplicationContext(), NotificationIntentService.class);
+                                notGoingIntent.setAction(ACTION_NOT_GOING);
+                                notGoingIntent.putExtra(Constants.SESSION_ID, sessionID);
+                                notGoingIntent.putExtra(Constants.EVENT_ID, event.getEventID());
+                                notGoingIntent.putExtra("NOTIFICATION_ID", NOTIFICATION_ID);
+                                PendingIntent notGoingPendingIntent = PendingIntent.getService(getApplicationContext(), 0, notGoingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                builder.addAction(R.drawable.baseline_close_white_24, "Not Going", notGoingPendingIntent);
 
-                    manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-                    Notification notification = builder.build();
-                    notification.defaults |= Notification.DEFAULT_SOUND;
-                    notification.defaults |= Notification.DEFAULT_VIBRATE;
-                    manager.notify(NOTIFICATION_ID, notification);
+                                manager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                                Notification notification = builder.build();
+                                notification.defaults |= Notification.DEFAULT_SOUND;
+                                notification.defaults |= Notification.DEFAULT_VIBRATE;
+                                manager.notify(NOTIFICATION_ID, notification);
+                            }
+
+                        }
+                    }
                 }
             }
-        }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
     }
 }

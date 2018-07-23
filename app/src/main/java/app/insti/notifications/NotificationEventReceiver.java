@@ -1,4 +1,4 @@
-package com.iitb.moodindigo.mi2016;
+package app.insti.notifications;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -15,14 +15,13 @@ NotificationEventReceiver extends WakefulBroadcastReceiver {
 
     private static final String ACTION_START_NOTIFICATION_SERVICE = "ACTION_START_NOTIFICATION_SERVICE";
     private static final String ACTION_DELETE_NOTIFICATION = "ACTION_DELETE_NOTIFICATION";
-    private static final int NOTIFICATIONS_INTERVAL_IN_HOURS = 1;
 
     public static void setupAlarm(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent alarmIntent = getStartPendingIntent(context);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
                 getTriggerAt(new Date()),
-                1000 * 60 * 15, //Change this to 1000 * 60 for testing => runs every minute
+                1000 * 60 * 10, //Change this to 1000 * 60 for testing => runs every minute
                 alarmIntent);
     }
 

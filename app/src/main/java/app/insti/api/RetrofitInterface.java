@@ -40,11 +40,11 @@ public interface RetrofitInterface {
     @GET("events")
     Call<NewsFeedResponse> getNewsFeed(@Header("Cookie") String sessionId);
 
-    @GET("locations")
-    Call<List<Venue>> getAllVenues();
-
     @GET("events")
     Call<NewsFeedResponse> getEventsBetweenDates(@Header("Cookie") String sessionId, @Query("start") String start, @Query("end") String end);
+
+    @GET("locations")
+    Call<List<Venue>> getAllVenues();
 
     @GET("users/{uuid}")
     Call<User> getUser(@Header("Cookie") String sessionId, @Path("uuid") String uuid);

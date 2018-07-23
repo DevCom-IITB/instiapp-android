@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
@@ -209,5 +210,10 @@ public class Event {
 
     public void setEventUserUes(int eventUserUes) {
         this.eventUserUes = eventUserUes;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

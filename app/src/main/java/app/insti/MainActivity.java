@@ -26,10 +26,12 @@ import com.squareup.picasso.Picasso;
 
 import app.insti.api.UnsafeOkHttpClient;
 import app.insti.data.Body;
+import app.insti.data.Event;
 import app.insti.data.User;
 import app.insti.fragment.BackHandledFragment;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.CalendarFragment;
+import app.insti.fragment.EventFragment;
 import app.insti.fragment.ExploreFragment;
 import app.insti.fragment.FeedFragment;
 import app.insti.fragment.MapFragment;
@@ -42,10 +44,12 @@ import app.insti.fragment.ProfileFragment;
 import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
+import app.insti.notifications.NotificationEventReceiver;
 
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
+import static app.insti.notifications.NotificationIntentService.ACTION_OPEN_EVENT;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BackHandledFragment.BackHandlerInterface {
@@ -80,8 +84,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         feedFragment = new FeedFragment();
         updateFragment(feedFragment);
 
-        Intent appLinkIntent = getIntent();
-        handleIntent(appLinkIntent);
+        Intent intent = getIntent();
+        if (intent != null) {
+            if (intent.getAction() != null && intent.getAction().equals(ACTION_OPEN_EVENT)) {
+                EventFragment eventFragment = new EventFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.EVENT_JSON, intent.getStringExtra(Constants.EVENT_JSON));
+                eventFragment.setArguments(bundle);
+                updateFragment(eventFragment);
+            } else {
+                handleIntent(intent);
+            }
+        }
+
+        NotificationEventReceiver.setupAlarm(getApplicationContext());
     }
 
     private void handleIntent(Intent appLinkIntent) {
