@@ -236,8 +236,12 @@ public class MapFragment extends Fragment implements TextWatcher,
             if (!campusMapView.isAddedMarker(user)) {
                 campusMapView.addMarker(user);
             }
-            SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
-            if (anim != null) anim.start();
+            if (user.getPoint().x == 0) {
+                Toast.makeText(getContext(), "Searching for GPS!", Toast.LENGTH_LONG).show();
+            } else {
+                SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
+                if (anim != null) anim.start();
+            }
         }
     }
 
@@ -1175,7 +1179,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                             } catch (IntentSender.SendIntentException e) { }
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            Toast.makeText(getContext(), "GPS is not enabled!", Toast.LENGTH_LONG);
+                            Toast.makeText(getContext(), "GPS is not enabled!", Toast.LENGTH_LONG).show();
                             break;
                     }
                 }
