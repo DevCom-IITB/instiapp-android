@@ -99,11 +99,12 @@
                     <Button
                         android:id="@+id/follow_button"
                         style="?android:attr/buttonBarButtonStyle"
+                        android:textAllCaps="false"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="0dp"
                         android:layout_weight="1"
-                        android:text="Follow"
+                        android:text="FOLLOW"
                         android:textColor="@color/secondaryTextColor" />
                 </LinearLayout>
 

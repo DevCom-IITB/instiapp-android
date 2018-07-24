@@ -235,8 +235,8 @@ public class EventFragment extends BackHandledFragment {
         goingButton.setBackgroundColor(getResources().getColor(status == Constants.STATUS_GOING ? R.color.colorAccent : R.color.colorWhite));
 
         // Show badges
-        interestedButton.setText(getCountBadgeSpannable("Interested", event.getEventInterestedCount()));
-        goingButton.setText(getCountBadgeSpannable("Going", event.getEventGoingCount()));
+        interestedButton.setText(getCountBadgeSpannable("INTERESTED", event.getEventInterestedCount()));
+        goingButton.setText(getCountBadgeSpannable("GOING", event.getEventGoingCount()));
     }
 
     /**
