@@ -98,6 +98,11 @@
             android:text="Services" />
 
         <TextView
+            android:id="@+id/button_WebMail"
+            style="@style/QuickLink"
+            android:text="WebMail" />
+
+        <TextView
             android:id="@+id/button_GPO"
             style="@style/QuickLink"
             android:text="GPO" />
