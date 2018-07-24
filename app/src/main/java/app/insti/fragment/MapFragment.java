@@ -15,6 +15,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -91,6 +92,7 @@ import app.insti.MainActivity;
 import app.insti.R;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
+import app.insti.data.AppDatabase;
 import app.insti.data.Venue;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -102,6 +104,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         TextView.OnEditorActionListener, AdapterView.OnItemClickListener, View.OnFocusChangeListener,
         View.OnTouchListener, ExpandableListView.OnChildClickListener {
     private static MapFragment mainactivity;
+    private AppDatabase appDatabase;
     private SettingsManager settingsManager;
     private FuzzySearchAdapter adapter;
     private ExpandableListAdapter expAdapter;
@@ -148,6 +151,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     public SoundPool soundPool;
     public int[] soundPoolIds;
 
+    private boolean locationsShown = false;
     private boolean GPSIsSetup = false;
     private boolean followingUser = false;
     private Marker user = new Marker("You", "", 0, 0, -10, "");
@@ -194,20 +198,55 @@ public class MapFragment extends Fragment implements TextWatcher,
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("InstiMap");
 
+        /* Initialize */
+        appDatabase = AppDatabase.getAppDatabase(getContext());
+
+        getAPILocations();
+        new showLocationsFromDB().execute();
+    }
+
+    private void getAPILocations() {
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
         retrofitInterface.getAllVenues().enqueue(new Callback<List<Venue>>() {
             @Override
             public void onResponse(Call<List<Venue>> call, Response<List<Venue>> response) {
                 if (response.isSuccessful()) {
-                    setupWithData(response.body());
+                    new updateDatabase().execute(response.body());
+                    if (!locationsShown) {
+                        setupWithData(response.body());
+                        locationsShown = true;
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<List<Venue>> call, Throwable t) {
-                setupWithData(new ArrayList<Venue>());
+                // Do nothing
             }
         });
+    }
+
+    private class updateDatabase extends AsyncTask<List<Venue>, Void, Integer> {
+        @Override
+        protected Integer doInBackground(List<Venue>... venues) {
+            appDatabase.dbDao().deleteVenues();
+            appDatabase.dbDao().insertVenues(venues[0]);
+            return 1;
+        }
+    }
+
+    private class showLocationsFromDB extends AsyncTask<String, Void, List<Venue>> {
+        @Override
+        protected List<Venue> doInBackground(String... events) {
+            return appDatabase.dbDao().getAllVenues();
+        }
+
+        protected void onPostExecute(List<Venue> result) {
+            if (!locationsShown && result.size() > 0) {
+                setupWithData(result);
+                locationsShown = true;
+            }
+        }
     }
 
     void setupWithData(List<Venue> venues) {
