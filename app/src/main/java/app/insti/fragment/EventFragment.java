@@ -271,6 +271,18 @@ public class EventFragment extends BackHandledFragment {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
+                            /* TODO: Find a better way to  change counts */
+                            if (endStatus == 0) {
+                                if (event.getEventUserUes() == 1) { event.setEventInterestedCount(event.getEventInterestedCount() - 1); }
+                                if (event.getEventUserUes() == 2) { event.setEventGoingCount(event.getEventGoingCount() - 1); }
+                            } else if (endStatus == 1) {
+                                if (event.getEventUserUes() != 1) { event.setEventInterestedCount(event.getEventInterestedCount() + 1); }
+                                if (event.getEventUserUes() == 2) { event.setEventGoingCount(event.getEventGoingCount() - 1); }
+                            } else if (endStatus == 2) {
+                                if (event.getEventUserUes() != 2) { event.setEventGoingCount(event.getEventGoingCount() + 1); }
+                                if (event.getEventUserUes() == 1) { event.setEventInterestedCount(event.getEventInterestedCount() - 1); }
+                            }
+
                             event.setEventUserUes(endStatus);
                             new updateDbEvent().execute(event);
                             setFollowButtonColors(endStatus);
