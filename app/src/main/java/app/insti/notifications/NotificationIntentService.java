@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
 import java.util.Date;
@@ -62,44 +61,40 @@ public class NotificationIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.d(getClass().getSimpleName(), "onHandleIntent, started handling a notification event");
-        try {
-            String action = intent.getAction();
-            if (ACTION_START.equals(action)) {
-                processStartNotification();
-            }
-            if (ACTION_DELETE.equals(action)) {
-                processDeleteNotification(intent);
-            }
-            if (ACTION_NOT_GOING.equals(action)) {
-                String eventID = intent.getStringExtra(Constants.EVENT_ID);
-                String sessionID = intent.getStringExtra(Constants.SESSION_ID);
+        String action = intent.getAction();
+        if (ACTION_START.equals(action)) {
+            processStartNotification();
+        }
+        if (ACTION_DELETE.equals(action)) {
+            processDeleteNotification(intent);
+        }
+        if (ACTION_NOT_GOING.equals(action)) {
+            String eventID = intent.getStringExtra(Constants.EVENT_ID);
+            String sessionID = intent.getStringExtra(Constants.SESSION_ID);
 
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-                retrofitInterface.updateUserEventStatus("sessionid=" + sessionID, eventID, Constants.STATUS_NOT_GOING).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
+            RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+            retrofitInterface.updateUserEventStatus("sessionid=" + sessionID, eventID, Constants.STATUS_NOT_GOING).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
 
-                    }
+                }
 
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
 
-                    }
-                });
-                manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-                manager.cancel(intent.getIntExtra("NOTIFICATION_ID", -1));
-            }
-            if (ACTION_NAVIGATE.equals(action)) {
-                manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-                manager.cancel(intent.getIntExtra("NOTIFICATION_ID", -1));
-                double latitude = intent.getDoubleExtra(Constants.EVENT_LATITUDE, 0);
-                double longitude = intent.getDoubleExtra(Constants.EVENT_LONGITUDE, 0);
-                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude + "&mode=w");
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                startActivity(mapIntent);
-            }
-        } finally {
-            WakefulBroadcastReceiver.completeWakefulIntent(intent);
+                }
+            });
+            manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.cancel(intent.getIntExtra("NOTIFICATION_ID", -1));
+        }
+        if (ACTION_NAVIGATE.equals(action)) {
+            manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.cancel(intent.getIntExtra("NOTIFICATION_ID", -1));
+            double latitude = intent.getDoubleExtra(Constants.EVENT_LATITUDE, 0);
+            double longitude = intent.getDoubleExtra(Constants.EVENT_LONGITUDE, 0);
+            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude + "&mode=w");
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            startActivity(mapIntent);
         }
     }
 

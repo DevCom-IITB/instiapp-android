@@ -2,6 +2,7 @@ package app.insti.notifications;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
@@ -10,8 +11,9 @@ import android.util.Log;
 import java.util.Calendar;
 import java.util.Date;
 
-public class
-NotificationEventReceiver extends WakefulBroadcastReceiver {
+import static android.support.v4.content.ContextCompat.startForegroundService;
+
+public class NotificationEventReceiver extends BroadcastReceiver {
 
     private static final String ACTION_START_NOTIFICATION_SERVICE = "ACTION_START_NOTIFICATION_SERVICE";
     private static final String ACTION_DELETE_NOTIFICATION = "ACTION_DELETE_NOTIFICATION";
@@ -57,7 +59,7 @@ NotificationEventReceiver extends WakefulBroadcastReceiver {
         }
 
         if (serviceIntent != null) {
-            startWakefulService(context, serviceIntent);
+            startForegroundService(context, serviceIntent);
         }
     }
 }
