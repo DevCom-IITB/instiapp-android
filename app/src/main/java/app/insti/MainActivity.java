@@ -3,6 +3,7 @@ package app.insti;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -97,7 +98,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        NotificationEventReceiver.setupAlarm(getApplicationContext());
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O)
+            NotificationEventReceiver.setupAlarm(getApplicationContext());
     }
 
     private void handleIntent(Intent appLinkIntent) {
