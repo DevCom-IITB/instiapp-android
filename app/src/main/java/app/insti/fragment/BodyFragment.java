@@ -217,7 +217,7 @@ public class BodyFragment extends BackHandledFragment {
         /* Check if user is already following
          * Initialize follow button */
         followButton.setBackgroundColor(getResources().getColor(body.getBodyUserFollows() ? R.color.colorAccent : R.color.colorWhite));
-        followButton.setText(EventFragment.getCountBadgeSpannable("Follow", body.getBodyFollowersCount()));
+        followButton.setText(EventFragment.getCountBadgeSpannable("FOLLOW", body.getBodyFollowersCount()));
 
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override

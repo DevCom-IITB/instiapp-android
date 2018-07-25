@@ -37,6 +37,7 @@ public class QuickLinksFragment extends BaseFragment {
         TextView Holidays = getActivity().findViewById(R.id.button_Holidays);
         TextView Circulars = getActivity().findViewById(R.id.button_Circulars);
         TextView Courses = getActivity().findViewById(R.id.button_Courselist);
+        TextView WebMail = getActivity().findViewById(R.id.button_WebMail);
         TextView GPO = getActivity().findViewById(R.id.button_GPO);
         TextView CAMP = getActivity().findViewById(R.id.button_CAMP);
         TextView MSStore = getActivity().findViewById(R.id.button_MSStore);
@@ -60,6 +61,7 @@ public class QuickLinksFragment extends BaseFragment {
         Holidays.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("http://www.iitb.ac.in/en/about-iit-bombay/iit-bombay-holidays-list");  } });
         Circulars.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("http://www.iitb.ac.in/newacadhome/circular.jsp");  } });
         Courses.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("https://portal.iitb.ac.in/asc/Courses");  } });
+        WebMail.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("https://webmail.iitb.ac.in");  } });
         GPO.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("https://gpo.iitb.ac.in");  } });
         CAMP.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("https://camp.iitb.ac.in/");  } });
         MSStore.setOnClickListener(new View.OnClickListener() {  public void onClick(View v) {  goToUrl("http://msstore.iitb.ac.in/");  } });

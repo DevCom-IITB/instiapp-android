@@ -152,11 +152,12 @@
                     <Button
                         android:id="@+id/going_button"
                         style="?android:attr/buttonBarButtonStyle"
+                        android:textAllCaps="false"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="0dp"
                         android:layout_weight="1"
-                        android:text="Going"
+                        android:text="GOING"
                         android:textColor="@color/secondaryTextColor" />
 
                     <View
@@ -171,11 +172,12 @@
                     <Button
                         android:id="@+id/interested_button"
                         style="?android:attr/buttonBarButtonStyle"
+                        android:textAllCaps="false"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="0dp"
                         android:layout_weight="1"
-                        android:text="Interested"
+                        android:text="INTERESTED"
                         android:textColor="@color/secondaryTextColor" />
 
                 </LinearLayout>
