@@ -41,6 +41,12 @@ public class NotificationIntentService extends IntentService {
         super(NotificationIntentService.class.getSimpleName());
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        startForeground(1, new Notification());
+    }
+
     public static Intent createIntentStartNotificationService(Context context) {
         Intent intent = new Intent(context, NotificationIntentService.class);
         intent.setAction(ACTION_START);
