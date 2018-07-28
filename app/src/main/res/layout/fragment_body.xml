@@ -105,7 +105,9 @@
                         android:layout_margin="0dp"
                         android:layout_weight="1"
                         android:text="FOLLOW"
-                        android:textColor="@color/secondaryTextColor" />
+                        android:textColor="@color/secondaryTextColor"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:clickable="true" />
                 </LinearLayout>
 
                 <View

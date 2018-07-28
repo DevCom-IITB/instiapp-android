@@ -158,7 +158,9 @@
                         android:layout_margin="0dp"
                         android:layout_weight="1"
                         android:text="GOING"
-                        android:textColor="@color/secondaryTextColor" />
+                        android:textColor="@color/secondaryTextColor"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:clickable="true" />
 
                     <View
                         android:layout_width="1dp"
@@ -176,7 +178,9 @@
                         android:layout_margin="0dp"
                         android:layout_weight="1"
                         android:text="INTERESTED"
-                        android:textColor="@color/secondaryTextColor" />
+                        android:textColor="@color/secondaryTextColor"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:clickable="true" />
 
                 </LinearLayout>
 
