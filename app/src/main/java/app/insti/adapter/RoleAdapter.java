@@ -35,7 +35,7 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         View v = LayoutInflater.from(context)
-                .inflate(R.layout.role_card, parent, false);
+                .inflate(R.layout.feed_card, parent, false);
         final ViewHolder postViewHolder = new ViewHolder(v);
 
         v.setOnClickListener(new View.OnClickListener() {
@@ -71,9 +71,9 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.ViewHolder> {
 
         public ViewHolder(View itemView) {
             super(itemView);
-            bodyName = (TextView) itemView.findViewById(R.id.role_card_body);
-            role = (TextView) itemView.findViewById(R.id.role_card_role);
-            image = (ImageView) itemView.findViewById(R.id.role_card_avatar);
+            bodyName = (TextView) itemView.findViewById(R.id.object_title);
+            role = (TextView) itemView.findViewById(R.id.object_subtitle);
+            image = (ImageView) itemView.findViewById(R.id.object_picture);
         }
 
 

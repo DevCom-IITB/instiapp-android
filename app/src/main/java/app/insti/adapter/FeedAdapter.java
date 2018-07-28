@@ -51,22 +51,24 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         Event currentEvent = posts.get(i);
         viewHolder.eventTitle.setText(currentEvent.getEventName());
-//        viewHolder.eventDetails.setText(currentEvent.getEventDescription());
+
+        String subtitle = "";
         Timestamp timestamp = currentEvent.getEventStartTime();
         if (timestamp != null) {
             Date Date = new Date(timestamp.getTime());
             SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
             SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm a");
 
-            viewHolder.eventDate.setText(simpleDateFormatDate.format(Date));
-            viewHolder.eventTime.setText(simpleDateFormatTime.format(Date));
+            subtitle += simpleDateFormatDate.format(Date) + " | " + simpleDateFormatTime.format(Date);
         }
         StringBuilder eventVenueName = new StringBuilder();
         for (Venue venue : currentEvent.getEventVenues()) {
             eventVenueName.append(", ").append(venue.getVenueShortName());
         }
         if (!eventVenueName.toString().equals(""))
-            viewHolder.eventVenue.setText(eventVenueName.toString().substring(2));
+            subtitle += " | " + eventVenueName.toString().substring(2);
+
+        viewHolder.eventSubtitle.setText(subtitle);
 
         // Fallback to image of first body if event has no image
         if (currentEvent.getEventImageURL() == null) {
@@ -84,21 +86,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView eventPicture;
         private TextView eventTitle;
-        //        private TextView eventDetails;
-        private TextView eventDate;
-        private TextView eventTime;
-        private TextView eventVenue;
-        private ImageView eventEnthu;
+        private TextView eventSubtitle;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            eventPicture = (ImageView) itemView.findViewById(R.id.event_picture);
-            eventTitle = (TextView) itemView.findViewById(R.id.event_title);
-//            eventDetails = (TextView) itemView.findViewById(R.id.event_details);
-            eventDate = (TextView) itemView.findViewById(R.id.event_date);
-            eventTime = (TextView) itemView.findViewById(R.id.event_time);
-            eventVenue = (TextView) itemView.findViewById(R.id.event_venue);
+            eventPicture = (ImageView) itemView.findViewById(R.id.object_picture);
+            eventTitle = (TextView) itemView.findViewById(R.id.object_title);
+            eventSubtitle = (TextView) itemView.findViewById(R.id.object_subtitle);
         }
     }
 

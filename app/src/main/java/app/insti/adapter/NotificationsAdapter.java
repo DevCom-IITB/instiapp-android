@@ -34,7 +34,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     public Viewholder onCreateViewHolder(ViewGroup viewGroup, int i) {
         context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View notificationView = inflater.inflate(R.layout.body_card_view, viewGroup, false);
+        View notificationView = inflater.inflate(R.layout.feed_card, viewGroup, false);
 
         final Viewholder notificationsViewHolder = new Viewholder(notificationView);
         notificationView.setOnClickListener(new View.OnClickListener() {
@@ -79,9 +79,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         public Viewholder(View itemView) {
             super(itemView);
 
-            notificationPicture = (ImageView) itemView.findViewById(R.id.body_card_avatar);
-            notificationTitle = (TextView) itemView.findViewById(R.id.body_card_name);
-            notificationVerb = (TextView) itemView.findViewById(R.id.body_card_description);
+            notificationPicture = (ImageView) itemView.findViewById(R.id.object_picture);
+            notificationTitle = (TextView) itemView.findViewById(R.id.object_title);
+            notificationVerb = (TextView) itemView.findViewById(R.id.object_subtitle);
         }
     }
 }
