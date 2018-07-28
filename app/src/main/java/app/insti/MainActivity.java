@@ -1,8 +1,13 @@
 package app.insti;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -70,6 +75,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             initPicasso();
         } catch (IllegalStateException ignored) {
         }
+
+        /* Make notification channel on oreo */
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            createNotificationChannel();
+        }
+
         setContentView(R.layout.activity_main);
         session = new SessionManager(getApplicationContext());
 
@@ -98,8 +109,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O)
-            NotificationEventReceiver.setupAlarm(getApplicationContext());
+        NotificationEventReceiver.setupAlarm(getApplicationContext());
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private void createNotificationChannel() {
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // The id of the channel.
+        String id = "INSTIAPP_CHANNEL";
+
+        // The user-visible name of the channel.
+        CharSequence name = "InstiApp";
+
+        // The user-visible description of the channel.
+        String description = "InstiApp Notifications";
+
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+
+        NotificationChannel mChannel = null;
+        mChannel = new NotificationChannel(id, name,importance);
+
+        // Configure the notification channel.
+        mChannel.setDescription(description);
+
+        mChannel.enableLights(true);
+        // Sets the notification light color for notifications posted to this
+        // channel, if the device supports this feature.
+        mChannel.setLightColor(Color.RED);
+
+        mChannel.enableVibration(true);
+        mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
+        mNotificationManager.createNotificationChannel(mChannel);
     }
 
     private void handleIntent(Intent appLinkIntent) {
