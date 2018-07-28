@@ -86,11 +86,6 @@ public class FeedFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        fab.setVisibility(View.VISIBLE);
-        if (((MainActivity) getActivity()).createEventAccess()) {
-            fab.setVisibility(View.VISIBLE);
-        }
-
         appDatabase = AppDatabase.getAppDatabase(getContext());
         new showEventsFromDB().execute();
 
@@ -125,6 +120,10 @@ public class FeedFragment extends BaseFragment {
     private void displayEvents(final List<Event> events) {
         /* Skip if we're already destroyed */
         if (getActivity() == null || getView() == null) return;
+
+        if (((MainActivity) getActivity()).createEventAccess()) {
+            fab.setVisibility(View.VISIBLE);
+        }
 
         final FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
             @Override
