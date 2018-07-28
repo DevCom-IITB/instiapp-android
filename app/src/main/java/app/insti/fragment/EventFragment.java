@@ -231,7 +231,11 @@ public class EventFragment extends BackHandledFragment {
         mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
         FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.edit_fab);
-        fab.setVisibility(View.VISIBLE);
+
+        if (((MainActivity) getActivity()).editEventAccess(event)) {
+            fab.setVisibility(View.VISIBLE);
+        }
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
