@@ -75,11 +75,12 @@ public class FeedFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 AddEventFragment addEventFragment = new AddEventFragment();
-                addEventFragment.setArguments(getArguments());
+                Bundle bundle = new Bundle();
+                addEventFragment.setArguments(bundle);
                 FragmentTransaction ft = getChildFragmentManager().beginTransaction();
                 ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.relative_layout, addEventFragment);
-                ft.addToBackStack("addEvent");
+                ft.replace(R.id.relative_layout, addEventFragment, addEventFragment.getTag());
+                ft.addToBackStack(addEventFragment.getTag());
                 ft.commit();
             }
         });
@@ -89,10 +90,9 @@ public class FeedFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-
+        fab.setVisibility(View.VISIBLE);
         if (((MainActivity) getActivity()).createEventAccess()) {
-            /* TODO: Uncomment the following line when Add Event is completed */
-            // fab.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
         }
 
         appDatabase = AppDatabase.getAppDatabase(getContext());

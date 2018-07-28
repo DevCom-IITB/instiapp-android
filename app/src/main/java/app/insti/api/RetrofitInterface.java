@@ -9,6 +9,7 @@ import app.insti.api.model.ImageUploadRequest;
 import app.insti.api.model.ImageUploadResponse;
 import app.insti.api.model.LoginResponse;
 import app.insti.api.model.NewsFeedResponse;
+import app.insti.data.Event;
 import app.insti.data.HostelMessMenu;
 import app.insti.data.NewsArticle;
 import app.insti.data.Notification;
@@ -36,6 +37,9 @@ public interface RetrofitInterface {
 
     @POST("events")
     Call<EventCreateResponse> createEvent(@Header("Cookie") String sessionId, @Body EventCreateRequest eventCreateRequest);
+
+    @GET("events/{uuid}")
+    Call<Event> getEvent(@Header("Cookie") String sessionId, @Path("uuid") String uuid);
 
     @GET("events")
     Call<NewsFeedResponse> getNewsFeed(@Header("Cookie") String sessionId);
