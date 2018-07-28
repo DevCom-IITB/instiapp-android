@@ -119,7 +119,7 @@ public class NotificationIntentService extends JobIntentService {
                     if (goingEventList != null) {
                         for (Event event : goingEventList) {
                             long timediff = getDateDiff(new Date(), event.getEventStartTime(), TimeUnit.MINUTES);
-                            if (timediff <= 50 && timediff > 0) { // Change this to 30*10000 for testing
+                            if (timediff <= 30 && timediff > 0) { // Change this to 30*10000 for testing
                                 NOTIFICATION_ID = event.getEventID().hashCode();
 
                                 final NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "INSTIAPP_CHANNEL");
