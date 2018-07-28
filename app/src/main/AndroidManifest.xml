@@ -113,7 +113,8 @@
         <service
             android:name=".notifications.NotificationIntentService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver android:name=".notifications.NotificationEventReceiver" />
         <receiver android:name=".notifications.NotificationServiceStarterReceiver">
