@@ -195,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_feed);
     }
 
     private void updateNavigationView() {

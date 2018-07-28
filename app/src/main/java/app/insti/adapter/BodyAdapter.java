@@ -32,7 +32,7 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         View v = LayoutInflater.from(context)
-                .inflate(R.layout.body_card_view, parent, false);
+                .inflate(R.layout.feed_card, parent, false);
         final ViewHolder postViewHolder = new ViewHolder(v);
 
         v.setOnClickListener(new View.OnClickListener() {
@@ -67,9 +67,9 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
 
         public ViewHolder(View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.body_card_name);
-            description = (TextView) itemView.findViewById(R.id.body_card_description);
-            image = (ImageView) itemView.findViewById(R.id.body_card_avatar);
+            name = (TextView) itemView.findViewById(R.id.object_title);
+            description = (TextView) itemView.findViewById(R.id.object_subtitle);
+            image = (ImageView) itemView.findViewById(R.id.object_picture);
         }
     }
 

@@ -59,6 +59,13 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     itemClickListener.onItemClick(v, postViewHolder.getAdapterPosition());
                 }
             });
+            postViewHolder.articleContent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemClickListener.onItemClick(v, postViewHolder.getAdapterPosition());
+                }
+            });
+
             return postViewHolder;
         } else {
             LayoutInflater inflater = LayoutInflater.from(context);
