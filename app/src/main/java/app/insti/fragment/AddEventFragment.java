@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -50,7 +51,9 @@ public class AddEventFragment extends BaseFragment {
         container.removeAllViews();
         View view = inflater.inflate(R.layout.fragment_add_event, container, false);
 
-        String host = "10.0.2.2:4200";
+        String host = "insti.app";
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(getArguments().containsKey("id") ? "Update Event" : "Add Event");
 
         if (savedInstanceState == null) {
             WebView webView = view.findViewById(R.id.add_event_webview);
@@ -69,9 +72,9 @@ public class AddEventFragment extends BaseFragment {
             cookieManager.setCookie(host, cookieString);
             CookieSyncManager.getInstance().sync();
 
-            String url = "http://" + host + "/add-event?sandbox=true";
+            String url = "https://" + host + "/add-event?sandbox=true";
             if (getArguments().containsKey("id")) {
-                url = "http://" + host + "/edit-event/" + getArguments().getString("id") + "?sandbox=true";
+                url = "https://" + host + "/edit-event/" + getArguments().getString("id") + "?sandbox=true";
             }
             webView.loadUrl(url);
 

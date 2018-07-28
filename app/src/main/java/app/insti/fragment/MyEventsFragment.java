@@ -58,11 +58,7 @@ public class MyEventsFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 AddEventFragment addEventFragment = new AddEventFragment();
-                addEventFragment.setArguments(getArguments());
-                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                ft.replace(R.id.relative_layout, addEventFragment);
-                ft.addToBackStack("addEvent");
-                ft.commit();
+                ((MainActivity) getActivity()).updateFragment(addEventFragment);
             }
         });
         return view;
@@ -73,8 +69,7 @@ public class MyEventsFragment extends BaseFragment {
         super.onStart();
 
         if (((MainActivity)getActivity()).createEventAccess()) {
-            /* TODO: Uncomment the following line when Add Event is completed */
-            // fab.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
         }
 
         appDatabase = AppDatabase.getAppDatabase(getContext());

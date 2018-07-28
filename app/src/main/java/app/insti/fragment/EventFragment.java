@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -228,6 +229,19 @@ public class EventFragment extends BackHandledFragment {
             }
         });
         mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.edit_fab);
+        fab.setVisibility(View.VISIBLE);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddEventFragment addEventFragment = new AddEventFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("id", event.getEventID());
+                addEventFragment.setArguments(bundle);
+                ((MainActivity) getActivity()).updateFragment(addEventFragment);
+            }
+        });
     }
 
     void setFollowButtonColors(int status) {
