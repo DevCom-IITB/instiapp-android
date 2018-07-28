@@ -1,6 +1,7 @@
 package app.insti.adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +23,19 @@ import app.insti.data.Venue;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
-    private List<Event> posts;
+    private List<Event> events;
     private Context context;
     private ItemClickListener itemClickListener;
 
-    public FeedAdapter(List<Event> posts, ItemClickListener itemClickListener) {
-        this.posts = posts;
+    public FeedAdapter(List<Event> events, ItemClickListener itemClickListener) {
+        this.events = events;
         this.itemClickListener = itemClickListener;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) return 1;
+        else return 2;
     }
 
     @Override
@@ -44,12 +51,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 itemClickListener.onItemClick(v, postViewHolder.getAdapterPosition());
             }
         });
+
         return postViewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        Event currentEvent = posts.get(i);
+        Event currentEvent = events.get(i);
         viewHolder.eventTitle.setText(currentEvent.getEventName());
 
         String subtitle = "";
@@ -75,18 +83,25 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             currentEvent.setEventImageURL(currentEvent.getEventBodies().get(0).getBodyImageURL());
         }
 
-        Picasso.get().load(currentEvent.getEventImageURL()).into(viewHolder.eventPicture);
+        if (currentEvent.isEventBigImage()) {
+            viewHolder.eventBigPicture.setVisibility(View.VISIBLE);
+            viewHolder.eventPicture.setVisibility(View.GONE);
+            Picasso.get().load(currentEvent.getEventImageURL()).into(viewHolder.eventBigPicture);
+        } else {
+            Picasso.get().load(currentEvent.getEventImageURL()).into(viewHolder.eventPicture);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return posts.size();
+        return events.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView eventPicture;
         private TextView eventTitle;
         private TextView eventSubtitle;
+        private ImageView eventBigPicture;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -94,10 +109,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             eventPicture = (ImageView) itemView.findViewById(R.id.object_picture);
             eventTitle = (TextView) itemView.findViewById(R.id.object_title);
             eventSubtitle = (TextView) itemView.findViewById(R.id.object_subtitle);
+            eventBigPicture = (ImageView) itemView.findViewById(R.id.big_object_picture);
         }
     }
 
-    public void setPosts(List<Event> posts) {
-        this.posts = posts;
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 }

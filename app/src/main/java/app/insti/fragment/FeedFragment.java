@@ -130,6 +130,11 @@ public class FeedFragment extends BaseFragment {
         /* Skip if we're already destroyed */
         if (getActivity() == null || getView() == null) return;
 
+        /* Make first event image big */
+        if (events.size() > 1) {
+            events.get(0).setEventBigImage(true);
+        }
+
         final FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {

@@ -1,7 +1,6 @@
 package app.insti.fragment;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,7 +12,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
@@ -163,7 +161,7 @@ public class ExploreFragment extends Fragment {
 
         // Set adapters data
         bodyAdapter.setBodyList(bodies);
-        eventsAdapter.setPosts(events);
+        eventsAdapter.setEvents(events);
         userAdapter.setUserList(users);
 
         // Notify all adapters

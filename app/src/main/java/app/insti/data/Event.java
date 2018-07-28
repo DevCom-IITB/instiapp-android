@@ -2,6 +2,7 @@ package app.insti.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -64,6 +65,9 @@ public class Event {
     @ColumnInfo(name = "user_ues")
     @SerializedName("user_ues")
     int eventUserUes;
+
+    @Ignore
+    boolean eventBigImage = false;
 
     public Event(String eventID, String eventStrID, String eventName, String eventDescription, String eventImageURL, Timestamp eventStartTime, Timestamp eventEndTime, boolean allDayEvent, List<Venue> eventVenues, List<Body> eventBodies, int eventInterestedCount, int eventGoingCount, List<User> eventInterested, List<User> eventGoing, String eventWebsiteURL, int eventUserUes) {
         this.eventID = eventID;
@@ -215,5 +219,13 @@ public class Event {
     @Override
     public String toString() {
         return new Gson().toJson(this);
+    }
+
+    public boolean isEventBigImage() {
+        return eventBigImage;
+    }
+
+    public void setEventBigImage(boolean eventBigImage) {
+        this.eventBigImage = eventBigImage;
     }
 }
