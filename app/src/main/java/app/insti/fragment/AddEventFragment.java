@@ -3,6 +3,7 @@ package app.insti.fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -63,6 +64,7 @@ public class AddEventFragment extends BaseFragment {
             WebSettings webSettings = webView.getSettings();
             webSettings.setJavaScriptEnabled(true);
             webSettings.setDomStorageEnabled(true);
+            webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
             webView.setWebChromeClient(new MyWebChromeClient());
             webView.setWebViewClient(new MyWebViewClient());
@@ -70,7 +72,11 @@ public class AddEventFragment extends BaseFragment {
             CookieManager cookieManager = CookieManager.getInstance();
             String cookieString = ((MainActivity) getActivity()).getSessionIDHeader();
             cookieManager.setCookie(host, cookieString);
-            CookieSyncManager.getInstance().sync();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                CookieManager.getInstance().flush();
+            } else {
+                CookieSyncManager.getInstance().sync();
+            }
 
             String url = "https://" + host + "/add-event?sandbox=true";
             if (getArguments().containsKey("id")) {
