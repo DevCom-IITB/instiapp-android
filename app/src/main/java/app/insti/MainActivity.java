@@ -55,6 +55,7 @@ import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.notifications.NotificationEventReceiver;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -426,7 +427,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void initPicasso() {
         Picasso.Builder builder = new Picasso.Builder(getApplicationContext());
         builder.downloader(new com.squareup.picasso.OkHttp3Downloader((
-                UnsafeOkHttpClient.getUnsafeOkHttpClient(getApplicationContext())
+                new OkHttpClient.Builder().build()
         )));
         Picasso built = builder.build();
         built.setIndicatorsEnabled(false);
