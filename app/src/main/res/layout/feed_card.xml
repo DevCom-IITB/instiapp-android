@@ -1,29 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginTop="4dp"
-    card_view:cardCornerRadius="1dp"
-    card_view:cardElevation="1dp">
+    android:orientation="vertical"
+    android:background="?android:attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/big_object_picture"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="4dp"
+        android:paddingLeft="18dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/event_picture"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/object_picture"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop" />
 
@@ -37,10 +44,10 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/event_title"
+                    android:id="@+id/object_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Event Title"
+                    android:text="Object Title"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
@@ -50,58 +57,18 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/event_date"
+                        android:id="@+id/object_subtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="26 May" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" | "
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/event_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="6:00 PM" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" | "
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/event_venue"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
+                        android:text="Subtitle"
+                        android:textSize="16sp"
                         android:ellipsize="end"
-                        android:text="LH 101"
                         android:scrollHorizontally="true"
-                        android:maxLines="1"/>
+                        android:maxLines="1" />
                 </LinearLayout>
 
             </LinearLayout>
 
-
-            <!--<ImageView-->
-            <!--android:id="@+id/event_enthu"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_marginRight="20dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/ic_action_add"-->
-            <!--android:layout_gravity="center_vertical"/>-->
-
         </LinearLayout>
-        <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="2dp"-->
-        <!--android:background="#adfff6"-->
-        <!--android:layout_marginLeft="16dp"-->
-        <!--android:layout_marginRight="16dp">-->
-
-        <!--</View>-->
     </LinearLayout>
-</android.support.v7.widget.CardView>
+</LinearLayout>

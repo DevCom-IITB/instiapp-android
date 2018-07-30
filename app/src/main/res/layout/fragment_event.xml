@@ -158,13 +158,13 @@
                         android:layout_margin="0dp"
                         android:layout_weight="1"
                         android:text="GOING"
-                        android:textColor="@color/secondaryTextColor" />
+                        android:textColor="@color/secondaryTextColor"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:clickable="true" />
 
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="6dp"
-                        android:layout_marginTop="10dp"
                         android:background="#aaa">
 
                     </View>
@@ -178,15 +178,15 @@
                         android:layout_margin="0dp"
                         android:layout_weight="1"
                         android:text="INTERESTED"
-                        android:textColor="@color/secondaryTextColor" />
+                        android:textColor="@color/secondaryTextColor"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:clickable="true" />
 
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:background="#aaa">
 
                 </View>
@@ -199,7 +199,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="12dp"
-                    android:textColor="#777"
+                    android:textColor="#333"
                     android:textSize="16sp" />
 
                 <android.support.v7.widget.RecyclerView
