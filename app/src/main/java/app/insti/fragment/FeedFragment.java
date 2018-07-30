@@ -154,6 +154,15 @@ public class FeedFragment extends BaseFragment {
                     feedRecyclerView = getActivity().findViewById(R.id.feed_recycler_view);
                     feedRecyclerView.setAdapter(feedAdapter);
                     feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                    feedRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                            if (dy > 0) fab.hide();
+                            else if (dy < 0) fab.show();
+                        }
+                    });
+
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
