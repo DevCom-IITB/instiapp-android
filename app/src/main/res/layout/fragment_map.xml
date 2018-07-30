@@ -24,7 +24,7 @@
                 android:layout_alignParentTop="true"
                 android:background="@null"
                 android:dropDownHeight="0dp"
-                android:fontFamily="sans-serif-light"
+                android:fontFamily="sans-serif"
                 android:hint="Search"
                 android:imeOptions="actionSearch"
                 android:inputType="textNoSuggestions"
