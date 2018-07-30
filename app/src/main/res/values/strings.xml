@@ -39,4 +39,5 @@
 
     <string name="drawer_open">Open the drawer</string>
     <string name="drawer_close">Close the drawer</string>
+    <string name="default_notification_channel_id">INSTIAPP_NOTIFS</string>
 </resources>

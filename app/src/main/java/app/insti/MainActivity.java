@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         // The id of the channel.
-        String id = "INSTIAPP_CHANNEL";
+        String id = getResources().getString(R.string.default_notification_channel_id);
 
         // The user-visible name of the channel.
         CharSequence name = "InstiApp";
