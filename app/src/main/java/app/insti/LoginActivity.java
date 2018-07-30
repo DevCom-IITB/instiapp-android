@@ -14,7 +14,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
@@ -31,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private final String guestUri = "https://guesturi";
     private boolean loggingIn = false;
     public String authCode = null;
+    public String fcmId = null;
     SessionManager session;
     Context mContext = this;
     private ProgressDialog progressDialog;
@@ -63,16 +66,24 @@ public class LoginActivity extends AppCompatActivity {
         webview.getSettings().setDomStorageEnabled(true);
         webview.setWebViewClient(new WvClient());
         webview.loadUrl("file:///android_asset/login.html");
+
+        // Get FCM Id
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                fcmId = instanceIdResult.getToken();
+            }
+        });
     }
 
     private void login(final String authorizationCode, final String redirectURL) {
         /* This can be null if play services is hung */
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
         Call<LoginResponse> call;
-        if (FirebaseInstanceId.getInstance().getToken() == null) {
+        if (fcmId == null) {
             call = retrofitInterface.login(authorizationCode, redirectURL);
         } else {
-            call = retrofitInterface.login(authorizationCode, redirectURL, FirebaseInstanceId.getInstance().getToken());
+            call = retrofitInterface.login(authorizationCode, redirectURL, fcmId);
         }
 
         call.enqueue(new Callback<LoginResponse>() {
@@ -109,10 +120,10 @@ public class LoginActivity extends AppCompatActivity {
         Call<LoginResponse> call;
 
         /* This can be null if play services is hung */
-        if (FirebaseInstanceId.getInstance().getToken() == null) {
+        if (fcmId == null) {
             call = retrofitInterface.passwordLogin(username, password);
         } else {
-            call = retrofitInterface.passwordLogin(username, password, FirebaseInstanceId.getInstance().getToken());
+            call = retrofitInterface.passwordLogin(username, password, fcmId);
         }
 
         /* Log in the user */
