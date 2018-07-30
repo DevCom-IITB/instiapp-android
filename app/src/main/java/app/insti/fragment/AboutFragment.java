@@ -55,6 +55,7 @@ public class AboutFragment extends BaseFragment {
             put(R.id.cheekuimg, "cheeku.jpg");
             put(R.id.sarthakimg, "sarthak.jpg");
             put(R.id.sohamimg, "soham.jpg");
+            put(R.id.maitreyaimg,"maitreya.jpg");
             put(R.id.mrunmayiimg, "mrunmayi.jpg");
             put(R.id.owaisimg, "owais.jpg");
             put(R.id.hrushikeshimg, "hrushikesh.jpg");
