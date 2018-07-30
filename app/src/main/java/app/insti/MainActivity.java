@@ -19,14 +19,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebChromeClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
 import app.insti.api.UnsafeOkHttpClient;
 import app.insti.data.Body;
 import app.insti.data.Event;
@@ -49,9 +48,6 @@ import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.notifications.NotificationEventReceiver;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
@@ -78,8 +74,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         setContentView(R.layout.activity_main);
         session = new SessionManager(getApplicationContext());
-
-        updateProfile();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -124,28 +118,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     ProfileFragment profileFragment = ProfileFragment.newInstance(getID(appLinkData));
                     updateFragment(profileFragment);
             }
-        }
-    }
-
-    private void updateProfile() {
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        if (session.isLoggedIn()) {
-            retrofitInterface.getUserMe(getSessionIDHeader()).enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    if (response.isSuccessful()) {
-                        session.createLoginSession(response.body().getUserLDAPId(), response.body(), session.getSessionID());
-                        currentUser = response.body();
-                    } else {
-                        session.logout();
-                        currentUser = null;
-                        Toast.makeText(MainActivity.this, "You session has expired!", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) { }
-            });
         }
     }
 

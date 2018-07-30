@@ -65,9 +65,6 @@ public interface RetrofitInterface {
     @POST("upload")
     Call<ImageUploadResponse> uploadImage(@Header("Cookie") String sessionID, @Body ImageUploadRequest imageUploadRequest);
 
-    @GET("user-me")
-    Call<User> getUserMe(@Header("Cookie") String sessionId);
-
     @GET("user-me/ues/{eventID}")
     Call<Void> updateUserEventStatus(@Header("Cookie") String sessionID, @Path("eventID") String eventID, @Query("status") int status);
 
