@@ -200,6 +200,8 @@ public class MapFragment extends Fragment implements TextWatcher,
 
         /* Initialize */
         appDatabase = AppDatabase.getAppDatabase(getContext());
+        editText = (EditText)getView().findViewById(R.id.search);
+        setFonts();
 
         getAPILocations();
         new showLocationsFromDB().execute();
@@ -442,15 +444,25 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void setFonts() {
+        if (getView() == null || getActivity() == null) return;
+
         Typeface regular = Typeface.createFromAsset(getActivity().getAssets(), FONT_REGULAR);
 
-        placeNameTextView.setTypeface(regular, Typeface.BOLD);
-        placeSubHeadTextView.setTypeface(regular);
-        editText.setTypeface(regular);
+        if (placeNameTextView != null) {
+            placeNameTextView.setTypeface(regular, Typeface.BOLD);
+        }
+        if (placeSubHeadTextView != null) {
+            placeSubHeadTextView.setTypeface(regular);
+        }
+        if (editText != null) {
+            editText.setTypeface(regular);
+        }
 
         TextView settingsTitle = (TextView) getActivity()
                 .findViewById(R.id.settings_title);
-        settingsTitle.setTypeface(regular);
+        if (settingsTitle != null) {
+            settingsTitle.setTypeface(regular);
+        }
     }
 
     private Runnable setAnchor() {
