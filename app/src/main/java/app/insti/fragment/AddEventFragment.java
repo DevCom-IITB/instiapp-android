@@ -1,5 +1,6 @@
 package app.insti.fragment;
 
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -35,6 +36,8 @@ import retrofit2.Response;
 
 
 public class AddEventFragment extends BaseFragment {
+    private ProgressDialog progressDialog;
+
     public ValueCallback<Uri[]> uploadMessage;
 
     public AddEventFragment() {
@@ -51,6 +54,12 @@ public class AddEventFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         container.removeAllViews();
         View view = inflater.inflate(R.layout.fragment_add_event, container, false);
+
+        /* Show progress dialog */
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Loading");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
         String host = "insti.app";
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
@@ -119,6 +128,7 @@ public class AddEventFragment extends BaseFragment {
     public class MyWebViewClient extends WebViewClient{
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            /* Check URL */
             if (url.contains("/event/")) {
                 url = url.substring(url.lastIndexOf("/") + 1);
 
@@ -143,12 +153,18 @@ public class AddEventFragment extends BaseFragment {
     }
 
     public class MyWebChromeClient extends WebChromeClient {
-        /*@Override
-        public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-            android.util.Log.wtf("cWebView", consoleMessage.message());
-            return true;
-        }*/
 
+        @Override
+        public void onProgressChanged(WebView view, int progress) {
+            if (progress < 100) {
+                progressDialog.show();
+            }
+            if (progress == 100) {
+                progressDialog.dismiss();
+            }
+        }
+
+        @Override
         public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
             // make sure there is no existing message
             if (uploadMessage != null) {
