@@ -238,25 +238,6 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/maitreyaimg"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp" />
-
-            <TextView
-                android:id="@+id/maitreya"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="Maitreya Verma"
-                android:textStyle="bold" />
-
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -393,6 +374,25 @@
                     android:textStyle="bold" />
 
             </LinearLayout>
+
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/maitreyaimg"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp" />
+
+            <TextView
+                android:id="@+id/maitreya"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Maitreya Verma"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/alumni"
@@ -571,6 +571,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="8dp"
                 android:autoLink="web"
                 android:linksClickable="true"
                 android:gravity="center"
@@ -584,6 +585,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="8dp"
                 android:autoLink="web"
                 android:linksClickable="true"
                 android:gravity="center"
@@ -597,6 +599,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="36dp"
                 android:autoLink="web"
                 android:linksClickable="true"
                 android:gravity="center"
@@ -608,10 +611,4 @@
         </LinearLayout>
 
     </ScrollView>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </RelativeLayout>
 </LinearLayout>
