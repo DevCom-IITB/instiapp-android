@@ -28,11 +28,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.squareup.picasso.Picasso;
 
+import app.insti.api.RetrofitInterface;
+import app.insti.api.ServiceGenerator;
 import app.insti.api.UnsafeOkHttpClient;
 import app.insti.data.Body;
-import app.insti.data.Event;
 import app.insti.data.User;
 import app.insti.fragment.BackHandledFragment;
 import app.insti.fragment.BodyFragment;
@@ -51,6 +55,9 @@ import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.notifications.NotificationEventReceiver;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
@@ -189,7 +196,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (session.isLoggedIn()) {
             currentUser = User.fromString(session.pref.getString(Constants.CURRENT_USER, ""));
             updateNavigationView();
+            updateFCMId();
         }
+    }
+
+    /** Update FCM Id and update profile */
+    private void updateFCMId() {
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String fcmId = instanceIdResult.getToken();
+                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                retrofitInterface.getUserMe(getSessionIDHeader(), fcmId).enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        if (response.isSuccessful()) {
+                            session.createLoginSession(response.body().getUserName(), response.body(), session.getSessionID());
+                            currentUser = response.body();
+                        } else {
+                            session.logout();
+                            currentUser = null;
+                            Toast.makeText(MainActivity.this, "You session has expired!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) { }
+                });
+            }
+        });
     }
 
     private void initNavigationView() {
