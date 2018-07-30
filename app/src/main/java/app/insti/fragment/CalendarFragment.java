@@ -93,8 +93,7 @@ public class CalendarFragment extends BaseFragment {
             }
         });
         if (((MainActivity)getActivity()).createEventAccess()) {
-            /* TODO: Uncomment the following line when Add Event is completed */
-            // fab.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
         }
 
         updateEvents();

@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebChromeClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,8 @@ import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
 import app.insti.api.UnsafeOkHttpClient;
 import app.insti.data.Body;
+import app.insti.data.Event;
+import app.insti.data.Role;
 import app.insti.data.User;
 import app.insti.fragment.BackHandledFragment;
 import app.insti.fragment.BodyFragment;
@@ -450,6 +453,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (currentUser == null || currentUser.getUserRoles() == null || currentUser.getUserRoles().size() == 0)
             return false;
         return true;
+    }
+
+    public boolean editEventAccess(Event event) {
+        if (currentUser == null || currentUser.getUserRoles() == null || currentUser.getUserRoles().size() == 0)
+            return false;
+
+        for (Role role : currentUser.getUserRoles()) {
+            for (Body body : role.getRoleBodies()) {
+                for (Body eventBody : event.getEventBodies()) {
+                    if (body.getBodyID().equals(eventBody.getBodyID())) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public static void hideKeyboard(Activity activity) {

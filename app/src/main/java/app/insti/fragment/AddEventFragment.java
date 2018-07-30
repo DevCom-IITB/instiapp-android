@@ -1,358 +1,212 @@
 package app.insti.fragment;
 
-import android.Manifest;
-import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.ImageViewCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.TimePicker;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.google.gson.Gson;
 
-import java.io.ByteArrayOutputStream;
-import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import app.insti.Constants;
+import app.insti.MainActivity;
 import app.insti.R;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
-import app.insti.api.model.EventCreateRequest;
-import app.insti.api.model.EventCreateResponse;
-import app.insti.api.model.ImageUploadRequest;
-import app.insti.api.model.ImageUploadResponse;
+import app.insti.data.Event;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.app.Activity.RESULT_OK;
-import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
-import static app.insti.Constants.RESULT_LOAD_IMAGE;
-
 
 public class AddEventFragment extends BaseFragment {
-    @BindView(R.id.button_createEvent)
-    Button createEvent;
-    @BindView(R.id.tv_start)
-    TextView start;
-    @BindView(R.id.et_eventName)
-    EditText eventName;
-    @BindView(R.id.tv_end)
-    TextView end;
-    @BindView(R.id.et_venue)
-    EditText venue;
-    @BindView(R.id.et_eventDetails)
-    EditText details;
-    @BindView(R.id.iv_eventImage)
-    ImageView eventImage;
-    @BindView(R.id.ib_eventImage)
-    ImageButton imageButton;
-    Timestamp timestamp_start;
-    Timestamp timestamp_end;
+    private ProgressDialog progressDialog;
 
-    @BindView(R.id.advanced_menu)
-    RelativeLayout advancedMenu;
-    @BindView(R.id.cb_public)
-    CheckBox cb_public;
-    @BindView(R.id.cb_permission)
-    CheckBox cb_permission;
-    @BindView(R.id.map_location)
-    EditText et_mapLocation;
-    @BindView(R.id.open)
-    ImageView open;
-    @BindView(R.id.close)
-    ImageView close;
-    ImageView eventPictureImageView;
-    int publicStatus;
-    View view;
-    String base64Image;
-    ProgressDialog progressDialog;
-    String TAG = "AddEventFragment";
-
+    public ValueCallback<Uri[]> uploadMessage;
 
     public AddEventFragment() {
         // Required empty public constructor
     }
 
-    public static String convertImageToString(Bitmap imageBitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        if (imageBitmap != null) {
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 60, stream);
-            byte[] byteArray = stream.toByteArray();
-            return Base64.encodeToString(byteArray, Base64.DEFAULT);
-        } else {
-            return null;
-        }
-    }
-
-    public static Timestamp makeTimestamp(int year, int month, int day, int hour, int minute) {
-        Calendar cal = new GregorianCalendar();
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DATE, day);
-        cal.set(Calendar.HOUR_OF_DAY, hour);
-        cal.set(Calendar.MINUTE, minute);
-
-        return new Timestamp(cal.getTimeInMillis());
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         container.removeAllViews();
+        View view = inflater.inflate(R.layout.fragment_add_event, container, false);
 
-        view = inflater.inflate(R.layout.fragment_add_event, container, false);
-        ButterKnife.bind(this, view);
-
-        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Add Event");
-
-        eventPictureImageView = view.findViewById(R.id.ib_eventImage);
+        /* Show progress dialog */
         progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Loading");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
-        cb_permission.setVisibility(View.GONE);
-        cb_public.setVisibility(View.GONE);
-        et_mapLocation.setVisibility(View.GONE);
+        String host = "insti.app";
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(getArguments().containsKey("id") ? "Update Event" : "Add Event");
 
+        if (savedInstanceState == null) {
+            WebView webView = view.findViewById(R.id.add_event_webview);
+            webView.getSettings().setBuiltInZoomControls(true);
+            webView.getSettings().setDisplayZoomControls(false);
+            webView.getSettings().setAllowFileAccess(true);
+            WebSettings webSettings = webView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            webSettings.setDomStorageEnabled(true);
+            webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
-        close.setVisibility(View.GONE);
-        open.setVisibility(View.VISIBLE);
+            webView.setWebChromeClient(new MyWebChromeClient());
+            webView.setWebViewClient(new MyWebViewClient());
 
+            CookieManager cookieManager = CookieManager.getInstance();
+            String cookieString = ((MainActivity) getActivity()).getSessionIDHeader();
+            cookieManager.setCookie(host, cookieString);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                CookieManager.getInstance().flush();
+            } else {
+                CookieSyncManager.getInstance().sync();
+            }
 
-        start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            String url = "https://" + host + "/add-event?sandbox=true";
+            if (getArguments().containsKey("id")) {
+                url = "https://" + host + "/edit-event/" + getArguments().getString("id") + "?sandbox=true";
+            }
+            webView.loadUrl(url);
 
-                final Calendar calendar = Calendar.getInstance();
-                int mYear = calendar.get(Calendar.YEAR);
-                int mMonth = calendar.get(Calendar.MONTH);
-                int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+            webView.setOnTouchListener(new View.OnTouchListener() {
+                float m_downX;
+                public boolean onTouch(View v, MotionEvent event) {
 
-                final int mHour = calendar.get(Calendar.HOUR_OF_DAY);
-                final int mMin = calendar.get(Calendar.MINUTE);
-
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                timestamp_start = makeTimestamp(year, month, dayOfMonth, hourOfDay, minute);
-                                if (timestamp_start.after(new Timestamp(Calendar.getInstance().getTimeInMillis()))) {
-                                    if (timestamp_end == null || timestamp_end.after(timestamp_start)) {
-                                        start.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":" + minute);
-                                        enableEndDatePicker(year, month, dayOfMonth, hourOfDay, minute);
-                                    }
-                                } else {
-                                    Toast.makeText(getContext(), "Start Time cannot be in the past", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }, mHour, mMin, true);
-                        timePickerDialog.show();
+                    if (event.getPointerCount() > 1) {
+                        //Multi touch detected
+                        return true;
                     }
-                }, mYear, mMonth, mDay);
-                datePickerDialog.show();
-            }
 
-        });
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN: {
+                            // save the x
+                            m_downX = event.getX();
+                            break;
+                        }
+                        case MotionEvent.ACTION_MOVE:
+                        case MotionEvent.ACTION_CANCEL:
+                        case MotionEvent.ACTION_UP: {
+                            // set x so that it doesn't move
+                            event.setLocation(m_downX, event.getY());
+                            break;
+                        }
 
-        if (cb_permission.isChecked()) {
-            publicStatus = 1;
-        } else publicStatus = 0;
-
-        advancedMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cb_public.getVisibility() == View.VISIBLE) {
-                    open.setVisibility(View.VISIBLE);
-                    close.setVisibility(View.GONE);
-                    cb_permission.setVisibility(View.GONE);
-                    cb_public.setVisibility(View.GONE);
-                    et_mapLocation.setVisibility(View.GONE);
-                } else {
-                    close.setVisibility(View.VISIBLE);
-                    open.setVisibility(View.GONE);
-                    cb_permission.setVisibility(View.VISIBLE);
-                    cb_public.setVisibility(View.VISIBLE);
-                    et_mapLocation.setVisibility(View.VISIBLE);
+                    }
+                    return false;
                 }
-            }
-        });
+            });
+        }
 
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    // Permission is not granted
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                    return;
-                }
-                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
-            }
-        });
-        createEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressDialog.setIndeterminate(true);
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-                sendImage();
-            }
-        });
         return view;
     }
 
-    private void enableEndDatePicker(final int startYear, final int startMonth, final int startDayOfMonth, final int startHourOfDay, final int startMinute) {
-        end.setEnabled(true);
-        end.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+    public class MyWebViewClient extends WebViewClient{
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            /* Check URL */
+            if (url.contains("/event/")) {
+                url = url.substring(url.lastIndexOf("/") + 1);
+
+                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                retrofitInterface.getEvent(((MainActivity) getActivity()).getSessionIDHeader(), url).enqueue(new Callback<Event>() {
+                    @Override
+                    public void onResponse(Call<Event> call, Response<Event> response) {
+                        if (response.isSuccessful()) {
+                            openEvent(response.body());
+                        }
+                    }
 
                     @Override
-                    public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                timestamp_end = makeTimestamp(year, month, dayOfMonth, hourOfDay, minute);
-                                if (timestamp_end.after(timestamp_start))
-                                    end.setText(dayOfMonth + "/" + month + "/" + year + " " + hourOfDay + ":" + minute);
-                                else {
-                                    Toast.makeText(getContext(), "End Time cannot be before Start Time", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }, startHourOfDay, startMinute, true);
-                        timePickerDialog.show();
-                    }
-                }, startYear, startMonth, startDayOfMonth);
-                datePickerDialog.show();
-            }
-        });
-    }
+                    public void onFailure(Call<Event> call, Throwable t) { }
+                });
 
-    private void sendImage() {
-        progressDialog.setMessage("Uploading Image");
-        ImageUploadRequest imageUploadRequest = new ImageUploadRequest(base64Image);
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.uploadImage("sessionid=" + getArguments().getString(Constants.SESSION_ID), imageUploadRequest).enqueue(new Callback<ImageUploadResponse>() {
-            @Override
-            public void onResponse(Call<ImageUploadResponse> call, Response<ImageUploadResponse> response) {
-                if (response.isSuccessful()) {
-                    ImageUploadResponse imageUploadResponse = response.body();
-                    String imageURL = imageUploadResponse.getPictureURL();
-                    addEvent(imageURL);
-                }
+                return true;
             }
-
-            @Override
-            public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-                progressDialog.dismiss();
-            }
-        });
-    }
-
-    public void addEvent(String eventImageURL) {
-        progressDialog.setMessage("Creating Event");
-        EventCreateRequest eventCreateRequest = new EventCreateRequest(eventName.getText().toString(), details.getText().toString(), eventImageURL, timestamp_start.toString(), timestamp_end.toString(), false, Arrays.asList(new String[]{venue.getText().toString()}), Arrays.asList(new String[]{"bde82d5e-f379-4b8a-ae38-a9f03e4f1c4a"}));
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.createEvent("sessionid=" + getArguments().getString(Constants.SESSION_ID), eventCreateRequest).enqueue(new Callback<EventCreateResponse>() {
-            @Override
-            public void onResponse(Call<EventCreateResponse> call, Response<EventCreateResponse> response) {
-                Toast.makeText(getContext(), "Event Created", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<EventCreateResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "Event Creation Failed", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-        });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-            ImageViewCompat.setImageTintList(eventPictureImageView, null);
-            Picasso.get().load(selectedImage).into(eventPictureImageView);
-            base64Image = convertImageToString(getScaledBitmap(picturePath, 800, 800));
-            Log.d(TAG, "onActivityResult: " + base64Image);
+            // return true; //Indicates WebView to NOT load the url;
+            return false; //Allow WebView to load url
         }
     }
 
-    private Bitmap getScaledBitmap(String picturePath, int width, int height) {
-        BitmapFactory.Options sizeOptions = new BitmapFactory.Options();
-        sizeOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(picturePath, sizeOptions);
+    public class MyWebChromeClient extends WebChromeClient {
 
-        int inSampleSize = calculateInSampleSize(sizeOptions, width, height);
-
-        sizeOptions.inJustDecodeBounds = false;
-        sizeOptions.inSampleSize = inSampleSize;
-
-        return BitmapFactory.decodeFile(picturePath, sizeOptions);
-    }
-
-    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            // Calculate ratios of height and width to requested height and
-            // width
-            final int heightRatio = Math.round((float) height / (float) reqHeight);
-            final int widthRatio = Math.round((float) width / (float) reqWidth);
-
-            // Choose the smallest ratio as inSampleSize value, this will
-            // guarantee
-            // a final image with both dimensions larger than or equal to the
-            // requested height and width.
-            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        @Override
+        public void onProgressChanged(WebView view, int progress) {
+            if (progress < 100) {
+                progressDialog.show();
+            }
+            if (progress == 100) {
+                progressDialog.dismiss();
+            }
         }
 
-        return inSampleSize;
+        @Override
+        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+            // make sure there is no existing message
+            if (uploadMessage != null) {
+                uploadMessage.onReceiveValue(null);
+                uploadMessage = null;
+            }
+
+            uploadMessage = filePathCallback;
+
+            Intent intent = fileChooserParams.createIntent();
+            try {
+                startActivityForResult(intent, 101);
+            } catch (ActivityNotFoundException e) {
+                uploadMessage = null;
+                Toast.makeText(getContext(), "Cannot open file chooser", Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    void openEvent(Event event) {
+        String eventJson = new Gson().toJson(event);
+        Bundle bundle = getArguments();
+        if (bundle == null)
+            bundle = new Bundle();
+        bundle.putString(Constants.EVENT_JSON, eventJson);
+        EventFragment eventFragment = new EventFragment();
+        eventFragment.setArguments(bundle);
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+        transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
+        transaction.addToBackStack(eventFragment.getTag()).commit();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == 101) {
+            if (uploadMessage == null) return;
+            uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
+            uploadMessage = null;
+        }
     }
 }

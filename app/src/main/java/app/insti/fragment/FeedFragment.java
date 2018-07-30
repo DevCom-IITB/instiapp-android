@@ -61,8 +61,6 @@ public class FeedFragment extends BaseFragment {
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Feed");
 
-        fab = (FloatingActionButton) view.findViewById(R.id.fab);
-
         feedSwipeRefreshLayout = view.findViewById(R.id.feed_swipe_refresh_layout);
         feedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -71,32 +69,17 @@ public class FeedFragment extends BaseFragment {
             }
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddEventFragment addEventFragment = new AddEventFragment();
-                addEventFragment.setArguments(getArguments());
-                FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.relative_layout, addEventFragment);
-                ft.addToBackStack("addEvent");
-                ft.commit();
-            }
-        });
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        if (((MainActivity) getActivity()).createEventAccess()) {
-            /* TODO: Uncomment the following line when Add Event is completed */
-            // fab.setVisibility(View.VISIBLE);
-        }
-
         appDatabase = AppDatabase.getAppDatabase(getContext());
         new showEventsFromDB().execute();
+
+        fab = (FloatingActionButton) getView().findViewById(R.id.fab);
+        feedRecyclerView = getView().findViewById(R.id.feed_recycler_view);
 
         updateFeed();
     }
@@ -130,6 +113,26 @@ public class FeedFragment extends BaseFragment {
         /* Skip if we're already destroyed */
         if (getActivity() == null || getView() == null) return;
 
+        if (((MainActivity) getActivity()).createEventAccess()) {
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AddEventFragment addEventFragment = new AddEventFragment();
+                    Bundle bundle = new Bundle();
+                    addEventFragment.setArguments(bundle);
+                    ((MainActivity) getActivity()).updateFragment(addEventFragment);
+                }
+            });
+            feedRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                    if (dy > 0) fab.hide();
+                    else if (dy < 0) fab.show();
+                }
+            });
+        }
+
         /* Make first event image big */
         if (events.size() > 1) {
             events.get(0).setEventBigImage(true);
@@ -156,9 +159,9 @@ public class FeedFragment extends BaseFragment {
             @Override
             public void run(Activity pActivity) {
                 try {
-                    feedRecyclerView = getActivity().findViewById(R.id.feed_recycler_view);
                     feedRecyclerView.setAdapter(feedAdapter);
                     feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
