@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/button_CMSMaint"
             style="@style/QuickLink"
-            android:text="CMS - Maintainance" />
+            android:text="CMS - Maintenance" />
 
         <TextView
             android:id="@+id/button_CMSNet"
@@ -91,7 +91,7 @@
         <TextView
             android:id="@+id/button_Courselist"
             style="@style/QuickLink"
-            android:text="CMS Maintainance" />
+            android:text="Course List" />
 
         <TextView
             style="@style/QuickLinksHeading"

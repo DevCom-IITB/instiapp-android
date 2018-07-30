@@ -1,6 +1,5 @@
 package app.insti.notifications;
 
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,8 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.v4.app.JobIntentService;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
 import java.util.Date;
@@ -28,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class NotificationIntentService extends IntentService {
+public class NotificationIntentService extends JobIntentService {
 
     private static final String ACTION_START = "ACTION_START";
     private static final String ACTION_DELETE = "ACTION_DELETE";
@@ -39,7 +38,7 @@ public class NotificationIntentService extends IntentService {
     private NotificationManager manager;
 
     public NotificationIntentService() {
-        super(NotificationIntentService.class.getSimpleName());
+        super();
     }
 
     public static Intent createIntentStartNotificationService(Context context) {
@@ -60,7 +59,7 @@ public class NotificationIntentService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(Intent intent) {
         Log.d(getClass().getSimpleName(), "onHandleIntent, started handling a notification event");
         try {
             String action = intent.getAction();
@@ -98,9 +97,7 @@ public class NotificationIntentService extends IntentService {
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 startActivity(mapIntent);
             }
-        } finally {
-            WakefulBroadcastReceiver.completeWakefulIntent(intent);
-        }
+        } finally { }
     }
 
     private void processDeleteNotification(Intent intent) {
@@ -124,7 +121,8 @@ public class NotificationIntentService extends IntentService {
                             long timediff = getDateDiff(new Date(), event.getEventStartTime(), TimeUnit.MINUTES);
                             if (timediff <= 30 && timediff > 0) { // Change this to 30*10000 for testing
                                 NOTIFICATION_ID = event.getEventID().hashCode();
-                                final NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+
+                                final NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "INSTIAPP_CHANNEL");
                                 builder.setContentTitle(event.getEventName())
                                         .setAutoCancel(true)
                                         .setColor(getResources().getColor(R.color.colorAccent))

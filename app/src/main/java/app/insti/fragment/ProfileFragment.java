@@ -142,7 +142,7 @@ public class ProfileFragment extends BackHandledFragment {
 
         Picasso.get()
                 .load(user.getUserProfilePictureUrl())
-                .resize(800, 0)
+                .resize(500, 0)
                 .placeholder(R.drawable.user_placeholder)
                 .into(userProfilePictureImageView);
 
