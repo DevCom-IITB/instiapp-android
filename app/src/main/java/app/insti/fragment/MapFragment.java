@@ -123,9 +123,6 @@ public class MapFragment extends Fragment implements TextWatcher,
     private List<com.mrane.data.Marker> markerlist;
     public FragmentTransaction transaction;
     public CampusMapView campusMapView;
-    public ImageButton removeIcon;
-    public ImageButton indexIcon;
-    public ImageButton mapIcon;
     public ImageButton addMarkerIcon;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -320,27 +317,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         campusMapView.setSettingsManager(settingsManager);
         campusMapView.setData(data);
 
-        removeIcon = (ImageButton) getActivity().findViewById(R.id.remove_icon);
-        removeIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeClick(v);
-            }
-        });
-        indexIcon = (ImageButton) getActivity().findViewById(R.id.index_icon);
-        indexIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                indexClick(v);
-            }
-        });
-        mapIcon = (ImageButton) getActivity().findViewById(R.id.map_icon);
-        mapIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mapClick(v);
-            }
-        });
         addMarkerIcon = (ImageButton) getActivity().findViewById(R.id.add_marker_icon);
 
         fragmentManager = getChildFragmentManager();
@@ -372,12 +348,10 @@ public class MapFragment extends Fragment implements TextWatcher,
                 R.string.drawer_open,
                 R.string.drawer_close) {
 
-            TextView settingsTitle = (TextView) getActivity().findViewById(R.id.settings_title);
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                settingsTitle.setVisibility(View.GONE);
 
                 editText.setVisibility(View.VISIBLE);
                 setCorrectIcons();
@@ -387,10 +361,6 @@ public class MapFragment extends Fragment implements TextWatcher,
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 editText.setVisibility(View.GONE);
-                indexIcon.setVisibility(View.GONE);
-                mapIcon.setVisibility(View.GONE);
-                removeIcon.setVisibility(View.GONE);
-                settingsTitle.setVisibility(View.VISIBLE);
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -453,15 +423,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         }
         if (placeSubHeadTextView != null) {
             placeSubHeadTextView.setTypeface(regular);
-        }
-        if (editText != null) {
-            editText.setTypeface(regular);
-        }
-
-        TextView settingsTitle = (TextView) getActivity()
-                .findViewById(R.id.settings_title);
-        if (settingsTitle != null) {
-            settingsTitle.setTypeface(regular);
         }
     }
 
@@ -1009,43 +970,26 @@ public class MapFragment extends Fragment implements TextWatcher,
         if (noFragments) {
             if (this.handleRemoveIcon()) {
                 this.noIndexButton();
-            } else {
-                this.setVisibleButton(indexIcon);
             }
         } else {
             if (fragment instanceof ListFragment) {
                 if (this.handleRemoveIcon()) {
                     this.noIndexButton();
-                } else {
-                    this.setVisibleButton(indexIcon);
                 }
-            } else if (fragment instanceof IndexFragment) {
-                this.setVisibleButton(mapIcon);
             }
         }
     }
 
     private void noIndexButton() {
-        indexIcon.setVisibility(View.GONE);
-        mapIcon.setVisibility(View.GONE);
     }
 
     private boolean handleRemoveIcon() {
         String text = editText.getText().toString();
         if (text.isEmpty() || text.equals(null)) {
-            removeIcon.setVisibility(View.GONE);
             return false;
         } else {
-            removeIcon.setVisibility(View.VISIBLE);
             return true;
         }
-    }
-
-    private void setVisibleButton(ImageButton icon) {
-        indexIcon.setVisibility(View.GONE);
-        mapIcon.setVisibility(View.GONE);
-
-        icon.setVisibility(View.VISIBLE);
     }
 
     @Override
