@@ -87,7 +87,7 @@ public class BodyFragment extends BackHandledFragment {
     private float startScaleFinal;
     private ImageView bodyPicture;
     private Body body;
-
+    private boolean bodyDisplayed = false;
 
     public BodyFragment() {
         // Required empty public constructor
@@ -136,6 +136,9 @@ public class BodyFragment extends BackHandledFragment {
         body = min_body;
         displayBody();
         new getDbBody().execute(min_body.getBodyID());
+
+        updateBody();
+
         bodySwipeRefreshLayout = getActivity().findViewById(R.id.body_swipe_refresh_layout);
         bodySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -158,9 +161,12 @@ public class BodyFragment extends BackHandledFragment {
 
                     new updateDbBody().execute(bodyResponse);
 
-                    body = bodyResponse;
-                    displayBody();
-                    bodySwipeRefreshLayout.setRefreshing(false);
+                    if (!bodyDisplayed) {
+                        body = bodyResponse;
+                        displayBody();
+                    }
+                    if (bodySwipeRefreshLayout.isRefreshing())
+                        bodySwipeRefreshLayout.setRefreshing(false);
                 }
             }
 
@@ -182,7 +188,8 @@ public class BodyFragment extends BackHandledFragment {
 
     private void displayBody() {
         /* Skip if we're already destroyed */
-        if (getView() == null) return;
+        if (getActivity() == null || getView() == null) return;
+        if(!body.equals(min_body)) bodyDisplayed = true;
 
         TextView bodyName = (TextView) getView().findViewById(R.id.body_name);
         TextView bodyDescription = (TextView) getView().findViewById(R.id.body_description);
@@ -416,11 +423,9 @@ public class BodyFragment extends BackHandledFragment {
 
         @Override
         protected void onPostExecute(Body[] result) {
-            if (result.length > 0) {
+            if (result.length > 0 && !bodyDisplayed) {
                 body = result[0];
                 displayBody();
-            } else {
-                updateBody();
             }
         }
     }
