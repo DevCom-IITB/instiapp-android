@@ -253,7 +253,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         Locations mLocations = new Locations(venues);
         data = mLocations.data;
         markerlist = new ArrayList<com.mrane.data.Marker>(data.values());
-        setUpDrawer();
         setupMap();
 
         // Setup locate button
@@ -336,35 +335,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         });
 
         getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-    }
-
-    private void setUpDrawer() {
-        Toolbar mToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        actionBarView = getActivity().findViewById(R.id.toolbar);
-        mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(getActivity(),
-                mDrawerLayout,
-                mToolbar,
-                R.string.drawer_open,
-                R.string.drawer_close) {
-
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-
-                editText.setVisibility(View.VISIBLE);
-                setCorrectIcons();
-            }
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                editText.setVisibility(View.GONE);
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
     }
 
     @Override
