@@ -12,8 +12,10 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -345,6 +347,29 @@ public class BodyFragment extends BackHandledFragment {
         childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+
+        /* Show update button if role */
+        final FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.edit_fab);
+        fab.setVisibility(View.VISIBLE);
+        NestedScrollView nsv = (NestedScrollView) getView().findViewById(R.id.body_scrollview);
+        nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > oldScrollY) fab.hide();
+                else fab.show();
+            }
+        });
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddEventFragment addEventFragment = new AddEventFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("bodyId", body.getBodyID());
+                addEventFragment.setArguments(bundle);
+                ((MainActivity) getActivity()).updateFragment(addEventFragment);
+            }
+        });
     }
 
     /**

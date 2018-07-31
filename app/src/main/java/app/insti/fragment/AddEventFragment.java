@@ -29,6 +29,7 @@ import app.insti.MainActivity;
 import app.insti.R;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
+import app.insti.data.Body;
 import app.insti.data.Event;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,6 +91,9 @@ public class AddEventFragment extends BaseFragment {
             String url = "https://" + host + "/add-event?sandbox=true";
             if (getArguments().containsKey("id")) {
                 url = "https://" + host + "/edit-event/" + getArguments().getString("id") + "?sandbox=true";
+            } else if (getArguments().containsKey("bodyId")) {
+                url = "https://" + host + "/edit-body/" + getArguments().getString("bodyId") + "?sandbox=true";
+                toolbar.setTitle("Update Organization");
             }
             webView.loadUrl(url);
 
@@ -143,6 +147,23 @@ public class AddEventFragment extends BaseFragment {
 
                     @Override
                     public void onFailure(Call<Event> call, Throwable t) { }
+                });
+
+                return true;
+            } else if (url.contains("/org/")) {
+                url = url.substring(url.lastIndexOf("/") + 1);
+
+                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                retrofitInterface.getBody(((MainActivity) getActivity()).getSessionIDHeader(), url).enqueue(new Callback<Body>() {
+                    @Override
+                    public void onResponse(Call<Body> call, Response<Body> response) {
+                        if (response.isSuccessful()) {
+                            openBody(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Body> call, Throwable t) { }
                 });
 
                 return true;
@@ -200,6 +221,15 @@ public class AddEventFragment extends BaseFragment {
         transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
         transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
         transaction.addToBackStack(eventFragment.getTag()).commit();
+    }
+
+    void openBody(Body body) {
+        BodyFragment bodyFragment = BodyFragment.newInstance(body);
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+        transaction.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
+        transaction.addToBackStack(bodyFragment.getTag()).commit();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data){

@@ -8,201 +8,220 @@
     android:orientation="vertical"
     tools:context=".fragment.BodyFragment">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/body_swipe_refresh_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <android.support.v4.widget.NestedScrollView
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/body_swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/body_scrollview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/body_picture"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter" />
-
-                <android.support.v7.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="@color/colorPrimary">
+                    android:orientation="vertical">
 
-                    <LinearLayout
+                    <ImageView
+                        android:id="@+id/body_picture"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter" />
+
+                    <android.support.v7.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginBottom="12dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_weight="3"
-                        android:orientation="vertical">
+                        app:cardBackgroundColor="@color/colorPrimary">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_weight="3"
+                            android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/body_name"
-                                android:layout_width="0dp"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="10"
-                                android:text="Org Title"
-                                android:textColor="#fff"
-                                android:textSize="21sp"
-                                android:textStyle="bold" />
+                                android:orientation="horizontal">
 
-                            <ImageButton
-                                android:id="@+id/web_body_button"
-                                android:layout_width="10dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_weight="1"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:contentDescription="Org Website"
-                                android:src="@drawable/ic_language_black_24dp"
-                                android:tint="@color/colorWhite"
-                                android:visibility="invisible" />
+                                <TextView
+                                    android:id="@+id/body_name"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="10"
+                                    android:text="Org Title"
+                                    android:textColor="#fff"
+                                    android:textSize="21sp"
+                                    android:textStyle="bold" />
 
-                            <ImageButton
-                                android:id="@+id/share_body_button"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_vertical"
-                                android:layout_weight="1"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:contentDescription="Share Body"
-                                android:src="@drawable/ic_menu_share"
-                                android:tint="@color/colorWhite" />
+                                <ImageButton
+                                    android:id="@+id/web_body_button"
+                                    android:layout_width="10dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_weight="1"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="Org Website"
+                                    android:src="@drawable/ic_language_black_24dp"
+                                    android:tint="@color/colorWhite"
+                                    android:visibility="invisible" />
+
+                                <ImageButton
+                                    android:id="@+id/share_body_button"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_weight="1"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="Share Body"
+                                    android:src="@drawable/ic_menu_share"
+                                    android:tint="@color/colorWhite" />
+                            </LinearLayout>
                         </LinearLayout>
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
+                    </android.support.v7.widget.CardView>
 
 
-                <LinearLayout
-                    style="?android:attr/buttonBarStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/follow_button"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:textAllCaps="false"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        style="?android:attr/buttonBarStyle"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="0dp"
-                        android:layout_weight="1"
-                        android:text="FOLLOW"
-                        android:textColor="@color/secondaryTextColor"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:clickable="true" />
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/follow_button"
+                            style="?android:attr/buttonBarButtonStyle"
+                            android:textAllCaps="false"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="0dp"
+                            android:layout_weight="1"
+                            android:text="FOLLOW"
+                            android:textColor="@color/secondaryTextColor"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:clickable="true" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#aaa">
+
+                    </View>
+
+                    <TextView
+                        android:id="@+id/body_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="12dp"
+                        android:textColor="#333"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/body_events_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:fontFamily="sans-serif-light"
+                        android:text="Events"
+                        android:textSize="20sp"
+                        android:visibility="gone" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/event_card_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:nestedScrollingEnabled="false"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/body_orgs_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:fontFamily="sans-serif-light"
+                        android:text="Organizations"
+                        android:textSize="20sp"
+                        android:visibility="gone" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/org_card_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:nestedScrollingEnabled="false"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/body_people_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:fontFamily="sans-serif-light"
+                        android:text="People"
+                        android:textSize="20sp"
+                        android:visibility="gone" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/people_card_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:nestedScrollingEnabled="false"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/body_parents_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:fontFamily="sans-serif-light"
+                        android:text="Part of"
+                        android:textSize="20sp"
+                        android:visibility="gone" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/parentorg_card_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:nestedScrollingEnabled="false"
+                        android:visibility="gone" />
+
                 </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#aaa">
+        </android.support.v4.widget.SwipeRefreshLayout>
 
-                </View>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/edit_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_edit_black_24dp"
+            android:tint="@android:color/black"
+            android:visibility="gone"/>
 
-                <TextView
-                    android:id="@+id/body_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="12dp"
-                    android:textColor="#333"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/body_events_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:fontFamily="sans-serif-light"
-                    android:text="Events"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/event_card_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:nestedScrollingEnabled="false"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/body_orgs_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:fontFamily="sans-serif-light"
-                    android:text="Organizations"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/org_card_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:nestedScrollingEnabled="false"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/body_people_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:fontFamily="sans-serif-light"
-                    android:text="People"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/people_card_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:nestedScrollingEnabled="false"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/body_parents_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:fontFamily="sans-serif-light"
-                    android:text="Part of"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/parentorg_card_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:nestedScrollingEnabled="false"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/loadingPanel"
