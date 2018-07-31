@@ -12,20 +12,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_marginTop="8dp"
+        <EditText
+            android:id="@+id/explore_search"
+            android:background="@color/colorPrimary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/explore_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="6dp"
-                android:layout_marginRight="6dp"
-                android:layout_marginTop="3dp"
-                android:hint="Search" />
-        </android.support.design.widget.TextInputLayout>
+            android:layout_height="wrap_content"
+            android:paddingLeft="18dp"
+            android:paddingRight="6dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="15dp"
+            android:hint="Search"
+            android:textColor="@color/primaryTextColor"
+            android:textColorHint="@color/primaryTextColor"/>
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -70,7 +68,8 @@
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminate="true" />
+            android:indeterminate="true"
+            android:theme="@style/BlueAccent"/>
     </RelativeLayout>
 
 </FrameLayout>
