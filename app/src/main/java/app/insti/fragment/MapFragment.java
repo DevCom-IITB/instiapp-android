@@ -69,7 +69,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.mrane.campusmap.ExpandableListAdapter;
 import com.mrane.campusmap.FuzzySearchAdapter;
-import com.mrane.campusmap.IndexFragment;
 import com.mrane.campusmap.ListFragment;
 import com.mrane.campusmap.SettingsManager;
 import com.mrane.data.Building;
@@ -110,7 +109,6 @@ public class MapFragment extends Fragment implements TextWatcher,
     private ExpandableListAdapter expAdapter;
     private FragmentManager fragmentManager;
     private ListFragment listFragment;
-    private IndexFragment indexFragment;
     private Fragment fragment;
     public LinearLayout newSmallCard;
     public ImageView placeColor;
@@ -320,7 +318,6 @@ public class MapFragment extends Fragment implements TextWatcher,
 
         fragmentManager = getChildFragmentManager();
         listFragment = new ListFragment();
-        indexFragment = new IndexFragment();
 
         adapter.setSettingsManager(settingsManager);
 
@@ -887,22 +884,6 @@ public class MapFragment extends Fragment implements TextWatcher,
     public void dismissCard() {
         cardSlideListener.dismissCard();
         campusMapView.invalidate();
-    }
-
-    public void removeClick(View v) {
-        this.editText.setText("");
-        displayMap();
-    }
-
-    public void indexClick(View v) {
-        this.putFragment(indexFragment);
-        this.removeEditTextFocus(null);
-        this.setCorrectIcons();
-    }
-
-    public void mapClick(View v) {
-        this.backToMap();
-        this.removeEditTextFocus("");
     }
 
     private void removeEditTextFocus(String text) {
