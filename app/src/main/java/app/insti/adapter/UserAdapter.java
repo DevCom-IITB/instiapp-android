@@ -48,7 +48,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         User user = userList.get(position);
         holder.userName.setText(user.getUserName());
-        holder.role.setText(user.getCurrentRole());
+        if (user.getCurrentRole() == null || user.getCurrentRole().equals("")) {
+            holder.role.setText(user.getUserLDAPId());
+        } else {
+            holder.role.setText(user.getCurrentRole());
+        }
         Picasso.get()
                 .load(user.getUserProfilePictureUrl())
                 .resize(150, 0)
