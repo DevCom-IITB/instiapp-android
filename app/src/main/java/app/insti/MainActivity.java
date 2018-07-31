@@ -472,6 +472,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
+    public boolean editBodyAccess(Body toEditBody) {
+        if (currentUser == null || currentUser.getUserRoles() == null || currentUser.getUserRoles().size() == 0)
+            return false;
+
+        for (Role role : currentUser.getUserRoles()) {
+            for (Body body : role.getRoleBodies()) {
+                if (body.getBodyID().equals(toEditBody.getBodyID())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
