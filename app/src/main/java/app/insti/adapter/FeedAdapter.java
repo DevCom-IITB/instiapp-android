@@ -65,7 +65,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         if (timestamp != null) {
             Date Date = new Date(timestamp.getTime());
             SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
-            SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm a");
+            SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm");
 
             subtitle += simpleDateFormatDate.format(Date) + " | " + simpleDateFormatTime.format(Date);
         }
