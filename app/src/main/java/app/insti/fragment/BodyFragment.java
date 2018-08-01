@@ -132,17 +132,22 @@ public class BodyFragment extends BackHandledFragment {
         super.onStart();
 
         /* Initialize */
+        bodyDisplayed = false;
         appDatabase = AppDatabase.getAppDatabase(getContext());
         body = min_body;
         displayBody();
-        new getDbBody().execute(min_body.getBodyID());
 
-        updateBody();
+        /* Check if full body was passed */
+        if (min_body.getBodyDescription() == null) {
+            new getDbBody().execute(min_body.getBodyID());
+            updateBody();
+        }
 
         bodySwipeRefreshLayout = getActivity().findViewById(R.id.body_swipe_refresh_layout);
         bodySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                bodyDisplayed = false;
                 updateBody();
             }
         });
