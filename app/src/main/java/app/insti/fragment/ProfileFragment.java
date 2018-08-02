@@ -66,6 +66,13 @@ public class ProfileFragment extends BackHandledFragment {
         // Required empty public constructor
     }
 
+    public static ProfileFragment newInstance(String userID) {
+        ProfileFragment fragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.USER_ID, userID);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -219,14 +226,6 @@ public class ProfileFragment extends BackHandledFragment {
         });
         set.start();
         mCurrentAnimator = set;
-    }
-
-    public static ProfileFragment newInstance(String userID) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(Constants.USER_ID, userID);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     private void zoomImageFromThumb(final ImageView thumbView) {

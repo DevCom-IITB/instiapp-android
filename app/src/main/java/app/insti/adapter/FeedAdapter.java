@@ -1,7 +1,6 @@
 package app.insti.adapter;
 
 import android.content.Context;
-import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,6 +96,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         return events.size();
     }
 
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView eventPicture;
         private TextView eventTitle;
@@ -111,9 +114,5 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             eventSubtitle = (TextView) itemView.findViewById(R.id.object_subtitle);
             eventBigPicture = (ImageView) itemView.findViewById(R.id.big_object_picture);
         }
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
     }
 }

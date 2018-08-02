@@ -44,9 +44,9 @@ import java.util.List;
 
 import app.insti.Constants;
 import app.insti.ItemClickListener;
-import app.insti.activity.MainActivity;
 import app.insti.R;
 import app.insti.ShareURLMaker;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
@@ -92,6 +92,27 @@ public class EventFragment extends BackHandledFragment {
         // Required empty public constructor
     }
 
+    /**
+     * Get a spannable with a small count badge to set for an element text
+     *
+     * @param text  Text to show in the spannable
+     * @param count integer count to show in the badge
+     * @return spannable to be used as view.setText(spannable)
+     */
+    static Spannable getCountBadgeSpannable(String text, Integer count) {
+        // Check for nulls
+        if (count == null) return new SpannableString(text);
+
+        // Make a spannable
+        String countString = Integer.toString(count);
+        Spannable spannable = new SpannableString(text + " " + countString);
+
+        // Set font face and color of badge
+        spannable.setSpan(new RelativeSizeSpan(0.75f), text.length(), text.length() + 1 + countString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(Color.DKGRAY), text.length(), text.length() + 1 + countString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+        return spannable;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -270,28 +291,6 @@ public class EventFragment extends BackHandledFragment {
         goingButton.setText(getCountBadgeSpannable("GOING", event.getEventGoingCount()));
     }
 
-    /**
-     * Get a spannable with a small count badge to set for an element text
-     *
-     * @param text  Text to show in the spannable
-     * @param count integer count to show in the badge
-     * @return spannable to be used as view.setText(spannable)
-     */
-    static Spannable getCountBadgeSpannable(String text, Integer count) {
-        // Check for nulls
-        if (count == null) return new SpannableString(text);
-
-        // Make a spannable
-        String countString = Integer.toString(count);
-        Spannable spannable = new SpannableString(text + " " + countString);
-
-        // Set font face and color of badge
-        spannable.setSpan(new RelativeSizeSpan(0.75f), text.length(), text.length() + 1 + countString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(Color.DKGRAY), text.length(), text.length() + 1 + countString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-
-        return spannable;
-    }
-
     View.OnClickListener getUESOnClickListener(final int status) {
         return new View.OnClickListener() {
             @Override
@@ -304,14 +303,26 @@ public class EventFragment extends BackHandledFragment {
                         if (response.isSuccessful()) {
                             /* TODO: Find a better way to  change counts */
                             if (endStatus == 0) {
-                                if (event.getEventUserUes() == 1) { event.setEventInterestedCount(event.getEventInterestedCount() - 1); }
-                                if (event.getEventUserUes() == 2) { event.setEventGoingCount(event.getEventGoingCount() - 1); }
+                                if (event.getEventUserUes() == 1) {
+                                    event.setEventInterestedCount(event.getEventInterestedCount() - 1);
+                                }
+                                if (event.getEventUserUes() == 2) {
+                                    event.setEventGoingCount(event.getEventGoingCount() - 1);
+                                }
                             } else if (endStatus == 1) {
-                                if (event.getEventUserUes() != 1) { event.setEventInterestedCount(event.getEventInterestedCount() + 1); }
-                                if (event.getEventUserUes() == 2) { event.setEventGoingCount(event.getEventGoingCount() - 1); }
+                                if (event.getEventUserUes() != 1) {
+                                    event.setEventInterestedCount(event.getEventInterestedCount() + 1);
+                                }
+                                if (event.getEventUserUes() == 2) {
+                                    event.setEventGoingCount(event.getEventGoingCount() - 1);
+                                }
                             } else if (endStatus == 2) {
-                                if (event.getEventUserUes() != 2) { event.setEventGoingCount(event.getEventGoingCount() + 1); }
-                                if (event.getEventUserUes() == 1) { event.setEventInterestedCount(event.getEventInterestedCount() - 1); }
+                                if (event.getEventUserUes() != 2) {
+                                    event.setEventGoingCount(event.getEventGoingCount() + 1);
+                                }
+                                if (event.getEventUserUes() == 1) {
+                                    event.setEventInterestedCount(event.getEventInterestedCount() - 1);
+                                }
                             }
 
                             event.setEventUserUes(endStatus);
@@ -327,14 +338,6 @@ public class EventFragment extends BackHandledFragment {
                 });
             }
         };
-    }
-
-    private class updateDbEvent extends AsyncTask<Event, Void, Integer> {
-        @Override
-        protected Integer doInBackground(Event... event) {
-            appDatabase.dbDao().updateEvent(event[0]);
-            return 1;
-        }
     }
 
     private void zoomImageFromThumb(final ImageView thumbView) {
@@ -446,7 +449,7 @@ public class EventFragment extends BackHandledFragment {
                 .ofFloat(expandedImageView, View.X, startBounds.left))
                 .with(ObjectAnimator
                         .ofFloat(expandedImageView,
-                                View.Y,startBounds.top))
+                                View.Y, startBounds.top))
                 .with(ObjectAnimator
                         .ofFloat(expandedImageView,
                                 View.SCALE_X, startScaleFinal))
@@ -472,5 +475,13 @@ public class EventFragment extends BackHandledFragment {
         });
         set.start();
         mCurrentAnimator = set;
+    }
+
+    private class updateDbEvent extends AsyncTask<Event, Void, Integer> {
+        @Override
+        protected Integer doInBackground(Event... event) {
+            appDatabase.dbDao().updateEvent(event[0]);
+            return 1;
+        }
     }
 }

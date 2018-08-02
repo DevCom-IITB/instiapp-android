@@ -2,17 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <ExpandableListView
         android:id="@+id/index_list"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
+        android:background="@android:color/transparent"
         android:divider="@null"
+        android:groupIndicator="@null"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
-        android:groupIndicator="@null"
-        android:background="@android:color/transparent"
         android:transcriptMode="disabled" />
 
 </LinearLayout>

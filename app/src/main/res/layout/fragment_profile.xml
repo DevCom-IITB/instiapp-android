@@ -33,9 +33,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
-                    android:textSize="20sp"
                     android:fontFamily="sans-serif-light"
-                    android:textColor="@color/secondaryTextColor"/>
+                    android:textColor="@color/secondaryTextColor"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/user_rollno_profile"
@@ -105,13 +105,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:theme="@style/BlueAccent"/>
+            android:theme="@style/BlueAccent" />
     </RelativeLayout>
 
     <app.insti.TouchImageView
         android:id="@+id/expanded_image_profile"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:contentDescription="Zoomed Image" />
+        android:contentDescription="Zoomed Image"
+        android:visibility="gone" />
 </RelativeLayout>

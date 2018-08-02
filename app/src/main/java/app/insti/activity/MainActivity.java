@@ -80,6 +80,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean showNotifications = false;
     private BackHandledFragment selectedFragment;
 
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int importance = NotificationManager.IMPORTANCE_HIGH;
 
         NotificationChannel mChannel = null;
-        mChannel = new NotificationChannel(id, name,importance);
+        mChannel = new NotificationChannel(id, name, importance);
 
         // Configure the notification channel.
         mChannel.setDescription(description);
@@ -227,7 +238,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /** Update FCM Id and update profile */
+    /**
+     * Update FCM Id and update profile
+     */
     private void updateFCMId() {
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
@@ -248,7 +261,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
 
                     @Override
-                    public void onFailure(Call<User> call, Throwable t) { }
+                    public void onFailure(Call<User> call, Throwable t) {
+                    }
                 });
             }
         });
@@ -290,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        if(selectedFragment == null || !selectedFragment.onBackPressed()) {
+        if (selectedFragment == null || !selectedFragment.onBackPressed()) {
             // Selected fragment did not consume the back press event.
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -309,7 +323,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -507,17 +520,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         return false;
-    }
-
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override

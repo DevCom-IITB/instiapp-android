@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import app.insti.Constants;
-import app.insti.activity.MainActivity;
 import app.insti.R;
 import app.insti.SessionManager;
+import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
 import app.insti.data.Event;
@@ -29,11 +29,11 @@ import retrofit2.Response;
 
 public class NotificationIntentService extends JobIntentService {
 
+    public static final String ACTION_OPEN_EVENT = "ACTION_OPEN_EVENT";
     private static final String ACTION_START = "ACTION_START";
     private static final String ACTION_DELETE = "ACTION_DELETE";
     private static final String ACTION_NAVIGATE = "ACTION_NAVIGATE";
     private static final String ACTION_NOT_GOING = "ACTION_NOT_GOING";
-    public static final String ACTION_OPEN_EVENT = "ACTION_OPEN_EVENT";
     private static int NOTIFICATION_ID = 1;
     private NotificationManager manager;
 
@@ -97,7 +97,8 @@ public class NotificationIntentService extends JobIntentService {
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 startActivity(mapIntent);
             }
-        } finally { }
+        } finally {
+        }
     }
 
     private void processDeleteNotification(Intent intent) {

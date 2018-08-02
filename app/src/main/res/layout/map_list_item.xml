@@ -2,58 +2,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#F0E5E5E5"
     android:minHeight="48dp"
-    android:orientation="horizontal"
-    android:background="#F0E5E5E5">
-	<RelativeLayout 
-	    android:layout_width="12dp"
-	    android:layout_height="fill_parent">
-		<View 
-	        android:id="@+id/item_group_color"
-	        android:layout_width="12dp"
-	        android:layout_height="fill_parent"
-	        android:layout_alignParentTop="true"
-	        android:layout_alignParentBottom="true"
-	        android:layout_alignParentLeft="true"
-	        android:paddingLeft="0dp"
-	        android:layout_marginLeft="0dp"/>
-	    <View 
-	        android:layout_width="12dp"
-	        android:layout_height="fill_parent"
-	        android:layout_alignParentTop="true"
-	        android:layout_alignParentBottom="true"
-	        android:layout_alignParentLeft="true"
-	        android:paddingLeft="0dp"
-	        android:layout_marginLeft="0dp" />
-	 
-	</RelativeLayout>
-	<RelativeLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:minHeight="48dp"
-	    android:paddingRight="8dp">
-		<View 
-		    android:layout_width="fill_parent"
-		    android:layout_height="1dp"
-	        android:padding="8dp"
-	        android:layout_marginLeft="40dp"
-		    android:layout_alignParentBottom="true"
-		    android:layout_alignParentLeft="true" />
-		<View 
-		    android:layout_width="fill_parent"
-		    android:layout_height="1dp"
-	        android:padding="8dp"
-	        android:layout_marginLeft="40dp"
-		    android:layout_alignParentTop="true"
-		    android:layout_alignParentLeft="true" />
-		<TextView
-	        android:id="@+id/lblListItem"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_centerVertical="true"
-	        android:layout_alignParentLeft="true"
-	        android:padding="8dp"
-	        android:fontFamily="sans-serif-light"
-	        android:layout_marginLeft="48dp" />
-	</RelativeLayout>
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="12dp"
+        android:layout_height="fill_parent">
+
+        <View
+            android:id="@+id/item_group_color"
+            android:layout_width="12dp"
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="0dp"
+            android:paddingLeft="0dp" />
+
+        <View
+            android:layout_width="12dp"
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="0dp"
+            android:paddingLeft="0dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:paddingRight="8dp">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="40dp"
+            android:padding="8dp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="40dp"
+            android:padding="8dp" />
+
+        <TextView
+            android:id="@+id/lblListItem"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="48dp"
+            android:fontFamily="sans-serif-light"
+            android:padding="8dp" />
+    </RelativeLayout>
 </LinearLayout>

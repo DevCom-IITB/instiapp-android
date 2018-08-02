@@ -157,15 +157,15 @@
                         <Button
                             android:id="@+id/going_button"
                             style="?android:attr/buttonBarButtonStyle"
-                            android:textAllCaps="false"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="0dp"
                             android:layout_weight="1"
-                            android:text="GOING"
-                            android:textColor="@color/secondaryTextColor"
+                            android:clickable="true"
                             android:foreground="?attr/selectableItemBackground"
-                            android:clickable="true" />
+                            android:text="GOING"
+                            android:textAllCaps="false"
+                            android:textColor="@color/secondaryTextColor" />
 
                         <View
                             android:layout_width="1dp"
@@ -177,15 +177,15 @@
                         <Button
                             android:id="@+id/interested_button"
                             style="?android:attr/buttonBarButtonStyle"
-                            android:textAllCaps="false"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="0dp"
                             android:layout_weight="1"
-                            android:text="INTERESTED"
-                            android:textColor="@color/secondaryTextColor"
+                            android:clickable="true"
                             android:foreground="?attr/selectableItemBackground"
-                            android:clickable="true" />
+                            android:text="INTERESTED"
+                            android:textAllCaps="false"
+                            android:textColor="@color/secondaryTextColor" />
 
                     </LinearLayout>
 

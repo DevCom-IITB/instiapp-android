@@ -33,11 +33,11 @@ public class LoginActivity extends AppCompatActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private final String redirectUri = "https://redirecturi";
     private final String guestUri = "https://guesturi";
-    private boolean loggingIn = false;
     public String authCode = null;
     public String fcmId = null;
     SessionManager session;
     Context mContext = this;
+    private boolean loggingIn = false;
     private ProgressDialog progressDialog;
 
     @Override
@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         webview.loadUrl("file:///android_asset/login.html");
 
         // Get FCM Id
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 fcmId = instanceIdResult.getToken();

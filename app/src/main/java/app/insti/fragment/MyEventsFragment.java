@@ -23,8 +23,8 @@ import java.util.List;
 import app.insti.ActivityBuffer;
 import app.insti.Constants;
 import app.insti.ItemClickListener;
-import app.insti.activity.MainActivity;
 import app.insti.R;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
 import app.insti.data.AppDatabase;
 import app.insti.data.Event;
@@ -67,7 +67,7 @@ public class MyEventsFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
 
-        if (((MainActivity)getActivity()).createEventAccess()) {
+        if (((MainActivity) getActivity()).createEventAccess()) {
             fab.setVisibility(View.VISIBLE);
         }
 

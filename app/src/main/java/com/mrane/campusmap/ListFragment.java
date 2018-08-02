@@ -16,27 +16,27 @@ import app.insti.fragment.MapFragment;
 
 public class ListFragment extends Fragment {
 
-	MapFragment mainActivity;
-	FuzzySearchAdapter adapter;
-	HashMap<String, Marker> data;
-	View rootView;
-	ListView list;
+    MapFragment mainActivity;
+    FuzzySearchAdapter adapter;
+    HashMap<String, Marker> data;
+    View rootView;
+    ListView list;
 
-	public ListFragment() {
-	}
+    public ListFragment() {
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		mainActivity = MapFragment.getMainActivity();
-		adapter = mainActivity.getAdapter();
-		rootView = inflater.inflate(R.layout.map_list_fragment, container, false);
-		list = (ListView) rootView.findViewById(R.id.suggestion_list);
-		list.setAdapter(adapter);
-		list.setOnItemClickListener(mainActivity);
-		list.setOnTouchListener(mainActivity);
-		list.setFastScrollEnabled(true);
-		return rootView;
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        mainActivity = MapFragment.getMainActivity();
+        adapter = mainActivity.getAdapter();
+        rootView = inflater.inflate(R.layout.map_list_fragment, container, false);
+        list = (ListView) rootView.findViewById(R.id.suggestion_list);
+        list.setAdapter(adapter);
+        list.setOnItemClickListener(mainActivity);
+        list.setOnTouchListener(mainActivity);
+        list.setFastScrollEnabled(true);
+        return rootView;
+    }
 
 }

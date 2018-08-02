@@ -20,111 +20,111 @@ import app.insti.fragment.MapFragment;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
-	private Context _context;
-	private List<String> _listDataHeader;
-	private HashMap<String, List<String>> _listDataChild;
+    private Context _context;
+    private List<String> _listDataHeader;
+    private HashMap<String, List<String>> _listDataChild;
 
-	public ExpandableListAdapter(Context context, List<String> listDataHeader,
-			HashMap<String, List<String>> listChildData) {
-		this._context = context;
-		this._listDataHeader = listDataHeader;
-		this._listDataChild = listChildData;
-	}
+    public ExpandableListAdapter(Context context, List<String> listDataHeader,
+                                 HashMap<String, List<String>> listChildData) {
+        this._context = context;
+        this._listDataHeader = listDataHeader;
+        this._listDataChild = listChildData;
+    }
 
-	@Override
-	public Object getChild(int groupPosition, int childPosititon) {
-		return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-				.get(childPosititon);
-	}
+    @Override
+    public Object getChild(int groupPosition, int childPosititon) {
+        return this._listDataChild.get(this._listDataHeader.get(groupPosition))
+                .get(childPosititon);
+    }
 
-	@Override
-	public long getChildId(int groupPosition, int childPosition) {
-		return childPosition;
-	}
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return childPosition;
+    }
 
-	@Override
-	public View getChildView(int groupPosition, final int childPosition,
-			boolean isLastChild, View convertView, ViewGroup parent) {
-		String headerTitle = (String) getGroup(groupPosition);
-		final String childText = (String) getChild(groupPosition, childPosition);
-		
-		if (convertView == null) {
-			LayoutInflater infalInflater = (LayoutInflater) this._context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = infalInflater.inflate(R.layout.map_list_item, null);
-		}
+    @Override
+    public View getChildView(int groupPosition, final int childPosition,
+                             boolean isLastChild, View convertView, ViewGroup parent) {
+        String headerTitle = (String) getGroup(groupPosition);
+        final String childText = (String) getChild(groupPosition, childPosition);
 
-		TextView txtListChild = (TextView) convertView
-				.findViewById(R.id.lblListItem);
-		View itemGroupColor = (View) convertView.findViewById(R.id.item_group_color);
-		int color = Marker.getColor(Marker.getGroupId(headerTitle));
-		itemGroupColor.setBackgroundColor(color);
-		Typeface regular = Typeface.createFromAsset(_context.getAssets(), MapFragment.FONT_REGULAR);
-		txtListChild.setTypeface(regular);
-		txtListChild.setText(childText);
-		return convertView;
-	}
+        if (convertView == null) {
+            LayoutInflater infalInflater = (LayoutInflater) this._context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(R.layout.map_list_item, null);
+        }
 
-	@Override
-	public int getChildrenCount(int groupPosition) {
-		return this._listDataChild.get(this._listDataHeader.get(groupPosition))
-				.size();
-	}
+        TextView txtListChild = (TextView) convertView
+                .findViewById(R.id.lblListItem);
+        View itemGroupColor = (View) convertView.findViewById(R.id.item_group_color);
+        int color = Marker.getColor(Marker.getGroupId(headerTitle));
+        itemGroupColor.setBackgroundColor(color);
+        Typeface regular = Typeface.createFromAsset(_context.getAssets(), MapFragment.FONT_REGULAR);
+        txtListChild.setTypeface(regular);
+        txtListChild.setText(childText);
+        return convertView;
+    }
 
-	@Override
-	public Object getGroup(int groupPosition) {
-		return this._listDataHeader.get(groupPosition);
-	}
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        return this._listDataChild.get(this._listDataHeader.get(groupPosition))
+                .size();
+    }
 
-	@Override
-	public int getGroupCount() {
-		return this._listDataHeader.size();
-	}
+    @Override
+    public Object getGroup(int groupPosition) {
+        return this._listDataHeader.get(groupPosition);
+    }
 
-	@Override
-	public long getGroupId(int groupPosition) {
-		return groupPosition;
-	}
+    @Override
+    public int getGroupCount() {
+        return this._listDataHeader.size();
+    }
 
-	@Override
-	public View getGroupView(int groupPosition, boolean isExpanded,
-			View convertView, ViewGroup parent) {
-		String headerTitle = (String) getGroup(groupPosition);
-		if (convertView == null) {
-			LayoutInflater infalInflater = (LayoutInflater) this._context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = infalInflater.inflate(
-					R.layout.map_expandable_list_header, null);
-		}
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
 
-		TextView lblListHeader = (TextView) convertView
-				.findViewById(R.id.lblListHeader);
-		Typeface regular = Typeface.createFromAsset(_context.getAssets(), MapFragment.FONT_REGULAR);
-		lblListHeader.setTypeface(regular);
-		lblListHeader.setText(headerTitle);
-		ImageView iconExpand = (ImageView) convertView
-				.findViewById(R.id.icon_expand);
-		
-		ImageView groupColor = (ImageView) convertView.findViewById(R.id.group_color);
-		int color = Marker.getColor(Marker.getGroupId(headerTitle));
-		groupColor.setImageDrawable(new ColorDrawable(color));
+    @Override
+    public View getGroupView(int groupPosition, boolean isExpanded,
+                             View convertView, ViewGroup parent) {
+        String headerTitle = (String) getGroup(groupPosition);
+        if (convertView == null) {
+            LayoutInflater infalInflater = (LayoutInflater) this._context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(
+                    R.layout.map_expandable_list_header, null);
+        }
 
-		if (isExpanded) {
-			iconExpand.setImageResource(R.drawable.ic_action_expand);
-		} else {
-			iconExpand.setImageResource(R.drawable.ic_action_next_item);
-		}
-		return convertView;
-	}
+        TextView lblListHeader = (TextView) convertView
+                .findViewById(R.id.lblListHeader);
+        Typeface regular = Typeface.createFromAsset(_context.getAssets(), MapFragment.FONT_REGULAR);
+        lblListHeader.setTypeface(regular);
+        lblListHeader.setText(headerTitle);
+        ImageView iconExpand = (ImageView) convertView
+                .findViewById(R.id.icon_expand);
 
-	@Override
-	public boolean hasStableIds() {
-		return false;
-	}
+        ImageView groupColor = (ImageView) convertView.findViewById(R.id.group_color);
+        int color = Marker.getColor(Marker.getGroupId(headerTitle));
+        groupColor.setImageDrawable(new ColorDrawable(color));
 
-	@Override
-	public boolean isChildSelectable(int groupPosition, int childPosition) {
-		return true;
-	}
+        if (isExpanded) {
+            iconExpand.setImageResource(R.drawable.ic_action_expand);
+        } else {
+            iconExpand.setImageResource(R.drawable.ic_action_next_item);
+        }
+        return convertView;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
+    }
 
 }

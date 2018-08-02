@@ -51,13 +51,17 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
         Body body = bodyList.get(position);
         holder.name.setText(body.getBodyName());
         holder.description.setText(body.getBodyShortDescription());
-        Picasso.get().load(body.getBodyImageURL()).resize(0,200).into(holder.image);
+        Picasso.get().load(body.getBodyImageURL()).resize(0, 200).into(holder.image);
 
     }
 
     @Override
     public int getItemCount() {
         return bodyList.size();
+    }
+
+    public void setBodyList(List<Body> bodyList) {
+        this.bodyList = bodyList;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -71,9 +75,5 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
             description = (TextView) itemView.findViewById(R.id.object_subtitle);
             image = (ImageView) itemView.findViewById(R.id.object_picture);
         }
-    }
-
-    public void setBodyList(List<Body> bodyList) {
-        this.bodyList = bodyList;
     }
 }

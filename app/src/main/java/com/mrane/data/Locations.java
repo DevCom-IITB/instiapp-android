@@ -7,9 +7,9 @@ import java.util.List;
 import app.insti.data.Venue;
 
 public class Locations {
-	public HashMap<String, Marker> data = new HashMap<String, Marker>();
+    public HashMap<String, Marker> data = new HashMap<String, Marker>();
 
-	public Locations(List<Venue> venueList) {
+    public Locations(List<Venue> venueList) {
         // Add locations
         for (Venue venue : venueList) {
             Marker marker;

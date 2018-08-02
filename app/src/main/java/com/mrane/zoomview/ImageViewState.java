@@ -26,11 +26,11 @@ import java.io.Serializable;
 public class ImageViewState implements Serializable {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -4397017033346987595L;
+     *
+     */
+    private static final long serialVersionUID = -4397017033346987595L;
 
-	private float scale;
+    private float scale;
 
     private float centerX;
 

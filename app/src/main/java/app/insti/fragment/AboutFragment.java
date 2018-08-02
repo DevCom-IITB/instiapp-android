@@ -9,16 +9,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import app.insti.R;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,7 +53,7 @@ public class AboutFragment extends BaseFragment {
             put(R.id.cheekuimg, "cheeku.jpg");
             put(R.id.sarthakimg, "sarthak.jpg");
             put(R.id.sohamimg, "soham.jpg");
-            put(R.id.maitreyaimg,"maitreya.jpg");
+            put(R.id.maitreyaimg, "maitreya.jpg");
             put(R.id.mrunmayiimg, "mrunmayi.jpg");
             put(R.id.owaisimg, "owais.jpg");
             put(R.id.hrushikeshimg, "hrushikesh.jpg");
@@ -73,11 +71,12 @@ public class AboutFragment extends BaseFragment {
         /* Show team pics */
         for (final Map.Entry<Integer, String> entry : team.entrySet()) {
             CircleImageView circleImageView = getActivity().findViewById(entry.getKey());
-            Picasso.get().load("https://insti.app/team-pics/" + entry.getValue()).resize(0,300).into(circleImageView);
+            Picasso.get().load("https://insti.app/team-pics/" + entry.getValue()).resize(0, 300).into(circleImageView);
         }
 
         /* Map TextView ids to links */
-        final Map<Integer, String> joinUs = new HashMap<Integer, String>() {{;
+        final Map<Integer, String> joinUs = new HashMap<Integer, String>() {{
+            ;
             put(R.id.django, "https://github.com/wncc/IITBapp");
             put(R.id.android, "https://github.com/wncc/InstiApp");
             put(R.id.angular, "https://github.com/pulsejet/iitb-app-angular");

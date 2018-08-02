@@ -29,8 +29,8 @@ import java.util.TimeZone;
 
 import app.insti.Constants;
 import app.insti.ItemClickListener;
-import app.insti.activity.MainActivity;
 import app.insti.R;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
@@ -92,7 +92,7 @@ public class CalendarFragment extends BaseFragment {
                 ((MainActivity) getActivity()).updateFragment(addEventFragment);
             }
         });
-        if (((MainActivity)getActivity()).createEventAccess()) {
+        if (((MainActivity) getActivity()).createEventAccess()) {
             fab.setVisibility(View.VISIBLE);
         }
 

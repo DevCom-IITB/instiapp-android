@@ -18,8 +18,8 @@ import java.util.List;
 
 import app.insti.Constants;
 import app.insti.ItemClickListener;
-import app.insti.activity.MainActivity;
 import app.insti.R;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.NotificationsAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
@@ -58,7 +58,7 @@ public class NotificationsFragment extends BaseFragment {
         toolbar.setTitle("Notifications");
 
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getNotifications(((MainActivity)getActivity()).getSessionIDHeader()).enqueue(new Callback<List<Notification>>() {
+        retrofitInterface.getNotifications(((MainActivity) getActivity()).getSessionIDHeader()).enqueue(new Callback<List<Notification>>() {
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
                 if (response.isSuccessful()) {
@@ -68,7 +68,8 @@ public class NotificationsFragment extends BaseFragment {
             }
 
             @Override
-            public void onFailure(Call<List<Notification>> call, Throwable t) { }
+            public void onFailure(Call<List<Notification>> call, Throwable t) {
+            }
         });
     }
 
@@ -87,12 +88,15 @@ public class NotificationsFragment extends BaseFragment {
 
                 /* Mark notification read */
                 RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-                String sessId = ((MainActivity)getActivity()).getSessionIDHeader();
+                String sessId = ((MainActivity) getActivity()).getSessionIDHeader();
                 retrofitInterface.markNotificationRead(sessId, notification.getNotificationId()).enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) { }
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    }
+
                     @Override
-                    public void onFailure(Call<Void> call, Throwable t) { }
+                    public void onFailure(Call<Void> call, Throwable t) {
+                    }
                 });
 
                 FragmentManager manager = getActivity().getSupportFragmentManager();
@@ -100,7 +104,9 @@ public class NotificationsFragment extends BaseFragment {
                 String tag = "";
 
                 Bundle bundle = getArguments();
-                if (bundle == null) { bundle = new Bundle(); }
+                if (bundle == null) {
+                    bundle = new Bundle();
+                }
                 bundle.putString(Constants.SESSION_ID, ((MainActivity) getActivity()).getSessionIDHeader());
 
                 /* Open event */

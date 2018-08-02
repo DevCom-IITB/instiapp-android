@@ -2,7 +2,6 @@ package app.insti.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,6 +99,15 @@ public class TrainingBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return TrainingBlogFragment.showLoader ? (posts.size() + 1) : posts.size();
     }
 
+    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public ProgressViewHolder(View v) {
+            super(v);
+            progressBar = (ProgressBar) v.findViewById(R.id.blog_load_item);
+        }
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView postTitle;
         private TextView postPublished;
@@ -111,14 +119,6 @@ public class TrainingBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             postTitle = (TextView) itemView.findViewById(R.id.post_title);
             postPublished = (TextView) itemView.findViewById(R.id.post_published);
             postContent = (TextView) itemView.findViewById(R.id.post_content);
-        }
-    }
-
-    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
-        public ProgressBar progressBar;
-        public ProgressViewHolder(View v) {
-            super(v);
-            progressBar = (ProgressBar)v.findViewById(R.id.blog_load_item);
         }
     }
 }

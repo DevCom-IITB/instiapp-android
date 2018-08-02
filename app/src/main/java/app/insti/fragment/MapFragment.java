@@ -87,8 +87,8 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import app.insti.Constants;
-import app.insti.activity.MainActivity;
 import app.insti.R;
+import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
 import app.insti.data.AppDatabase;
@@ -102,40 +102,6 @@ import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 public class MapFragment extends Fragment implements TextWatcher,
         TextView.OnEditorActionListener, AdapterView.OnItemClickListener, View.OnFocusChangeListener,
         View.OnTouchListener, ExpandableListView.OnChildClickListener {
-    private static MapFragment mainactivity;
-    private AppDatabase appDatabase;
-    private SettingsManager settingsManager;
-    private FuzzySearchAdapter adapter;
-    private ExpandableListAdapter expAdapter;
-    private FragmentManager fragmentManager;
-    private ListFragment listFragment;
-    private Fragment fragment;
-    public LinearLayout newSmallCard;
-    public ImageView placeColor;
-    private RelativeLayout fragmentContainer;
-    private View actionBarView;
-    public TextView placeNameTextView;
-    public TextView placeSubHeadTextView;
-    public EditText editText;
-    public HashMap<String, com.mrane.data.Marker> data;
-    private List<com.mrane.data.Marker> markerlist;
-    public FragmentTransaction transaction;
-    public CampusMapView campusMapView;
-    public ImageButton addMarkerIcon;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private SlidingUpPanelLayout slidingLayout;
-    private CardSlideListener cardSlideListener;
-    private boolean noFragments = true;
-    private boolean editTextFocused = false;
-    private final String firstStackTag = "FIRST_TAG";
-    private final int MSG_ANIMATE = 1;
-    private final int MSG_PLAY_SOUND = 2;
-    private final int MSG_DISPLAY_MAP = 3;
-    private final long DELAY_ANIMATE = 150;
-    private final long DELAY_INIT_LAYOUT = 250;
-    private Toast toast;
-    private String message = "Sorry, no such place in our data.";
     public static final PointF MAP_CENTER = new PointF(2971f, 1744f);
     public static final long DURATION_INIT_MAP_ANIM = 500;
     public static final String FONT_SEMIBOLD = "rigascreen_bold.ttf";
@@ -143,14 +109,48 @@ public class MapFragment extends Fragment implements TextWatcher,
     public static final int SOUND_ID_RESULT = 0;
     public static final int SOUND_ID_ADD = 1;
     public static final int SOUND_ID_REMOVE = 2;
+    private static final String INSTANCE_CARD_STATE = "instanceCardState";
+    private static final String INSTANCE_VISIBILITY_INDEX = "instanceVisibilityIndex";
+    private static MapFragment mainactivity;
+    private final String firstStackTag = "FIRST_TAG";
+    private final int MSG_ANIMATE = 1;
+    private final int MSG_PLAY_SOUND = 2;
+    private final int MSG_DISPLAY_MAP = 3;
+    private final long DELAY_ANIMATE = 150;
+    private final long DELAY_INIT_LAYOUT = 250;
+    public LinearLayout newSmallCard;
+    public ImageView placeColor;
+    public TextView placeNameTextView;
+    public TextView placeSubHeadTextView;
+    public EditText editText;
+    public HashMap<String, com.mrane.data.Marker> data;
+    public FragmentTransaction transaction;
+    public CampusMapView campusMapView;
+    public ImageButton addMarkerIcon;
     public SoundPool soundPool;
     public int[] soundPoolIds;
-
+    private AppDatabase appDatabase;
+    private SettingsManager settingsManager;
+    private FuzzySearchAdapter adapter;
+    private ExpandableListAdapter expAdapter;
+    private FragmentManager fragmentManager;
+    private ListFragment listFragment;
+    private Fragment fragment;
+    private RelativeLayout fragmentContainer;
+    private View actionBarView;
+    private List<com.mrane.data.Marker> markerlist;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private SlidingUpPanelLayout slidingLayout;
+    private CardSlideListener cardSlideListener;
+    private boolean noFragments = true;
+    private boolean editTextFocused = false;
+    private Toast toast;
+    private String message = "Sorry, no such place in our data.";
     private boolean locationsShown = false;
     private boolean GPSIsSetup = false;
     private boolean followingUser = false;
     private Marker user = new Marker("You", "", 0, 0, -10, "");
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -170,6 +170,35 @@ public class MapFragment extends Fragment implements TextWatcher,
 
     public MapFragment() {
         // Required empty public constructor
+    }
+
+    public static MapFragment getMainActivity() {
+        return mainactivity;
+    }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(),
+                View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 
     @Override
@@ -195,7 +224,7 @@ public class MapFragment extends Fragment implements TextWatcher,
 
         /* Initialize */
         appDatabase = AppDatabase.getAppDatabase(getContext());
-        editText = (EditText)getView().findViewById(R.id.search);
+        editText = (EditText) getView().findViewById(R.id.search);
         setFonts();
 
         getAPILocations();
@@ -221,29 +250,6 @@ public class MapFragment extends Fragment implements TextWatcher,
                 // Do nothing
             }
         });
-    }
-
-    private class updateDatabase extends AsyncTask<List<Venue>, Void, Integer> {
-        @Override
-        protected Integer doInBackground(List<Venue>... venues) {
-            appDatabase.dbDao().deleteVenues();
-            appDatabase.dbDao().insertVenues(venues[0]);
-            return 1;
-        }
-    }
-
-    private class showLocationsFromDB extends AsyncTask<String, Void, List<Venue>> {
-        @Override
-        protected List<Venue> doInBackground(String... events) {
-            return appDatabase.dbDao().getAllVenues();
-        }
-
-        protected void onPostExecute(List<Venue> result) {
-            if (!locationsShown && result.size() > 0) {
-                setupWithData(result);
-                locationsShown = true;
-            }
-        }
     }
 
     void setupWithData(List<Venue> venues) {
@@ -302,7 +308,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         fragmentContainer = (RelativeLayout) getActivity().findViewById(R.id.fragment_container);
 
         adapter = new FuzzySearchAdapter(getContext(), markerlist);
-        editText = (EditText)getView().findViewById(R.id.search);
+        editText = (EditText) getView().findViewById(R.id.search);
         editText.addTextChangedListener(this);
         editText.setOnEditorActionListener(this);
         editText.setOnFocusChangeListener(this);
@@ -351,9 +357,9 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void initShowDefault() {
-        String[] keys = { "Convocation Hall", "Hostel 13 House of Titans",
+        String[] keys = {"Convocation Hall", "Hostel 13 House of Titans",
                 "Hostel 15", "Main Gate no. 2",
-                "Market Gate, Y point Gate no. 3", "Lake Side Gate no. 1", };
+                "Market Gate, Y point Gate no. 3", "Lake Side Gate no. 1",};
         for (String key : keys) {
             if (data.containsKey(key)) {
                 data.get(key).setShowDefault(true);
@@ -364,13 +370,13 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void initImageUri() {
-        String[] keys = { "Convocation Hall", "Guest House/ Jalvihar",
+        String[] keys = {"Convocation Hall", "Guest House/ Jalvihar",
                 "Guest House/ Vanvihar", "Gulmohar Restaurant", "Hostel 14",
                 "Industrial Design Centre", "Main Building",
                 "Nestle Cafe (Coffee Shack)", "School of Management",
-                "Victor Menezes Convention Centre" };
-        String[] uri = { "convo_hall", "jalvihar", "vanvihar", "gulmohar",
-                "h14", "idc", "mainbuilding", "nescafestall", "som", "vmcc" };
+                "Victor Menezes Convention Centre"};
+        String[] uri = {"convo_hall", "jalvihar", "vanvihar", "gulmohar",
+                "h14", "idc", "mainbuilding", "nescafestall", "som", "vmcc"};
         for (int i = 0; i < keys.length; i++) {
             if (data.containsKey(keys[i])) {
                 data.get(keys[i]).setImageUri(uri[i]);
@@ -460,10 +466,6 @@ public class MapFragment extends Fragment implements TextWatcher,
             onItemClick(null, v, 0, 0);
         }
         return true;
-    }
-
-    public static MapFragment getMainActivity() {
-        return mainactivity;
     }
 
     private void putFragment(Fragment tempFragment) {
@@ -595,31 +597,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         }
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null)
-            return;
-
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(),
-                View.MeasureSpec.UNSPECIFIED);
-        int totalHeight = 0;
-        View view = null;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            view = listAdapter.getView(i, view, listView);
-            if (i == 0)
-                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT));
-
-            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += view.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight
-                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
-    }
-
     private void setChildrenView(LinearLayout parent, Building building) {
         View childrenView = getLayoutInflater().inflate(R.layout.map_children_view,
                 parent);
@@ -678,47 +655,10 @@ public class MapFragment extends Fragment implements TextWatcher,
 
     }
 
-    private class CustomListAdapter extends ArrayAdapter<String> {
-
-        private Context mContext;
-        private int id;
-        private List<String> items;
-
-        public CustomListAdapter(Context context, int textViewResourceId,
-                                 List<String> list) {
-            super(context, textViewResourceId, list);
-            mContext = context;
-            id = textViewResourceId;
-            items = list;
-        }
-
-        @Override
-        public View getView(int position, View v, ViewGroup parent) {
-            View mView = v;
-            if (mView == null) {
-                LayoutInflater vi = (LayoutInflater) mContext
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                mView = vi.inflate(id, null);
-            }
-
-            TextView text = (TextView) mView.findViewById(R.id.child_name);
-            Log.d("testing", "position = " + position);
-            if (items.get(position) != null) {
-                Typeface regular = Typeface.createFromAsset(getContext().getAssets(),
-                        FONT_REGULAR);
-                text.setText(items.get(position));
-                text.setTypeface(regular);
-            }
-
-            return mView;
-        }
-
-    }
-
     private SpannableStringBuilder getDescriptionText(com.mrane.data.Marker marker) {
         String text = marker.getDescription();
         SpannableStringBuilder desc = new SpannableStringBuilder(text);
-        String[] toBoldParts = { "Email", "Phone No.", "Fax No." };
+        String[] toBoldParts = {"Email", "Phone No.", "Fax No."};
         for (String part : toBoldParts) {
             setBold(desc, part);
         }
@@ -1011,9 +951,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         this.expAdapter = expAdapter;
     }
 
-    private static final String INSTANCE_CARD_STATE = "instanceCardState";
-    private static final String INSTANCE_VISIBILITY_INDEX = "instanceVisibilityIndex";
-
     public SlidingUpPanelLayout getSlidingLayout() {
         return slidingLayout;
     }
@@ -1042,50 +979,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         }
     }
 
-    /*---------- Listener class to get coordinates ------------- */
-    private class MyLocationListener implements LocationListener {
-
-        @Override
-        public void onLocationChanged(Location loc) {
-            if (getView() == null || getActivity() == null) return;
-
-            // Set the origin
-            double Xn = Constants.MAP_Xn, Yn = Constants.MAP_Yn, Zn = Constants.MAP_Zn, Zyn = Constants.MAP_Zyn;
-
-            double x = (loc.getLatitude() - Xn) * 1000;
-            double y = (loc.getLongitude() - Yn) * 1000;
-
-            // Pre-trained weights
-            double[] A = Constants.MAP_WEIGHTS_X;
-            int px = (int)(Zn + A[0] + A[1]*x + A[2]*y + A[3]*x*x + A[4]*x*x*y + A[5]*x*x*y*y + A[6]*y*y + A[7]*x*y*y + A[8]*x*y);
-
-            A = Constants.MAP_WEIGHTS_Y;
-            int py = (int)(Zyn + A[0] + A[1]*x + A[2]*y + A[3]*x*x + A[4]*x*x*y + A[5]*x*x*y*y + A[6]*y*y + A[7]*x*y*y + A[8]*x*y);
-
-            if (px > 0 && py > 0 && px < 5430 && py < 5375){
-                if (!campusMapView.isAddedMarker(user)) {
-                    campusMapView.addMarker(user);
-                }
-                user.setPoint(new PointF(px, py));
-                user.setName("You - " + (int)loc.getAccuracy() + "m");
-                if (followingUser) {
-                    SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
-                    if (anim != null) anim.start();
-                }
-                campusMapView.invalidate();
-            }
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {}
-
-        @Override
-        public void onProviderEnabled(String provider) {}
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-    }
-
     public void setFollowingUser(boolean followingUser) {
         this.followingUser = followingUser;
     }
@@ -1109,8 +1002,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                     if (result.getLocationSettingsStates().isGpsPresent() &&
                             result.getLocationSettingsStates().isGpsUsable() &&
                             result.getLocationSettingsStates().isLocationPresent() &&
-                            result.getLocationSettingsStates().isLocationUsable())
-                    {
+                            result.getLocationSettingsStates().isLocationUsable()) {
                         setupGPS();
                     }
                 } catch (ApiException ex) {
@@ -1122,7 +1014,8 @@ public class MapFragment extends Fragment implements TextWatcher,
                                 resolvableApiException
                                         .startResolutionForResult(getActivity(), 87);
                                 setupGPS();
-                            } catch (IntentSender.SendIntentException e) { }
+                            } catch (IntentSender.SendIntentException e) {
+                            }
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                             Toast.makeText(getContext(), "GPS is not enabled!", Toast.LENGTH_LONG).show();
@@ -1131,6 +1024,113 @@ public class MapFragment extends Fragment implements TextWatcher,
                 }
             }
         });
+    }
+
+    private class updateDatabase extends AsyncTask<List<Venue>, Void, Integer> {
+        @Override
+        protected Integer doInBackground(List<Venue>... venues) {
+            appDatabase.dbDao().deleteVenues();
+            appDatabase.dbDao().insertVenues(venues[0]);
+            return 1;
+        }
+    }
+
+    private class showLocationsFromDB extends AsyncTask<String, Void, List<Venue>> {
+        @Override
+        protected List<Venue> doInBackground(String... events) {
+            return appDatabase.dbDao().getAllVenues();
+        }
+
+        protected void onPostExecute(List<Venue> result) {
+            if (!locationsShown && result.size() > 0) {
+                setupWithData(result);
+                locationsShown = true;
+            }
+        }
+    }
+
+    private class CustomListAdapter extends ArrayAdapter<String> {
+
+        private Context mContext;
+        private int id;
+        private List<String> items;
+
+        public CustomListAdapter(Context context, int textViewResourceId,
+                                 List<String> list) {
+            super(context, textViewResourceId, list);
+            mContext = context;
+            id = textViewResourceId;
+            items = list;
+        }
+
+        @Override
+        public View getView(int position, View v, ViewGroup parent) {
+            View mView = v;
+            if (mView == null) {
+                LayoutInflater vi = (LayoutInflater) mContext
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                mView = vi.inflate(id, null);
+            }
+
+            TextView text = (TextView) mView.findViewById(R.id.child_name);
+            Log.d("testing", "position = " + position);
+            if (items.get(position) != null) {
+                Typeface regular = Typeface.createFromAsset(getContext().getAssets(),
+                        FONT_REGULAR);
+                text.setText(items.get(position));
+                text.setTypeface(regular);
+            }
+
+            return mView;
+        }
+
+    }
+
+    /*---------- Listener class to get coordinates ------------- */
+    private class MyLocationListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location loc) {
+            if (getView() == null || getActivity() == null) return;
+
+            // Set the origin
+            double Xn = Constants.MAP_Xn, Yn = Constants.MAP_Yn, Zn = Constants.MAP_Zn, Zyn = Constants.MAP_Zyn;
+
+            double x = (loc.getLatitude() - Xn) * 1000;
+            double y = (loc.getLongitude() - Yn) * 1000;
+
+            // Pre-trained weights
+            double[] A = Constants.MAP_WEIGHTS_X;
+            int px = (int) (Zn + A[0] + A[1] * x + A[2] * y + A[3] * x * x + A[4] * x * x * y + A[5] * x * x * y * y + A[6] * y * y + A[7] * x * y * y + A[8] * x * y);
+
+            A = Constants.MAP_WEIGHTS_Y;
+            int py = (int) (Zyn + A[0] + A[1] * x + A[2] * y + A[3] * x * x + A[4] * x * x * y + A[5] * x * x * y * y + A[6] * y * y + A[7] * x * y * y + A[8] * x * y);
+
+            if (px > 0 && py > 0 && px < 5430 && py < 5375) {
+                if (!campusMapView.isAddedMarker(user)) {
+                    campusMapView.addMarker(user);
+                }
+                user.setPoint(new PointF(px, py));
+                user.setName("You - " + (int) loc.getAccuracy() + "m");
+                if (followingUser) {
+                    SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
+                    if (anim != null) anim.start();
+                }
+                campusMapView.invalidate();
+            }
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
     }
 }
 

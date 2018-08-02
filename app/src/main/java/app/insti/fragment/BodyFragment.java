@@ -38,9 +38,9 @@ import java.util.List;
 
 import app.insti.Constants;
 import app.insti.ItemClickListener;
-import app.insti.activity.MainActivity;
 import app.insti.R;
 import app.insti.ShareURLMaker;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
 import app.insti.adapter.FeedAdapter;
 import app.insti.adapter.UserAdapter;
@@ -93,16 +93,6 @@ public class BodyFragment extends BackHandledFragment {
         // Required empty public constructor
     }
 
-    @Override
-    public boolean onBackPressed() {
-        if (zoomMode) {
-            zoomOut(expandedImageView, startBounds, startScaleFinal, bodyPicture);
-            zoomMode = false;
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -117,6 +107,16 @@ public class BodyFragment extends BackHandledFragment {
         args.putString(Constants.BODY_JSON, new Gson().toJson(arg_body));
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (zoomMode) {
+            zoomOut(expandedImageView, startBounds, startScaleFinal, bodyPicture);
+            zoomMode = false;
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -185,7 +185,7 @@ public class BodyFragment extends BackHandledFragment {
 
     private void setVisibleIfHasElements(int[] viewIds, List list) {
         if (list != null && list.size() > 0) {
-            for (int viewId: viewIds){
+            for (int viewId : viewIds) {
                 getActivity().findViewById(viewId).setVisibility(View.VISIBLE);
             }
         }
@@ -194,7 +194,7 @@ public class BodyFragment extends BackHandledFragment {
     private void displayBody() {
         /* Skip if we're already destroyed */
         if (getActivity() == null || getView() == null) return;
-        if(!body.equals(min_body)) bodyDisplayed = true;
+        if (!body.equals(min_body)) bodyDisplayed = true;
 
         TextView bodyName = (TextView) getView().findViewById(R.id.body_name);
         TextView bodyDescription = (TextView) getView().findViewById(R.id.body_description);
@@ -408,33 +408,6 @@ public class BodyFragment extends BackHandledFragment {
         return inflater.inflate(R.layout.fragment_body, container, false);
     }
 
-    private class updateDbBody extends AsyncTask<Body, Void, Integer> {
-        @Override
-        protected Integer doInBackground(Body... body) {
-            if (appDatabase.dbDao().getBody(body[0].getBodyID()).length > 0) {
-                appDatabase.dbDao().updateBody(body[0]);
-            } else {
-                appDatabase.dbDao().insertBody(body[0]);
-            }
-            return 1;
-        }
-    }
-
-    private class getDbBody extends AsyncTask<String, Void, Body[]> {
-        @Override
-        protected Body[] doInBackground(String... id) {
-            return appDatabase.dbDao().getBody(min_body.getBodyID());
-        }
-
-        @Override
-        protected void onPostExecute(Body[] result) {
-            if (result.length > 0 && !bodyDisplayed) {
-                body = result[0];
-                displayBody();
-            }
-        }
-    }
-
     private void zoomOut(final ImageView expandedImageView, Rect startBounds, float startScaleFinal, final View thumbView) {
         expandedImageView.setBackgroundColor(0x00000000);
         if (mCurrentAnimator != null) {
@@ -448,7 +421,7 @@ public class BodyFragment extends BackHandledFragment {
                 .ofFloat(expandedImageView, View.X, startBounds.left))
                 .with(ObjectAnimator
                         .ofFloat(expandedImageView,
-                                View.Y,startBounds.top))
+                                View.Y, startBounds.top))
                 .with(ObjectAnimator
                         .ofFloat(expandedImageView,
                                 View.SCALE_X, startScaleFinal))
@@ -570,5 +543,32 @@ public class BodyFragment extends BackHandledFragment {
 
         startScaleFinal = startScale;
         zoomMode = true;
+    }
+
+    private class updateDbBody extends AsyncTask<Body, Void, Integer> {
+        @Override
+        protected Integer doInBackground(Body... body) {
+            if (appDatabase.dbDao().getBody(body[0].getBodyID()).length > 0) {
+                appDatabase.dbDao().updateBody(body[0]);
+            } else {
+                appDatabase.dbDao().insertBody(body[0]);
+            }
+            return 1;
+        }
+    }
+
+    private class getDbBody extends AsyncTask<String, Void, Body[]> {
+        @Override
+        protected Body[] doInBackground(String... id) {
+            return appDatabase.dbDao().getBody(min_body.getBodyID());
+        }
+
+        @Override
+        protected void onPostExecute(Body[] result) {
+            if (result.length > 0 && !bodyDisplayed) {
+                body = result[0];
+                displayBody();
+            }
+        }
     }
 }

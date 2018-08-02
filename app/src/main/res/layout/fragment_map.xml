@@ -6,22 +6,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/search"
-            android:background="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:hint="Search"
+            android:paddingBottom="15dp"
             android:paddingLeft="18dp"
             android:paddingRight="6dp"
             android:paddingTop="3dp"
-            android:paddingBottom="15dp"
-            android:hint="Search"
             android:textColor="@color/primaryTextColor"
-            android:textColorHint="@color/primaryTextColor"/>
+            android:textColorHint="@color/primaryTextColor" />
 
         <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/drawer_layout"
@@ -34,10 +34,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/darker_gray"
-                tools:context="com.mrane.campusmap.MainActivity"
-                tools:ignore="MergeRootFrame"
                 android:focusable="true"
-                android:focusableInTouchMode="true">
+                android:focusableInTouchMode="true"
+                tools:context="com.mrane.campusmap.MainActivity"
+                tools:ignore="MergeRootFrame">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
                     android:focusable="true"
                     android:focusableInTouchMode="true"></LinearLayout>
 
-                <com.mrane.navigation.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+                <com.mrane.navigation.SlidingUpPanelLayout
                     android:id="@+id/sliding_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -76,16 +76,16 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/loadingPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:id="@+id/loadingPanel">
+        android:gravity="center">
 
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:theme="@style/BlueAccent"/>
+            android:theme="@style/BlueAccent" />
     </RelativeLayout>
 
     <RelativeLayout

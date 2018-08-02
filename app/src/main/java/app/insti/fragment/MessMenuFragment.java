@@ -156,12 +156,14 @@ public class MessMenuFragment extends BaseFragment {
         final List<MessMenu> sortedMenus = new ArrayList<>();
         final Calendar calendar = Calendar.getInstance(Locale.UK);
         int today = calendar.get(Calendar.DAY_OF_WEEK) - 2;
-        if (today == -1) { today = 6; }
+        if (today == -1) {
+            today = 6;
+        }
 
         for (int i = 0; i < 7; i++) {
             final int day = (today + i) % 7 + 1;
-            for(MessMenu menu : messMenus) {
-                if(menu.getDay() == day) {
+            for (MessMenu menu : messMenus) {
+                if (menu.getDay() == day) {
                     sortedMenus.add(menu);
                 }
             }

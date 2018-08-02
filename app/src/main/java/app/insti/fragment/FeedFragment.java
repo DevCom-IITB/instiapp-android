@@ -23,8 +23,8 @@ import java.util.List;
 import app.insti.ActivityBuffer;
 import app.insti.Constants;
 import app.insti.ItemClickListener;
-import app.insti.activity.MainActivity;
 import app.insti.R;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
@@ -124,9 +124,9 @@ public class FeedFragment extends BaseFragment {
                     ((MainActivity) getActivity()).updateFragment(addEventFragment);
                 }
             });
-            feedRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            feedRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     if (dy > 0) fab.hide();
                     else if (dy < 0) fab.show();
                 }

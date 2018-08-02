@@ -66,6 +66,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         return userList.size();
     }
 
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView userName;
         public TextView role;
@@ -77,9 +81,5 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             role = (TextView) itemView.findViewById(R.id.object_subtitle);
             image = (ImageView) itemView.findViewById(R.id.object_picture);
         }
-    }
-
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
     }
 }

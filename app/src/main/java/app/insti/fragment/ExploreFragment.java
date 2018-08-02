@@ -21,8 +21,8 @@ import java.util.List;
 
 import app.insti.Constants;
 import app.insti.ItemClickListener;
-import app.insti.activity.MainActivity;
 import app.insti.R;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
 import app.insti.adapter.FeedAdapter;
 import app.insti.adapter.UserAdapter;
@@ -60,6 +60,7 @@ public class ExploreFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment.
+     *
      * @return A new instance of fragment ExploreFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -96,7 +97,8 @@ public class ExploreFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<List<Body>> call, Throwable t) {}
+                public void onFailure(Call<List<Body>> call, Throwable t) {
+                }
             });
         } else {
             getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
@@ -106,9 +108,12 @@ public class ExploreFragment extends Fragment {
         final EditText searchEditText = getView().findViewById(R.id.explore_search);
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {

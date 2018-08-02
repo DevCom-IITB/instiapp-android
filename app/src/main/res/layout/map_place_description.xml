@@ -1,42 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:paddingLeft="12dp" >
-	<TextView
-		android:id="@+id/desc_header"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:padding="8dp"
-		android:paddingBottom="0dp"
-		android:textSize="20sp"
-		android:text="Description"/>
-	<TextView
-		android:id="@+id/desc_content"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/desc_header"
-		android:lineSpacingExtra="3dp"
-		android:padding="8dp"
-		android:textSize="18sp"
-		android:paddingTop="0dp"
-		android:textIsSelectable="true"/>
-	<View
-		android:layout_below="@id/desc_content"
-		android:layout_width="match_parent"
-		android:layout_height="96dp"/>
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="12dp">
 
-	<View
-		android:layout_width="fill_parent"
-		android:layout_height="0dp"
-		android:layout_alignParentBottom="true"
-		android:layout_alignParentLeft="true"
-		android:background="@color/colorSecondary"/>
-	<View
-		android:layout_width="fill_parent"
-		android:layout_height="0dp"
-		android:layout_alignParentTop="true"
-		android:layout_alignParentLeft="true"
-		android:background="@color/colorSecondary"/>
+    <TextView
+        android:id="@+id/desc_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:paddingBottom="0dp"
+        android:text="Description"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/desc_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/desc_header"
+        android:lineSpacingExtra="3dp"
+        android:padding="8dp"
+        android:paddingTop="0dp"
+        android:textIsSelectable="true"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:layout_below="@id/desc_content" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="@color/colorSecondary" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorSecondary" />
 
 </RelativeLayout>

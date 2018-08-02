@@ -278,20 +278,20 @@
                     android:id="@+id/mrunmayi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
                     android:gravity="center"
                     android:text="Mrunmayi Mungekar"
                     android:textSize="13sp"
-                    android:layout_marginEnd="15dp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/owais"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="25dp"
                     android:gravity="center"
                     android:text="Owais Chunawala"
                     android:textSize="13sp"
-                    android:layout_marginEnd="25dp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -304,7 +304,6 @@
                     android:textStyle="bold" />
 
             </LinearLayout>
-
 
 
             <LinearLayout
@@ -349,18 +348,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:gravity="center"
-                    android:textSize="13sp"
                     android:text="Yash Khemchandani"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/bavish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="13sp"
                     android:layout_marginStart="10dp"
+                    android:gravity="center"
                     android:text="Bavish Kulur"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -369,12 +368,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:gravity="center"
-                    android:textSize="13sp"
                     android:text="Mayuresh Bhattu"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
-
 
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -455,10 +453,10 @@
                     android:id="@+id/bijoy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="13sp"
-                    android:text="Bijoy Singh Kochar"
                     android:layout_marginStart="30dp"
+                    android:gravity="center"
+                    android:text="Bijoy Singh Kochar"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -467,8 +465,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="25dp"
                     android:gravity="center"
-                    android:textSize="13sp"
                     android:text="Dheerendra Rathor"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -550,9 +548,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:textStyle="bold"
                 android:gravity="center"
-                android:text="tty0" />
+                android:text="tty0"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/join_us"
@@ -570,42 +568,42 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginTop="10dp"
                 android:autoLink="web"
-                android:linksClickable="true"
                 android:gravity="center"
+                android:linksClickable="true"
                 android:text="@string/django_api"
-                android:textStyle="bold"
-                android:textColorLink="@color/colorPrimaryDark"/>
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="5dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginTop="5dp"
                 android:autoLink="web"
-                android:linksClickable="true"
                 android:gravity="center"
+                android:linksClickable="true"
                 android:text="@string/android_app"
-                android:textStyle="bold"
-                android:textColorLink="@color/colorPrimaryDark"/>
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/angular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="5dp"
                 android:layout_marginBottom="36dp"
+                android:layout_marginTop="5dp"
                 android:autoLink="web"
-                android:linksClickable="true"
                 android:gravity="center"
+                android:linksClickable="true"
                 android:text="@string/angular_pwa"
-                android:textStyle="bold"
-                android:textColorLink="@color/colorPrimaryDark"/>
+                android:textColorLink="@color/colorPrimaryDark"
+                android:textStyle="bold" />
 
 
         </LinearLayout>

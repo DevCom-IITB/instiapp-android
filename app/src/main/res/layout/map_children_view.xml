@@ -2,36 +2,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#e0e0e0" >
-    <LinearLayout 
+    android:background="#e0e0e0">
+
+    <LinearLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:orientation="horizontal">
-        <ImageView 
+
+        <ImageView
             android:id="@+id/arrow_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:paddingTop="16dp"
+            android:cropToPadding="true"
             android:paddingBottom="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="8dp"
-            android:cropToPadding="true"
+            android:paddingTop="16dp"
             android:scaleType="centerInside" />
-        <TextView 
+
+        <TextView
             android:id="@+id/list_header"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:paddingLeft="8dp" />
     </LinearLayout>
-	<ListView 
-	    android:id="@+id/child_list"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@id/header_layout"
-	    android:paddingLeft="48dp"
-	    android:background="#e5e5e5"></ListView>
+
+    <ListView
+        android:id="@+id/child_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_layout"
+        android:background="#e5e5e5"
+        android:paddingLeft="48dp"></ListView>
 </RelativeLayout>

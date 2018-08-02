@@ -26,8 +26,8 @@ import java.util.List;
 import app.insti.ActivityBuffer;
 import app.insti.Constants;
 import app.insti.ItemClickListener;
-import app.insti.activity.MainActivity;
 import app.insti.R;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.PlacementBlogAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
@@ -42,12 +42,12 @@ import retrofit2.Response;
  */
 public class PlacementBlogFragment extends BaseFragment {
 
+    public static boolean showLoader = true;
     private RecyclerView placementFeedRecyclerView;
     private PlacementBlogAdapter placementBlogAdapter;
     private SwipeRefreshLayout feedSwipeRefreshLayout;
     private AppDatabase appDatabase;
     private boolean freshBlogDisplayed = false;
-    public static boolean showLoader = true;
     private String searchQuery;
 
 
@@ -177,6 +177,43 @@ public class PlacementBlogFragment extends BaseFragment {
         startActivity(browse);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search_view_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView sv = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        item.setActionView(sv);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                performSearch(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText)) {
+                    //Text is cleared, do your thing
+                    searchQuery = null;
+                    updatePlacementFeed();
+                    showLoader = true;
+                    return true;
+                } else if (newText.length() >= 3) {
+                    performSearch(newText);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void performSearch(String query) {
+        searchQuery = query;
+        updatePlacementFeed();
+        showLoader = false;
+    }
+
     private class updateDatabase extends AsyncTask<List<PlacementBlogPost>, Void, Integer> {
         @Override
         protected Integer doInBackground(List<PlacementBlogPost>... posts) {
@@ -197,42 +234,5 @@ public class PlacementBlogFragment extends BaseFragment {
                 displayPlacementFeed(result);
             }
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search_view_menu, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        SearchView sv = new SearchView(((MainActivity) getActivity()).getSupportActionBar().getThemedContext());
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        item.setActionView(sv);
-        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                performSearch(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (TextUtils.isEmpty(newText)){
-                    //Text is cleared, do your thing
-                    searchQuery = null;
-                    updatePlacementFeed();
-                    showLoader = true;
-                    return true;
-                } else if (newText.length() >= 3) {
-                    performSearch(newText);
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
-
-    private void performSearch(String query) {
-        searchQuery = query;
-        updatePlacementFeed();
-        showLoader = false;
     }
 }

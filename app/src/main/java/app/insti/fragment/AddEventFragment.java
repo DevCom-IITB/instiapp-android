@@ -25,8 +25,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import app.insti.Constants;
-import app.insti.activity.MainActivity;
 import app.insti.R;
+import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
 import app.insti.data.Body;
@@ -37,9 +37,8 @@ import retrofit2.Response;
 
 
 public class AddEventFragment extends BaseFragment {
-    private ProgressDialog progressDialog;
-
     public ValueCallback<Uri[]> uploadMessage;
+    private ProgressDialog progressDialog;
 
     public AddEventFragment() {
         // Required empty public constructor
@@ -98,6 +97,7 @@ public class AddEventFragment extends BaseFragment {
 
             webView.setOnTouchListener(new View.OnTouchListener() {
                 float m_downX;
+
                 public boolean onTouch(View v, MotionEvent event) {
 
                     if (event.getPointerCount() > 1) {
@@ -128,7 +128,39 @@ public class AddEventFragment extends BaseFragment {
         return view;
     }
 
-    public class MyWebViewClient extends WebViewClient{
+    void openEvent(Event event) {
+        String eventJson = new Gson().toJson(event);
+        Bundle bundle = getArguments();
+        if (bundle == null)
+            bundle = new Bundle();
+        bundle.putString(Constants.EVENT_JSON, eventJson);
+        EventFragment eventFragment = new EventFragment();
+        eventFragment.setArguments(bundle);
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+        transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
+        transaction.addToBackStack(eventFragment.getTag()).commit();
+    }
+
+    void openBody(Body body) {
+        BodyFragment bodyFragment = BodyFragment.newInstance(body);
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+        transaction.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
+        transaction.addToBackStack(bodyFragment.getTag()).commit();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 101) {
+            if (uploadMessage == null) return;
+            uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
+            uploadMessage = null;
+        }
+    }
+
+    public class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             /* Check URL */
@@ -145,7 +177,8 @@ public class AddEventFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onFailure(Call<Event> call, Throwable t) { }
+                    public void onFailure(Call<Event> call, Throwable t) {
+                    }
                 });
 
                 return true;
@@ -162,7 +195,8 @@ public class AddEventFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onFailure(Call<Body> call, Throwable t) { }
+                    public void onFailure(Call<Body> call, Throwable t) {
+                    }
                 });
 
                 return true;
@@ -204,38 +238,6 @@ public class AddEventFragment extends BaseFragment {
             }
 
             return true;
-        }
-    }
-
-    void openEvent(Event event) {
-        String eventJson = new Gson().toJson(event);
-        Bundle bundle = getArguments();
-        if (bundle == null)
-            bundle = new Bundle();
-        bundle.putString(Constants.EVENT_JSON, eventJson);
-        EventFragment eventFragment = new EventFragment();
-        eventFragment.setArguments(bundle);
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-        transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-        transaction.addToBackStack(eventFragment.getTag()).commit();
-    }
-
-    void openBody(Body body) {
-        BodyFragment bodyFragment = BodyFragment.newInstance(body);
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-        transaction.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
-        transaction.addToBackStack(bodyFragment.getTag()).commit();
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if (requestCode == 101) {
-            if (uploadMessage == null) return;
-            uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
-            uploadMessage = null;
         }
     }
 }

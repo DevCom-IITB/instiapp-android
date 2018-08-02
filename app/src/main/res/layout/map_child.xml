@@ -4,8 +4,8 @@
     android:id="@+id/child_name"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
+    android:fontFamily="sans-serif-light"
     android:minHeight="56dp"
-    android:textSize="18dp"
-    android:fontFamily="sans-serif-light" />
+    android:padding="8dp"
+    android:textSize="18dp" />
 

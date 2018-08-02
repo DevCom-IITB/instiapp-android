@@ -14,16 +14,16 @@
 
         <EditText
             android:id="@+id/explore_search"
-            android:background="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:hint="Search"
+            android:paddingBottom="15dp"
             android:paddingLeft="18dp"
             android:paddingRight="6dp"
             android:paddingTop="3dp"
-            android:paddingBottom="15dp"
-            android:hint="Search"
             android:textColor="@color/primaryTextColor"
-            android:textColorHint="@color/primaryTextColor"/>
+            android:textColorHint="@color/primaryTextColor" />
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -69,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:theme="@style/BlueAccent"/>
+            android:theme="@style/BlueAccent" />
     </RelativeLayout>
 
 </FrameLayout>

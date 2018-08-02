@@ -2,7 +2,6 @@ package app.insti.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,13 @@ import ru.noties.markwon.Markwon;
 public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
+    private List<PlacementBlogPost> posts;
+    private Context context;
+    private ItemClickListener itemClickListener;
+    public PlacementBlogAdapter(List<PlacementBlogPost> posts, ItemClickListener itemClickListener) {
+        this.posts = posts;
+        this.itemClickListener = itemClickListener;
+    }
 
     public List<PlacementBlogPost> getPosts() {
         return posts;
@@ -32,15 +38,6 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public void setPosts(List<PlacementBlogPost> posts) {
         this.posts = posts;
-    }
-
-    private List<PlacementBlogPost> posts;
-    private Context context;
-    private ItemClickListener itemClickListener;
-
-    public PlacementBlogAdapter(List<PlacementBlogPost> posts, ItemClickListener itemClickListener) {
-        this.posts = posts;
-        this.itemClickListener = itemClickListener;
     }
 
     @Override
@@ -101,6 +98,14 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
+    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public ProgressViewHolder(View v) {
+            super(v);
+            progressBar = (ProgressBar) v.findViewById(R.id.blog_load_item);
+        }
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView postTitle;
@@ -113,15 +118,6 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
             postTitle = (TextView) itemView.findViewById(R.id.post_title);
             postPublished = (TextView) itemView.findViewById(R.id.post_published);
             postContent = (TextView) itemView.findViewById(R.id.post_content);
-        }
-    }
-
-    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
-        public ProgressBar progressBar;
-
-        public ProgressViewHolder(View v) {
-            super(v);
-            progressBar = (ProgressBar) v.findViewById(R.id.blog_load_item);
         }
     }
 
