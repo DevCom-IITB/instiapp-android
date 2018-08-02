@@ -151,7 +151,7 @@ public class EventFragment extends BackHandledFragment {
         Timestamp timestamp = event.getEventStartTime();
         Date Date = new Date(timestamp.getTime());
         SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
-        SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm a");
+        SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm");
         eventDate.setText(simpleDateFormatDate.format(Date));
         eventTime.setText(simpleDateFormatTime.format(Date));
         StringBuilder eventVenueName = new StringBuilder();
