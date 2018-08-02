@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import app.insti.Constants;
-import app.insti.LoginActivity;
+import app.insti.activity.LoginActivity;
 import app.insti.R;
 import app.insti.SessionManager;
 import app.insti.api.RetrofitInterface;

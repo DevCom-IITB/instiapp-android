@@ -1,4 +1,4 @@
-package app.insti;
+package app.insti.activity;
 
 
 import android.app.ProgressDialog;
@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import app.insti.R;
+import app.insti.SessionManager;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
 import app.insti.api.model.LoginResponse;

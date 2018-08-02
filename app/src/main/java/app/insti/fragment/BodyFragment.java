@@ -38,7 +38,7 @@ import java.util.List;
 
 import app.insti.Constants;
 import app.insti.ItemClickListener;
-import app.insti.MainActivity;
+import app.insti.activity.MainActivity;
 import app.insti.R;
 import app.insti.ShareURLMaker;
 import app.insti.adapter.BodyAdapter;

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import app.insti.Constants;
-import app.insti.MainActivity;
+import app.insti.activity.MainActivity;
 import app.insti.R;
 import app.insti.SessionManager;
 import app.insti.api.RetrofitInterface;

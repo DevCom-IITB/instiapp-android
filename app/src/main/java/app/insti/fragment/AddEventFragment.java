@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import app.insti.Constants;
-import app.insti.MainActivity;
+import app.insti.activity.MainActivity;
 import app.insti.R;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;

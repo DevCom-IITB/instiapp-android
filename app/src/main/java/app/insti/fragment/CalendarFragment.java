@@ -29,7 +29,7 @@ import java.util.TimeZone;
 
 import app.insti.Constants;
 import app.insti.ItemClickListener;
-import app.insti.MainActivity;
+import app.insti.activity.MainActivity;
 import app.insti.R;
 import app.insti.adapter.FeedAdapter;
 import app.insti.api.RetrofitInterface;

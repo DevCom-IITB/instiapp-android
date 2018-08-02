@@ -87,7 +87,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import app.insti.Constants;
-import app.insti.MainActivity;
+import app.insti.activity.MainActivity;
 import app.insti.R;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;

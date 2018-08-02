@@ -6,10 +6,11 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
+import app.insti.activity.LoginActivity;
 import app.insti.data.User;
 
 public class SessionManager {
-    SharedPreferences pref;
+    public SharedPreferences pref;
     Editor editor;
     Context context;
     int PRIVATE_MODE = 0;

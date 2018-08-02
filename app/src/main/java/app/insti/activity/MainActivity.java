@@ -1,4 +1,4 @@
-package app.insti;
+package app.insti.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -24,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebChromeClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,9 +33,11 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.squareup.picasso.Picasso;
 
+import app.insti.Constants;
+import app.insti.R;
+import app.insti.SessionManager;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
-import app.insti.api.UnsafeOkHttpClient;
 import app.insti.data.Body;
 import app.insti.data.Event;
 import app.insti.data.Role;

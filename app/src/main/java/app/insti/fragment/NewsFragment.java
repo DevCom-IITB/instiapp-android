@@ -26,7 +26,7 @@ import java.util.List;
 import app.insti.ActivityBuffer;
 import app.insti.Constants;
 import app.insti.ItemClickListener;
-import app.insti.MainActivity;
+import app.insti.activity.MainActivity;
 import app.insti.R;
 import app.insti.adapter.NewsAdapter;
 import app.insti.api.RetrofitInterface;
