@@ -168,6 +168,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case "user":
                     ProfileFragment profileFragment = ProfileFragment.newInstance(getID(appLinkData));
                     updateFragment(profileFragment);
+                    break;
+                case "event":
+                    RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                    retrofitInterface.getEvent(getSessionIDHeader(), getID(appLinkData)).enqueue(new Callback<Event>() {
+                        @Override
+                        public void onResponse(Call<Event> call, Response<Event> response) {
+                            EventFragment eventFragment = new EventFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putString(Constants.EVENT_JSON, response.body().toString());
+                            eventFragment.setArguments(bundle);
+                            updateFragment(eventFragment);
+                        }
+
+                        @Override
+                        public void onFailure(Call<Event> call, Throwable t) {
+
+                        }
+                    });
             }
         }
     }
@@ -180,6 +198,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return appLinkData.substring(appLinkData.indexOf("org") + 4);
             case "user":
                 return appLinkData.substring(appLinkData.indexOf("user") + 5);
+            case "event":
+                return appLinkData.substring(appLinkData.indexOf("event") + 6);
         }
         return null;
     }
@@ -189,6 +209,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return "body";
         } else if (appLinkData.startsWith("http://insti.app/user/") || appLinkData.startsWith("https://insti.app/user/")) {
             return "user";
+        } else if (appLinkData.startsWith("http://insti.app/event/") || appLinkData.startsWith("https://insti.app/event/")) {
+            return "event";
         }
         return null;
     }
