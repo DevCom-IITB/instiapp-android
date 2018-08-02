@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         } else {
                             session.logout();
                             currentUser = null;
-                            Toast.makeText(MainActivity.this, "You session has expired!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, "Your session has expired!", Toast.LENGTH_LONG).show();
                         }
                     }
 
