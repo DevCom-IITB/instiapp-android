@@ -306,7 +306,7 @@ public class BodyFragment extends BackHandledFragment {
 
         /* Get users from roles */
         final List<Role> roles = body.getBodyRoles();
-        final List<User> users = new ArrayList();
+        final List<User> users = new ArrayList<>();
         for (Role role : roles) {
             if (role.getRoleUsersDetail() != null) {
                 for (User user : role.getRoleUsersDetail()) {

@@ -67,7 +67,7 @@ public class TrainingBlogFragment extends BaseFragment {
         super.onStart();
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Training Blog");
+        toolbar.setTitle("Internship Blog");
 
         setHasOptionsMenu(true);
 
