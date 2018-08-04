@@ -13,6 +13,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="false"
-        android:layout_alignWithParentIfMissing="false"></WebView>
+        android:layout_alignWithParentIfMissing="false" />
 
 </LinearLayout>

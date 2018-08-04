@@ -1,5 +1,9 @@
 package app.insti.api;
 
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
+
 import java.util.List;
 
 import app.insti.api.model.EventCreateRequest;
@@ -26,6 +30,9 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface RetrofitInterface {
+    @GET("../andro.json")
+    Call<JsonObject> getLatestVersion();
+
     @GET("login")
     Call<LoginResponse> login(@Query("code") String AUTH_CODE, @Query("redir") String redirectURI, @Query("fcm_id") String fcmID);
 

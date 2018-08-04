@@ -6,11 +6,14 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -31,7 +34,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import app.insti.Constants;
 import app.insti.R;
@@ -132,7 +139,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
+        checkLatestVersion();
+
         NotificationEventReceiver.setupAlarm(getApplicationContext());
+    }
+
+    private void checkLatestVersion() {
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            final int versionCode = pInfo.versionCode;
+            RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+            retrofitInterface.getLatestVersion().enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    System.out.println("Check" + response.code() + response.body());
+                    if (response.isSuccessful()) {
+                        System.out.println("Check 2" + response.body());
+                        if (response.body().get("version").getAsInt() > versionCode) {
+                            showUpdateSnackBar();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                }
+            });
+        } catch (PackageManager.NameNotFoundException ignored) {
+
+        }
+    }
+
+    private void showUpdateSnackBar() {
+        View parentLayout = findViewById(android.R.id.content);
+        Snackbar.make(parentLayout, "New Version Available", Snackbar.LENGTH_LONG).setAction("UPDATE", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
+            }
+        }).show();
     }
 
     @TargetApi(Build.VERSION_CODES.O)
