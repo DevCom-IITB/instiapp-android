@@ -129,6 +129,11 @@ public class ProfileFragment extends BackHandledFragment {
         getActivity().findViewById(R.id.tab_layout).setVisibility(View.VISIBLE);
 
         final List<Role> roleList = user.getUserRoles();
+        List<Role> formerRoleList = user.getUserFormerRoles();
+        for (Role role : formerRoleList) {
+            role.setRoleName("Former " + role.getRoleName());
+        }
+        roleList.addAll(formerRoleList);
         RecyclerView userRoleRecyclerView = getActivity().findViewById(R.id.role_recycler_view);
         RoleAdapter roleAdapter = new RoleAdapter(roleList, new ItemClickListener() {
             @Override

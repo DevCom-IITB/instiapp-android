@@ -54,6 +54,9 @@ public class User {
     @ColumnInfo(name = "institute_roles")
     @SerializedName("institute_roles")
     List<Role> userInstituteRoles;
+    @ColumnInfo(name = "former_roles")
+    @SerializedName("former_roles")
+    List<Role> userFormerRoles;
     @ColumnInfo(name = "website_url")
     @SerializedName("website_url")
     String userWebsiteURL;
@@ -70,7 +73,7 @@ public class User {
     @Ignore
     String currentRole;
 
-    public User(@NonNull String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, List<Role> userRoles, List<Role> userInstituteRoles, String userWebsiteURL, String userLDAPId, String hostel) {
+    public User(@NonNull String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, List<Role> userRoles, List<Role> userInstituteRoles, List<Role> userFormerRoles, String userWebsiteURL, String userLDAPId, String hostel) {
         this.userID = userID;
         this.userName = userName;
         this.userProfilePictureUrl = userProfilePictureUrl;
@@ -84,6 +87,7 @@ public class User {
         this.userFollowedBodiesID = userFollowedBodiesID;
         this.userRoles = userRoles;
         this.userInstituteRoles = userInstituteRoles;
+        this.userFormerRoles = userFormerRoles;
         this.userWebsiteURL = userWebsiteURL;
         this.userLDAPId = userLDAPId;
         this.hostel = hostel;
@@ -93,11 +97,12 @@ public class User {
         return new Gson().fromJson(json, User.class);
     }
 
+    @NonNull
     public String getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID) {
+    public void setUserID(@NonNull String userID) {
         this.userID = userID;
     }
 
@@ -195,6 +200,14 @@ public class User {
 
     public void setUserInstituteRoles(List<Role> userInstituteRoles) {
         this.userInstituteRoles = userInstituteRoles;
+    }
+
+    public List<Role> getUserFormerRoles() {
+        return userFormerRoles;
+    }
+
+    public void setUserFormerRoles(List<Role> userFormerRoles) {
+        this.userFormerRoles = userFormerRoles;
     }
 
     public String getUserWebsiteURL() {
