@@ -6,7 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
-@Database(entities = {Event.class, Body.class, Venue.class, User.class, Role.class, PlacementBlogPost.class, TrainingBlogPost.class, HostelMessMenu.class, NewsArticle.class}, version = 1, exportSchema = false)
+@Database(entities = {Event.class, Body.class, Venue.class, User.class, Role.class, PlacementBlogPost.class, TrainingBlogPost.class, HostelMessMenu.class, NewsArticle.class}, version = 2, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -19,6 +19,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             // allow queries on the main thread.
                             // Don't do this on a real app! See PersistenceBasicSample for an example.
                             // .allowMainThreadQueries()
+                            .fallbackToDestructiveMigration()
                             .build();
         }
         return INSTANCE;
