@@ -152,9 +152,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             retrofitInterface.getLatestVersion().enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    System.out.println("Check" + response.code() + response.body());
                     if (response.isSuccessful()) {
-                        System.out.println("Check 2" + response.body());
                         if (response.body().get("version").getAsInt() > versionCode) {
                             showUpdateSnackBar();
                         }
