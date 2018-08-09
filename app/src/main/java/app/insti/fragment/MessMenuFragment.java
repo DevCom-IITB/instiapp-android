@@ -43,7 +43,7 @@ public class MessMenuFragment extends BaseFragment {
     private SwipeRefreshLayout messMenuSwipeRefreshLayout;
     private AppDatabase appDatabase;
     private Spinner hostelSpinner;
-
+    private String hostel;
 
     public MessMenuFragment() {
         // Required empty public constructor
@@ -64,7 +64,7 @@ public class MessMenuFragment extends BaseFragment {
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Mess Menu");
 
-        final String hostel = (String) getArguments().get(Constants.USER_HOSTEL);
+        hostel = (String) getArguments().get(Constants.USER_HOSTEL);
         displayMenu(hostel);
 
         messMenuSwipeRefreshLayout = getActivity().findViewById(R.id.mess_menu_swipe_refresh_layout);
@@ -83,11 +83,12 @@ public class MessMenuFragment extends BaseFragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 16)
-                    displayMenu("tansa");
+                    hostel = "tansa";
                 else if (i == 17)
-                    displayMenu("qip");
+                    hostel = "qip";
                 else
-                    displayMenu(Integer.toString(i + 1));
+                    hostel = Integer.toString(i + 1);
+                displayMenu(hostel);
             }
 
             @Override
@@ -119,7 +120,8 @@ public class MessMenuFragment extends BaseFragment {
                 if (response.isSuccessful()) {
                     List<HostelMessMenu> instituteMessMenu = response.body();
                     HostelMessMenu hostelMessMenu = findMessMenu(instituteMessMenu, hostel);
-                    displayMessMenu(hostelMessMenu);
+                    if(hostelMessMenu != null)
+                        displayMessMenu(hostelMessMenu);
 
                     new updateDatabase().execute(instituteMessMenu);
                 }
