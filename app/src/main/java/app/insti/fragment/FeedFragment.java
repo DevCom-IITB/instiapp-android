@@ -45,7 +45,8 @@ public class FeedFragment extends BaseFragment {
     private AppDatabase appDatabase;
     private FloatingActionButton fab;
     private boolean freshEventsDisplayed = false;
-
+    LinearLayoutManager mLayoutManager;
+    public static int index = -1, top = -1;
     public FeedFragment() {
         // Required empty public constructor
     }
@@ -60,7 +61,9 @@ public class FeedFragment extends BaseFragment {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Feed");
-
+        feedRecyclerView = view.findViewById(R.id.feed_recycler_view);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        feedRecyclerView.setLayoutManager(mLayoutManager);
         feedSwipeRefreshLayout = view.findViewById(R.id.feed_swipe_refresh_layout);
         feedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -77,12 +80,30 @@ public class FeedFragment extends BaseFragment {
         super.onStart();
         appDatabase = AppDatabase.getAppDatabase(getContext());
         new showEventsFromDB().execute();
-
         fab = (FloatingActionButton) getView().findViewById(R.id.fab);
-        feedRecyclerView = getView().findViewById(R.id.feed_recycler_view);
-
         updateFeed();
     }
+
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        index = mLayoutManager.findFirstVisibleItemPosition();
+        View v = feedRecyclerView.getChildAt(0);
+        top = (v == null) ? 0 : (v.getTop() - feedRecyclerView.getPaddingTop());
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if(index != -1)
+        {
+            mLayoutManager.scrollToPositionWithOffset( index, top);
+        }
+    }
+
 
     private void updateFeed() {
         RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
@@ -160,7 +181,7 @@ public class FeedFragment extends BaseFragment {
             public void run(Activity pActivity) {
                 try {
                     feedRecyclerView.setAdapter(feedAdapter);
-                    feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    //feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
                 } catch (NullPointerException e) {
                     e.printStackTrace();
