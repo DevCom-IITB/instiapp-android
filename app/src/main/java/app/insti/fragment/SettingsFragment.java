@@ -75,6 +75,9 @@ public class SettingsFragment extends Fragment {
     }
 
     private void populateUserCard() {
+        if (getActivity() == null || getView() == null) {
+            return;
+        }
         ImageView userProfilePictureImageView = getActivity().findViewById(R.id.user_card_avatar);
         TextView userNameTextView = getActivity().findViewById(R.id.user_card_name);
 
