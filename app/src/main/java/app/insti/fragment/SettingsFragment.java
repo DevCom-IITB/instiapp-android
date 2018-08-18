@@ -21,6 +21,7 @@ import app.insti.Constants;
 import app.insti.R;
 import app.insti.SessionManager;
 import app.insti.activity.LoginActivity;
+import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
 import app.insti.data.User;
@@ -87,6 +88,14 @@ public class SettingsFragment extends Fragment {
                 .placeholder(R.drawable.user_placeholder)
                 .into(userProfilePictureImageView);
         userNameTextView.setText(user.getUserName());
+
+        getView().findViewById(R.id.role_card_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProfileFragment profileFragment = ProfileFragment.newInstance(user.getUserID());
+                ((MainActivity)getActivity()).updateFragment(profileFragment);
+            }
+        });
     }
 
     private void populateViews() {
