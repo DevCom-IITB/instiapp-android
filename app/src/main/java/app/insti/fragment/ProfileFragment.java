@@ -5,9 +5,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -122,7 +124,7 @@ public class ProfileFragment extends BackHandledFragment {
         userProfilePictureImageView = getActivity().findViewById(R.id.user_profile_picture_profile);
         TextView userNameTextView = getActivity().findViewById(R.id.user_name_profile);
         TextView userRollNumberTextView = getActivity().findViewById(R.id.user_rollno_profile);
-        TextView userEmailIDTextView = getActivity().findViewById(R.id.user_email_profile);
+        final TextView userEmailIDTextView = getActivity().findViewById(R.id.user_email_profile);
         TextView userContactNumberTextView = getActivity().findViewById(R.id.user_contact_no_profile);
 
         /* Show tabs */
@@ -186,10 +188,45 @@ public class ProfileFragment extends BackHandledFragment {
         tabLayout.setupWithViewPager(viewPager);
         userNameTextView.setText(user.getUserName());
         userRollNumberTextView.setText(user.getUserRollNumber());
-        userEmailIDTextView.setText(user.getUserEmail());
+        if (!user.getUserEmail().equals("N/A")) {
+            userEmailIDTextView.setText(user.getUserEmail());
+        } else {
+            userEmailIDTextView.setText(user.getUserRollNumber() + "@iitb.ac.in");
+        }
         userContactNumberTextView.setText(user.getUserContactNumber());
 
+        userEmailIDTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mail((String) userEmailIDTextView.getText());
+            }
+        });
+
+        if (user.getUserContactNumber() != null) {
+            userContactNumberTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    call(user.getUserContactNumber());
+                }
+            });
+        }
+
         getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+    }
+
+    private void call(String contactNumber) {
+        String uri = "tel:" + contactNumber;
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse(uri));
+        startActivity(Intent.createChooser(intent, "PLace a Call"));
+    }
+
+    private void mail(String email) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, email);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Let's have Coffee!");
+        startActivity(Intent.createChooser(intent, "Send Email"));
     }
 
     private void zoomOut(final ImageView expandedImageView, Rect startBounds, float startScaleFinal, final View thumbView) {
