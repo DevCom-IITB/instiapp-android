@@ -37,9 +37,6 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.SessionManager;
@@ -61,7 +58,7 @@ import app.insti.fragment.MyEventsFragment;
 import app.insti.fragment.NewsFragment;
 import app.insti.fragment.NotificationsFragment;
 import app.insti.fragment.PlacementBlogFragment;
-import app.insti.fragment.ProfileFragment;
+import app.insti.fragment.UserFragment;
 import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
@@ -227,8 +224,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     updateFragment(bodyFragment);
                     break;
                 case "user":
-                    ProfileFragment profileFragment = ProfileFragment.newInstance(getID(appLinkData));
-                    updateFragment(profileFragment);
+                    UserFragment userFragment = UserFragment.newInstance(getID(appLinkData));
+                    updateFragment(userFragment);
                     break;
                 case "event":
                     RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
@@ -331,9 +328,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.USER_ID, currentUser.getUserID());
-                ProfileFragment profileFragment = new ProfileFragment();
-                profileFragment.setArguments(bundle);
-                updateFragment(profileFragment);
+                UserFragment userFragment = new UserFragment();
+                userFragment.setArguments(bundle);
+                updateFragment(userFragment);
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
             }
@@ -480,8 +477,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         FragmentTransaction transaction = manager.beginTransaction();
 
-        /* Animate only for ProfileFragment */
-        if (fragment instanceof ProfileFragment) {
+        /* Animate only for UserFragment */
+        if (fragment instanceof UserFragment) {
             transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
         }
 

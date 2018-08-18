@@ -324,12 +324,12 @@ public class BodyFragment extends BackHandledFragment {
                 User user = users.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.USER_ID, user.getUserID());
-                ProfileFragment profileFragment = new ProfileFragment();
-                profileFragment.setArguments(bundle);
+                UserFragment userFragment = new UserFragment();
+                userFragment.setArguments(bundle);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.framelayout_for_fragment, profileFragment, profileFragment.getTag());
-                ft.addToBackStack(profileFragment.getTag());
+                ft.replace(R.id.framelayout_for_fragment, userFragment, userFragment.getTag());
+                ft.addToBackStack(userFragment.getTag());
                 ft.commit();
             }
         });

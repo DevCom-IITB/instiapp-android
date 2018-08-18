@@ -92,8 +92,8 @@ public class SettingsFragment extends Fragment {
         getView().findViewById(R.id.role_card_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProfileFragment profileFragment = ProfileFragment.newInstance(user.getUserID());
-                ((MainActivity)getActivity()).updateFragment(profileFragment);
+                UserFragment userFragment = UserFragment.newInstance(user.getUserID());
+                ((MainActivity)getActivity()).updateFragment(userFragment);
             }
         });
     }

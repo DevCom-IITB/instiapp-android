@@ -47,7 +47,7 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends BackHandledFragment {
+public class UserFragment extends BackHandledFragment {
     private User user;
 
     // Hold a reference to the current animator,
@@ -64,12 +64,12 @@ public class ProfileFragment extends BackHandledFragment {
     private float startScaleFinal;
     private ImageView userProfilePictureImageView;
 
-    public ProfileFragment() {
+    public UserFragment() {
         // Required empty public constructor
     }
 
-    public static ProfileFragment newInstance(String userID) {
-        ProfileFragment fragment = new ProfileFragment();
+    public static UserFragment newInstance(String userID) {
+        UserFragment fragment = new UserFragment();
         Bundle args = new Bundle();
         args.putString(Constants.USER_ID, userID);
         fragment.setArguments(args);
@@ -80,7 +80,7 @@ public class ProfileFragment extends BackHandledFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        return inflater.inflate(R.layout.fragment_user, container, false);
     }
 
     @Override

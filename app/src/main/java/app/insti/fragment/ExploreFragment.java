@@ -212,7 +212,7 @@ public class ExploreFragment extends Fragment {
                 User user = users.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.USER_ID, user.getUserID());
-                updateFragment(new ProfileFragment(), bundle);
+                updateFragment(new UserFragment(), bundle);
             }
         });
         usersRecyclerView.setAdapter(userAdapter);
