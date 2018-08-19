@@ -208,6 +208,8 @@ public class EventFragment extends BackHandledFragment {
 
         setFollowButtonColors(event.getEventUserUes());
 
+        if (!event.getEventVenues().isEmpty())
+        {
         if (event.getEventVenues().get(0).getVenueLatitude() == 0) {
             navigateButton.setVisibility(View.GONE);
         } else {
@@ -221,6 +223,11 @@ public class EventFragment extends BackHandledFragment {
                     startActivity(mapIntent);
                 }
             });
+            }
+        }
+        else
+        {
+            navigateButton.setVisibility(View.GONE);
         }
 
         shareEventButton.setOnClickListener(new View.OnClickListener() {
