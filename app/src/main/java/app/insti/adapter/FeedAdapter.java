@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+
 import app.insti.ItemClickListener;
 import app.insti.R;
 import app.insti.data.Event;
@@ -29,6 +30,55 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     public FeedAdapter(List<Event> events, ItemClickListener itemClickListener) {
         this.events = events;
         this.itemClickListener = itemClickListener;
+    }
+
+    public void getSubtitle(ViewHolder viewHolder, Event currentEvent)
+    {
+        String subtitle = "";
+
+        Date startTime = currentEvent.getEventStartTime();
+        Date endTime = currentEvent.getEventEndTime();
+        Date timeNow = currentEvent.getTimeNow();
+        boolean eventStarted = timeNow.compareTo(startTime) > 0;
+        boolean eventEnded = timeNow.compareTo(endTime) > 0;
+
+        if (eventEnded)
+            subtitle += "Event ended | ";
+        else if(eventStarted)
+        {
+            int difference = (int) (endTime.getTime() - timeNow.getTime());
+            int minutes = difference / (60 * 1000 ) % 60;
+            int hours = difference / (60 * 60 * 1000) % 24;
+            int days = (int) difference / (24 * 60 * 60 * 1000);
+            String timeDiff = "";
+            if (days > 0)
+                timeDiff += Integer.toString(days) + "D ";
+            if (hours > 0)
+                timeDiff += Integer.toString(hours) + "H ";
+
+
+            timeDiff += Integer.toString(minutes) + "M";
+
+            subtitle += "Ends in " + timeDiff + " | " ;
+        }
+
+        Timestamp timestamp = currentEvent.getEventStartTime();
+        if (timestamp != null) {
+            Date Date = new Date(timestamp.getTime());
+            SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
+            SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm");
+
+            subtitle += simpleDateFormatDate.format(Date) + " | " + simpleDateFormatTime.format(Date);
+        }
+        StringBuilder eventVenueName = new StringBuilder();
+        for (Venue venue : currentEvent.getEventVenues()) {
+            eventVenueName.append(", ").append(venue.getVenueShortName());
+        }
+        if (!eventVenueName.toString().equals(""))
+            subtitle += " | " + eventVenueName.toString().substring(2);
+
+        viewHolder.eventSubtitle.setText(subtitle);
+        return ;
     }
 
     @Override
@@ -59,23 +109,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         Event currentEvent = events.get(i);
         viewHolder.eventTitle.setText(currentEvent.getEventName());
 
-        String subtitle = "";
-        Timestamp timestamp = currentEvent.getEventStartTime();
-        if (timestamp != null) {
-            Date Date = new Date(timestamp.getTime());
-            SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
-            SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm");
-
-            subtitle += simpleDateFormatDate.format(Date) + " | " + simpleDateFormatTime.format(Date);
-        }
-        StringBuilder eventVenueName = new StringBuilder();
-        for (Venue venue : currentEvent.getEventVenues()) {
-            eventVenueName.append(", ").append(venue.getVenueShortName());
-        }
-        if (!eventVenueName.toString().equals(""))
-            subtitle += " | " + eventVenueName.toString().substring(2);
-
-        viewHolder.eventSubtitle.setText(subtitle);
+        getSubtitle(viewHolder, currentEvent);
 
         // Fallback to image of first body if event has no image
         if (currentEvent.getEventImageURL() == null) {
