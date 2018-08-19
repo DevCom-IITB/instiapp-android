@@ -32,7 +32,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         this.itemClickListener = itemClickListener;
     }
 
-    public void get_subtitle(ViewHolder viewHolder, Event currentEvent)
+    public void getSubtitle(ViewHolder viewHolder, Event currentEvent)
     {
         String subtitle = "";
 
@@ -109,7 +109,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         Event currentEvent = events.get(i);
         viewHolder.eventTitle.setText(currentEvent.getEventName());
 
-        get_subtitle(viewHolder, currentEvent);
+        getSubtitle(viewHolder, currentEvent);
 
         // Fallback to image of first body if event has no image
         if (currentEvent.getEventImageURL() == null) {
