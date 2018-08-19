@@ -208,8 +208,7 @@ public class EventFragment extends BackHandledFragment {
 
         setFollowButtonColors(event.getEventUserUes());
 
-
-        if (event.getEventVenues() != null && event.getEventVenues().size() != 0) {
+        if (!event.getEventVenues().isEmpty()) {
             if (event.getEventVenues().get(0).getVenueLatitude() == 0) {
                 navigateButton.setVisibility(View.GONE);
             } else {
@@ -224,6 +223,8 @@ public class EventFragment extends BackHandledFragment {
                     }
                 });
             }
+        } else {
+            navigateButton.setVisibility(View.GONE);
         }
         shareEventButton.setOnClickListener(new View.OnClickListener() {
             String shareUrl = ShareURLMaker.getEventURL(event);
