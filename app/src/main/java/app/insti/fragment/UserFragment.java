@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ import java.util.List;
 import app.insti.Constants;
 import app.insti.ItemClickListener;
 import app.insti.R;
+import app.insti.ShareURLMaker;
 import app.insti.adapter.RoleAdapter;
 import app.insti.adapter.TabAdapter;
 import app.insti.api.RetrofitInterface;
@@ -43,6 +45,8 @@ import app.insti.data.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.view.View.VISIBLE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -126,9 +130,10 @@ public class UserFragment extends BackHandledFragment {
         TextView userRollNumberTextView = getActivity().findViewById(R.id.user_rollno_profile);
         final TextView userEmailIDTextView = getActivity().findViewById(R.id.user_email_profile);
         TextView userContactNumberTextView = getActivity().findViewById(R.id.user_contact_no_profile);
+        ImageButton userShareImageButton = getActivity().findViewById(R.id.share_user_button);
 
         /* Show tabs */
-        getActivity().findViewById(R.id.tab_layout).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.tab_layout).setVisibility(VISIBLE);
 
         final List<Role> roleList = user.getUserRoles();
         List<Role> formerRoleList = user.getUserFormerRoles();
@@ -210,6 +215,20 @@ public class UserFragment extends BackHandledFragment {
                 }
             });
         }
+
+        userShareImageButton.setOnClickListener(new View.OnClickListener() {
+            String shareUrl = ShareURLMaker.getUserURL(user);
+
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
+                i.putExtra(Intent.EXTRA_TEXT, shareUrl);
+                startActivity(Intent.createChooser(i, "Share URL"));
+            }
+        });
+        userShareImageButton.setVisibility(VISIBLE);
 
         getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
@@ -325,7 +344,7 @@ public class UserFragment extends BackHandledFragment {
         // begins, it will position the zoomed-in view in the place of the
         // thumbnail.
         thumbView.setAlpha(0f);
-        expandedImageView.setVisibility(View.VISIBLE);
+        expandedImageView.setVisibility(VISIBLE);
 
         // Set the pivot point for SCALE_X and SCALE_Y transformations
         // to the top-left corner of the zoomed-in view (the default

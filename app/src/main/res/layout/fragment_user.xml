@@ -10,10 +10,9 @@
         android:orientation="vertical"
         tools:context="app.insti.fragment.UserFragment">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/user_profile_picture_profile"
@@ -26,6 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_toEndOf="@id/user_profile_picture_profile"
                 android:orientation="vertical">
 
                 <TextView
@@ -60,7 +60,20 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+            <ImageButton
+                android:id="@+id/share_user_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:layout_gravity="center_vertical"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Share User"
+                android:padding="16dp"
+                android:src="@drawable/ic_menu_share" />
+
+        </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/role_recycler_view"
