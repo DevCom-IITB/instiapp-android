@@ -244,6 +244,8 @@ public class BodyFragment extends BackHandledFragment {
                             body.setBodyUserFollows(!body.getBodyUserFollows());
                             new updateDbBody().execute(body);
                             followButton.setBackgroundColor(getResources().getColor(body.getBodyUserFollows() ? R.color.colorAccent : R.color.colorWhite));
+                            if (body.getBodyUserFollows()) followButton.setText( body.getBodyFollowersCount() + 1 );
+                            else {followButton.setText( body.getBodyFollowersCount() + 1 );}
                         }
                     }
 
