@@ -122,6 +122,7 @@ public class NotificationIntentService extends JobIntentService {
                             long timediff = getDateDiff(new Date(), event.getEventStartTime(), TimeUnit.MINUTES);
                             if (timediff <= 30 && timediff > 0) { // Change this to 30*10000 for testing
                                 NOTIFICATION_ID = event.getEventID().hashCode();
+
                                 final NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), getResources().getString(R.string.default_notification_channel_id));
                                 builder.setContentTitle(event.getEventName())
                                         .setAutoCancel(true)
