@@ -128,9 +128,7 @@ public class NotificationIntentService extends JobIntentService {
                                         .setColor(getResources().getColor(R.color.colorAccent))
                                         .setContentText("Event is about to start in " + getDateDiff(new Date(), event.getEventStartTime(), TimeUnit.MINUTES) + ((getDateDiff(new Date(), event.getEventStartTime(), TimeUnit.MINUTES) == 1) ? " minute." : " minutes."))
                                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.lotus_white))
-                                        .setSmallIcon(R.drawable.lotus_white)
-                                  //      .addAction (R.drawable.common_google_signin_btn_icon_dark,"Hello", null)
-                                ;
+                                        .setSmallIcon(R.drawable.lotus_white);
 
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 intent.setAction(ACTION_OPEN_EVENT);
