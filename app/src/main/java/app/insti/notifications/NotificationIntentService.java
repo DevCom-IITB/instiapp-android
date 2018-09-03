@@ -5,14 +5,21 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import app.insti.Constants;
@@ -26,6 +33,7 @@ import app.insti.data.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 
 public class NotificationIntentService extends JobIntentService {
 
@@ -57,6 +65,37 @@ public class NotificationIntentService extends JobIntentService {
         long diffInMillies = date2.getTime() - date1.getTime();
         return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
+
+    public static Bitmap getImageBitmapFromURL(final String imageUrl){
+        Bitmap imageBitmap = null;
+        try {
+            imageBitmap = new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(Void... params) {
+                    {
+                        int targetHeight = 200;
+                        int targetWidth = 200;
+
+                        try {
+                            return Picasso.get()
+                                    .load(String.valueOf(imageUrl)).get();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    return null;
+                }
+            }.execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+        return imageBitmap;
+    }
+
 
     @Override
     protected void onHandleWork(Intent intent) {
@@ -129,7 +168,9 @@ public class NotificationIntentService extends JobIntentService {
                                         .setColor(getResources().getColor(R.color.colorAccent))
                                         .setContentText("Event is about to start in " + getDateDiff(new Date(), event.getEventStartTime(), TimeUnit.MINUTES) + ((getDateDiff(new Date(), event.getEventStartTime(), TimeUnit.MINUTES) == 1) ? " minute." : " minutes."))
                                         .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.lotus_white))
-                                        .setSmallIcon(R.drawable.lotus_white);
+                                        .setSmallIcon(R.drawable.lotus_white)
+                                        .setStyle(new NotificationCompat.BigPictureStyle()
+                                                .bigPicture(getImageBitmapFromURL(event.getEventImageURL())));
 
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 intent.setAction(ACTION_OPEN_EVENT);
