@@ -375,22 +375,65 @@
             </LinearLayout>
 
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/maitreyaimg"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp" />
 
-            <TextView
-                android:id="@+id/maitreya"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
+
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:text="Maitreya Verma"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/maitreyaimg"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="50dp" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/safwanimg"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="50dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/maitreya"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="35dp"
+                    android:gravity="center"
+                    android:text="Maitreya Verma"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/safwan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="35dp"
+                    android:gravity="center"
+                    android:text="Mohd Safwan"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/alumni"
@@ -402,6 +445,12 @@
                 android:text="Alumni"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+
+
+
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
