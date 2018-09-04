@@ -184,14 +184,17 @@ public class NotificationIntentService extends JobIntentService {
                                 builder.setContentIntent(pendingIntent);
                                 builder.setDeleteIntent(NotificationEventReceiver.getDeleteIntent(getApplicationContext()));
 
-                                Intent navigateIntent = new Intent(getApplicationContext(), NotificationIntentService.class);
-                                navigateIntent.setAction(ACTION_NAVIGATE);
-                                navigateIntent.putExtra(Constants.EVENT_ID, event.getEventID());
-                                navigateIntent.putExtra(Constants.EVENT_LATITUDE, event.getEventVenues().get(0).getVenueLatitude());
-                                navigateIntent.putExtra(Constants.EVENT_LONGITUDE, event.getEventVenues().get(0).getVenueLongitude());
-                                navigateIntent.putExtra("NOTIFICATION_ID", NOTIFICATION_ID);
-                                PendingIntent navigatePendingIntent = PendingIntent.getService(getApplicationContext(), 0, navigateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                                builder.addAction(R.drawable.baseline_navigation_white_24, "Navigate", navigatePendingIntent);
+                                if(event.getEventVenues().size() > 0)
+                                {
+                                    Intent navigateIntent = new Intent(getApplicationContext(), NotificationIntentService.class);
+                                    navigateIntent.setAction(ACTION_NAVIGATE);
+                                    navigateIntent.putExtra(Constants.EVENT_ID, event.getEventID());
+                                    navigateIntent.putExtra(Constants.EVENT_LATITUDE, event.getEventVenues().get(0).getVenueLatitude());
+                                    navigateIntent.putExtra(Constants.EVENT_LONGITUDE, event.getEventVenues().get(0).getVenueLongitude());
+                                    navigateIntent.putExtra("NOTIFICATION_ID", NOTIFICATION_ID);
+                                    PendingIntent navigatePendingIntent = PendingIntent.getService(getApplicationContext(), 0, navigateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                    builder.addAction(R.drawable.baseline_navigation_white_24, "Navigate", navigatePendingIntent);
+                                }
 
                                 Intent notGoingIntent = new Intent(getApplicationContext(), NotificationIntentService.class);
                                 notGoingIntent.setAction(ACTION_NOT_GOING);
