@@ -37,6 +37,8 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.SessionManager;
@@ -44,6 +46,7 @@ import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
 import app.insti.data.Body;
 import app.insti.data.Event;
+import app.insti.data.Notification;
 import app.insti.data.Role;
 import app.insti.data.User;
 import app.insti.fragment.BackHandledFragment;
@@ -83,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private User currentUser;
     private boolean showNotifications = false;
     private BackHandledFragment selectedFragment;
+    private Menu menu;
 
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -136,9 +140,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
+        fetchNotifications();
+
         checkLatestVersion();
 
         NotificationEventReceiver.setupAlarm(getApplicationContext());
+    }
+
+    private void fetchNotifications() {
+        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        retrofitInterface.getNotifications(getSessionIDHeader()).enqueue(new Callback<List<Notification>>() {
+            @Override
+            public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
+                if (response.isSuccessful()) {
+                    List<Notification> notifications = response.body();
+                    if (notifications != null && !notifications.isEmpty()) {
+                        menu.findItem(R.id.action_notifications).setIcon(R.drawable.baseline_notifications_active_white_24);
+                    } else {
+                        menu.findItem(R.id.action_notifications).setIcon(R.drawable.ic_notifications_white_24dp);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Notification>> call, Throwable t) {
+            }
+        });
     }
 
     private void checkLatestVersion() {
@@ -366,7 +393,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        this.menu = menu;
+        fetchNotifications();
+        getMenuInflater().inflate(R.menu.main, this.menu);
         return true;
     }
 
