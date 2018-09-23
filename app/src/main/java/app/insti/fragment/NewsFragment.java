@@ -125,7 +125,6 @@ public class NewsFragment extends BaseFragment {
             public void run(Activity pActivity) {
                 try {
                     newsRecyclerView = getActivity().findViewById(R.id.news_recycler_view);
-
                     newsRecyclerView.setAdapter(newsAdapter);
                     newsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     newsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
