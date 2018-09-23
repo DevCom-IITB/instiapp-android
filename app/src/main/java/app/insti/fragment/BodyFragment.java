@@ -232,7 +232,7 @@ public class BodyFragment extends BackHandledFragment {
          * Initialize follow button */
         followButton.setBackgroundColor(getResources().getColor(body.getBodyUserFollows() ? R.color.colorAccent : R.color.colorWhite));
         followButton.setText(EventFragment.getCountBadgeSpannable("FOLLOW", body.getBodyFollowersCount()));
-
+        final boolean initial = body.getBodyUserFollows();
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -241,11 +241,14 @@ public class BodyFragment extends BackHandledFragment {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
+
                             body.setBodyUserFollows(!body.getBodyUserFollows());
-                            new updateDbBody().execute(body);
                             followButton.setBackgroundColor(getResources().getColor(body.getBodyUserFollows() ? R.color.colorAccent : R.color.colorWhite));
-                            if (body.getBodyUserFollows()) followButton.setText( body.getBodyFollowersCount() + 1 );
-                            else {followButton.setText( body.getBodyFollowersCount() + 1 );}
+                            followButton.setText( EventFragment.getCountBadgeSpannable("FOLLOW", body.getBodyFollowersCount()) );
+                                    if (! initial ) { if (body.getBodyUserFollows()) {
+                                    followButton.setText(EventFragment.getCountBadgeSpannable("FOLLOW", body.getBodyFollowersCount()+1)); }}
+                                    else            { if (!body.getBodyUserFollows()) {
+                                    followButton.setText(EventFragment.getCountBadgeSpannable("FOLLOW", body.getBodyFollowersCount()-1)); }}
                         }
                     }
 

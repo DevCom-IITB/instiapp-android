@@ -48,6 +48,8 @@ public class NewsFragment extends BaseFragment {
     private AppDatabase appDatabase;
     private boolean freshNewsDisplayed = false;
     private String searchQuery;
+    LinearLayoutManager mLayoutManager;
+    public static int index = -1, top = -1;
 
     public NewsFragment() {
         // Required empty public constructor
@@ -125,6 +127,7 @@ public class NewsFragment extends BaseFragment {
             public void run(Activity pActivity) {
                 try {
                     newsRecyclerView = getActivity().findViewById(R.id.news_recycler_view);
+
                     newsRecyclerView.setAdapter(newsAdapter);
                     newsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     newsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
