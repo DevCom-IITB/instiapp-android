@@ -48,8 +48,6 @@ public class NewsFragment extends BaseFragment {
     private AppDatabase appDatabase;
     private boolean freshNewsDisplayed = false;
     private String searchQuery;
-    LinearLayoutManager mLayoutManager;
-    public static int index = -1, top = -1;
 
     public NewsFragment() {
         // Required empty public constructor
