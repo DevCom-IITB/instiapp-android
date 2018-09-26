@@ -87,6 +87,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean showNotifications = false;
     private BackHandledFragment selectedFragment;
     private Menu menu;
+    private RetrofitInterface retrofitInterface;
+
+    public RetrofitInterface getRetrofitInterface() {
+        return retrofitInterface;
+    }
 
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -106,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             initPicasso();
         } catch (IllegalStateException ignored) {
         }
+
+        ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
+        this.retrofitInterface = serviceGenerator.getRetrofitInterface();
 
         /* Make notification channel on oreo */
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

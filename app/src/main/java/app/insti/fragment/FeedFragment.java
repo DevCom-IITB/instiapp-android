@@ -31,9 +31,12 @@ import app.insti.api.ServiceGenerator;
 import app.insti.api.model.NewsFeedResponse;
 import app.insti.data.AppDatabase;
 import app.insti.data.Event;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,7 +82,7 @@ public class FeedFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
         appDatabase = AppDatabase.getAppDatabase(getContext());
-        new showEventsFromDB().execute();
+        //new showEventsFromDB().execute();
         fab = (FloatingActionButton) getView().findViewById(R.id.fab);
         updateFeed();
     }
@@ -104,9 +107,9 @@ public class FeedFragment extends BaseFragment {
         }
     }
 
-
     private void updateFeed() {
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getNewsFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
