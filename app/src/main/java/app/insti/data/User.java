@@ -1,9 +1,5 @@
 package app.insti.data;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -13,8 +9,6 @@ import java.util.List;
 
 public class User {
     @NonNull()
-    @PrimaryKey()
-
     @SerializedName("id")
     String userID;
 
@@ -62,7 +56,7 @@ public class User {
 
     @SerializedName("ldap_id")
     String userLDAPId;
-    @ColumnInfo(name = "hostel")
+
     @SerializedName("hostel")
     String hostel;
 

@@ -29,7 +29,6 @@ ext {
     retrofitVersion = '2.3.0'
     okhttpVersion = '3.11.0'
     picassoVersion = '2.71828'
-    archRoomVersion = '1.1.1'
     circleImageViewVersion = '2.2.0'
     markwonVersion = '1.0.6'
 }
@@ -54,8 +53,6 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}"
     implementation "com.squareup.picasso:picasso:${picassoVersion}"
     implementation "com.android.support:customtabs:${supportLibVersion}"
-    implementation "android.arch.persistence.room:runtime:${archRoomVersion}"
-    annotationProcessor "android.arch.persistence.room:compiler:${archRoomVersion}"
     implementation "com.android.support:cardview-v7:${supportLibVersion}"
     implementation "de.hdodenhof:circleimageview:${circleImageViewVersion}"
     implementation "ru.noties:markwon:${markwonVersion}"
