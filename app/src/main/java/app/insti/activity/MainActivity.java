@@ -37,6 +37,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import app.insti.Constants;
@@ -66,6 +67,7 @@ import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.notifications.NotificationEventReceiver;
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -147,8 +149,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 handleIntent(intent);
             }
         }
-
-        fetchNotifications();
 
         checkLatestVersion();
 
@@ -402,8 +402,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         this.menu = menu;
-        fetchNotifications();
         getMenuInflater().inflate(R.menu.main, this.menu);
+
+        // Fetch notifictions if logged in or hide icon
+        if (session.isLoggedIn()) {
+            fetchNotifications();
+        } else {
+            this.menu.findItem(R.id.action_notifications).setVisible(false);
+        }
+
         return true;
     }
 
@@ -548,8 +555,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void initPicasso() {
         Picasso.Builder builder = new Picasso.Builder(getApplicationContext());
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+        Cache cache = new Cache(new File(getApplicationContext().getCacheDir(), "http-cache"), 100 * 1024 * 1024);
+        client.cache(cache);
         builder.downloader(new com.squareup.picasso.OkHttp3Downloader((
-                new OkHttpClient.Builder().build()
+                client.build()
         )));
         Picasso built = builder.build();
         built.setIndicatorsEnabled(false);
