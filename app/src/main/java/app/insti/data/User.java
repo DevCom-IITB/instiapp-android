@@ -11,66 +11,61 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-@Entity(tableName = "users")
 public class User {
     @NonNull()
     @PrimaryKey()
-    @ColumnInfo(name = "id")
+
     @SerializedName("id")
     String userID;
-    @ColumnInfo(name = "name")
+
     @SerializedName("name")
     String userName;
-    @ColumnInfo(name = "profile_pic")
+
     @SerializedName("profile_pic")
     String userProfilePictureUrl;
-    @ColumnInfo(name = "events_interested")
+
     @SerializedName("events_interested")
     List<Event> userInterestedEvents;
-    @ColumnInfo(name = "events_going")
+
     @SerializedName("events_going")
     List<Event> userGoingEvents;
-    @ColumnInfo(name = "email")
+
     @SerializedName("email")
     String userEmail;
-    @ColumnInfo(name = "roll_no")
+
     @SerializedName("roll_no")
     String userRollNumber;
-    @ColumnInfo(name = "contact_no")
+
     @SerializedName("contact_no")
     String userContactNumber;
-    @ColumnInfo(name = "about")
+
     @SerializedName("about")
     String userAbout;
-    @ColumnInfo(name = "followed_bodies")
+
     @SerializedName("followed_bodies")
     List<Body> userFollowedBodies;
-    @ColumnInfo(name = "followed_bodies_id")
+
     @SerializedName("followed_bodies_id")
     List<String> userFollowedBodiesID;
-    @ColumnInfo(name = "roles")
+
     @SerializedName("roles")
     List<Role> userRoles;
-    @ColumnInfo(name = "institute_roles")
+
     @SerializedName("institute_roles")
     List<Role> userInstituteRoles;
-    @ColumnInfo(name = "former_roles")
+
     @SerializedName("former_roles")
     List<Role> userFormerRoles;
-    @ColumnInfo(name = "website_url")
+
     @SerializedName("website_url")
     String userWebsiteURL;
-    @ColumnInfo(name = "ldap_id")
+
     @SerializedName("ldap_id")
     String userLDAPId;
     @ColumnInfo(name = "hostel")
     @SerializedName("hostel")
     String hostel;
 
-    /**
-     * Not in database
-     */
-    @Ignore
     String currentRole;
 
     public User(@NonNull String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, List<Role> userRoles, List<Role> userInstituteRoles, List<Role> userFormerRoles, String userWebsiteURL, String userLDAPId, String hostel) {

@@ -7,7 +7,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class MessMenu {
     @NonNull()
-    @PrimaryKey()
     @SerializedName("id")
     private String mealID;
 

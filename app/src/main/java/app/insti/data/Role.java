@@ -9,46 +9,32 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-@Entity(tableName = "roles")
-
-
 public class Role {
     @NonNull()
-    @PrimaryKey()
-    @ColumnInfo(name = "id")
     @SerializedName("id")
     String roleID;
 
-    @ColumnInfo(name = "name")
     @SerializedName("name")
     String roleName;
 
-    @ColumnInfo(name = "inheritable")
     @SerializedName("inheritable")
     boolean roleInheritable;
 
-    @ColumnInfo(name = "body")
     @SerializedName("body")
     String roleBody;
 
-    @ColumnInfo(name = "body_detail")
     @SerializedName("body_detail")
     Body roleBodyDetails;
 
-    @ColumnInfo(name = "bodies")
     @SerializedName("bodies")
     List<Body> roleBodies;
 
-
-    @ColumnInfo(name = "permissions")
     @SerializedName("permissions")
     List<String> rolePermissions;
 
-    @ColumnInfo(name = "users")
     @SerializedName("users")
     List<String> roleUsers;
 
-    @ColumnInfo(name = "users_detail")
     @SerializedName("users_detail")
     List<User> roleUsersDetail;
 

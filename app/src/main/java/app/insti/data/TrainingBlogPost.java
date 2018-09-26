@@ -9,28 +9,20 @@ import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
 
-@Entity(tableName = "trainingBlogPosts")
-
 public class TrainingBlogPost {
     @NonNull()
-    @PrimaryKey()
-    @ColumnInfo(name = "id")
     @SerializedName("id")
     private String postID;
 
-    @ColumnInfo(name = "link")
     @SerializedName("link")
     private String link;
 
-    @ColumnInfo(name = "title")
     @SerializedName("title")
     private String title;
 
-    @ColumnInfo(name = "content")
     @SerializedName("content")
     private String content;
 
-    @ColumnInfo(name = "published")
     @SerializedName("published")
     private Timestamp published;
 

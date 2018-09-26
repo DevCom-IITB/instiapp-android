@@ -7,44 +7,41 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-@Entity(tableName = "venues")
 public class Venue {
     @NonNull()
-    @PrimaryKey()
-    @ColumnInfo(name = "id")
     @SerializedName("id")
     String venueID;
-    @ColumnInfo(name = "name")
+
     @SerializedName("name")
     String venueName;
-    @ColumnInfo(name = "short_name")
+
     @SerializedName("short_name")
     String venueShortName;
-    @ColumnInfo(name = "description")
+
     @SerializedName("description")
     String venueDescripion;
-    @ColumnInfo(name = "parent")
+
     @SerializedName("parent")
     String venueParentId;
-    @ColumnInfo(name = "parent_relation")
+
     @SerializedName("parent_relation")
     String venueParentRelation;
-    @ColumnInfo(name = "group_id")
+
     @SerializedName("group_id")
     Integer venueGroupId;
-    @ColumnInfo(name = "pixel_x")
+
     @SerializedName("pixel_x")
     Integer venuePixelX;
-    @ColumnInfo(name = "pixel_y")
+
     @SerializedName("pixel_y")
     Integer venuePixelY;
-    @ColumnInfo(name = "reusable")
+
     @SerializedName("reusable")
     Boolean venueReusable;
-    @ColumnInfo(name = "lat")
+
     @SerializedName("lat")
     double venueLatitude;
-    @ColumnInfo(name = "lng")
+
     @SerializedName("lng")
     double venueLongitude;
 
