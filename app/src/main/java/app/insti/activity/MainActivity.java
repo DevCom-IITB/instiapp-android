@@ -140,8 +140,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        fetchNotifications();
-
         checkLatestVersion();
 
         NotificationEventReceiver.setupAlarm(getApplicationContext());
@@ -394,8 +392,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         this.menu = menu;
-        fetchNotifications();
         getMenuInflater().inflate(R.menu.main, this.menu);
+
+        // Fetch notifictions if logged in or hide icon
+        if (session.isLoggedIn()) {
+            fetchNotifications();
+        } else {
+            this.menu.findItem(R.id.action_notifications).setVisible(false);
+        }
+
         return true;
     }
 
