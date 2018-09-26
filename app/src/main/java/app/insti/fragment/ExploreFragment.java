@@ -87,7 +87,7 @@ public class ExploreFragment extends Fragment {
 
         // Get all bodies
         if (allBodies.size() == 0) {
-            RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+            RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
             retrofitInterface.getAllBodies(sessionId).enqueue(new Callback<List<Body>>() {
                 @Override
                 public void onResponse(Call<List<Body>> call, Response<List<Body>> response) {
@@ -141,7 +141,7 @@ public class ExploreFragment extends Fragment {
         getView().findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
 
         // Make request
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.search(sessionId, query).enqueue(new Callback<ExploreResponse>() {
             @Override
             public void onResponse(Call<ExploreResponse> call, Response<ExploreResponse> response) {

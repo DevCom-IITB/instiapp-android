@@ -118,8 +118,6 @@ public class FeedFragment extends BaseFragment {
                     List<Event> events = newsFeedResponse.getEvents();
                     freshEventsDisplayed = true;
                     displayEvents(events);
-
-                    new updateDatabase().execute(events);
                 }
                 //Server Error
                 feedSwipeRefreshLayout.setRefreshing(false);
@@ -194,27 +192,5 @@ public class FeedFragment extends BaseFragment {
         View view = getActivity().findViewById(R.id.loadingPanel);
         if (view != null)
             view.setVisibility(View.GONE);
-    }
-
-    private class updateDatabase extends AsyncTask<List<Event>, Void, Integer> {
-        @Override
-        protected Integer doInBackground(List<Event>... events) {
-            appDatabase.dbDao().deleteEvents();
-            appDatabase.dbDao().insertEvents(events[0]);
-            return 1;
-        }
-    }
-
-    private class showEventsFromDB extends AsyncTask<String, Void, List<Event>> {
-        @Override
-        protected List<Event> doInBackground(String... events) {
-            return appDatabase.dbDao().getAllEvents();
-        }
-
-        protected void onPostExecute(List<Event> result) {
-            if (!freshEventsDisplayed) {
-                displayEvents(result);
-            }
-        }
     }
 }

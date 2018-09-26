@@ -112,7 +112,8 @@ public class NotificationIntentService extends JobIntentService {
                 String eventID = intent.getStringExtra(Constants.EVENT_ID);
                 String sessionID = intent.getStringExtra(Constants.SESSION_ID);
 
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
+                RetrofitInterface retrofitInterface = serviceGenerator.getRetrofitInterface();
                 retrofitInterface.updateUserEventStatus("sessionid=" + sessionID, eventID, Constants.STATUS_NOT_GOING).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -149,7 +150,8 @@ public class NotificationIntentService extends JobIntentService {
         String userID = sessionManager.getUserID();
         final String sessionID = sessionManager.getSessionID();
 
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
+        RetrofitInterface retrofitInterface = serviceGenerator.getRetrofitInterface();
         retrofitInterface.getUser("sessionid=" + sessionID, userID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {

@@ -85,7 +85,7 @@ public class NewsFragment extends BaseFragment {
     }
 
     private void updateNews() {
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getNews("sessionid=" + getArguments().getString(Constants.SESSION_ID), 0, 20, searchQuery).enqueue(new Callback<List<NewsArticle>>() {
             @Override
             public void onResponse(Call<List<NewsArticle>> call, Response<List<NewsArticle>> response) {
@@ -138,7 +138,7 @@ public class NewsFragment extends BaseFragment {
                                 if (((layoutManager.getChildCount() + layoutManager.findFirstVisibleItemPosition()) > (layoutManager.getItemCount() - 5)) && (!loading)) {
                                     loading = true;
                                     View v = getActivity().findViewById(R.id.training_feed_swipe_refresh_layout);
-                                    RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                                    RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                                     retrofitInterface.getNews("sessionid=" + getArguments().getString(Constants.SESSION_ID), layoutManager.getItemCount(), 10, searchQuery).enqueue(new Callback<List<NewsArticle>>() {
                                         @Override
                                         public void onResponse(Call<List<NewsArticle>> call, Response<List<NewsArticle>> response) {

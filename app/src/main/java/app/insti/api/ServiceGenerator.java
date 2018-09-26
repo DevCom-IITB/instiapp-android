@@ -8,15 +8,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import app.insti.Constants;
-import butterknife.internal.Utils;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -36,7 +33,7 @@ public class ServiceGenerator {
 
             if (isConnected()) {
                 cacheControl = new CacheControl.Builder()
-                        .maxAge(80, TimeUnit.SECONDS)
+                        .maxAge(0, TimeUnit.SECONDS)
                         .build();
             } else {
                 cacheControl = new CacheControl.Builder()
@@ -106,13 +103,8 @@ public class ServiceGenerator {
     private static Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create());
-    private static Retrofit retrofit;
 
-    public static <S> S createService(Class<S> serviceClass) {
-        retrofit = retrofitBuilder.client(clientBuilder.build()).build();
-        return retrofit.create(serviceClass);
-    }
-
+    private Retrofit retrofit;
     public RetrofitInterface retrofitInterface;
     public ServiceGenerator(Context mContext) {
         context = mContext;

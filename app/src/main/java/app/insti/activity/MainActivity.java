@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void fetchNotifications() {
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = getRetrofitInterface();
         retrofitInterface.getNotifications(getSessionIDHeader()).enqueue(new Callback<List<Notification>>() {
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             final int versionCode = pInfo.versionCode;
-            RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+            RetrofitInterface retrofitInterface = getRetrofitInterface();
             retrofitInterface.getLatestVersion().enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     updateFragment(userFragment);
                     break;
                 case "event":
-                    RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                    RetrofitInterface retrofitInterface = getRetrofitInterface();
                     retrofitInterface.getEvent(getSessionIDHeader(), getID(appLinkData)).enqueue(new Callback<Event>() {
                         @Override
                         public void onResponse(Call<Event> call, Response<Event> response) {
@@ -327,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 String fcmId = instanceIdResult.getToken();
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                RetrofitInterface retrofitInterface = getRetrofitInterface();
                 retrofitInterface.getUserMe(getSessionIDHeader(), fcmId).enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {

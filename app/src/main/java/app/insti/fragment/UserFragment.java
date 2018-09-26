@@ -34,6 +34,7 @@ import app.insti.Constants;
 import app.insti.ItemClickListener;
 import app.insti.R;
 import app.insti.ShareURLMaker;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.RoleAdapter;
 import app.insti.adapter.TabAdapter;
 import app.insti.api.RetrofitInterface;
@@ -107,7 +108,7 @@ public class UserFragment extends BackHandledFragment {
         Bundle bundle = getArguments();
         String userID = bundle.getString(Constants.USER_ID);
 
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getUser("sessionid=" + getArguments().getString(Constants.SESSION_ID), userID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {

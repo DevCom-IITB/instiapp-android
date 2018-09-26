@@ -167,7 +167,7 @@ public class AddEventFragment extends BaseFragment {
             if (url.contains("/event/")) {
                 url = url.substring(url.lastIndexOf("/") + 1);
 
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                 retrofitInterface.getEvent(((MainActivity) getActivity()).getSessionIDHeader(), url).enqueue(new Callback<Event>() {
                     @Override
                     public void onResponse(Call<Event> call, Response<Event> response) {
@@ -185,7 +185,7 @@ public class AddEventFragment extends BaseFragment {
             } else if (url.contains("/org/")) {
                 url = url.substring(url.lastIndexOf("/") + 1);
 
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                 retrofitInterface.getBody(((MainActivity) getActivity()).getSessionIDHeader(), url).enqueue(new Callback<Body>() {
                     @Override
                     public void onResponse(Call<Body> call, Response<Body> response) {
