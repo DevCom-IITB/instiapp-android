@@ -30,8 +30,6 @@ import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.NewsAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.AppDatabase;
 import app.insti.data.NewsArticle;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,7 +43,6 @@ public class NewsFragment extends BaseFragment {
     public static boolean showLoader = true;
     private RecyclerView newsRecyclerView;
     private SwipeRefreshLayout newsSwipeRefreshLayout;
-    private AppDatabase appDatabase;
     private boolean freshNewsDisplayed = false;
     private String searchQuery;
 
@@ -70,9 +67,6 @@ public class NewsFragment extends BaseFragment {
 
         setHasOptionsMenu(true);
 
-        appDatabase = AppDatabase.getAppDatabase(getContext());
-        new NewsFragment.showNewsFromDB().execute();
-
         updateNews();
 
         newsSwipeRefreshLayout = getActivity().findViewById(R.id.news_swipe_refresh_layout);
@@ -93,8 +87,6 @@ public class NewsFragment extends BaseFragment {
                     List<NewsArticle> articles = response.body();
                     freshNewsDisplayed = true;
                     displayNews(articles);
-
-                    new updateDatabase().execute(articles);
                 }
                 //Server Error
                 newsSwipeRefreshLayout.setRefreshing(false);
@@ -212,27 +204,5 @@ public class NewsFragment extends BaseFragment {
         searchQuery = query;
         updateNews();
         showLoader = false;
-    }
-
-    private class updateDatabase extends AsyncTask<List<NewsArticle>, Void, Integer> {
-        @Override
-        protected Integer doInBackground(List<NewsArticle>... posts) {
-            appDatabase.dbDao().deleteNewsArticles();
-            appDatabase.dbDao().insertNewsArticles(posts[0]);
-            return 1;
-        }
-    }
-
-    private class showNewsFromDB extends AsyncTask<String, Void, List<NewsArticle>> {
-        @Override
-        protected List<NewsArticle> doInBackground(String... posts) {
-            return appDatabase.dbDao().getAllNewsArticles();
-        }
-
-        protected void onPostExecute(List<NewsArticle> result) {
-            if (!freshNewsDisplayed) {
-                displayNews(result);
-            }
-        }
     }
 }

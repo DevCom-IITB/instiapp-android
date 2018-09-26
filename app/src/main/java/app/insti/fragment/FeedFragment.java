@@ -2,7 +2,6 @@ package app.insti.fragment;
 
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -27,16 +26,11 @@ import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
 import app.insti.api.model.NewsFeedResponse;
-import app.insti.data.AppDatabase;
 import app.insti.data.Event;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,7 +39,6 @@ public class FeedFragment extends BaseFragment {
 
     private RecyclerView feedRecyclerView;
     private SwipeRefreshLayout feedSwipeRefreshLayout;
-    private AppDatabase appDatabase;
     private FloatingActionButton fab;
     private boolean freshEventsDisplayed = false;
     LinearLayoutManager mLayoutManager;
@@ -81,8 +74,6 @@ public class FeedFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        appDatabase = AppDatabase.getAppDatabase(getContext());
-        //new showEventsFromDB().execute();
         fab = (FloatingActionButton) getView().findViewById(R.id.fab);
         updateFeed();
     }

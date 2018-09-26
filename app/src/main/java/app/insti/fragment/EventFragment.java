@@ -49,8 +49,6 @@ import app.insti.ShareURLMaker;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.AppDatabase;
 import app.insti.data.Body;
 import app.insti.data.Event;
 import app.insti.data.Venue;
@@ -71,7 +69,6 @@ public class EventFragment extends BackHandledFragment {
     ImageButton shareEventButton;
     RecyclerView bodyRecyclerView;
     String TAG = "EventFragment";
-    private AppDatabase appDatabase;
 
     // Hold a reference to the current animator,
     // so that it can be canceled mid-way.
@@ -134,9 +131,6 @@ public class EventFragment extends BackHandledFragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        /* Initialize */
-        appDatabase = AppDatabase.getAppDatabase(getContext());
 
         Bundle bundle = getArguments();
         String eventJson = bundle.getString(Constants.EVENT_JSON);
@@ -329,7 +323,6 @@ public class EventFragment extends BackHandledFragment {
                             }
 
                             event.setEventUserUes(endStatus);
-                            new updateDbEvent().execute(event);
                             setFollowButtonColors(endStatus);
                         }
                     }
@@ -478,13 +471,5 @@ public class EventFragment extends BackHandledFragment {
         });
         set.start();
         mCurrentAnimator = set;
-    }
-
-    private class updateDbEvent extends AsyncTask<Event, Void, Integer> {
-        @Override
-        protected Integer doInBackground(Event... event) {
-            appDatabase.dbDao().updateEvent(event[0]);
-            return 1;
-        }
     }
 }
