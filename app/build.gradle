@@ -23,9 +23,8 @@ android {
 }
 
 ext {
-    supportLibVersion = '27.1.1'
+    supportLibVersion = '27.1.0'
     playServicesVersion = '15.0.1'
-    butterKnifeVersion = '8.8.1'
     retrofitVersion = '2.3.0'
     okhttpVersion = '3.11.0'
     picassoVersion = '2.71828'
@@ -36,10 +35,6 @@ ext {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.firebase:firebase-messaging:17.1.0'
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    testImplementation "junit:junit:4.12"
     implementation "com.android.support:design:${supportLibVersion}"
     implementation "com.android.support:support-v4:${supportLibVersion}"
     implementation "com.google.android.gms:play-services-location:${playServicesVersion}"
