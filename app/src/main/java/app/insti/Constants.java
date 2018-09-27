@@ -34,6 +34,7 @@ public class Constants {
     public static final double[] MAP_WEIGHTS_Y = {0.09738953520399705, -4.519868444089616, 62.38493718381985, 16.664561869057696, -2.168377988768651, 0.0919143297622087, 0.32304266159540823, 0.21688067854428716, -12.81393255320748};
 
     public static final String resizeImageUrl(String url, Integer dim) {
+        if (url == null) { return url; }
         return url.replace("api.insti.app/static/", "img.insti.app/static/" + dim.toString() + "/");
     }
 }
