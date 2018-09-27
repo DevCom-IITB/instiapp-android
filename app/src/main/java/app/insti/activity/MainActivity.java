@@ -52,6 +52,7 @@ import app.insti.data.User;
 import app.insti.fragment.BackHandledFragment;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.CalendarFragment;
+import app.insti.fragment.ComplaintFragment;
 import app.insti.fragment.EventFragment;
 import app.insti.fragment.ExploreFragment;
 import app.insti.fragment.FeedFragment;
@@ -473,7 +474,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 MapFragment mapFragment = new MapFragment();
                 updateFragment(mapFragment);
                 break;
-
+            case R.id.nav_complaint:
+                if (session.isLoggedIn()) {
+                    ComplaintFragment complaintFragment = new ComplaintFragment();
+                    updateFragment(complaintFragment);
+                } else {
+                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
+                }
+                break;
             case R.id.nav_settings:
                 SettingsFragment settingsFragment = new SettingsFragment();
                 updateFragment(settingsFragment);
@@ -489,7 +497,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void updateFragment(Fragment fragment) {
-        Log.d(TAG, "updateFragment: " + fragment.toString());
+        Log.i(TAG, "updateFragment: " + fragment.toString());
         Bundle bundle = fragment.getArguments();
         if (bundle == null) {
             bundle = new Bundle();
@@ -498,6 +506,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (fragment instanceof MessMenuFragment)
             bundle.putString(Constants.USER_HOSTEL, session.isLoggedIn() && currentUser.getHostel() != null ? currentUser.getHostel() : "1");
         if (fragment instanceof SettingsFragment && session.isLoggedIn())
+            bundle.putString(Constants.USER_ID, currentUser.getUserID());
+        if (fragment instanceof ComplaintFragment && session.isLoggedIn())
             bundle.putString(Constants.USER_ID, currentUser.getUserID());
         fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();

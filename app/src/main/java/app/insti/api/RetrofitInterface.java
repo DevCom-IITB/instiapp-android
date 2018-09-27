@@ -20,6 +20,7 @@ import app.insti.data.Notification;
 import app.insti.data.PlacementBlogPost;
 import app.insti.data.TrainingBlogPost;
 import app.insti.data.User;
+import app.insti.data.Venter;
 import app.insti.data.Venue;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -107,4 +108,6 @@ public interface RetrofitInterface {
 
     @GET("search")
     Call<ExploreResponse> search(@Header("Cookie") String sessionID, @Query("query") String query);
+
+
 }
