@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://C:\Users\Shivam Sharma\AndroidStudioProjects\InstiApp\IITB-App.iml" filepath="C:\Users\Shivam Sharma\AndroidStudioProjects\InstiApp\IITB-App.iml" />
+      <module fileurl="file://C:\Users\Shivam Sharma\AndroidStudioProjects\InstiApp\IITBApp.iml" filepath="C:\Users\Shivam Sharma\AndroidStudioProjects\InstiApp\IITBApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/InstiApp.iml" filepath="$PROJECT_DIR$/InstiApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

@@ -1,6 +1,7 @@
 package app.insti.fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -437,13 +438,6 @@ public class FileComplaintFragment extends Fragment {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_LOCATION);
-        }
-
-        if (!GPSIsEnabled) {
-            Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@GPSIsEnabled? = " + !(GPSIsEnabled));
-            enableGPSRequest();
-        } else {
-            Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@Inside else");
             final FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
             mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
                 @Override
@@ -457,49 +451,25 @@ public class FileComplaintFragment extends Fragment {
                     }
                 }
             });
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(getContext(),
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-
-                        if (!GPSIsEnabled) {
-                            enableGPSRequest();
-                        }
-                        final FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-                        mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-                                    // Logic to handle location object
-                                    Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@lat = " + location.getLatitude() + " lon = " + location.getLongitude());
-                                    Location = new LatLng(location.getLatitude(), location.getLongitude());
-                                    callServerToPostComplaint(Location, location.getLatitude() + ", " + location.getLongitude(), " ", cursor);
-                                }
-                            }
-                        });
-
+        } else {
+//            if (!GPSIsEnabled) {
+//                Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@GPSIsEnabled? = " + !(GPSIsEnabled));
+//                enableGPSRequest();
+//            }
+            final FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        // Logic to handle location object
+                        Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@lat = " + location.getLatitude() + " lon = " + location.getLongitude());
+                        Location = new LatLng(location.getLatitude(), location.getLongitude());
+                        callServerToPostComplaint(Location, location.getLatitude() + ", " + location.getLongitude(), " ", cursor);
                     }
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-
                 }
-                return;
+            });
+
         }
     }
 
