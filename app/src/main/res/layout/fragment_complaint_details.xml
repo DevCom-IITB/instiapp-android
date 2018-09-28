@@ -22,6 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:contentScrim="@android:color/white"
+                android:background="@color/colorWhite"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <LinearLayout
@@ -44,7 +45,9 @@
                         <me.relex.circleindicator.CircleIndicator
                             android:id="@+id/indicator"
                             android:layout_width="match_parent"
-                            android:layout_height="48dp" />
+                            android:layout_height="48dp"
+                            app:ci_animator="@animator/scale_with_alpha"
+                            app:ci_drawable="@drawable/selected_dot" />
 
 
                     </RelativeLayout>
@@ -59,7 +62,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="bottom"
                 app:tabIndicatorColor="@color/colorPrimary"
-                android:background="?attr/colorPrimary"
+                android:background="@color/colorWhite"
                 app:tabTextColor="@color/colorGray"
                 app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
                 app:tabSelectedTextColor="#4a4a4a"/>

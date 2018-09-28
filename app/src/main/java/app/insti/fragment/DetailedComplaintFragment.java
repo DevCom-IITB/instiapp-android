@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.R;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.CommentRecyclerViewAdapter;
 import app.insti.api.ComplaintAPI;
 import app.insti.api.ServiceGenerator;
@@ -166,7 +167,7 @@ public class DetailedComplaintFragment extends Fragment {
         recyclerViewComments.post(new Runnable() {
             @Override
             public void run() {
-                recyclerViewComments.scrollToPosition(View.FOCUS_DOWN);
+                MainActivity.hideKeyboard(getActivity());
             }
         });
     }

@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -23,7 +24,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,6 +38,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -63,11 +67,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.Constants;
 import app.insti.R;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.ImageViewPagerAdapter;
 import app.insti.api.ComplaintAPI;
 import app.insti.api.LocationAPIUtils;
@@ -88,6 +97,7 @@ import retrofit2.Response;
 
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
+import static app.insti.Constants.REQUEST_CAMERA_INT_ID;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
 
 public class FileComplaintFragment extends Fragment {
@@ -99,7 +109,7 @@ public class FileComplaintFragment extends Fragment {
     private EditText editTextSuggestions;
     private EditText editTextTags;
     private MapView mMapView;
-    private GoogleMap googleMap;
+    GoogleMap googleMap;
     private TagView tagView;
     private TagView tagViewPopulate;
     private ScrollView tagsLayout;
@@ -107,6 +117,7 @@ public class FileComplaintFragment extends Fragment {
     private String Name;
     private String Address;
     private List<String> Tags;
+    private ArrayList<TagClass> tagList;
     private List<String> uploadedImagesUrl = new ArrayList<>();
     ;
     private int cursor = 1;
@@ -118,8 +129,11 @@ public class FileComplaintFragment extends Fragment {
     private ViewPager viewPager;
     private CircleIndicator indicator;
     private Button buttonAnalysis;
+    private LinearLayout layout_buttons;
     String userId;
     View view;
+    NestedScrollView nestedScrollView;
+    LinearLayout linearLayoutAddImage;
 
     public FileComplaintFragment() {
         // Required empty public constructor
@@ -133,6 +147,12 @@ public class FileComplaintFragment extends Fragment {
         android.app.FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.remove(fragment);
         ft.commit();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Toast.makeText(getContext(), "Please provide the complaint description before submitting", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -163,18 +183,23 @@ public class FileComplaintFragment extends Fragment {
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Add Complaint");
 
+        nestedScrollView = view.findViewById(R.id.nested_scrollview);
+        layout_buttons = view.findViewById(R.id.layout_buttons);
+        layout_buttons.setVisibility(View.GONE);
 
         buttonSubmit = view.findViewById(R.id.buttonSubmit);
         buttonSubmit.setVisibility(View.INVISIBLE);
         buttonSubmit.setVisibility(View.GONE);
 
         buttonAnalysis = view.findViewById(R.id.button_analysis);
+        buttonAnalysis.setVisibility(View.INVISIBLE);
+        buttonAnalysis.setVisibility(View.GONE);
 
         tagsLayout = view.findViewById(R.id.tags_layout);
 
         viewPager = view.findViewById(R.id.complaint_image_view_pager);
         indicator = view.findViewById(R.id.indicator);
-
+        linearLayoutAddImage = view.findViewById(R.id.linearLayoutAddImage);
 
 //        imageViewAddImage = view.findViewById(R.id.image_view_image);
         floatingActionButton = view.findViewById(R.id.fabButton);
@@ -193,9 +218,10 @@ public class FileComplaintFragment extends Fragment {
                 if (!hasFocus) {
 
                     if (!(autoCompleteTextView.getText().toString().trim().isEmpty())) {
+                        layout_buttons.setVisibility(View.VISIBLE);
                         buttonSubmit.setVisibility(View.VISIBLE);
                     } else {
-                        Toast.makeText(getContext(), "Please provide the complaint description (atleast) for analysis", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Please provide the complaint description before submitting", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
@@ -233,7 +259,7 @@ public class FileComplaintFragment extends Fragment {
                 populateTags(editTextTags.getText().toString());
                 editTextTags.setText("");
                 tagViewPopulate.addTags(new ArrayList<Tag>());
-
+                MainActivity.hideKeyboard(getActivity());
             }
         });
 
@@ -344,6 +370,67 @@ public class FileComplaintFragment extends Fragment {
         return view;
     }
 
+    private void populateTags(String cs) {
+        tagList2.add(new TagClass(cs));
+
+        ArrayList<Tag> tags = new ArrayList<>();
+        Tag tag;
+
+
+        for (int i = 0; i < tagList2.size(); i++) {
+            tag = new Tag(tagList2.get(i).getName());
+            tag.radius = 10f;
+            tag.layoutColor = Color.parseColor(tagList2.get(i).getColor());
+            tag.isDeletable = true;
+            tags.add(tag);
+
+        }
+        tagView.addTags(tags);
+    }
+
+    private void setTags(CharSequence cs) {
+
+        if (!cs.toString().equals("")) {
+            String text = cs.toString();
+            ArrayList<Tag> tags = new ArrayList<>();
+            Tag tag;
+
+
+            for (int i = 0; i < tagList.size(); i++) {
+                if (tagList.get(i).getName().toLowerCase().contains(text.toLowerCase())) {
+                    tagsLayout.setVisibility(View.VISIBLE);
+                    tag = new Tag(tagList.get(i).getName());
+                    tag.radius = 10f;
+                    tag.layoutColor = Color.parseColor(tagList.get(i).getColor());
+                    tag.isDeletable = false;
+                    tags.add(tag);
+                }
+            }
+            tagViewPopulate.addTags(tags);
+        } else {
+            tagViewPopulate.addTags(new ArrayList<Tag>());
+            return;
+        }
+
+        tagsLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                nestedScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
+    }
+
+    private void prepareTags() {
+        tagList = new ArrayList<>();
+        try {
+            for (int i = 0; i < TagCategories.CATEGORIES.length; i++) {
+                tagList.add(new TagClass(TagCategories.CATEGORIES[i]));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
     private void setupGPS() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -500,24 +587,6 @@ public class FileComplaintFragment extends Fragment {
         });
     }
 
-    private void populateTags(String cs) {
-        tagList2.add(new TagClass(cs));
-
-        ArrayList<Tag> tags = new ArrayList<>();
-        Tag tag;
-
-
-        for (int i = 0; i < tagList2.size(); i++) {
-            tag = new Tag(tagList2.get(i).getName());
-            tag.radius = 10f;
-            tag.layoutColor = Color.parseColor(tagList2.get(i).getColor());
-            tag.isDeletable = true;
-            tags.add(tag);
-
-        }
-        tagView.addTags(tags);
-    }
-
     private void callServerToPostComplaint(LatLng Location, String Name, String Address, int cursor) {
         LocationAPIUtils locationAPIUtils = new LocationAPIUtils(googleMap, mMapView);
         locationAPIUtils.callGoogleToShowLocationOnMap(getContext(), Location, Name, Address, cursor);
@@ -528,67 +597,33 @@ public class FileComplaintFragment extends Fragment {
         /* Machine Learning Part */
     }
 
-
-    private void setTags(CharSequence cs) {
-
-        if (cs.toString() != null && !cs.toString().equals("")) {
-            if (cs.toString().equals("")) {
-                tagViewPopulate.addTags(new ArrayList<Tag>());
-                return;
-            }
-            String text = cs.toString();
-            ArrayList<Tag> tags = new ArrayList<>();
-            Tag tag;
-
-
-            for (int i = 0; i < tagList.size(); i++) {
-                if (tagList.get(i).getName().toLowerCase().contains(text.toLowerCase())) {
-                    tagsLayout.setVisibility(View.VISIBLE);
-                    tag = new Tag(tagList.get(i).getName());
-                    tag.radius = 10f;
-                    tag.layoutColor = Color.parseColor(tagList.get(i).getColor());
-                    tag.isDeletable = false;
-                    tags.add(tag);
-                }
-            }
-            tagViewPopulate.addTags(tags);
-        }
-    }
-
-    private ArrayList<TagClass> tagList;
-
-    private void prepareTags() {
-        tagList = new ArrayList<>();
-        try {
-            for (int i = 0; i < TagCategories.CATEGORIES.length; i++) {
-                tagList.add(new TagClass(TagCategories.CATEGORIES[i]));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
     private void giveOptionsToAddImage() {
-        final CharSequence[] items = {/*getString(R.string.take_photo_using_camera),*/ getString(R.string.choose_from_library)};
+        final CharSequence[] items = {getString(R.string.take_photo_using_camera), getString(R.string.choose_from_library)};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.add_photo);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                /*if (items[item].equals(getString(R.string.take_photo_using_camera))) {
-                    if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(FileComplaintActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+               /* if (items[item].equals(getString(R.string.take_photo_using_camera))) {
+                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                         return;
                     }
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     String pictureFileName = "" + System.currentTimeMillis() + ".jpg";
-                    pictureFile = getMediaFilesDirFile(pictureFileName, getApplicationContext());
-                    if (pictureFile != null) {
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getApplicationContext(), "app.insti.provider", pictureFile));
+//                    pictureFile = getMediaFilesDirFile(pictureFileName, getApplicationContext());
+//                    if (pictureFile != null) {
+//                        intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getApplicationContext(), "app.insti.provider", pictureFile));
+//
+//                        startActivityForResult(intent, Constants.REQUEST_CAMERA_INT_ID);
+//                    }
+                    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CameraImages/" + pictureFileName;
+                    File file = new File(path);
+                    Uri outputFileUri = Uri.fromFile(file);
 
-                        startActivityForResult(intent, Constants.REQUEST_CAMERA_INT_ID);
-                    }
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+
+                    startActivityForResult(intent, REQUEST_CAMERA_INT_ID);
 
                 } else*/
                 if (items[item].equals(getString(R.string.choose_from_library))) {
@@ -602,7 +637,9 @@ public class FileComplaintFragment extends Fragment {
                     intent.setType("image/*");
 
                     startActivityForResult(intent, RESULT_LOAD_IMAGE);
-                } else {
+                } else
+
+                {
                     dialog.dismiss();
                 }
             }
@@ -610,14 +647,23 @@ public class FileComplaintFragment extends Fragment {
         builder.show();
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-//        if (resultCode == Activity.RESULT_OK && requestCode == Constants.REQUEST_CAMERA_INT_ID) {
-//            Toast.makeText(FileComplaintActivity.this, "Picture Taken", Toast.LENGTH_SHORT).show();
-//            new UploadPicFromCamera().execute();
-        /*} else*/
+        /*if (resultCode == Activity.RESULT_OK && requestCode == Constants.REQUEST_CAMERA_INT_ID) {
+            final Uri imageUri = data.getData();
+            try {
+                final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                base64Image = convertImageToString(selectedImage);
+                sendImage();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        } else */
         if (resultCode == Activity.RESULT_OK && requestCode == Constants.RESULT_LOAD_IMAGE && data != null) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -657,8 +703,7 @@ public class FileComplaintFragment extends Fragment {
         if (viewPager != null) {
             try {
                 imageViewPagerAdapter = new ImageViewPagerAdapter(getFragmentManager(), uploadedImagesUrl);
-
-
+                linearLayoutAddImage.setVisibility(View.GONE);
                 viewPager.setAdapter(imageViewPagerAdapter);
                 indicator.setViewPager(viewPager);
                 imageViewPagerAdapter.registerDataSetObserver(indicator.getDataSetObserver());
@@ -666,8 +711,8 @@ public class FileComplaintFragment extends Fragment {
                 synchronized (viewPager) {
                     viewPager.notifyAll();
                 }
-
                 imageViewPagerAdapter.notifyDataSetChanged();
+                Toast.makeText(getContext(), "Picture Taken", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
