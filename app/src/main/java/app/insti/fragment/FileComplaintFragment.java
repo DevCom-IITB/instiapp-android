@@ -3,7 +3,6 @@ package app.insti.fragment;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -15,7 +14,6 @@ import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -25,7 +23,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
@@ -39,7 +36,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -59,7 +55,6 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
@@ -68,10 +63,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +89,6 @@ import retrofit2.Response;
 
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
-import static app.insti.Constants.REQUEST_CAMERA_INT_ID;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
 
 public class FileComplaintFragment extends Fragment {
@@ -574,29 +564,16 @@ public class FileComplaintFragment extends Fragment {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-               /* if (items[item].equals(getString(R.string.take_photo_using_camera))) {
+                if (items[item].equals(getString(R.string.take_photo_using_camera))) {
                     if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                         return;
                     }
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    String pictureFileName = "" + System.currentTimeMillis() + ".jpg";
-//                    pictureFile = getMediaFilesDirFile(pictureFileName, getApplicationContext());
-//                    if (pictureFile != null) {
-//                        intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(getApplicationContext(), "app.insti.provider", pictureFile));
-//
-//                        startActivityForResult(intent, Constants.REQUEST_CAMERA_INT_ID);
-//                    }
-                    String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CameraImages/" + pictureFileName;
-                    File file = new File(path);
-                    Uri outputFileUri = Uri.fromFile(file);
-
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-
-                    startActivityForResult(intent, REQUEST_CAMERA_INT_ID);
-
-                } else*/
-                if (items[item].equals(getString(R.string.choose_from_library))) {
+                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        startActivityForResult(intent, Constants.REQUEST_CAMERA_INT_ID);
+                    }
+                } else if (items[item].equals(getString(R.string.choose_from_library))) {
                     if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                         return;
@@ -607,9 +584,7 @@ public class FileComplaintFragment extends Fragment {
                     intent.setType("image/*");
 
                     startActivityForResult(intent, RESULT_LOAD_IMAGE);
-                } else
-
-                {
+                } else {
                     dialog.dismiss();
                 }
             }
@@ -622,19 +597,13 @@ public class FileComplaintFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        /*if (resultCode == Activity.RESULT_OK && requestCode == Constants.REQUEST_CAMERA_INT_ID) {
-            final Uri imageUri = data.getData();
-            try {
-                final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
-                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                base64Image = convertImageToString(selectedImage);
-                sendImage();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+        if (resultCode == Activity.RESULT_OK && requestCode == Constants.REQUEST_CAMERA_INT_ID && data != null) {
+            Bundle bundle = data.getExtras();
+            Bitmap bitmap = (Bitmap) bundle.get("data");
+            base64Image = convertImageToString(bitmap);
+            sendImage();
 
-        } else */
-        if (resultCode == Activity.RESULT_OK && requestCode == Constants.RESULT_LOAD_IMAGE && data != null) {
+        } else if (resultCode == Activity.RESULT_OK && requestCode == Constants.RESULT_LOAD_IMAGE && data != null) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
