@@ -598,7 +598,7 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void giveOptionsToAddImage() {
-        final CharSequence[] items = {getString(R.string.take_photo_using_camera), getString(R.string.choose_from_library)};
+        final CharSequence[] items = {/*getString(R.string.take_photo_using_camera),*/ getString(R.string.choose_from_library)};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.add_photo);
         builder.setItems(items, new DialogInterface.OnClickListener() {
