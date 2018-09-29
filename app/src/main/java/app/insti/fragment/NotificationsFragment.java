@@ -21,6 +21,7 @@ import app.insti.ItemClickListener;
 import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.NotificationsAdapter;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
 import app.insti.data.Notification;
@@ -89,15 +90,7 @@ public class NotificationsFragment extends BaseFragment {
                 /* Mark notification read */
                 RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                 String sessId = ((MainActivity) getActivity()).getSessionIDHeader();
-                retrofitInterface.markNotificationRead(sessId, notification.getNotificationId().toString()).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                    }
-                });
+                retrofitInterface.markNotificationRead(sessId, notification.getNotificationId().toString()).enqueue(new EmptyCallback<Void>());
 
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
