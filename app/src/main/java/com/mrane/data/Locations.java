@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import app.insti.data.Venue;
+import app.insti.api.model.Venue;
 
 public class Locations {
     public HashMap<String, Marker> data = new HashMap<String, Marker>();

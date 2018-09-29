@@ -7,7 +7,7 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 import app.insti.activity.LoginActivity;
-import app.insti.data.User;
+import app.insti.api.model.User;
 
 public class SessionManager {
     public SharedPreferences pref;

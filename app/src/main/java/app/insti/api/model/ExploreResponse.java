@@ -4,10 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import app.insti.data.Body;
-import app.insti.data.Event;
-import app.insti.data.User;
-
 public class ExploreResponse {
     @SerializedName("bodies")
     private List<Body> bodies;

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import app.insti.R;
-import app.insti.data.MessMenu;
+import app.insti.api.model.MessMenu;
 
 public class MessMenuAdapter extends RecyclerView.Adapter<MessMenuAdapter.ViewHolder> {
     private List<MessMenu> messMenus;

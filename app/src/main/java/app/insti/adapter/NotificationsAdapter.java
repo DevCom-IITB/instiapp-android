@@ -16,10 +16,10 @@ import java.util.List;
 import app.insti.Constants;
 import app.insti.ItemClickListener;
 import app.insti.R;
-import app.insti.data.Event;
-import app.insti.data.NewsArticle;
-import app.insti.data.Notification;
-import app.insti.data.PlacementBlogPost;
+import app.insti.api.model.Event;
+import app.insti.api.model.NewsArticle;
+import app.insti.api.model.Notification;
+import app.insti.api.model.PlacementBlogPost;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.Viewholder> {
     private List<Notification> notifications;

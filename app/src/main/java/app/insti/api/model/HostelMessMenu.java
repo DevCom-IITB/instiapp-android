@@ -1,4 +1,4 @@
-package app.insti.data;
+package app.insti.api.model;
 
 import android.support.annotation.NonNull;
 

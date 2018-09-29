@@ -18,7 +18,7 @@ import java.util.Locale;
 
 import app.insti.ItemClickListener;
 import app.insti.R;
-import app.insti.data.NewsArticle;
+import app.insti.api.model.NewsArticle;
 import app.insti.fragment.NewsFragment;
 import ru.noties.markwon.Markwon;
 

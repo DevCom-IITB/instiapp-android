@@ -1,4 +1,4 @@
-package app.insti.data;
+package app.insti.api.model;
 
 import android.support.annotation.NonNull;
 
@@ -11,54 +11,54 @@ import java.util.List;
 public class Event {
     @NonNull()
     @SerializedName("id")
-    String eventID;
+    private String eventID;
 
     @SerializedName("str_id")
-    String eventStrID;
+    private String eventStrID;
 
     @SerializedName("name")
-    String eventName;
+    private String eventName;
 
     @SerializedName("description")
-    String eventDescription;
+    private String eventDescription;
 
     @SerializedName("image_url")
-    String eventImageURL;
+    private String eventImageURL;
 
     @SerializedName("start_time")
-    Timestamp eventStartTime;
+    private Timestamp eventStartTime;
 
     @SerializedName("end_time")
-    Timestamp eventEndTime;
+    private Timestamp eventEndTime;
 
     @SerializedName("all_day")
-    boolean allDayEvent;
+    private boolean allDayEvent;
 
     @SerializedName("venues")
-    List<Venue> eventVenues;
+    private List<Venue> eventVenues;
 
     @SerializedName("bodies")
-    List<Body> eventBodies;
+    private List<Body> eventBodies;
 
     @SerializedName("interested_count")
-    int eventInterestedCount;
+    private int eventInterestedCount;
 
     @SerializedName("going_count")
-    int eventGoingCount;
+    private int eventGoingCount;
 
     @SerializedName("interested")
-    List<User> eventInterested;
+    private List<User> eventInterested;
 
     @SerializedName("going")
-    List<User> eventGoing;
+    private List<User> eventGoing;
 
     @SerializedName("website_url")
-    String eventWebsiteURL;
+    private String eventWebsiteURL;
 
     @SerializedName("user_ues")
-    int eventUserUes;
+    private int eventUserUes;
 
-    boolean eventBigImage = false;
+    private boolean eventBigImage = false;
 
     public Event(String eventID, String eventStrID, String eventName, String eventDescription, String eventImageURL, Timestamp eventStartTime, Timestamp eventEndTime, boolean allDayEvent, List<Venue> eventVenues, List<Body> eventBodies, int eventInterestedCount, int eventGoingCount, List<User> eventInterested, List<User> eventGoing, String eventWebsiteURL, int eventUserUes) {
         this.eventID = eventID;

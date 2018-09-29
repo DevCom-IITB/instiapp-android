@@ -27,7 +27,7 @@ import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.NewsFeedResponse;
-import app.insti.data.Event;
+import app.insti.api.model.Event;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

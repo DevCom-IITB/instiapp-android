@@ -1,4 +1,4 @@
-package app.insti.data;
+package app.insti.api.model;
 
 import android.support.annotation.NonNull;
 
@@ -9,31 +9,31 @@ import java.util.List;
 public class Role {
     @NonNull()
     @SerializedName("id")
-    String roleID;
+    private String roleID;
 
     @SerializedName("name")
-    String roleName;
+    private String roleName;
 
     @SerializedName("inheritable")
-    boolean roleInheritable;
+    private boolean roleInheritable;
 
     @SerializedName("body")
-    String roleBody;
+    private String roleBody;
 
     @SerializedName("body_detail")
-    Body roleBodyDetails;
+    private Body roleBodyDetails;
 
     @SerializedName("bodies")
-    List<Body> roleBodies;
+    private List<Body> roleBodies;
 
     @SerializedName("permissions")
-    List<String> rolePermissions;
+    private List<String> rolePermissions;
 
     @SerializedName("users")
-    List<String> roleUsers;
+    private List<String> roleUsers;
 
     @SerializedName("users_detail")
-    List<User> roleUsersDetail;
+    private List<User> roleUsersDetail;
 
     public Role(String roleID, String roleName, boolean roleInheritable, String roleBody, Body roleBodyDetails, List<Body> roleBodies, List<String> rolePermissions, List<String> roleUsers, List<User> roleUsersDetail) {
         this.roleID = roleID;

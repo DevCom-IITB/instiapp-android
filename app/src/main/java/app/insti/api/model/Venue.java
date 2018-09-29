@@ -1,4 +1,4 @@
-package app.insti.data;
+package app.insti.api.model;
 
 import android.support.annotation.NonNull;
 
@@ -7,40 +7,40 @@ import com.google.gson.annotations.SerializedName;
 public class Venue {
     @NonNull()
     @SerializedName("id")
-    String venueID;
+    private String venueID;
 
     @SerializedName("name")
-    String venueName;
+    private String venueName;
 
     @SerializedName("short_name")
-    String venueShortName;
+    private String venueShortName;
 
     @SerializedName("description")
-    String venueDescripion;
+    private String venueDescripion;
 
     @SerializedName("parent")
-    String venueParentId;
+    private String venueParentId;
 
     @SerializedName("parent_relation")
-    String venueParentRelation;
+    private String venueParentRelation;
 
     @SerializedName("group_id")
-    Integer venueGroupId;
+    private Integer venueGroupId;
 
     @SerializedName("pixel_x")
-    Integer venuePixelX;
+    private Integer venuePixelX;
 
     @SerializedName("pixel_y")
-    Integer venuePixelY;
+    private Integer venuePixelY;
 
     @SerializedName("reusable")
-    Boolean venueReusable;
+    private Boolean venueReusable;
 
     @SerializedName("lat")
-    double venueLatitude;
+    private double venueLatitude;
 
     @SerializedName("lng")
-    double venueLongitude;
+    private double venueLongitude;
 
     public Venue(String venueID, String venueName, String venueShortName, String venueDescripion, String venueParentId, String venueParentRelation, Integer venueGroupId, Integer venuePixelX, Integer venuePixelY, Boolean venueReusable, double venueLatitude, double venueLongitude) {
         this.venueID = venueID;

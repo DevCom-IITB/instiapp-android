@@ -15,7 +15,7 @@ import java.util.List;
 import app.insti.Constants;
 import app.insti.ItemClickListener;
 import app.insti.R;
-import app.insti.data.Body;
+import app.insti.api.model.Body;
 
 
 public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
