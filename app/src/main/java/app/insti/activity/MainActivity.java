@@ -58,7 +58,6 @@ import app.insti.fragment.ExploreFragment;
 import app.insti.fragment.FeedFragment;
 import app.insti.fragment.MapFragment;
 import app.insti.fragment.MessMenuFragment;
-import app.insti.fragment.MyEventsFragment;
 import app.insti.fragment.NewsFragment;
 import app.insti.fragment.NotificationsFragment;
 import app.insti.fragment.PlacementBlogFragment;
@@ -437,14 +436,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_feed:
                 feedFragment = new FeedFragment();
                 updateFragment(feedFragment);
-                break;
-            case R.id.nav_my_events:
-                if (session.isLoggedIn()) {
-                    MyEventsFragment myeventsFragment = new MyEventsFragment();
-                    updateFragment(myeventsFragment);
-                } else {
-                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
-                }
                 break;
 
             case R.id.nav_explore:
