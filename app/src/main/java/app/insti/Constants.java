@@ -31,6 +31,7 @@ public class Constants {
     public static final String MAIN_INTENT_EXTRAS = "MAIN_EXTRA";
     public static final String FCM_BUNDLE_TYPE = "type";
     public static final String FCM_BUNDLE_ID = "id";
+    public static final String FCM_BUNDLE_EXTRA = "extra";
 
     public static final String DATA_TYPE_EVENT = "event";
     public static final String DATA_TYPE_BODY = "body";

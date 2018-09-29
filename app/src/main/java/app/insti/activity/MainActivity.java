@@ -75,6 +75,8 @@ import retrofit2.Response;
 
 import static app.insti.Constants.DATA_TYPE_BODY;
 import static app.insti.Constants.DATA_TYPE_EVENT;
+import static app.insti.Constants.DATA_TYPE_NEWS;
+import static app.insti.Constants.DATA_TYPE_PT;
 import static app.insti.Constants.DATA_TYPE_USER;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
@@ -258,7 +260,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void handleFCMIntent(Bundle bundle) {
         chooseIntent(
                 bundle.getString(Constants.FCM_BUNDLE_TYPE),
-                bundle.getString(Constants.FCM_BUNDLE_ID)
+                bundle.getString(Constants.FCM_BUNDLE_ID),
+                bundle.getString(Constants.FCM_BUNDLE_EXTRA)
         );
     }
 
@@ -284,6 +287,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case DATA_TYPE_EVENT:
                 openEventFragment(id);
                 break;
+            case DATA_TYPE_NEWS:
+                updateFragment(new NewsFragment());
+                break;
+        }
+    }
+
+    /** Open the proper fragment from given type, id and extra */
+    private void chooseIntent(String type, String id, String extra) {
+        if (extra == null) {
+            chooseIntent(type, id);
+        } else {
+            switch (type) {
+                case DATA_TYPE_PT:
+                    if (extra.contains("/trainingblog")) {
+                        openTrainingBlog();
+                    } else {
+                        openPlacementBlog();
+                    }
+                    break;
+            }
         }
     }
 
@@ -461,7 +484,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -486,26 +508,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_news:
-                NewsFragment newsFragment = new NewsFragment();
-                updateFragment(newsFragment);
+                updateFragment(new NewsFragment());
                 break;
 
             case R.id.nav_placement_blog:
-                if (session.isLoggedIn()) {
-                    PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
-                    updateFragment(placementBlogFragment);
-                } else {
-                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
-                }
+                openPlacementBlog();
                 break;
             case R.id.nav_training_blog:
-                if (session.isLoggedIn()) {
-                    TrainingBlogFragment trainingBlogFragment = new TrainingBlogFragment();
-                    updateFragment(trainingBlogFragment);
-                } else {
-                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
-                }
+                openTrainingBlog();
                 break;
+
             case R.id.nav_mess_menu:
                 MessMenuFragment messMenuFragment = new MessMenuFragment();
                 updateFragment(messMenuFragment);
@@ -534,6 +546,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    /** Open placement blog fragment */
+    private void openPlacementBlog() {
+        if (session.isLoggedIn()) {
+            PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
+            updateFragment(placementBlogFragment);
+        } else {
+            Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void openTrainingBlog() {
+        if (session.isLoggedIn()) {
+            TrainingBlogFragment trainingBlogFragment = new TrainingBlogFragment();
+            updateFragment(trainingBlogFragment);
+        } else {
+            Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /** Change the active fragment to the supplied one */
     public void updateFragment(Fragment fragment) {
         Log.d(TAG, "updateFragment: " + fragment.toString());
         Bundle bundle = fragment.getArguments();
