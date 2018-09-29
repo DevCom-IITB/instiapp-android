@@ -1,4 +1,4 @@
-package app.insti;
+package app.insti.interfaces;
 
 import android.view.View;
 

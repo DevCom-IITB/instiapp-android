@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
 
-public class TrainingBlogPost {
+import app.insti.interfaces.Browsable;
+
+public class TrainingBlogPost implements Browsable {
     @NonNull()
     @SerializedName("id")
     private String postID;

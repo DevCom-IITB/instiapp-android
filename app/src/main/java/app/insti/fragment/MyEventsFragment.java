@@ -2,7 +2,6 @@ package app.insti.fragment;
 
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -22,7 +21,7 @@ import java.util.List;
 
 import app.insti.ActivityBuffer;
 import app.insti.Constants;
-import app.insti.ItemClickListener;
+import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
