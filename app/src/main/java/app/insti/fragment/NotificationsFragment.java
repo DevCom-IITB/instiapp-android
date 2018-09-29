@@ -17,12 +17,11 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.ItemClickListener;
+import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.NotificationsAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
 import app.insti.data.Notification;
 import app.insti.data.PlacementBlogPost;
 import retrofit2.Call;

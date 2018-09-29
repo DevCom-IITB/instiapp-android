@@ -31,14 +31,13 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.ItemClickListener;
+import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.ShareURLMaker;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.RoleAdapter;
 import app.insti.adapter.TabAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
 import app.insti.data.Body;
 import app.insti.data.Event;
 import app.insti.data.Role;
