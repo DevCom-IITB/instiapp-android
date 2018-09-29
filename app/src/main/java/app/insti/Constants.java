@@ -32,4 +32,9 @@ public class Constants {
     public static final double MAP_Xn = 19.134417, MAP_Yn = 72.901229, MAP_Zn = 1757, MAP_Zyn = 501;
     public static final double[] MAP_WEIGHTS_X = {-11.392001766454612, -36.31634553309953, 73.91269388324432, -24.14021153064087, 3.4508817531539115, -0.1462262375477863, 5.532505074667804, -1.542391995870977, 36.14211738142935};
     public static final double[] MAP_WEIGHTS_Y = {0.09738953520399705, -4.519868444089616, 62.38493718381985, 16.664561869057696, -2.168377988768651, 0.0919143297622087, 0.32304266159540823, 0.21688067854428716, -12.81393255320748};
+
+    public static final String resizeImageUrl(String url, Integer dim) {
+        if (url == null) { return url; }
+        return url.replace("api.insti.app/static/", "img.insti.app/static/" + dim.toString() + "/");
+    }
 }

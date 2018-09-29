@@ -1,40 +1,28 @@
 package app.insti.data;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
 
-@Entity(tableName = "news")
-
 public class NewsArticle {
     @NonNull()
-    @PrimaryKey()
-    @ColumnInfo(name = "id")
     @SerializedName("id")
     private String articleID;
 
-    @ColumnInfo(name = "link")
     @SerializedName("link")
     private String link;
 
-    @ColumnInfo(name = "title")
     @SerializedName("title")
     private String title;
 
-    @ColumnInfo(name = "content")
     @SerializedName("content")
     private String content;
 
-    @ColumnInfo(name = "published")
     @SerializedName("published")
     private Timestamp published;
 
-    @ColumnInfo(name = "body")
     @SerializedName("body")
     private Body body;
 

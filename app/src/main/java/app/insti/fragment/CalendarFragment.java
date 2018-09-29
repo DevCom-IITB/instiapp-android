@@ -117,7 +117,7 @@ public class CalendarFragment extends BaseFragment {
         final String oneMonthBack = isoFormatter.format(oneMonthBackDate).toString();
         final String oneMonthOn = isoFormatter.format(oneMonthOnDate).toString();
 
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getEventsBetweenDates(((MainActivity) getActivity()).getSessionIDHeader(), oneMonthBack, oneMonthOn).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {

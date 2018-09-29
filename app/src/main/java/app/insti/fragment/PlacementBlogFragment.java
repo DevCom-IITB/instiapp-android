@@ -30,8 +30,6 @@ import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.PlacementBlogAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.AppDatabase;
 import app.insti.data.PlacementBlogPost;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,7 +44,6 @@ public class PlacementBlogFragment extends BaseFragment {
     private RecyclerView placementFeedRecyclerView;
     private PlacementBlogAdapter placementBlogAdapter;
     private SwipeRefreshLayout feedSwipeRefreshLayout;
-    private AppDatabase appDatabase;
     private boolean freshBlogDisplayed = false;
     private String searchQuery;
 
@@ -72,9 +69,6 @@ public class PlacementBlogFragment extends BaseFragment {
 
         setHasOptionsMenu(true);
 
-        appDatabase = AppDatabase.getAppDatabase(getContext());
-        new PlacementBlogFragment.showPlacementBlogFromDB().execute();
-
         updatePlacementFeed();
 
         feedSwipeRefreshLayout = getActivity().findViewById(R.id.placement_feed_swipe_refresh_layout);
@@ -87,7 +81,7 @@ public class PlacementBlogFragment extends BaseFragment {
     }
 
     private void updatePlacementFeed() {
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getPlacementBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), 0, 20, searchQuery).enqueue(new Callback<List<PlacementBlogPost>>() {
             @Override
             public void onResponse(Call<List<PlacementBlogPost>> call, Response<List<PlacementBlogPost>> response) {
@@ -95,8 +89,6 @@ public class PlacementBlogFragment extends BaseFragment {
                     List<PlacementBlogPost> posts = response.body();
                     freshBlogDisplayed = true;
                     displayPlacementFeed(posts);
-
-                    new updateDatabase().execute(posts);
                 }
                 //Server Error
                 feedSwipeRefreshLayout.setRefreshing(false);
@@ -138,7 +130,7 @@ public class PlacementBlogFragment extends BaseFragment {
                                 if (((layoutManager.getChildCount() + layoutManager.findFirstVisibleItemPosition()) > (layoutManager.getItemCount() - 5)) && (!loading)) {
                                     loading = true;
                                     View v = getActivity().findViewById(R.id.placement_feed_swipe_refresh_layout);
-                                    RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                                    RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                                     retrofitInterface.getPlacementBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), layoutManager.getItemCount(), 10, searchQuery).enqueue(new Callback<List<PlacementBlogPost>>() {
                                         @Override
                                         public void onResponse(Call<List<PlacementBlogPost>> call, Response<List<PlacementBlogPost>> response) {
@@ -212,27 +204,5 @@ public class PlacementBlogFragment extends BaseFragment {
         searchQuery = query;
         updatePlacementFeed();
         showLoader = false;
-    }
-
-    private class updateDatabase extends AsyncTask<List<PlacementBlogPost>, Void, Integer> {
-        @Override
-        protected Integer doInBackground(List<PlacementBlogPost>... posts) {
-            appDatabase.dbDao().deletePlacementBlogPosts();
-            appDatabase.dbDao().insertPlacementBlogPosts(posts[0]);
-            return 1;
-        }
-    }
-
-    private class showPlacementBlogFromDB extends AsyncTask<String, Void, List<PlacementBlogPost>> {
-        @Override
-        protected List<PlacementBlogPost> doInBackground(String... posts) {
-            return appDatabase.dbDao().getAllPlacementBlogPosts();
-        }
-
-        protected void onPostExecute(List<PlacementBlogPost> result) {
-            if (!freshBlogDisplayed) {
-                displayPlacementFeed(result);
-            }
-        }
     }
 }

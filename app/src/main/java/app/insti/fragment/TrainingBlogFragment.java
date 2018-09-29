@@ -30,8 +30,6 @@ import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.TrainingBlogAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.AppDatabase;
 import app.insti.data.TrainingBlogPost;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,7 +43,6 @@ public class TrainingBlogFragment extends BaseFragment {
     public static boolean showLoader = true;
     private RecyclerView trainingFeedRecyclerView;
     private SwipeRefreshLayout feedSwipeRefreshLayout;
-    private AppDatabase appDatabase;
     private boolean freshBlogDisplayed = false;
     private String searchQuery;
 
@@ -71,9 +68,6 @@ public class TrainingBlogFragment extends BaseFragment {
 
         setHasOptionsMenu(true);
 
-        appDatabase = AppDatabase.getAppDatabase(getContext());
-        new TrainingBlogFragment.showTrainingBlogFromDB().execute();
-
         updateTrainingFeed();
 
         feedSwipeRefreshLayout = getActivity().findViewById(R.id.training_feed_swipe_refresh_layout);
@@ -86,7 +80,7 @@ public class TrainingBlogFragment extends BaseFragment {
     }
 
     private void updateTrainingFeed() {
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getTrainingBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), 0, 20, searchQuery).enqueue(new Callback<List<TrainingBlogPost>>() {
             @Override
             public void onResponse(Call<List<TrainingBlogPost>> call, Response<List<TrainingBlogPost>> response) {
@@ -94,8 +88,6 @@ public class TrainingBlogFragment extends BaseFragment {
                     List<TrainingBlogPost> posts = response.body();
                     freshBlogDisplayed = true;
                     displayTrainingFeed(posts);
-
-                    new updateDatabase().execute(posts);
                 }
                 //Server Error
                 feedSwipeRefreshLayout.setRefreshing(false);
@@ -137,7 +129,7 @@ public class TrainingBlogFragment extends BaseFragment {
                                 if (((layoutManager.getChildCount() + layoutManager.findFirstVisibleItemPosition()) > (layoutManager.getItemCount() - 5)) && (!loading)) {
                                     loading = true;
                                     View v = getActivity().findViewById(R.id.training_feed_swipe_refresh_layout);
-                                    RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                                    RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                                     retrofitInterface.getTrainingBlogFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID), layoutManager.getItemCount(), 10, searchQuery).enqueue(new Callback<List<TrainingBlogPost>>() {
                                         @Override
                                         public void onResponse(Call<List<TrainingBlogPost>> call, Response<List<TrainingBlogPost>> response) {
@@ -211,27 +203,5 @@ public class TrainingBlogFragment extends BaseFragment {
         searchQuery = query;
         updateTrainingFeed();
         showLoader = false;
-    }
-
-    private class updateDatabase extends AsyncTask<List<TrainingBlogPost>, Void, Integer> {
-        @Override
-        protected Integer doInBackground(List<TrainingBlogPost>... posts) {
-            appDatabase.dbDao().deleteTrainingBlogPosts();
-            appDatabase.dbDao().insertTrainingBlogPosts(posts[0]);
-            return 1;
-        }
-    }
-
-    private class showTrainingBlogFromDB extends AsyncTask<String, Void, List<TrainingBlogPost>> {
-        @Override
-        protected List<TrainingBlogPost> doInBackground(String... posts) {
-            return appDatabase.dbDao().getAllTrainingBlogPosts();
-        }
-
-        protected void onPostExecute(List<TrainingBlogPost> result) {
-            if (!freshBlogDisplayed) {
-                displayTrainingFeed(result);
-            }
-        }
     }
 }

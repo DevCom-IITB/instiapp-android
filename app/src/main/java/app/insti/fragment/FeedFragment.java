@@ -2,7 +2,6 @@ package app.insti.fragment;
 
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -27,9 +26,7 @@ import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
 import app.insti.api.model.NewsFeedResponse;
-import app.insti.data.AppDatabase;
 import app.insti.data.Event;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,7 +39,6 @@ public class FeedFragment extends BaseFragment {
 
     private RecyclerView feedRecyclerView;
     private SwipeRefreshLayout feedSwipeRefreshLayout;
-    private AppDatabase appDatabase;
     private FloatingActionButton fab;
     private boolean freshEventsDisplayed = false;
     LinearLayoutManager mLayoutManager;
@@ -78,8 +74,6 @@ public class FeedFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        appDatabase = AppDatabase.getAppDatabase(getContext());
-        new showEventsFromDB().execute();
         fab = (FloatingActionButton) getView().findViewById(R.id.fab);
         updateFeed();
     }
@@ -104,9 +98,9 @@ public class FeedFragment extends BaseFragment {
         }
     }
 
-
     private void updateFeed() {
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getNewsFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
@@ -115,8 +109,6 @@ public class FeedFragment extends BaseFragment {
                     List<Event> events = newsFeedResponse.getEvents();
                     freshEventsDisplayed = true;
                     displayEvents(events);
-
-                    new updateDatabase().execute(events);
                 }
                 //Server Error
                 feedSwipeRefreshLayout.setRefreshing(false);
@@ -191,27 +183,5 @@ public class FeedFragment extends BaseFragment {
         View view = getActivity().findViewById(R.id.loadingPanel);
         if (view != null)
             view.setVisibility(View.GONE);
-    }
-
-    private class updateDatabase extends AsyncTask<List<Event>, Void, Integer> {
-        @Override
-        protected Integer doInBackground(List<Event>... events) {
-            appDatabase.dbDao().deleteEvents();
-            appDatabase.dbDao().insertEvents(events[0]);
-            return 1;
-        }
-    }
-
-    private class showEventsFromDB extends AsyncTask<String, Void, List<Event>> {
-        @Override
-        protected List<Event> doInBackground(String... events) {
-            return appDatabase.dbDao().getAllEvents();
-        }
-
-        protected void onPostExecute(List<Event> result) {
-            if (!freshEventsDisplayed) {
-                displayEvents(result);
-            }
-        }
     }
 }

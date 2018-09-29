@@ -1,13 +1,11 @@
 package app.insti.data;
 
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
 public class MessMenu {
     @NonNull()
-    @PrimaryKey()
     @SerializedName("id")
     private String mealID;
 

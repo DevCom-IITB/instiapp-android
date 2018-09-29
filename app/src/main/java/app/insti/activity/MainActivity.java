@@ -37,6 +37,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import app.insti.Constants;
@@ -66,6 +67,7 @@ import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.notifications.NotificationEventReceiver;
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,6 +89,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean showNotifications = false;
     private BackHandledFragment selectedFragment;
     private Menu menu;
+    private RetrofitInterface retrofitInterface;
+
+    public RetrofitInterface getRetrofitInterface() {
+        return retrofitInterface;
+    }
 
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -106,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             initPicasso();
         } catch (IllegalStateException ignored) {
         }
+
+        ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
+        this.retrofitInterface = serviceGenerator.getRetrofitInterface();
 
         /* Make notification channel on oreo */
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -140,15 +150,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        fetchNotifications();
-
         checkLatestVersion();
 
         NotificationEventReceiver.setupAlarm(getApplicationContext());
     }
 
     private void fetchNotifications() {
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = getRetrofitInterface();
         retrofitInterface.getNotifications(getSessionIDHeader()).enqueue(new Callback<List<Notification>>() {
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
@@ -172,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             final int versionCode = pInfo.versionCode;
-            RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+            RetrofitInterface retrofitInterface = getRetrofitInterface();
             retrofitInterface.getLatestVersion().enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -255,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     updateFragment(userFragment);
                     break;
                 case "event":
-                    RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                    RetrofitInterface retrofitInterface = getRetrofitInterface();
                     retrofitInterface.getEvent(getSessionIDHeader(), getID(appLinkData)).enqueue(new Callback<Event>() {
                         @Override
                         public void onResponse(Call<Event> call, Response<Event> response) {
@@ -319,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 String fcmId = instanceIdResult.getToken();
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                RetrofitInterface retrofitInterface = getRetrofitInterface();
                 retrofitInterface.getUserMe(getSessionIDHeader(), fcmId).enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
@@ -394,8 +402,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         this.menu = menu;
-        fetchNotifications();
         getMenuInflater().inflate(R.menu.main, this.menu);
+
+        // Fetch notifictions if logged in or hide icon
+        if (session.isLoggedIn()) {
+            fetchNotifications();
+        } else {
+            this.menu.findItem(R.id.action_notifications).setVisible(false);
+        }
+
         return true;
     }
 
@@ -540,8 +555,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void initPicasso() {
         Picasso.Builder builder = new Picasso.Builder(getApplicationContext());
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+        Cache cache = new Cache(new File(getApplicationContext().getCacheDir(), "http-cache"), 100 * 1024 * 1024);
+        client.cache(cache);
         builder.downloader(new com.squareup.picasso.OkHttp3Downloader((
-                new OkHttpClient.Builder().build()
+                client.build()
         )));
         Picasso built = builder.build();
         built.setIndicatorsEnabled(false);

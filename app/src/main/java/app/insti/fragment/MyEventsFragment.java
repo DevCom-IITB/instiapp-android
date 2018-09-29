@@ -26,8 +26,12 @@ import app.insti.ItemClickListener;
 import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
-import app.insti.data.AppDatabase;
+import app.insti.api.RetrofitInterface;
 import app.insti.data.Event;
+import app.insti.data.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,7 +40,6 @@ public class MyEventsFragment extends BaseFragment {
 
     private RecyclerView myEventsFeedRecyclerView;
     private SwipeRefreshLayout myEventsFeedSwipeRefreshLayout;
-    private AppDatabase appDatabase;
     private FloatingActionButton fab;
 
     public MyEventsFragment() {
@@ -71,8 +74,7 @@ public class MyEventsFragment extends BaseFragment {
             fab.setVisibility(View.VISIBLE);
         }
 
-        appDatabase = AppDatabase.getAppDatabase(getContext());
-        new showEvents().execute();
+        updateOnRefresh();
 
         myEventsFeedSwipeRefreshLayout = getActivity().findViewById(R.id.my_events_feed_swipe_refresh_layout);
         myEventsFeedSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -85,9 +87,21 @@ public class MyEventsFragment extends BaseFragment {
     }
 
     private void updateOnRefresh() {
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
+        retrofitInterface.getUserMe(((MainActivity)getActivity()).getSessionIDHeader()).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+                    List<Event> events = user.getUserGoingEvents();
+                    events.addAll(user.getUserInterestedEvents());
+                    displayEvents(events);
+                }
+            }
 
-        new showEvents().execute();
-
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {}
+        });
     }
 
     private void displayEvents(final List<Event> events) {
@@ -125,17 +139,5 @@ public class MyEventsFragment extends BaseFragment {
         });
 
         getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-    }
-
-    private class showEvents extends AsyncTask<String, Void, List<Event>> {
-
-        @Override
-        protected List<Event> doInBackground(String... events) {
-            return appDatabase.dbDao().getFollowingEvents();
-        }
-
-        protected void onPostExecute(List<Event> result) {
-            displayEvents(result);
-        }
     }
 }

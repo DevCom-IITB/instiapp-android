@@ -1,63 +1,41 @@
 package app.insti.data;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-@Entity(tableName = "bodies")
 public class Body {
-    @NonNull()
-    @PrimaryKey()
-    @ColumnInfo(name = "id")
     @SerializedName("id")
     String bodyID;
-    @ColumnInfo(name = "str_id")
     @SerializedName("str_id")
     String bodyStrID;
-    @ColumnInfo(name = "name")
     @SerializedName("name")
     String bodyName;
-    @ColumnInfo(name = "short_description")
     @SerializedName("short_description")
     String bodyShortDescription;
-    @ColumnInfo(name = "description")
     @SerializedName("description")
     String bodyDescription;
-    @ColumnInfo(name = "image_url")
     @SerializedName("image_url")
     String bodyImageURL;
-    @ColumnInfo(name = "children")
     @SerializedName("children")
     List<Body> bodyChildren;
-    @ColumnInfo(name = "parents")
     @SerializedName("parents")
     List<Body> bodyParents;
-    @ColumnInfo(name = "events")
     @SerializedName("events")
     List<Event> bodyEvents;
-    @ColumnInfo(name = "followers_count")
     @SerializedName("followers_count")
     int bodyFollowersCount;
-    @ColumnInfo(name = "website_url")
     @SerializedName("website_url")
     String bodyWebsiteURL;
-    @ColumnInfo(name = "blog_url")
     @SerializedName("blog_url")
     String bodyBlogURL;
-    @ColumnInfo(name = "user_follows")
     @SerializedName("user_follows")
     boolean bodyUserFollows;
-    @ColumnInfo(name = "roles")
     @SerializedName("roles")
     List<Role> bodyRoles;
 
-    @Ignore
     public Body(@NonNull String bodyID) {
         this.bodyID = bodyID;
     }

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Calendar;
 
 
+import app.insti.Constants;
 import app.insti.ItemClickListener;
 import app.insti.R;
 import app.insti.data.Event;
@@ -112,17 +113,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
         getSubtitle(viewHolder, currentEvent);
 
-        // Fallback to image of first body if event has no image
-        if (currentEvent.getEventImageURL() == null) {
-            currentEvent.setEventImageURL(currentEvent.getEventBodies().get(0).getBodyImageURL());
-        }
-
         if (currentEvent.isEventBigImage()) {
             viewHolder.eventBigPicture.setVisibility(View.VISIBLE);
             viewHolder.eventPicture.setVisibility(View.GONE);
             Picasso.get().load(currentEvent.getEventImageURL()).into(viewHolder.eventBigPicture);
         } else {
-            Picasso.get().load(currentEvent.getEventImageURL()).into(viewHolder.eventPicture);
+            Picasso.get().load(
+                    Constants.resizeImageUrl(currentEvent.getEventImageURL(), 200)
+            ).into(viewHolder.eventPicture);
         }
     }
 

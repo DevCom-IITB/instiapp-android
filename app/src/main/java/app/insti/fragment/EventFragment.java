@@ -49,8 +49,6 @@ import app.insti.ShareURLMaker;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.AppDatabase;
 import app.insti.data.Body;
 import app.insti.data.Event;
 import app.insti.data.Venue;
@@ -71,7 +69,6 @@ public class EventFragment extends BackHandledFragment {
     ImageButton shareEventButton;
     RecyclerView bodyRecyclerView;
     String TAG = "EventFragment";
-    private AppDatabase appDatabase;
 
     // Hold a reference to the current animator,
     // so that it can be canceled mid-way.
@@ -135,9 +132,6 @@ public class EventFragment extends BackHandledFragment {
     public void onStart() {
         super.onStart();
 
-        /* Initialize */
-        appDatabase = AppDatabase.getAppDatabase(getContext());
-
         Bundle bundle = getArguments();
         String eventJson = bundle.getString(Constants.EVENT_JSON);
         Log.d(TAG, "onStart: " + eventJson);
@@ -160,11 +154,6 @@ public class EventFragment extends BackHandledFragment {
         navigateButton = getActivity().findViewById(R.id.navigate_button);
         webEventButton = getActivity().findViewById(R.id.web_event_button);
         shareEventButton = getActivity().findViewById(R.id.share_event_button);
-
-        // Fallback to image of first body if event has no image
-        if (event.getEventImageURL() == null) {
-            event.setEventImageURL(event.getEventBodies().get(0).getBodyImageURL());
-        }
 
         Picasso.get().load(event.getEventImageURL()).into(eventPicture);
         eventTitle.setText(event.getEventName());
@@ -299,7 +288,7 @@ public class EventFragment extends BackHandledFragment {
             @Override
             public void onClick(View view) {
                 final int endStatus = event.getEventUserUes() == status ? 0 : status;
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                 retrofitInterface.updateUserEventStatus(((MainActivity) getActivity()).getSessionIDHeader(), event.getEventID(), endStatus).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -329,7 +318,6 @@ public class EventFragment extends BackHandledFragment {
                             }
 
                             event.setEventUserUes(endStatus);
-                            new updateDbEvent().execute(event);
                             setFollowButtonColors(endStatus);
                         }
                     }
@@ -478,13 +466,5 @@ public class EventFragment extends BackHandledFragment {
         });
         set.start();
         mCurrentAnimator = set;
-    }
-
-    private class updateDbEvent extends AsyncTask<Event, Void, Integer> {
-        @Override
-        protected Integer doInBackground(Event... event) {
-            appDatabase.dbDao().updateEvent(event[0]);
-            return 1;
-        }
     }
 }

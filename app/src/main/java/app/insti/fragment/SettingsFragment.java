@@ -58,7 +58,7 @@ public class SettingsFragment extends Fragment {
 
         populateViews();
 
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getUser("sessionid=" + getArguments().getString(Constants.SESSION_ID), userID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -139,7 +139,7 @@ public class SettingsFragment extends Fragment {
             logoutButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                    RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                     retrofitInterface.logout("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {

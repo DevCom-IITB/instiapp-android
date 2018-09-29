@@ -57,7 +57,7 @@ public class NotificationsFragment extends BaseFragment {
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Notifications");
 
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getNotifications(((MainActivity) getActivity()).getSessionIDHeader()).enqueue(new Callback<List<Notification>>() {
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
@@ -87,7 +87,7 @@ public class NotificationsFragment extends BaseFragment {
                 Notification notification = notifications.get(position);
 
                 /* Mark notification read */
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                 String sessId = ((MainActivity) getActivity()).getSessionIDHeader();
                 retrofitInterface.markNotificationRead(sessId, notification.getNotificationId()).enqueue(new Callback<Void>() {
                     @Override
