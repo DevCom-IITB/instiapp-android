@@ -96,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Menu menu;
     private RetrofitInterface retrofitInterface;
 
+    /** which menu item should be checked on activity start */
+    private int initMenuChecked = R.id.nav_feed;
+
     public RetrofitInterface getRetrofitInterface() {
         return retrofitInterface;
     }
@@ -280,17 +283,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (type) {
             case DATA_TYPE_BODY:
                 openBodyFragment(id);
-                break;
+                return;
             case DATA_TYPE_USER:
                 openUserFragment(id);
-                break;
+                return;
             case DATA_TYPE_EVENT:
                 openEventFragment(id);
-                break;
+                return;
             case DATA_TYPE_NEWS:
+                initMenuChecked = R.id.nav_news;
                 updateFragment(new NewsFragment());
-                break;
+                return;
         }
+        Log.e("NOTIFICATIONS", "Server sent invalid notification?");
     }
 
     /** Open the proper fragment from given type, id and extra */
@@ -301,12 +306,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             switch (type) {
                 case DATA_TYPE_PT:
                     if (extra.contains("/trainingblog")) {
+                        initMenuChecked = R.id.nav_training_blog;
                         openTrainingBlog();
                     } else {
+                        initMenuChecked = R.id.nav_placement_blog;
                         openPlacementBlog();
                     }
-                    break;
+                    return;
             }
+            chooseIntent(type, id);
         }
     }
 
@@ -409,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_feed);
+        navigationView.setCheckedItem(initMenuChecked);
     }
 
     private void updateNavigationView() {
