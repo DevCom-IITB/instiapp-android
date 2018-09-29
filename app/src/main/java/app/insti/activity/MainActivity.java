@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     if (response.isSuccessful()) {
                         if (response.body().get("version").getAsInt() > versionCode) {
-                            showUpdateSnackBar();
+                            showUpdateSnackBar(response.body().get("message").getAsString());
                         }
                     }
                 }
@@ -201,9 +201,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void showUpdateSnackBar() {
+    private void showUpdateSnackBar(String message) {
         View parentLayout = findViewById(android.R.id.content);
-        Snackbar.make(parentLayout, "New Version Available", Snackbar.LENGTH_LONG).setAction("UPDATE", new View.OnClickListener() {
+        Snackbar.make(parentLayout, message, Snackbar.LENGTH_LONG).setAction("UPDATE", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
