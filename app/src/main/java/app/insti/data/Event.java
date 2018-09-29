@@ -112,6 +112,10 @@ public class Event {
     }
 
     public String getEventImageURL() {
+        // Fallback to body image if event has no image
+        if (eventImageURL == null) {
+            return getEventBodies().get(0).getBodyImageURL();
+        }
         return eventImageURL;
     }
 
