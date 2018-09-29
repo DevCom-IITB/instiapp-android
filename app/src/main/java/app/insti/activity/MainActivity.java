@@ -62,10 +62,10 @@ import app.insti.fragment.MyEventsFragment;
 import app.insti.fragment.NewsFragment;
 import app.insti.fragment.NotificationsFragment;
 import app.insti.fragment.PlacementBlogFragment;
-import app.insti.fragment.UserFragment;
 import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
+import app.insti.fragment.UserFragment;
 import app.insti.notifications.NotificationEventReceiver;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -139,7 +139,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Intent intent = getIntent();
         if (intent != null) {
-            if (intent.getAction() != null && intent.getAction().equals(ACTION_OPEN_EVENT)) {
+            // Check for data passed by FCM
+            if (intent.getExtras() != null && intent.getBundleExtra(Constants.MAIN_INTENT_EXTRAS) != null) {
+                handleFCMIntent(intent.getBundleExtra(Constants.MAIN_INTENT_EXTRAS));
+            } else if (intent.getAction() != null && intent.getAction().equals(ACTION_OPEN_EVENT)) {
                 EventFragment eventFragment = new EventFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.EVENT_JSON, intent.getStringExtra(Constants.EVENT_JSON));
@@ -248,39 +251,68 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mNotificationManager.createNotificationChannel(mChannel);
     }
 
+    /** Handle opening event/body/blog from FCM notification */
+    private void handleFCMIntent(Bundle bundle) {
+        chooseIntent(
+                bundle.getString(Constants.FCM_BUNDLE_TYPE),
+                bundle.getString(Constants.FCM_BUNDLE_ID)
+        );
+    }
+
+    /** Handle intents for links */
     private void handleIntent(Intent appLinkIntent) {
         String appLinkAction = appLinkIntent.getAction();
         String appLinkData = appLinkIntent.getDataString();
         if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null) {
-            switch (getType(appLinkData)) {
-                case "body":
-                    Body body = new Body(getID(appLinkData));
-                    BodyFragment bodyFragment = BodyFragment.newInstance(body);
-                    updateFragment(bodyFragment);
-                    break;
-                case "user":
-                    UserFragment userFragment = UserFragment.newInstance(getID(appLinkData));
-                    updateFragment(userFragment);
-                    break;
-                case "event":
-                    RetrofitInterface retrofitInterface = getRetrofitInterface();
-                    retrofitInterface.getEvent(getSessionIDHeader(), getID(appLinkData)).enqueue(new Callback<Event>() {
-                        @Override
-                        public void onResponse(Call<Event> call, Response<Event> response) {
-                            EventFragment eventFragment = new EventFragment();
-                            Bundle bundle = new Bundle();
-                            bundle.putString(Constants.EVENT_JSON, response.body().toString());
-                            eventFragment.setArguments(bundle);
-                            updateFragment(eventFragment);
-                        }
-
-                        @Override
-                        public void onFailure(Call<Event> call, Throwable t) {
-
-                        }
-                    });
-            }
+            chooseIntent(getType(appLinkData), getID(appLinkData));
         }
+    }
+
+    /** Open the proper fragment from given type and id */
+    private void chooseIntent(String type, String id) {
+        if (type == null || id == null) { return; }
+        switch (type) {
+            case "body":
+                openBodyFragment(id);
+                break;
+            case "user":
+                openUserFragment(id);
+                break;
+            case "event":
+                openEventFragment(id);
+                break;
+        }
+    }
+
+    /** Open user fragment from given id */
+    private void openUserFragment(String id) {
+        UserFragment userFragment = UserFragment.newInstance(id);
+        updateFragment(userFragment);
+    }
+
+    /** Open the body fragment from given id */
+    private void openBodyFragment(String id) {
+        Body body = new Body(id);
+        BodyFragment bodyFragment = BodyFragment.newInstance(body);
+        updateFragment(bodyFragment);
+    }
+
+    /** Open the event fragment from the provided id */
+    private void openEventFragment(String id) {
+        RetrofitInterface retrofitInterface = getRetrofitInterface();
+        retrofitInterface.getEvent(getSessionIDHeader(), id).enqueue(new Callback<Event>() {
+            @Override
+            public void onResponse(Call<Event> call, Response<Event> response) {
+                EventFragment eventFragment = new EventFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.EVENT_JSON, response.body().toString());
+                eventFragment.setArguments(bundle);
+                updateFragment(eventFragment);
+            }
+
+            @Override
+            public void onFailure(Call<Event> call, Throwable t) {}
+        });
     }
 
     private String getID(String appLinkData) {
@@ -342,8 +374,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
 
                     @Override
-                    public void onFailure(Call<User> call, Throwable t) {
-                    }
+                    public void onFailure(Call<User> call, Throwable t) {}
                 });
             }
         });
@@ -492,9 +523,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_settings:
                 SettingsFragment settingsFragment = new SettingsFragment();
                 updateFragment(settingsFragment);
-                //Checking the about fragment
-                //AboutFragment aboutFragment = new AboutFragment();
-                //updateFragment(aboutFragment);
                 break;
         }
 
