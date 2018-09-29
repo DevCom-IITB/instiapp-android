@@ -2,7 +2,11 @@ package app.insti;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -10,7 +14,9 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.Map;
 
 import app.insti.activity.MainActivity;
@@ -75,15 +81,19 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
     private void sendEventStartingNotification(RemoteMessage remoteMessage) {
         if (!ensureKeyExists(remoteMessage, "name")) { return; }
 
-        int notification_id = NotificationId.getID();
-        Notification notification = standardNotificationBuilder()
-                .setContentTitle(remoteMessage.getData().get("name"))
-                .setContentText("Event is about to start")
-                .setContentIntent(getNotificationIntent(remoteMessage, notification_id))
-                .build();
+        final String message = "Event is about to start";
 
-        /* Show notification */
-        showNotification(notification_id, notification);
+        int notification_id = NotificationId.getID();
+        showBitmapNotification(
+                this,
+                remoteMessage.getData().get("image_url"),
+                notification_id,
+                standardNotificationBuilder()
+                    .setContentTitle(remoteMessage.getData().get("name"))
+                    .setContentText(message)
+                    .setContentIntent(getNotificationIntent(remoteMessage, notification_id)),
+                message
+        );
     }
 
     /** Send a standard notification from foreground */
@@ -114,7 +124,12 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
 
     /** Show the notification */
     private void showNotification(int id, Notification notification) {
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        showNotification(this, id, notification);
+    }
+
+    /** Show the notification */
+    private static void showNotification(Context context, int id, Notification notification) {
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(id, notification);
     }
 
@@ -126,5 +141,38 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
                 .setVibrate(new long[]{0, 400})
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+    }
+
+    interface MyCallbackInterface {
+        void onDownloadFinished(String result);
+    }
+
+    /** Gets a bitmap from a URL asynchronously and shows notification */
+    public static void showBitmapNotification(
+            final Context context, final String imageUrl, final int notification_id,
+            final NotificationCompat.Builder builder, final String content){
+
+        new AsyncTask<Void, Void, Bitmap>() {
+            @Override
+            protected Bitmap doInBackground(Void... params) {
+                try {
+                    return Picasso.get().load(imageUrl).get();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                builder.setStyle(
+                        new NotificationCompat.BigPictureStyle()
+                            .bigPicture(bitmap)
+                            .setSummaryText(content)
+                );
+                showNotification(context, notification_id, builder.build());
+                super.onPostExecute(bitmap);
+            }
+        }.execute();
     }
 }
