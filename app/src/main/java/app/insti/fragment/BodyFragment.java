@@ -133,10 +133,7 @@ public class BodyFragment extends BackHandledFragment {
         body = min_body;
         displayBody();
 
-        /* Check if full body was passed */
-        if (min_body.getBodyDescription() == null) {
-            updateBody();
-        }
+        updateBody();
 
         bodySwipeRefreshLayout = getActivity().findViewById(R.id.body_swipe_refresh_layout);
         bodySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
