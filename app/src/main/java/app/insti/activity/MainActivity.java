@@ -43,6 +43,7 @@ import java.util.List;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.SessionManager;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
 import app.insti.data.Body;
@@ -78,6 +79,7 @@ import static app.insti.Constants.DATA_TYPE_EVENT;
 import static app.insti.Constants.DATA_TYPE_NEWS;
 import static app.insti.Constants.DATA_TYPE_PT;
 import static app.insti.Constants.DATA_TYPE_USER;
+import static app.insti.Constants.FCM_BUNDLE_NOTIFICATION_ID;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
@@ -261,6 +263,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /** Handle opening event/body/blog from FCM notification */
     private void handleFCMIntent(Bundle bundle) {
+        /* Mark the notification read */
+        final String notificationId = bundle.getString(FCM_BUNDLE_NOTIFICATION_ID);
+        if (notificationId != null) {
+            getRetrofitInterface().markNotificationRead(getSessionIDHeader(), notificationId).enqueue(new EmptyCallback<Void>());
+        }
+
+        /* Follow the notification */
         chooseIntent(
                 bundle.getString(Constants.FCM_BUNDLE_TYPE),
                 bundle.getString(Constants.FCM_BUNDLE_ID),

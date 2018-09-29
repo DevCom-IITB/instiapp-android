@@ -89,7 +89,7 @@ public class NotificationsFragment extends BaseFragment {
                 /* Mark notification read */
                 RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                 String sessId = ((MainActivity) getActivity()).getSessionIDHeader();
-                retrofitInterface.markNotificationRead(sessId, notification.getNotificationId()).enqueue(new Callback<Void>() {
+                retrofitInterface.markNotificationRead(sessId, notification.getNotificationId().toString()).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                     }
