@@ -66,23 +66,24 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
     }
 
+    /** Ensure key is in data */
+    private boolean ensureKeyExists(RemoteMessage remoteMessage, String key) {
+        return (remoteMessage.getData().get(key) != null);
+    }
+
     /** Send a event is starting notification */
     private void sendEventStartingNotification(RemoteMessage remoteMessage) {
+        if (!ensureKeyExists(remoteMessage, "name")) { return; }
+
         int notification_id = NotificationId.getID();
-        Notification notification = new NotificationCompat.Builder(this, channel)
-                .setSmallIcon(R.drawable.ic_lotusgray)
-                .setColor(getResources().getColor(R.color.colorPrimary))
-                .setContentTitle("TEST")
-                .setContentText("TEST")
+        Notification notification = standardNotificationBuilder()
+                .setContentTitle(remoteMessage.getData().get("name"))
+                .setContentText("Event is about to start")
                 .setContentIntent(getNotificationIntent(remoteMessage, notification_id))
-                .setVibrate(new long[]{0, 400})
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .build();
 
         /* Show notification */
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(notification_id, notification);
+        showNotification(notification_id, notification);
     }
 
     /** Send a standard notification from foreground */
@@ -101,19 +102,29 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
         if (title == null || body == null) { return; }
 
         /* Build notification */
-        Notification notification = new NotificationCompat.Builder(this, channel)
-                .setSmallIcon(R.drawable.ic_lotusgray)
-                .setColor(getResources().getColor(R.color.colorPrimary))
+        Notification notification = standardNotificationBuilder()
                 .setContentTitle(title)
                 .setContentText(body)
                 .setContentIntent(getNotificationIntent(remoteMessage, notification_id))
-                .setVibrate(new long[]{0, 400})
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .build();
 
         /* Show notification */
+        showNotification(notification_id, notification);
+    }
+
+    /** Show the notification */
+    private void showNotification(int id, Notification notification) {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(notification_id, notification);
+        notificationManager.notify(id, notification);
+    }
+
+    /** Common builder */
+    private NotificationCompat.Builder standardNotificationBuilder() {
+        return new NotificationCompat.Builder(this, channel)
+                .setSmallIcon(R.drawable.ic_lotusgray)
+                .setColor(getResources().getColor(R.color.colorPrimary))
+                .setVibrate(new long[]{0, 400})
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
     }
 }
