@@ -14,8 +14,11 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 
 import app.insti.activity.MainActivity;
+import app.insti.notifications.NotificationId;
 
 public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
+    String channel;
+
     @Override
     public void onNewToken(String s) {
         /* For future functionality */
@@ -32,56 +35,85 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     /** Get a PendingIntent to open MainActivity from a notification message */
-    private PendingIntent getNotificationIntent(RemoteMessage remoteMessage) {
+    private PendingIntent getNotificationIntent(RemoteMessage remoteMessage, Integer notificationId) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra(Constants.MAIN_INTENT_EXTRAS, stringMapToBundle(remoteMessage.getData()));
-        return PendingIntent.getActivity(this, 0, intent, 0);
+        return PendingIntent.getActivity(this, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         String TAG = "NOTIFICATION";
-        String channel = getResources().getString(R.string.default_notification_channel_id);
+        channel = getResources().getString(R.string.default_notification_channel_id);
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.wtf(TAG, "Message data payload: " + remoteMessage.getData());
-            String isData = remoteMessage.getData().get("is_data");
+            String isData = remoteMessage.getData().get(Constants.FCM_BUNDLE_IS_DATA);
             if (isData != null && isData.equals("true")) {
-                // TODO: Implement this
-            } else {
-                /* Get data */
-                String title = remoteMessage.getNotification().getTitle();
-                String body = remoteMessage.getNotification().getBody();
-                Integer notification_id;
-                try {
-                    notification_id = Integer.parseInt(remoteMessage.getData().get(Constants.FCM_BUNDLE_NOTIFICATION_ID));
-                } catch (NumberFormatException ignored) {
-                    return;
+                String type = remoteMessage.getData().get(Constants.FCM_BUNDLE_TYPE);
+                String action = remoteMessage.getData().get(Constants.FCM_BUNDLE_ACTION);
+
+                if (type.equals(Constants.DATA_TYPE_EVENT) && action.equals(Constants.FCM_BUNDLE_ACTION_STARTING)) {
+                    sendEventStartingNotification(remoteMessage);
                 }
-
-                /* Check malformed notifications */
-                if (title == null || body == null) { return; }
-
-                /* Build notification */
-                Notification notification = new NotificationCompat.Builder(this, channel)
-                        .setSmallIcon(R.drawable.ic_lotusgray)
-                        .setColor(getResources().getColor(R.color.colorPrimary))
-                        .setContentTitle(title)
-                        .setContentText(body)
-                        .setContentIntent(getNotificationIntent(remoteMessage))
-                        .setVibrate(new long[]{0, 400})
-                        .setAutoCancel(true)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .build();
-
-                /* Show notification */
-                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-                notificationManager.notify(notification_id, notification);
+            } else {
+                sendMessageNotification(remoteMessage);
             }
         }
 
         super.onMessageReceived(remoteMessage);
+    }
+
+    /** Send a event is starting notification */
+    private void sendEventStartingNotification(RemoteMessage remoteMessage) {
+        int notification_id = NotificationId.getID();
+        Notification notification = new NotificationCompat.Builder(this, channel)
+                .setSmallIcon(R.drawable.ic_lotusgray)
+                .setColor(getResources().getColor(R.color.colorPrimary))
+                .setContentTitle("TEST")
+                .setContentText("TEST")
+                .setContentIntent(getNotificationIntent(remoteMessage, notification_id))
+                .setVibrate(new long[]{0, 400})
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .build();
+
+        /* Show notification */
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(notification_id, notification);
+    }
+
+    /** Send a standard notification from foreground */
+    private void sendMessageNotification(RemoteMessage remoteMessage) {
+        /* Get data */
+        String title = remoteMessage.getNotification().getTitle();
+        String body = remoteMessage.getNotification().getBody();
+        Integer notification_id;
+        try {
+            notification_id = Integer.parseInt(remoteMessage.getData().get(Constants.FCM_BUNDLE_NOTIFICATION_ID));
+        } catch (NumberFormatException ignored) {
+            return;
+        }
+
+        /* Check malformed notifications */
+        if (title == null || body == null) { return; }
+
+        /* Build notification */
+        Notification notification = new NotificationCompat.Builder(this, channel)
+                .setSmallIcon(R.drawable.ic_lotusgray)
+                .setColor(getResources().getColor(R.color.colorPrimary))
+                .setContentTitle(title)
+                .setContentText(body)
+                .setContentIntent(getNotificationIntent(remoteMessage, notification_id))
+                .setVibrate(new long[]{0, 400})
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .build();
+
+        /* Show notification */
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(notification_id, notification);
     }
 }

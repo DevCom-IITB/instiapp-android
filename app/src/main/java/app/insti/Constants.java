@@ -33,6 +33,10 @@ public class Constants {
     public static final String FCM_BUNDLE_ID = "id";
     public static final String FCM_BUNDLE_EXTRA = "extra";
     public static final String FCM_BUNDLE_NOTIFICATION_ID = "notification_id";
+    public static final String FCM_BUNDLE_ACTION = "action";
+    public static final String FCM_BUNDLE_IS_DATA = "is_data";
+
+    public static final String FCM_BUNDLE_ACTION_STARTING = "starting";
 
     public static final String DATA_TYPE_EVENT = "event";
     public static final String DATA_TYPE_BODY = "body";
