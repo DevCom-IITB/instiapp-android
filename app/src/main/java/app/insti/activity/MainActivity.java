@@ -73,6 +73,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static app.insti.Constants.DATA_TYPE_BODY;
+import static app.insti.Constants.DATA_TYPE_EVENT;
+import static app.insti.Constants.DATA_TYPE_USER;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
@@ -272,13 +275,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void chooseIntent(String type, String id) {
         if (type == null || id == null) { return; }
         switch (type) {
-            case "body":
+            case DATA_TYPE_BODY:
                 openBodyFragment(id);
                 break;
-            case "user":
+            case DATA_TYPE_USER:
                 openUserFragment(id);
                 break;
-            case "event":
+            case DATA_TYPE_EVENT:
                 openEventFragment(id);
                 break;
         }
@@ -319,23 +322,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (appLinkData.charAt(appLinkData.length() - 1) == '/')
             appLinkData = appLinkData.substring(0, appLinkData.length() - 1);
         switch (getType(appLinkData)) {
-            case "body":
+            case DATA_TYPE_BODY:
                 return appLinkData.substring(appLinkData.indexOf("org") + 4);
-            case "user":
+            case DATA_TYPE_USER:
                 return appLinkData.substring(appLinkData.indexOf("user") + 5);
-            case "event":
+            case DATA_TYPE_EVENT:
                 return appLinkData.substring(appLinkData.indexOf("event") + 6);
         }
         return null;
     }
 
     private String getType(String appLinkData) {
-        if (appLinkData.startsWith("http://insti.app/org/") || appLinkData.startsWith("https://insti.app/org/")) {
-            return "body";
-        } else if (appLinkData.startsWith("http://insti.app/user/") || appLinkData.startsWith("https://insti.app/user/")) {
-            return "user";
-        } else if (appLinkData.startsWith("http://insti.app/event/") || appLinkData.startsWith("https://insti.app/event/")) {
-            return "event";
+        if (appLinkData.contains("://insti.app/org/")) {
+            return DATA_TYPE_BODY;
+        } else if (appLinkData.contains("://insti.app/user/")) {
+            return DATA_TYPE_USER;
+        } else if (appLinkData.contains("://insti.app/event/")) {
+            return DATA_TYPE_EVENT;
         }
         return null;
     }
