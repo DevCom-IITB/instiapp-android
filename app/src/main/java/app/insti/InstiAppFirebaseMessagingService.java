@@ -124,7 +124,8 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
                     }
                     Bitmap largeIcon = null;
                     if (largeIconUrl != null) {
-                         largeIcon = getCroppedBitmap(Picasso.get().load(largeIconUrl).get(), 200);
+                         largeIcon = getCroppedBitmap(
+                                 Picasso.get().load(Constants.resizeImageUrl(largeIconUrl, 200)).get(), 200);
                     }
                     return new Bitmap[]{image, largeIcon};
                 } catch (IOException e) {
