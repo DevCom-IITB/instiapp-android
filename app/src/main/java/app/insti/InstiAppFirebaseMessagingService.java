@@ -122,7 +122,7 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
                 try {
                     Bitmap image = null;
                     if (imageUrl != null) {
-                        Picasso.get().load(imageUrl).get();
+                        image = Picasso.get().load(imageUrl).get();
                     }
                     Bitmap largeIcon = null;
                     if (largeIconUrl != null) {
