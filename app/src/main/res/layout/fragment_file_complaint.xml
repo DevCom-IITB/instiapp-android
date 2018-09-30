@@ -56,9 +56,9 @@
                             app:layout_anchorGravity="bottom|end" />
 
                         <LinearLayout
+                            android:id="@+id/linearLayoutAddImage"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:id="@+id/linearLayoutAddImage"
                             android:gravity="center"
                             android:orientation="vertical">
 
@@ -67,7 +67,7 @@
                                 android:layout_width="100dp"
                                 android:layout_height="100dp"
                                 android:src="@drawable/ic_add_a_photo_black_24dp" />
-l
+                            l
                         </LinearLayout>
 
                         <android.support.v4.view.ViewPager

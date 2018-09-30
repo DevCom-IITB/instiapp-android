@@ -3,6 +3,7 @@ package app.insti.fragment;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -12,10 +13,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -43,10 +47,13 @@ import android.support.v7.widget.Toolbar;
 
 import com.cunoraz.tagview.Tag;
 import com.cunoraz.tagview.TagView;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -55,15 +62,24 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import app.insti.Constants;
@@ -94,6 +110,7 @@ import static app.insti.Constants.RESULT_LOAD_IMAGE;
 public class FileComplaintFragment extends Fragment {
 
     private static final String TAG = FileComplaintFragment.class.getSimpleName();
+    private static FileComplaintFragment mainactivity;
     private Button buttonSubmit;
     private FloatingActionButton floatingActionButton;
     private CustomAutoCompleteTextView autoCompleteTextView;
@@ -110,11 +127,10 @@ public class FileComplaintFragment extends Fragment {
     private List<String> Tags;
     private ArrayList<TagClass> tagList;
     private List<String> uploadedImagesUrl = new ArrayList<>();
-    ;
     private int cursor = 1;
     private List<TagClass> tagList2 = new ArrayList<>();
 
-    private boolean GPSIsEnabled = false;
+    //    private boolean GPSIsEnabled = false;
     private String base64Image;
     private ImageViewPagerAdapter imageViewPagerAdapter;
     private ViewPager viewPager;
@@ -125,9 +141,19 @@ public class FileComplaintFragment extends Fragment {
     View view;
     NestedScrollView nestedScrollView;
     LinearLayout linearLayoutAddImage;
+    private boolean GPSIsSetup = false;
+    FusedLocationProviderClient mFusedLocationClient;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    Location mLastLocation;
+    private Marker mCurrLocationMarker;
 
     public FileComplaintFragment() {
         // Required empty public constructor
+    }
+
+    public static FileComplaintFragment getMainActivity() {
+        return mainactivity;
     }
 
     @Override
@@ -147,6 +173,13 @@ public class FileComplaintFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        mainactivity = this;
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -162,7 +195,6 @@ public class FileComplaintFragment extends Fragment {
         userId = bundle.getString(Constants.USER_ID);
 
         prepareTags();
-        setupGPS();
 
         LinearLayout imageViewHolder = view.findViewById(R.id.image_holder_view);
         CollapsingToolbarLayout.LayoutParams layoutParams = new CollapsingToolbarLayout.LayoutParams(
@@ -192,7 +224,6 @@ public class FileComplaintFragment extends Fragment {
         indicator = view.findViewById(R.id.indicator);
         linearLayoutAddImage = view.findViewById(R.id.linearLayoutAddImage);
 
-//        imageViewAddImage = view.findViewById(R.id.image_view_image);
         floatingActionButton = view.findViewById(R.id.fabButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,41 +285,6 @@ public class FileComplaintFragment extends Fragment {
             }
         });
 
-
-        //        Autocomplete location bar
-
-//        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment ) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-
-        final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                .setCountry("IN")
-                .build();
-
-        autocompleteFragment.setFilter(typeFilter);
-
-        autocompleteFragment.setHint("Enter Location");
-
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-
-            @Override
-            public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
-                Location = place.getLatLng();
-                Name = place.getName().toString();
-                Address = place.getAddress().toString();
-                callServerToPostComplaint(Location, Name, Address, cursor); //on selecting the place will automatically shows the Details on the map.
-                cursor++;
-
-            }
-
-            @Override
-            public void onError(Status status) {
-                Log.i(TAG, "@@@@@@@@@@@@@@@@@An error occurred: " + status);
-
-            }
-        });
-        //        ends here
-
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,6 +306,41 @@ public class FileComplaintFragment extends Fragment {
         mMapView = view.findViewById(R.id.google_map);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
+//        mMapView.getMapAsync(this);
+
+        getMapReady();
+
+        //        Autocomplete location bar
+
+        final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setCountry("IN")
+                .build();
+
+        autocompleteFragment.setFilter(typeFilter);
+
+        autocompleteFragment.setHint("Enter Location");
+
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+
+            @Override
+            public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
+                Location = place.getLatLng();
+                Name = place.getName().toString();
+                Address = place.getAddress().toString();
+                updateMap(Location, Name, Address, cursor); //on selecting the place will automatically shows the Details on the map.
+                cursor++;
+
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.i(TAG, "@@@@@@@@@@@@@@@@@An error occurred: " + status);
+
+            }
+        });
+        //        ends here
 
         tagView = view.findViewById(R.id.tag_view);
 
@@ -359,6 +390,338 @@ public class FileComplaintFragment extends Fragment {
             }
         });
         return view;
+    }
+
+//    @Override
+//    public void onMapReady(GoogleMap map) {
+//        googleMap = map;
+//
+//        UiSettings uiSettings = googleMap.getUiSettings();
+//        uiSettings.setAllGesturesEnabled(true);
+//        uiSettings.setZoomControlsEnabled(true);
+//        uiSettings.setMyLocationButtonEnabled(true);
+//        uiSettings.setIndoorLevelPickerEnabled(true);
+//        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (ContextCompat.checkSelfPermission(getContext(),
+//                    Manifest.permission.ACCESS_FINE_LOCATION)
+//                    == PackageManager.PERMISSION_GRANTED) {
+//                //Location Permission already granted
+//                buildGoogleApiClient();
+//                googleMap.setMyLocationEnabled(true);
+//                googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+//                    @Override
+//                    public boolean onMyLocationButtonClick() {
+//                        if(googleMap.getMyLocation() != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
+//                            if (ContextCompat.checkSelfPermission(getContext(),
+//                                    Manifest.permission.ACCESS_FINE_LOCATION)
+//                                    == PackageManager.PERMISSION_GRANTED) {
+//
+//                            }
+//                        }
+//                        return false;
+//                    }
+//                });
+//            } else {
+//                //Request Location Permission
+//                checkLocationPermission();
+//            }
+//        } else {
+//            buildGoogleApiClient();
+//            googleMap.setMyLocationEnabled(true);
+//            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+//            googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+//                @Override
+//                public boolean onMyLocationButtonClick() {
+//                    if(googleMap.getMyLocation() != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
+//                        if (ContextCompat.checkSelfPermission(getContext(),
+//                                Manifest.permission.ACCESS_FINE_LOCATION)
+//                                == PackageManager.PERMISSION_GRANTED) {
+//
+//                        }
+//                    }
+//                    return false;
+//                }
+//            });
+//        }
+//    }
+//
+//    protected synchronized void buildGoogleApiClient() {
+//        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .addApi(LocationServices.API)
+//                .build();
+//        mGoogleApiClient.connect();
+//    }
+//
+//    @Override
+//    public void onConnected(@Nullable Bundle bundle) {
+//        mLocationRequest = new LocationRequest();
+//        mLocationRequest = new LocationRequest();
+//        mLocationRequest.setInterval(1000);
+//        mLocationRequest.setFastestInterval(1000);
+//        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+//        if (ContextCompat.checkSelfPermission(getContext(),
+//                Manifest.permission.ACCESS_FINE_LOCATION)
+//                == PackageManager.PERMISSION_GRANTED) {
+//            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+//        }
+//    }
+//
+//    @Override
+//    public void onConnectionSuspended(int i) {
+//
+//    }
+//
+//    @Override
+//    public void onConnectionFailed(ConnectionResult connectionResult) {
+//
+//    }
+//
+//    @Override
+//    public void onLocationChanged(Location location) {
+//        mLastLocation = location;
+//        if (mCurrLocationMarker != null) {
+//            mCurrLocationMarker.remove();
+//        }
+//
+//        //Place current location marker
+//        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(latLng);
+//        markerOptions.title("Current Position");
+//        mCurrLocationMarker = googleMap.addMarker(markerOptions);
+//
+//        //move map camera
+//        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,11));
+//        googleMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+//
+//        if (mGoogleApiClient != null) {
+//            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+//        }
+//    }
+//
+//    private void checkLocationPermission() {
+//        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+//                != PackageManager.PERMISSION_GRANTED) {
+//
+//            // Should we show an explanation?
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+//                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+//
+//                // Show an explanation to the user *asynchronously* -- don't block
+//                // this thread waiting for the user's response! After the user
+//                // sees the explanation, try again to request the permission.
+//                new AlertDialog.Builder(getContext())
+//                        .setTitle("Location Permission Needed")
+//                        .setMessage("This app needs the Location permission, please accept to use location functionality")
+//                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                //Prompt the user once explanation has been shown
+//                                ActivityCompat.requestPermissions(getActivity(),
+//                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                                        MY_PERMISSIONS_REQUEST_LOCATION );
+//                            }
+//                        })
+//                        .create()
+//                        .show();
+//
+//
+//            } else {
+//                // No explanation needed, we can request the permission.
+//                ActivityCompat.requestPermissions(getActivity(),
+//                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                        MY_PERMISSIONS_REQUEST_LOCATION );
+//            }
+//        }
+//    }
+//
+//
+//    public void setLocationEnable() {
+//        if (ContextCompat.checkSelfPermission(getContext(),
+//                Manifest.permission.ACCESS_FINE_LOCATION)
+//                == PackageManager.PERMISSION_GRANTED) {
+//
+//            if (mGoogleApiClient == null) {
+//                buildGoogleApiClient();
+//            }
+//            googleMap.setMyLocationEnabled(true);
+//            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+//
+//            googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+//                @Override
+//                public boolean onMyLocationButtonClick() {
+//                    if(googleMap.getMyLocation() != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
+//                        if (ContextCompat.checkSelfPermission(getContext(),
+//                                Manifest.permission.ACCESS_FINE_LOCATION)
+//                                == PackageManager.PERMISSION_GRANTED) {
+//                            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, FileComplaintFragment.this);
+//                        }
+//                    }
+//                    return false;
+//                }
+//            });
+//        }
+//    }
+
+    public void getMapReady() {
+        Log.i(TAG, "@@@@@@@@@@@@@@ in getMapReady");
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap map) {
+                googleMap = map;
+                UiSettings uiSettings = googleMap.getUiSettings();
+                uiSettings.setAllGesturesEnabled(true);
+                uiSettings.setZoomControlsEnabled(true);
+                uiSettings.setMyLocationButtonEnabled(true);
+                uiSettings.setIndoorLevelPickerEnabled(true);
+                uiSettings.setScrollGesturesEnabled(true);
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "@@@@@@@@@@@@@@ No initial permission granted");
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                            MY_PERMISSIONS_REQUEST_LOCATION);
+                } else {
+                    Log.i(TAG, "@@@@@@@@@@@@@@ Initial Permission Granted");
+                    googleMap.setMyLocationEnabled(true);
+                    googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                    googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+                        @Override
+                        public boolean onMyLocationButtonClick() {
+                            Log.i(TAG, "@@@@@@@@@@@@@@ in onMyLocationButtonClick");
+                            locate();
+                            return false;
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void locate() {
+        Log.i(TAG, "@@@@@@@@@@@@@@ in locate");
+        if (!GPSIsSetup) {
+            Log.i(TAG, "@@@@@@@@@@@@@@ GPS not enabled");
+            displayLocationSettingsRequest();
+        } else {
+            Log.i(TAG, "@@@@@@@@@@@@@@ GPS enabled");
+            try {
+                mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@lat = " + location.getLatitude() + " lon = " + location.getLongitude());
+                            Location = new LatLng(location.getLatitude(), location.getLongitude());
+                            updateMap(Location, "Current Location", location.getLatitude() + ", " + location.getLongitude(), cursor);
+                        } else {
+                            Toast.makeText(getContext(), "Getting current location. Please try after some time", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                mFusedLocationClient.getLastLocation().addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                GPSIsSetup = true;
+            } catch (SecurityException ignored) {
+                Toast.makeText(getContext(), "No permission!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void displayLocationSettingsRequest() {
+        Log.i(TAG, "@@@@@@@@@@@@@@ in displayLocationSettingsRequest");
+        if (getView() == null || getActivity() == null) return;
+        LocationRequest mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10 * 1000)
+                .setFastestInterval(1 * 1000);
+        LocationSettingsRequest.Builder settingsBuilder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        settingsBuilder.setAlwaysShow(true);
+        Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(getActivity())
+                .checkLocationSettings(settingsBuilder.build());
+        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+                try {
+                    Log.i(TAG, "@@@@@@@@@@@@@@ in displayLocationSettingsRequest try");
+                    LocationSettingsResponse result = task.getResult(ApiException.class);
+                    if (result.getLocationSettingsStates().isGpsPresent() &&
+                            result.getLocationSettingsStates().isGpsUsable() &&
+                            result.getLocationSettingsStates().isLocationPresent() &&
+                            result.getLocationSettingsStates().isLocationUsable()) {
+                        Log.i(TAG, "@@@@@@@@@@@@@@ in displayLocationSettingsRequest if setupGPS called");
+                        setupGPS();
+                    }
+                } catch (ApiException ex) {
+                    Log.i(TAG, "@@@@@@@@@@@@@@ in displayLocationSettingsRequest catch");
+                    switch (ex.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            try {
+                                ResolvableApiException resolvableApiException =
+                                        (ResolvableApiException) ex;
+                                resolvableApiException
+                                        .startResolutionForResult(getActivity(), 87);
+                                Log.i(TAG, "@@@@@@@@@@@@@@ in displayLocationSettingsRequest catch case1 try setupGPS called");
+                                setupGPS();
+                            } catch (IntentSender.SendIntentException e) {
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            Toast.makeText(getContext(), "GPS is not enabled!", Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    private void setupGPS() {
+        Log.i(TAG, "@@@@@@@@@@@@@@ in setup");
+        if (getView() == null || getActivity() == null) return;
+        // Permissions stuff
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+        } else {
+            try {
+                mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@lat = " + location.getLatitude() + " lon = " + location.getLongitude());
+                            Location = new LatLng(location.getLatitude(), location.getLongitude());
+                            updateMap(Location, "Current Location", location.getLatitude() + ", " + location.getLongitude(), cursor);
+                        } else {
+                            Toast.makeText(getContext(), "Getting Current location. Please try after some time", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                mFusedLocationClient.getLastLocation().addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                GPSIsSetup = true;
+            } catch (SecurityException ignored) {
+                Toast.makeText(getContext(), "No permission!", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void populateTags(String cs) {
@@ -423,96 +786,6 @@ public class FileComplaintFragment extends Fragment {
 
     }
 
-    private void setupGPS() {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_LOCATION);
-            final FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-            mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    // Got last known location. In some rare situations this can be null.
-                    if (location != null) {
-                        // Logic to handle location object
-                        Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@lat = " + location.getLatitude() + " lon = " + location.getLongitude());
-                        Location = new LatLng(location.getLatitude(), location.getLongitude());
-                        callServerToPostComplaint(Location, location.getLatitude() + ", " + location.getLongitude(), " ", cursor);
-                    }
-                }
-            });
-        } else {
-//            if (!GPSIsEnabled) {
-//                Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@GPSIsEnabled? = " + !(GPSIsEnabled));
-//                enableGPSRequest();
-//            }
-            final FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-            mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    // Got last known location. In some rare situations this can be null.
-                    if (location != null) {
-                        // Logic to handle location object
-                        Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@lat = " + location.getLatitude() + " lon = " + location.getLongitude());
-                        Location = new LatLng(location.getLatitude(), location.getLongitude());
-                        callServerToPostComplaint(Location, location.getLatitude() + ", " + location.getLongitude(), " ", cursor);
-                    }
-                }
-            });
-
-        }
-    }
-
-    private void enableGPSRequest() {
-        Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@ Inside enableGPSRequest");
-        LocationRequest locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10 * 1000)
-                .setFastestInterval(1000);
-
-        LocationSettingsRequest.Builder settingsBuilder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest);
-        settingsBuilder.setAlwaysShow(true);
-
-        Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(getActivity())
-                .checkLocationSettings(settingsBuilder.build());
-        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
-                try {
-                    Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@ Inside try");
-                    LocationSettingsResponse result = task.getResult(ApiException.class);
-                    if (result.getLocationSettingsStates().isGpsPresent() &&
-                            result.getLocationSettingsStates().isGpsUsable() &&
-                            result.getLocationSettingsStates().isLocationPresent() &&
-                            result.getLocationSettingsStates().isLocationUsable()) {
-                        Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@ Inside if in try");
-                        setupGPS();
-                    }
-                } catch (ApiException ex) {
-                    Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@ Inside catch");
-                    ex.printStackTrace();
-                    switch (ex.getStatusCode()) {
-                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            try {
-                                ResolvableApiException resolvableApiException =
-                                        (ResolvableApiException) ex;
-                                resolvableApiException
-                                        .startResolutionForResult(getActivity(), 87);
-                                setupGPS();
-                            } catch (IntentSender.SendIntentException e) {
-                            }
-                            break;
-                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            Toast.makeText(getContext(), "GPS is not enabled!", Toast.LENGTH_LONG).show();
-                            break;
-                    }
-                }
-            }
-        });
-        GPSIsEnabled = true;
-    }
-
     private void addComplaint() {
         String complaint = "Complaint: " + autoCompleteTextView.getText().toString();
         String suggestion = null;
@@ -535,7 +808,6 @@ public class FileComplaintFragment extends Fragment {
                 FragmentManager manager = getFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.framelayout_for_fragment, complaintFragment, complaintFragment.getTag());
-//                transaction.remove(getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment)).commit();
                 transaction.commit();
             }
 
@@ -547,9 +819,10 @@ public class FileComplaintFragment extends Fragment {
         });
     }
 
-    private void callServerToPostComplaint(LatLng Location, String Name, String Address, int cursor) {
+    private void updateMap(LatLng Location, String Name, String Address, int cursor) {
+        Log.i(TAG, "@@@@@@@@@@@@@@ in updateMap");
         LocationAPIUtils locationAPIUtils = new LocationAPIUtils(googleMap, mMapView);
-        locationAPIUtils.callGoogleToShowLocationOnMap(getContext(), Location, Name, Address, cursor);
+        locationAPIUtils.callGoogleToShowLocationOnMap(getActivity(), getContext(), Location, Name, Address, cursor);
         showAnalysis();
     }
 

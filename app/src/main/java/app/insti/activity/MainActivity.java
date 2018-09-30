@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,12 +32,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import app.insti.Constants;
@@ -56,6 +61,7 @@ import app.insti.fragment.ComplaintFragment;
 import app.insti.fragment.EventFragment;
 import app.insti.fragment.ExploreFragment;
 import app.insti.fragment.FeedFragment;
+import app.insti.fragment.FileComplaintFragment;
 import app.insti.fragment.MapFragment;
 import app.insti.fragment.MessMenuFragment;
 import app.insti.fragment.MyEventsFragment;
@@ -73,6 +79,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
+import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
 import static app.insti.notifications.NotificationIntentService.ACTION_OPEN_EVENT;
@@ -541,8 +548,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
                     toast.show();
                 }
+                break;
+            case MY_PERMISSIONS_REQUEST_LOCATION:
+                Log.i(TAG, "@@@@@@@@@@@@@@ Permission request captured");
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "@@@@@@@@@@@@@@ Permission Granted");
+                    FileComplaintFragment.getMainActivity().getMapReady();
+                } else {
+                    Log.i(TAG, "@@@@@@@@@@@@@@ Permission Cancelled");
+                    Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
         }
     }
+
 
     public String getSessionIDHeader() {
         return "sessionid=" + session.getSessionID();
