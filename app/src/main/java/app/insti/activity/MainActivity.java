@@ -38,7 +38,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.List;
 
 import app.insti.Constants;
@@ -47,12 +46,12 @@ import app.insti.SessionManager;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
-import app.insti.api.request.UserFCMPatchRequest;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.Notification;
 import app.insti.api.model.Role;
 import app.insti.api.model.User;
+import app.insti.api.request.UserFCMPatchRequest;
 import app.insti.fragment.BackHandledFragment;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.CalendarFragment;
@@ -68,8 +67,6 @@ import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.fragment.UserFragment;
-import okhttp3.Cache;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -116,10 +113,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            initPicasso();
-        } catch (IllegalStateException ignored) {
-        }
 
         ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
         this.retrofitInterface = serviceGenerator.getRetrofitInterface();
@@ -606,20 +599,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public String getSessionIDHeader() {
         return "sessionid=" + session.getSessionID();
-    }
-
-    public void initPicasso() {
-        Picasso.Builder builder = new Picasso.Builder(getApplicationContext());
-        OkHttpClient.Builder client = new OkHttpClient.Builder();
-        Cache cache = new Cache(new File(getApplicationContext().getCacheDir(), "http-cache"), 100 * 1024 * 1024);
-        client.cache(cache);
-        builder.downloader(new com.squareup.picasso.OkHttp3Downloader((
-                client.build()
-        )));
-        Picasso built = builder.build();
-        built.setIndicatorsEnabled(false);
-        built.setLoggingEnabled(false);
-        Picasso.setSingletonInstance(built);
     }
 
     @Override
