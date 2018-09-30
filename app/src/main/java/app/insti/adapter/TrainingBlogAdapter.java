@@ -17,7 +17,7 @@ import java.util.Locale;
 
 import app.insti.ItemClickListener;
 import app.insti.R;
-import app.insti.data.TrainingBlogPost;
+import app.insti.api.model.TrainingBlogPost;
 import app.insti.fragment.TrainingBlogFragment;
 import ru.noties.markwon.Markwon;
 

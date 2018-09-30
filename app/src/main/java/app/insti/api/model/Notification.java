@@ -1,34 +1,24 @@
-package app.insti.data;
+package app.insti.api.model;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-@Entity(tableName = "news")
-
 public class Notification {
     @NonNull()
-    @PrimaryKey()
-    @ColumnInfo(name = "id")
+
     @SerializedName("id")
     private Integer notificationId;
 
-    @ColumnInfo(name = "verb")
     @SerializedName("verb")
     private String notificationVerb;
 
-    @ColumnInfo(name = "unread")
     @SerializedName("unread")
     private boolean notificationUnread;
 
-    @ColumnInfo(name = "actor_type")
     @SerializedName("actor_type")
     private String notificationActorType;
 
-    @ColumnInfo(name = "actor")
     @SerializedName("actor")
     private Object notificationActor;
 

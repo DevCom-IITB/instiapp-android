@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -45,12 +44,10 @@ import app.insti.adapter.BodyAdapter;
 import app.insti.adapter.FeedAdapter;
 import app.insti.adapter.UserAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.AppDatabase;
-import app.insti.data.Body;
-import app.insti.data.Event;
-import app.insti.data.Role;
-import app.insti.data.User;
+import app.insti.api.model.Body;
+import app.insti.api.model.Event;
+import app.insti.api.model.Role;
+import app.insti.api.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,7 +64,6 @@ public class BodyFragment extends BackHandledFragment {
 
 
     String TAG = "BodyFragment";
-    private AppDatabase appDatabase;
     // TODO: Rename and change types of parameters
     private Body min_body;
     private SwipeRefreshLayout bodySwipeRefreshLayout;
@@ -133,15 +129,10 @@ public class BodyFragment extends BackHandledFragment {
 
         /* Initialize */
         bodyDisplayed = false;
-        appDatabase = AppDatabase.getAppDatabase(getContext());
         body = min_body;
         displayBody();
 
-        /* Check if full body was passed */
-        if (min_body.getBodyDescription() == null) {
-            new getDbBody().execute(min_body.getBodyID());
-            updateBody();
-        }
+        updateBody();
 
         bodySwipeRefreshLayout = getActivity().findViewById(R.id.body_swipe_refresh_layout);
         bodySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -157,14 +148,12 @@ public class BodyFragment extends BackHandledFragment {
     }
 
     private void updateBody() {
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getBody(((MainActivity) getActivity()).getSessionIDHeader(), min_body.getBodyID()).enqueue(new Callback<Body>() {
             @Override
             public void onResponse(Call<Body> call, Response<Body> response) {
                 if (response.isSuccessful()) {
                     Body bodyResponse = response.body();
-
-                    new updateDbBody().execute(bodyResponse);
 
                     if (!bodyDisplayed) {
                         body = bodyResponse;
@@ -236,13 +225,12 @@ public class BodyFragment extends BackHandledFragment {
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                 retrofitInterface.updateBodyFollowing(((MainActivity) getActivity()).getSessionIDHeader(), body.getBodyID(), body.getBodyUserFollows() ? 0 : 1).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
                             body.setBodyUserFollows(!body.getBodyUserFollows());
-                            new updateDbBody().execute(body);
                             followButton.setBackgroundColor(getResources().getColor(body.getBodyUserFollows() ? R.color.colorAccent : R.color.colorWhite));
                         }
                     }
@@ -543,32 +531,5 @@ public class BodyFragment extends BackHandledFragment {
 
         startScaleFinal = startScale;
         zoomMode = true;
-    }
-
-    private class updateDbBody extends AsyncTask<Body, Void, Integer> {
-        @Override
-        protected Integer doInBackground(Body... body) {
-            if (appDatabase.dbDao().getBody(body[0].getBodyID()).length > 0) {
-                appDatabase.dbDao().updateBody(body[0]);
-            } else {
-                appDatabase.dbDao().insertBody(body[0]);
-            }
-            return 1;
-        }
-    }
-
-    private class getDbBody extends AsyncTask<String, Void, Body[]> {
-        @Override
-        protected Body[] doInBackground(String... id) {
-            return appDatabase.dbDao().getBody(min_body.getBodyID());
-        }
-
-        @Override
-        protected void onPostExecute(Body[] result) {
-            if (result.length > 0 && !bodyDisplayed) {
-                body = result[0];
-                displayBody();
-            }
-        }
     }
 }

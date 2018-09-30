@@ -4,8 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import app.insti.data.Event;
-
 public class NewsFeedResponse {
     @SerializedName("data")
     private List<Event> events;

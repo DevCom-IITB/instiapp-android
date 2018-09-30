@@ -40,6 +40,11 @@ public class LoginActivity extends AppCompatActivity {
     private boolean loggingIn = false;
     private ProgressDialog progressDialog;
 
+    private RetrofitInterface retrofitInterface;
+    public RetrofitInterface getRetrofitInterface() {
+        return retrofitInterface;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +68,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
+        this.retrofitInterface = serviceGenerator.getRetrofitInterface();
+
         WebView webview = (WebView) findViewById(R.id.login_webview);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setDomStorageEnabled(true);
@@ -80,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login(final String authorizationCode, final String redirectURL) {
         /* This can be null if play services is hung */
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = getRetrofitInterface();
         Call<LoginResponse> call;
         if (fcmId == null) {
             call = retrofitInterface.login(authorizationCode, redirectURL);
@@ -118,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
             progressDialog.show();
         }
 
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = getRetrofitInterface();
         Call<LoginResponse> call;
 
         /* This can be null if play services is hung */

@@ -2,8 +2,6 @@ package app.insti.api;
 
 import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 import app.insti.api.model.EventCreateRequest;
@@ -13,15 +11,15 @@ import app.insti.api.model.ImageUploadRequest;
 import app.insti.api.model.ImageUploadResponse;
 import app.insti.api.model.LoginResponse;
 import app.insti.api.model.NewsFeedResponse;
-import app.insti.data.Event;
-import app.insti.data.HostelMessMenu;
-import app.insti.data.NewsArticle;
-import app.insti.data.Notification;
-import app.insti.data.PlacementBlogPost;
-import app.insti.data.TrainingBlogPost;
-import app.insti.data.User;
-import app.insti.data.Venter;
-import app.insti.data.Venue;
+import app.insti.api.model.Event;
+import app.insti.api.model.HostelMessMenu;
+import app.insti.api.model.NewsArticle;
+import app.insti.api.model.Notification;
+import app.insti.api.model.PlacementBlogPost;
+import app.insti.api.model.TrainingBlogPost;
+import app.insti.api.model.User;
+import app.insti.api.model.Venue;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -65,10 +63,10 @@ public interface RetrofitInterface {
     Call<User> getUser(@Header("Cookie") String sessionId, @Path("uuid") String uuid);
 
     @GET("bodies/{uuid}")
-    Call<app.insti.data.Body> getBody(@Header("Cookie") String sessionId, @Path("uuid") String uuid);
+    Call<app.insti.api.model.Body> getBody(@Header("Cookie") String sessionId, @Path("uuid") String uuid);
 
     @GET("bodies")
-    Call<List<app.insti.data.Body>> getAllBodies(@Header("Cookie") String sessionId);
+    Call<List<app.insti.api.model.Body>> getAllBodies(@Header("Cookie") String sessionId);
 
     @GET("bodies/{bodyID}/follow")
     Call<Void> updateBodyFollowing(@Header("Cookie") String sessionID, @Path("bodyID") String eventID, @Query("action") int action);

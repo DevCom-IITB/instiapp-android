@@ -1,52 +1,46 @@
-package app.insti.data;
+package app.insti.api.model;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-@Entity(tableName = "venues")
 public class Venue {
     @NonNull()
-    @PrimaryKey()
-    @ColumnInfo(name = "id")
     @SerializedName("id")
-    String venueID;
-    @ColumnInfo(name = "name")
+    private String venueID;
+
     @SerializedName("name")
-    String venueName;
-    @ColumnInfo(name = "short_name")
+    private String venueName;
+
     @SerializedName("short_name")
-    String venueShortName;
-    @ColumnInfo(name = "description")
+    private String venueShortName;
+
     @SerializedName("description")
-    String venueDescripion;
-    @ColumnInfo(name = "parent")
+    private String venueDescripion;
+
     @SerializedName("parent")
-    String venueParentId;
-    @ColumnInfo(name = "parent_relation")
+    private String venueParentId;
+
     @SerializedName("parent_relation")
-    String venueParentRelation;
-    @ColumnInfo(name = "group_id")
+    private String venueParentRelation;
+
     @SerializedName("group_id")
-    Integer venueGroupId;
-    @ColumnInfo(name = "pixel_x")
+    private Integer venueGroupId;
+
     @SerializedName("pixel_x")
-    Integer venuePixelX;
-    @ColumnInfo(name = "pixel_y")
+    private Integer venuePixelX;
+
     @SerializedName("pixel_y")
-    Integer venuePixelY;
-    @ColumnInfo(name = "reusable")
+    private Integer venuePixelY;
+
     @SerializedName("reusable")
-    Boolean venueReusable;
-    @ColumnInfo(name = "lat")
+    private Boolean venueReusable;
+
     @SerializedName("lat")
-    double venueLatitude;
-    @ColumnInfo(name = "lng")
+    private double venueLatitude;
+
     @SerializedName("lng")
-    double venueLongitude;
+    private double venueLongitude;
 
     public Venue(String venueID, String venueName, String venueShortName, String venueDescripion, String venueParentId, String venueParentRelation, Integer venueGroupId, Integer venuePixelX, Integer venuePixelY, Boolean venueReusable, double venueLatitude, double venueLongitude) {
         this.venueID = venueID;

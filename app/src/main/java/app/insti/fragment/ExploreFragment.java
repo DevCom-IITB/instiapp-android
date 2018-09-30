@@ -27,11 +27,10 @@ import app.insti.adapter.BodyAdapter;
 import app.insti.adapter.FeedAdapter;
 import app.insti.adapter.UserAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
 import app.insti.api.model.ExploreResponse;
-import app.insti.data.Body;
-import app.insti.data.Event;
-import app.insti.data.User;
+import app.insti.api.model.Body;
+import app.insti.api.model.Event;
+import app.insti.api.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,7 +86,7 @@ public class ExploreFragment extends Fragment {
 
         // Get all bodies
         if (allBodies.size() == 0) {
-            RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+            RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
             retrofitInterface.getAllBodies(sessionId).enqueue(new Callback<List<Body>>() {
                 @Override
                 public void onResponse(Call<List<Body>> call, Response<List<Body>> response) {
@@ -141,7 +140,7 @@ public class ExploreFragment extends Fragment {
         getView().findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
 
         // Make request
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.search(sessionId, query).enqueue(new Callback<ExploreResponse>() {
             @Override
             public void onResponse(Call<ExploreResponse> call, Response<ExploreResponse> response) {

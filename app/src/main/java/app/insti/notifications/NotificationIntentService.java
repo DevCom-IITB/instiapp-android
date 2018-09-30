@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.JobIntentService;
@@ -28,8 +27,8 @@ import app.insti.SessionManager;
 import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
-import app.insti.data.Event;
-import app.insti.data.User;
+import app.insti.api.model.Event;
+import app.insti.api.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -112,7 +111,8 @@ public class NotificationIntentService extends JobIntentService {
                 String eventID = intent.getStringExtra(Constants.EVENT_ID);
                 String sessionID = intent.getStringExtra(Constants.SESSION_ID);
 
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
+                RetrofitInterface retrofitInterface = serviceGenerator.getRetrofitInterface();
                 retrofitInterface.updateUserEventStatus("sessionid=" + sessionID, eventID, Constants.STATUS_NOT_GOING).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
@@ -149,7 +149,8 @@ public class NotificationIntentService extends JobIntentService {
         String userID = sessionManager.getUserID();
         final String sessionID = sessionManager.getSessionID();
 
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
+        RetrofitInterface retrofitInterface = serviceGenerator.getRetrofitInterface();
         retrofitInterface.getUser("sessionid=" + sessionID, userID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {

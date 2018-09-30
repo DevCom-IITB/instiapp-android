@@ -15,7 +15,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -90,9 +89,7 @@ import app.insti.Constants;
 import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.AppDatabase;
-import app.insti.data.Venue;
+import app.insti.api.model.Venue;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -129,7 +126,6 @@ public class MapFragment extends Fragment implements TextWatcher,
     public ImageButton addMarkerIcon;
     public SoundPool soundPool;
     public int[] soundPoolIds;
-    private AppDatabase appDatabase;
     private SettingsManager settingsManager;
     private FuzzySearchAdapter adapter;
     private ExpandableListAdapter expAdapter;
@@ -223,21 +219,18 @@ public class MapFragment extends Fragment implements TextWatcher,
         toolbar.setTitle("InstiMap");
 
         /* Initialize */
-        appDatabase = AppDatabase.getAppDatabase(getContext());
         editText = (EditText) getView().findViewById(R.id.search);
         setFonts();
 
         getAPILocations();
-        new showLocationsFromDB().execute();
     }
 
     private void getAPILocations() {
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getAllVenues().enqueue(new Callback<List<Venue>>() {
             @Override
             public void onResponse(Call<List<Venue>> call, Response<List<Venue>> response) {
                 if (response.isSuccessful()) {
-                    new updateDatabase().execute(response.body());
                     if (!locationsShown) {
                         setupWithData(response.body());
                         locationsShown = true;
@@ -1024,29 +1017,6 @@ public class MapFragment extends Fragment implements TextWatcher,
                 }
             }
         });
-    }
-
-    private class updateDatabase extends AsyncTask<List<Venue>, Void, Integer> {
-        @Override
-        protected Integer doInBackground(List<Venue>... venues) {
-            appDatabase.dbDao().deleteVenues();
-            appDatabase.dbDao().insertVenues(venues[0]);
-            return 1;
-        }
-    }
-
-    private class showLocationsFromDB extends AsyncTask<String, Void, List<Venue>> {
-        @Override
-        protected List<Venue> doInBackground(String... events) {
-            return appDatabase.dbDao().getAllVenues();
-        }
-
-        protected void onPostExecute(List<Venue> result) {
-            if (!locationsShown && result.size() > 0) {
-                setupWithData(result);
-                locationsShown = true;
-            }
-        }
     }
 
     private class CustomListAdapter extends ArrayAdapter<String> {

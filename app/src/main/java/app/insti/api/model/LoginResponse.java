@@ -2,8 +2,6 @@ package app.insti.api.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import app.insti.data.User;
-
 public class LoginResponse {
     @SerializedName("sessionid")
     private String sessionID;

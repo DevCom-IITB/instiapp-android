@@ -4,7 +4,6 @@ package app.insti.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,9 +29,7 @@ import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.NewsAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.AppDatabase;
-import app.insti.data.NewsArticle;
+import app.insti.api.model.NewsArticle;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,7 +42,6 @@ public class NewsFragment extends BaseFragment {
     public static boolean showLoader = true;
     private RecyclerView newsRecyclerView;
     private SwipeRefreshLayout newsSwipeRefreshLayout;
-    private AppDatabase appDatabase;
     private boolean freshNewsDisplayed = false;
     private String searchQuery;
 
@@ -70,9 +66,6 @@ public class NewsFragment extends BaseFragment {
 
         setHasOptionsMenu(true);
 
-        appDatabase = AppDatabase.getAppDatabase(getContext());
-        new NewsFragment.showNewsFromDB().execute();
-
         updateNews();
 
         newsSwipeRefreshLayout = getActivity().findViewById(R.id.news_swipe_refresh_layout);
@@ -85,7 +78,7 @@ public class NewsFragment extends BaseFragment {
     }
 
     private void updateNews() {
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getNews("sessionid=" + getArguments().getString(Constants.SESSION_ID), 0, 20, searchQuery).enqueue(new Callback<List<NewsArticle>>() {
             @Override
             public void onResponse(Call<List<NewsArticle>> call, Response<List<NewsArticle>> response) {
@@ -93,8 +86,6 @@ public class NewsFragment extends BaseFragment {
                     List<NewsArticle> articles = response.body();
                     freshNewsDisplayed = true;
                     displayNews(articles);
-
-                    new updateDatabase().execute(articles);
                 }
                 //Server Error
                 newsSwipeRefreshLayout.setRefreshing(false);
@@ -138,7 +129,7 @@ public class NewsFragment extends BaseFragment {
                                 if (((layoutManager.getChildCount() + layoutManager.findFirstVisibleItemPosition()) > (layoutManager.getItemCount() - 5)) && (!loading)) {
                                     loading = true;
                                     View v = getActivity().findViewById(R.id.training_feed_swipe_refresh_layout);
-                                    RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                                    RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                                     retrofitInterface.getNews("sessionid=" + getArguments().getString(Constants.SESSION_ID), layoutManager.getItemCount(), 10, searchQuery).enqueue(new Callback<List<NewsArticle>>() {
                                         @Override
                                         public void onResponse(Call<List<NewsArticle>> call, Response<List<NewsArticle>> response) {
@@ -212,27 +203,5 @@ public class NewsFragment extends BaseFragment {
         searchQuery = query;
         updateNews();
         showLoader = false;
-    }
-
-    private class updateDatabase extends AsyncTask<List<NewsArticle>, Void, Integer> {
-        @Override
-        protected Integer doInBackground(List<NewsArticle>... posts) {
-            appDatabase.dbDao().deleteNewsArticles();
-            appDatabase.dbDao().insertNewsArticles(posts[0]);
-            return 1;
-        }
-    }
-
-    private class showNewsFromDB extends AsyncTask<String, Void, List<NewsArticle>> {
-        @Override
-        protected List<NewsArticle> doInBackground(String... posts) {
-            return appDatabase.dbDao().getAllNewsArticles();
-        }
-
-        protected void onPostExecute(List<NewsArticle> result) {
-            if (!freshNewsDisplayed) {
-                displayNews(result);
-            }
-        }
     }
 }

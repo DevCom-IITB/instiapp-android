@@ -34,14 +34,14 @@ import app.insti.Constants;
 import app.insti.ItemClickListener;
 import app.insti.R;
 import app.insti.ShareURLMaker;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.RoleAdapter;
 import app.insti.adapter.TabAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.Body;
-import app.insti.data.Event;
-import app.insti.data.Role;
-import app.insti.data.User;
+import app.insti.api.model.Body;
+import app.insti.api.model.Event;
+import app.insti.api.model.Role;
+import app.insti.api.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -107,7 +107,7 @@ public class UserFragment extends BackHandledFragment {
         Bundle bundle = getArguments();
         String userID = bundle.getString(Constants.USER_ID);
 
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getUser("sessionid=" + getArguments().getString(Constants.SESSION_ID), userID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {

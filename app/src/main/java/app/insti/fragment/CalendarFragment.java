@@ -33,9 +33,8 @@ import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
 import app.insti.api.model.NewsFeedResponse;
-import app.insti.data.Event;
+import app.insti.api.model.Event;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -117,7 +116,7 @@ public class CalendarFragment extends BaseFragment {
         final String oneMonthBack = isoFormatter.format(oneMonthBackDate).toString();
         final String oneMonthOn = isoFormatter.format(oneMonthOnDate).toString();
 
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getEventsBetweenDates(((MainActivity) getActivity()).getSessionIDHeader(), oneMonthBack, oneMonthOn).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {

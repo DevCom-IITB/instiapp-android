@@ -13,12 +13,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import app.insti.Constants;
 import app.insti.ItemClickListener;
 import app.insti.R;
-import app.insti.data.Event;
-import app.insti.data.NewsArticle;
-import app.insti.data.Notification;
-import app.insti.data.PlacementBlogPost;
+import app.insti.api.model.Event;
+import app.insti.api.model.NewsArticle;
+import app.insti.api.model.Notification;
+import app.insti.api.model.PlacementBlogPost;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.Viewholder> {
     private List<Notification> notifications;
@@ -53,11 +54,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         viewholder.notificationVerb.setText(appNotification.getNotificationVerb());
         if (appNotification.getNotificationActorType().contains("event")) {
             Event event = gson.fromJson(gson.toJson(appNotification.getNotificationActor()), Event.class);
-            Picasso.get().load(event.getEventImageURL()).into(viewholder.notificationPicture);
+            Picasso.get().load(
+                    Constants.resizeImageUrl(event.getEventImageURL(), 200)
+            ).into(viewholder.notificationPicture);
             viewholder.notificationTitle.setText(event.getEventName());
         } else if (appNotification.getNotificationActorType().contains("newsentry")) {
             NewsArticle article = gson.fromJson(gson.toJson(appNotification.getNotificationActor()), NewsArticle.class);
-            Picasso.get().load(article.getBody().getBodyImageURL()).into(viewholder.notificationPicture);
+            Picasso.get().load(
+                    Constants.resizeImageUrl(article.getBody().getBodyImageURL(), 200)
+            ).into(viewholder.notificationPicture);
             viewholder.notificationTitle.setText(article.getTitle());
         } else if (appNotification.getNotificationActorType().contains("blogentry")) {
             PlacementBlogPost post = gson.fromJson(gson.toJson(appNotification.getNotificationActor()), PlacementBlogPost.class);

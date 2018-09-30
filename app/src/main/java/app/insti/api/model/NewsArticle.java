@@ -1,53 +1,46 @@
-package app.insti.data;
+package app.insti.api.model;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
 
-@Entity(tableName = "trainingBlogPosts")
-
-public class TrainingBlogPost {
+public class NewsArticle {
     @NonNull()
-    @PrimaryKey()
-    @ColumnInfo(name = "id")
     @SerializedName("id")
-    private String postID;
+    private String articleID;
 
-    @ColumnInfo(name = "link")
     @SerializedName("link")
     private String link;
 
-    @ColumnInfo(name = "title")
     @SerializedName("title")
     private String title;
 
-    @ColumnInfo(name = "content")
     @SerializedName("content")
     private String content;
 
-    @ColumnInfo(name = "published")
     @SerializedName("published")
     private Timestamp published;
 
-    public TrainingBlogPost(String postID, String link, String title, String content, Timestamp published) {
-        this.postID = postID;
+    @SerializedName("body")
+    private Body body;
+
+    public NewsArticle(String articleID, String link, String title, String content, Timestamp published, Body body) {
+        this.articleID = articleID;
         this.link = link;
         this.title = title;
         this.content = content;
         this.published = published;
+        this.body = body;
     }
 
-    public String getPostID() {
-        return postID;
+    public String getArticleID() {
+        return articleID;
     }
 
-    public void setPostID(String postID) {
-        this.postID = postID;
+    public void setArticleID(String articleID) {
+        this.articleID = articleID;
     }
 
     public String getLink() {
@@ -80,5 +73,13 @@ public class TrainingBlogPost {
 
     public void setPublished(Timestamp published) {
         this.published = published;
+    }
+
+    public Body getBody() {
+        return body;
+    }
+
+    public void setBody(Body body) {
+        this.body = body;
     }
 }

@@ -12,9 +12,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import app.insti.Constants;
 import app.insti.ItemClickListener;
 import app.insti.R;
-import app.insti.data.Body;
+import app.insti.api.model.Body;
 
 
 public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
@@ -51,7 +52,9 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
         Body body = bodyList.get(position);
         holder.name.setText(body.getBodyName());
         holder.description.setText(body.getBodyShortDescription());
-        Picasso.get().load(body.getBodyImageURL()).resize(0, 200).into(holder.image);
+        Picasso.get().load(
+                Constants.resizeImageUrl(body.getBodyImageURL(), 200)
+        ).into(holder.image);
 
     }
 

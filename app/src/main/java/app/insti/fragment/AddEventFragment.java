@@ -28,9 +28,8 @@ import app.insti.Constants;
 import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.Body;
-import app.insti.data.Event;
+import app.insti.api.model.Body;
+import app.insti.api.model.Event;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -167,7 +166,7 @@ public class AddEventFragment extends BaseFragment {
             if (url.contains("/event/")) {
                 url = url.substring(url.lastIndexOf("/") + 1);
 
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                 retrofitInterface.getEvent(((MainActivity) getActivity()).getSessionIDHeader(), url).enqueue(new Callback<Event>() {
                     @Override
                     public void onResponse(Call<Event> call, Response<Event> response) {
@@ -185,7 +184,7 @@ public class AddEventFragment extends BaseFragment {
             } else if (url.contains("/org/")) {
                 url = url.substring(url.lastIndexOf("/") + 1);
 
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                 retrofitInterface.getBody(((MainActivity) getActivity()).getSessionIDHeader(), url).enqueue(new Callback<Body>() {
                     @Override
                     public void onResponse(Call<Body> call, Response<Body> response) {
