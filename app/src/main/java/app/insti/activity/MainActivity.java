@@ -68,11 +68,9 @@ import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.fragment.UserFragment;
-import app.insti.notifications.NotificationEventReceiver;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 import static app.insti.Constants.DATA_TYPE_BODY;
@@ -84,8 +82,6 @@ import static app.insti.Constants.FCM_BUNDLE_NOTIFICATION_ID;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
-import static app.insti.notifications.NotificationIntentService.ACTION_OPEN_EVENT;
-
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BackHandledFragment.BackHandlerInterface {
 
@@ -153,20 +149,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Check for data passed by FCM
             if (intent.getExtras() != null && intent.getBundleExtra(Constants.MAIN_INTENT_EXTRAS) != null) {
                 handleFCMIntent(intent.getBundleExtra(Constants.MAIN_INTENT_EXTRAS));
-            } else if (intent.getAction() != null && intent.getAction().equals(ACTION_OPEN_EVENT)) {
-                EventFragment eventFragment = new EventFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.EVENT_JSON, intent.getStringExtra(Constants.EVENT_JSON));
-                eventFragment.setArguments(bundle);
-                updateFragment(eventFragment);
             } else {
                 handleIntent(intent);
             }
         }
 
         checkLatestVersion();
-
-        NotificationEventReceiver.setupAlarm(getApplicationContext());
     }
 
     private void fetchNotifications() {
