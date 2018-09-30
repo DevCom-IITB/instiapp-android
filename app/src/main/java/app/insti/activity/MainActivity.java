@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /** Open user fragment from given id */
-    private void openUserFragment(String id) {
+    public void openUserFragment(String id) {
         UserFragment userFragment = UserFragment.newInstance(id);
         updateFragment(userFragment);
     }
