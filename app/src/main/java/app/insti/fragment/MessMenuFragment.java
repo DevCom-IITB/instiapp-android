@@ -2,7 +2,6 @@ package app.insti.fragment;
 
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,8 +26,8 @@ import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.MessMenuAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.data.HostelMessMenu;
-import app.insti.data.MessMenu;
+import app.insti.api.model.HostelMessMenu;
+import app.insti.api.model.MessMenu;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

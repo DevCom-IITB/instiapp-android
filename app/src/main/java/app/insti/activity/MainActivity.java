@@ -47,11 +47,11 @@ import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
 import app.insti.api.model.UserFCMPatchRequest;
-import app.insti.data.Body;
-import app.insti.data.Event;
-import app.insti.data.Notification;
-import app.insti.data.Role;
-import app.insti.data.User;
+import app.insti.api.model.Body;
+import app.insti.api.model.Event;
+import app.insti.api.model.Notification;
+import app.insti.api.model.Role;
+import app.insti.api.model.User;
 import app.insti.fragment.BackHandledFragment;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.CalendarFragment;
@@ -60,7 +60,6 @@ import app.insti.fragment.ExploreFragment;
 import app.insti.fragment.FeedFragment;
 import app.insti.fragment.MapFragment;
 import app.insti.fragment.MessMenuFragment;
-import app.insti.fragment.MyEventsFragment;
 import app.insti.fragment.NewsFragment;
 import app.insti.fragment.NotificationsFragment;
 import app.insti.fragment.PlacementBlogFragment;
@@ -200,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     if (response.isSuccessful()) {
                         if (response.body().get("version").getAsInt() > versionCode) {
-                            showUpdateSnackBar();
+                            showUpdateSnackBar(response.body().get("message").getAsString());
                         }
                     }
                 }
@@ -215,9 +214,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void showUpdateSnackBar() {
+    private void showUpdateSnackBar(String message) {
         View parentLayout = findViewById(android.R.id.content);
-        Snackbar.make(parentLayout, "New Version Available", Snackbar.LENGTH_LONG).setAction("UPDATE", new View.OnClickListener() {
+        Snackbar.make(parentLayout, message, Snackbar.LENGTH_LONG).setAction("UPDATE", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
@@ -512,14 +511,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_feed:
                 feedFragment = new FeedFragment();
                 updateFragment(feedFragment);
-                break;
-            case R.id.nav_my_events:
-                if (session.isLoggedIn()) {
-                    MyEventsFragment myeventsFragment = new MyEventsFragment();
-                    updateFragment(myeventsFragment);
-                } else {
-                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
-                }
                 break;
 
             case R.id.nav_explore:

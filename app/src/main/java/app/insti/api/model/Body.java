@@ -1,4 +1,4 @@
-package app.insti.data;
+package app.insti.api.model;
 
 import android.support.annotation.NonNull;
 
@@ -8,33 +8,46 @@ import java.util.List;
 
 public class Body {
     @SerializedName("id")
-    String bodyID;
+    private String bodyID;
+
     @SerializedName("str_id")
-    String bodyStrID;
+    private String bodyStrID;
+
     @SerializedName("name")
-    String bodyName;
+    private String bodyName;
+
     @SerializedName("short_description")
-    String bodyShortDescription;
+    private String bodyShortDescription;
+
     @SerializedName("description")
-    String bodyDescription;
+    private String bodyDescription;
+
     @SerializedName("image_url")
-    String bodyImageURL;
+    private String bodyImageURL;
+
     @SerializedName("children")
-    List<Body> bodyChildren;
+    private List<Body> bodyChildren;
+
     @SerializedName("parents")
-    List<Body> bodyParents;
+    private List<Body> bodyParents;
+
     @SerializedName("events")
-    List<Event> bodyEvents;
+    private List<Event> bodyEvents;
+
     @SerializedName("followers_count")
-    int bodyFollowersCount;
+    private int bodyFollowersCount;
+
     @SerializedName("website_url")
-    String bodyWebsiteURL;
+    private String bodyWebsiteURL;
+
     @SerializedName("blog_url")
-    String bodyBlogURL;
+    private String bodyBlogURL;
+
     @SerializedName("user_follows")
-    boolean bodyUserFollows;
+    private boolean bodyUserFollows;
+
     @SerializedName("roles")
-    List<Role> bodyRoles;
+    private List<Role> bodyRoles;
 
     public Body(@NonNull String bodyID) {
         this.bodyID = bodyID;

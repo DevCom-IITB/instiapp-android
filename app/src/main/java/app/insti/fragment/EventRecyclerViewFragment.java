@@ -18,7 +18,7 @@ import app.insti.Constants;
 import app.insti.ItemClickListener;
 import app.insti.R;
 import app.insti.adapter.FeedAdapter;
-import app.insti.data.Event;
+import app.insti.api.model.Event;
 
 /**
  * A simple {@link Fragment} subclass.

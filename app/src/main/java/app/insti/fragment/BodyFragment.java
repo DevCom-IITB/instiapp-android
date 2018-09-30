@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -45,10 +44,10 @@ import app.insti.adapter.BodyAdapter;
 import app.insti.adapter.FeedAdapter;
 import app.insti.adapter.UserAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.data.Body;
-import app.insti.data.Event;
-import app.insti.data.Role;
-import app.insti.data.User;
+import app.insti.api.model.Body;
+import app.insti.api.model.Event;
+import app.insti.api.model.Role;
+import app.insti.api.model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -133,10 +132,7 @@ public class BodyFragment extends BackHandledFragment {
         body = min_body;
         displayBody();
 
-        /* Check if full body was passed */
-        if (min_body.getBodyDescription() == null) {
-            updateBody();
-        }
+        updateBody();
 
         bodySwipeRefreshLayout = getActivity().findViewById(R.id.body_swipe_refresh_layout);
         bodySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

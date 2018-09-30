@@ -1,4 +1,4 @@
-package app.insti.data;
+package app.insti.api.model;
 
 import android.support.annotation.NonNull;
 
@@ -10,57 +10,57 @@ import java.util.List;
 public class User {
     @NonNull()
     @SerializedName("id")
-    String userID;
+    private String userID;
 
     @SerializedName("name")
-    String userName;
+    private String userName;
 
     @SerializedName("profile_pic")
-    String userProfilePictureUrl;
+    private String userProfilePictureUrl;
 
     @SerializedName("events_interested")
-    List<Event> userInterestedEvents;
+    private List<Event> userInterestedEvents;
 
     @SerializedName("events_going")
-    List<Event> userGoingEvents;
+    private List<Event> userGoingEvents;
 
     @SerializedName("email")
-    String userEmail;
+    private String userEmail;
 
     @SerializedName("roll_no")
-    String userRollNumber;
+    private String userRollNumber;
 
     @SerializedName("contact_no")
-    String userContactNumber;
+    private String userContactNumber;
 
     @SerializedName("about")
-    String userAbout;
+    private String userAbout;
 
     @SerializedName("followed_bodies")
-    List<Body> userFollowedBodies;
+    private List<Body> userFollowedBodies;
 
     @SerializedName("followed_bodies_id")
-    List<String> userFollowedBodiesID;
+    private List<String> userFollowedBodiesID;
 
     @SerializedName("roles")
-    List<Role> userRoles;
+    private List<Role> userRoles;
 
     @SerializedName("institute_roles")
-    List<Role> userInstituteRoles;
+    private List<Role> userInstituteRoles;
 
     @SerializedName("former_roles")
-    List<Role> userFormerRoles;
+    private List<Role> userFormerRoles;
 
     @SerializedName("website_url")
-    String userWebsiteURL;
+    private String userWebsiteURL;
 
     @SerializedName("ldap_id")
-    String userLDAPId;
+    private String userLDAPId;
 
     @SerializedName("hostel")
-    String hostel;
+    private String hostel;
 
-    String currentRole;
+    private String currentRole;
 
     public User(@NonNull String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, List<Role> userRoles, List<Role> userInstituteRoles, List<Role> userFormerRoles, String userWebsiteURL, String userLDAPId, String hostel) {
         this.userID = userID;

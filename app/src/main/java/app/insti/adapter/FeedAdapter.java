@@ -20,8 +20,8 @@ import java.util.Calendar;
 import app.insti.Constants;
 import app.insti.ItemClickListener;
 import app.insti.R;
-import app.insti.data.Event;
-import app.insti.data.Venue;
+import app.insti.api.model.Event;
+import app.insti.api.model.Venue;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
