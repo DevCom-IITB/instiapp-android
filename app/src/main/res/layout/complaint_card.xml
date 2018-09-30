@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewUserName"
-                android:textColor="@color/browser_actions_text_color"
+                android:textColor="@android:color/black"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:text="User"
@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewStatus"
-                android:textColor="@color/browser_actions_text_color"
+                android:textColor="@android:color/black"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:paddingHorizontal="10dp"
@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:textColor="@color/browser_actions_text_color"/>
+            android:textColor="@android:color/black"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:textColor="@color/colorWhite"
-                android:background="@color/browser_actions_text_color"
+                android:background="@android:color/black"
                 android:layout_weight="1"/>
 
         </LinearLayout>

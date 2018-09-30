@@ -1,7 +1,6 @@
 package app.insti.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.R;
-import app.insti.data.Venter;
+import app.insti.api.model.Venter;
 import app.insti.fragment.ComplaintDetailsFragment;
 import app.insti.utils.GsonProvider;
 
@@ -121,14 +120,11 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 e.printStackTrace();
             }
             try {
-
-//                buttonComments.setText("COMMENTS("+suggestionSnippet.getComplaint().getComments().size()+")");
                 buttonComments.setText("COMMENTS(" + complaint.getComment().size() + ")");
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-//                buttonComments.setText("VOTES("+suggestionSnippet.getValue()+")");
                 buttonVotes.setText("UP VOTES(" + complaint.getUsersUpVoted().size() + ")");
             } catch (Exception e) {
                 e.printStackTrace();

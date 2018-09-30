@@ -21,12 +21,12 @@ import android.widget.Toast;
 import java.util.Objects;
 
 import app.insti.R;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.ComplaintDetailsPagerAdapter;
 import app.insti.adapter.ImageViewPagerAdapter;
-import app.insti.api.ComplaintAPI;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.User;
-import app.insti.data.Venter;
+import app.insti.api.RetrofitInterface;
+import app.insti.api.model.User;
+import app.insti.api.model.Venter;
 import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -86,8 +86,8 @@ public class ComplaintDetailsFragment extends Fragment {
 
     private void upVote() {
         if (voteCount == 0) {
-            ComplaintAPI complaintAPI = ServiceGenerator.createService(ComplaintAPI.class);
-            complaintAPI.upVote("sessionid=" + sessionID, complaintId).enqueue(new Callback<Venter.Complaint>() {
+            RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
+            retrofitInterface.upVote("sessionid=" + sessionID, complaintId).enqueue(new Callback<Venter.Complaint>() {
                 @Override
                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                     if (response.isSuccessful()) {
@@ -110,8 +110,8 @@ public class ComplaintDetailsFragment extends Fragment {
 
     private void callServerToGetDetailedComplaint() {
 
-        ComplaintAPI complaintAPI = ServiceGenerator.createService(ComplaintAPI.class);
-        complaintAPI.getComplaint("sessionid=" + sessionID, complaintId).enqueue(new Callback<Venter.Complaint>() {
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
+        retrofitInterface.getComplaint("sessionid=" + sessionID, complaintId).enqueue(new Callback<Venter.Complaint>() {
             @Override
             public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                 if (response.body() != null) {
@@ -220,17 +220,11 @@ public class ComplaintDetailsFragment extends Fragment {
                         }
                     });
 
-//                    DetailedComplaintFragment detailedComplaintFragment = new DetailedComplaintFragment();
-//                    AppCompatActivity activity = (AppCompatActivity) mview.getContext();
-//                    activity.getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.framelayout_for_tab, detailedComplaintFragment).addToBackStack(null).commit();
-
                     DetailedComplaintFragment detailedComplaintFragment = (DetailedComplaintFragment) getChildFragmentManager().findFragmentByTag(
                             "android:switcher:" + R.id.tab_viewpager_details + ":0"
                     );
 
                     Log.i(TAG, "@@@@@@@@@@@@ detailedComplaintFragment: " + detailedComplaint);
-
 
                     /*For Relevant Complaint Fragment
                     * RelevantComplaintFragment relevantComplaintFragment = (RelevantComplaintFragment) getSupportFragmentManager().findFragmentByTag(
@@ -241,7 +235,6 @@ public class ComplaintDetailsFragment extends Fragment {
                         Log.i(TAG, "@@@@@@@@@@@@ detailedComplinatFragment != null");
                         detailedComplaintFragment.setDetailedComplaint(detailedComplaint);
                     }
-
                 }
             }
         } catch (Exception e) {

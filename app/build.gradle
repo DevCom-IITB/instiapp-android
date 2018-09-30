@@ -41,12 +41,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:17.1.0'
     implementation "com.android.support:design:${supportLibVersion}"
     implementation "com.android.support:support-v4:${supportLibVersion}"
-    implementation "com.jakewharton:butterknife:${butterKnifeVersion}"
     implementation "com.google.android.gms:play-services-gcm:${playServicesVersion}"
     implementation "com.google.android.gms:play-services-maps:${playServicesVersion}"
     implementation "com.google.android.gms:play-services-location:${playServicesVersion}"
     implementation "com.google.android.gms:play-services-places:${playServicesVersion}"
-    annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
     implementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     implementation "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
     implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"

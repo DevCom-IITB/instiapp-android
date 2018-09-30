@@ -2,9 +2,7 @@ package app.insti.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,11 +32,10 @@ import java.util.List;
 import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.CommentRecyclerViewAdapter;
-import app.insti.api.ComplaintAPI;
-import app.insti.api.ServiceGenerator;
+import app.insti.api.RetrofitInterface;
 import app.insti.api.model.CommentCreateRequest;
-import app.insti.data.User;
-import app.insti.data.Venter;
+import app.insti.api.model.User;
+import app.insti.api.model.Venter;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -140,8 +137,8 @@ public class DetailedComplaintFragment extends Fragment {
 
     private void postComment() {
         final CommentCreateRequest commentCreateRequest = new CommentCreateRequest(editTextComment.getText().toString());
-        ComplaintAPI complaintAPI = ServiceGenerator.createService(ComplaintAPI.class);
-        complaintAPI.postComment("sessionid=" + sId, cId, commentCreateRequest).enqueue(new Callback<Venter.Comment>() {
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
+        retrofitInterface.postComment("sessionid=" + sId, cId, commentCreateRequest).enqueue(new Callback<Venter.Comment>() {
             @Override
             public void onResponse(Call<Venter.Comment> call, Response<Venter.Comment> response) {
                 if (response.isSuccessful()) {

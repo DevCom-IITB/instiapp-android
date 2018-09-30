@@ -1,9 +1,7 @@
 package app.insti.fragment;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -13,9 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -47,13 +43,11 @@ import android.support.v7.widget.Toolbar;
 
 import com.cunoraz.tagview.Tag;
 import com.cunoraz.tagview.TagView;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -62,16 +56,12 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -79,25 +69,22 @@ import com.google.android.gms.tasks.Task;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.ImageViewPagerAdapter;
-import app.insti.api.ComplaintAPI;
 import app.insti.api.LocationAPIUtils;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
 import app.insti.api.model.ComplaintCreateRequest;
 import app.insti.api.model.ComplaintCreateResponse;
-import app.insti.api.model.ImageUploadRequest;
-import app.insti.api.model.ImageUploadResponse;
+import app.insti.api.request.ImageUploadRequest;
+import app.insti.api.response.ImageUploadResponse;
 import app.insti.uicomponents.CustomAutoCompleteTextView;
 import app.insti.uicomponents.TagClass;
 import app.insti.utils.TagCategories;
-import butterknife.ButterKnife;
 import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -189,7 +176,6 @@ public class FileComplaintFragment extends Fragment {
                 parent.removeView(view);
         }
         view = inflater.inflate(R.layout.fragment_file_complaint, container, false);
-        ButterKnife.bind(this, view);
 
         Bundle bundle = getArguments();
         userId = bundle.getString(Constants.USER_ID);
@@ -391,179 +377,6 @@ public class FileComplaintFragment extends Fragment {
         });
         return view;
     }
-
-//    @Override
-//    public void onMapReady(GoogleMap map) {
-//        googleMap = map;
-//
-//        UiSettings uiSettings = googleMap.getUiSettings();
-//        uiSettings.setAllGesturesEnabled(true);
-//        uiSettings.setZoomControlsEnabled(true);
-//        uiSettings.setMyLocationButtonEnabled(true);
-//        uiSettings.setIndoorLevelPickerEnabled(true);
-//        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            if (ContextCompat.checkSelfPermission(getContext(),
-//                    Manifest.permission.ACCESS_FINE_LOCATION)
-//                    == PackageManager.PERMISSION_GRANTED) {
-//                //Location Permission already granted
-//                buildGoogleApiClient();
-//                googleMap.setMyLocationEnabled(true);
-//                googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-//                    @Override
-//                    public boolean onMyLocationButtonClick() {
-//                        if(googleMap.getMyLocation() != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
-//                            if (ContextCompat.checkSelfPermission(getContext(),
-//                                    Manifest.permission.ACCESS_FINE_LOCATION)
-//                                    == PackageManager.PERMISSION_GRANTED) {
-//
-//                            }
-//                        }
-//                        return false;
-//                    }
-//                });
-//            } else {
-//                //Request Location Permission
-//                checkLocationPermission();
-//            }
-//        } else {
-//            buildGoogleApiClient();
-//            googleMap.setMyLocationEnabled(true);
-//            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-//            googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-//                @Override
-//                public boolean onMyLocationButtonClick() {
-//                    if(googleMap.getMyLocation() != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
-//                        if (ContextCompat.checkSelfPermission(getContext(),
-//                                Manifest.permission.ACCESS_FINE_LOCATION)
-//                                == PackageManager.PERMISSION_GRANTED) {
-//
-//                        }
-//                    }
-//                    return false;
-//                }
-//            });
-//        }
-//    }
-//
-//    protected synchronized void buildGoogleApiClient() {
-//        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-//                .addConnectionCallbacks(this)
-//                .addOnConnectionFailedListener(this)
-//                .addApi(LocationServices.API)
-//                .build();
-//        mGoogleApiClient.connect();
-//    }
-//
-//    @Override
-//    public void onConnected(@Nullable Bundle bundle) {
-//        mLocationRequest = new LocationRequest();
-//        mLocationRequest = new LocationRequest();
-//        mLocationRequest.setInterval(1000);
-//        mLocationRequest.setFastestInterval(1000);
-//        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-//        if (ContextCompat.checkSelfPermission(getContext(),
-//                Manifest.permission.ACCESS_FINE_LOCATION)
-//                == PackageManager.PERMISSION_GRANTED) {
-//            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-//        }
-//    }
-//
-//    @Override
-//    public void onConnectionSuspended(int i) {
-//
-//    }
-//
-//    @Override
-//    public void onConnectionFailed(ConnectionResult connectionResult) {
-//
-//    }
-//
-//    @Override
-//    public void onLocationChanged(Location location) {
-//        mLastLocation = location;
-//        if (mCurrLocationMarker != null) {
-//            mCurrLocationMarker.remove();
-//        }
-//
-//        //Place current location marker
-//        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//        MarkerOptions markerOptions = new MarkerOptions();
-//        markerOptions.position(latLng);
-//        markerOptions.title("Current Position");
-//        mCurrLocationMarker = googleMap.addMarker(markerOptions);
-//
-//        //move map camera
-//        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,11));
-//        googleMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-//
-//        if (mGoogleApiClient != null) {
-//            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-//        }
-//    }
-//
-//    private void checkLocationPermission() {
-//        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-//                != PackageManager.PERMISSION_GRANTED) {
-//
-//            // Should we show an explanation?
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-//                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-//
-//                // Show an explanation to the user *asynchronously* -- don't block
-//                // this thread waiting for the user's response! After the user
-//                // sees the explanation, try again to request the permission.
-//                new AlertDialog.Builder(getContext())
-//                        .setTitle("Location Permission Needed")
-//                        .setMessage("This app needs the Location permission, please accept to use location functionality")
-//                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                //Prompt the user once explanation has been shown
-//                                ActivityCompat.requestPermissions(getActivity(),
-//                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-//                                        MY_PERMISSIONS_REQUEST_LOCATION );
-//                            }
-//                        })
-//                        .create()
-//                        .show();
-//
-//
-//            } else {
-//                // No explanation needed, we can request the permission.
-//                ActivityCompat.requestPermissions(getActivity(),
-//                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-//                        MY_PERMISSIONS_REQUEST_LOCATION );
-//            }
-//        }
-//    }
-//
-//
-//    public void setLocationEnable() {
-//        if (ContextCompat.checkSelfPermission(getContext(),
-//                Manifest.permission.ACCESS_FINE_LOCATION)
-//                == PackageManager.PERMISSION_GRANTED) {
-//
-//            if (mGoogleApiClient == null) {
-//                buildGoogleApiClient();
-//            }
-//            googleMap.setMyLocationEnabled(true);
-//            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-//
-//            googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-//                @Override
-//                public boolean onMyLocationButtonClick() {
-//                    if(googleMap.getMyLocation() != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
-//                        if (ContextCompat.checkSelfPermission(getContext(),
-//                                Manifest.permission.ACCESS_FINE_LOCATION)
-//                                == PackageManager.PERMISSION_GRANTED) {
-//                            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, FileComplaintFragment.this);
-//                        }
-//                    }
-//                    return false;
-//                }
-//            });
-//        }
-//    }
 
     public void getMapReady() {
         Log.i(TAG, "@@@@@@@@@@@@@@ in getMapReady");
@@ -796,8 +609,8 @@ public class FileComplaintFragment extends Fragment {
             suggestion = "";
         }
         ComplaintCreateRequest complaintCreateRequest = new ComplaintCreateRequest(complaint + suggestion, Address, (float) Location.latitude, (float) Location.longitude, Tags, uploadedImagesUrl);
-        ComplaintAPI complaintAPI = ServiceGenerator.createService(ComplaintAPI.class);
-        complaintAPI.postComplaint("sessionid=" + getArguments().getString(Constants.SESSION_ID), complaintCreateRequest).enqueue(new Callback<ComplaintCreateResponse>() {
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
+        retrofitInterface.postComplaint("sessionid=" + getArguments().getString(Constants.SESSION_ID), complaintCreateRequest).enqueue(new Callback<ComplaintCreateResponse>() {
             @Override
             public void onResponse(Call<ComplaintCreateResponse> call, Response<ComplaintCreateResponse> response) {
                 Toast.makeText(getContext(), "Complaint successfully posted", Toast.LENGTH_LONG).show();
@@ -891,7 +704,7 @@ public class FileComplaintFragment extends Fragment {
 
     private void sendImage() {
         ImageUploadRequest imageUploadRequest = new ImageUploadRequest(base64Image);
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.uploadImage("sessionid=" + getArguments().getString(Constants.SESSION_ID), imageUploadRequest).enqueue(new Callback<ImageUploadResponse>() {
             @Override
             public void onResponse(Call<ImageUploadResponse> call, Response<ImageUploadResponse> response) {

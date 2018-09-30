@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import app.insti.data.Venter;
+import app.insti.api.model.Venter;
 import app.insti.fragment.DetailedComplaintFragment;
 
 /**

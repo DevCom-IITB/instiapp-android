@@ -56,10 +56,6 @@ public class ComplaintFragment extends BaseFragment {
         buttonVentIssues.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(context, FileComplaintActivity.class);
-//                intent.putExtra("sessionId", getArguments().getString(Constants.SESSION_ID));
-//                startActivity(intent);
-
                 FileComplaintFragment fileComplaintFragment = new FileComplaintFragment();
                 fileComplaintFragment.setArguments(getArguments());
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

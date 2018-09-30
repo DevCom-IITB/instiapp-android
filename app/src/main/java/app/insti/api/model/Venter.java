@@ -1,14 +1,12 @@
-package app.insti.data;
+package app.insti.api.model;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
 import java.util.List;
+
+import app.insti.api.model.User;
 
 /**
  * Created by Shivam Sharma on 04-09-2018.
@@ -16,41 +14,28 @@ import java.util.List;
 
 public class Venter {
 
-    @Entity(tableName = "complaints")
     public static class Complaint {
         @NonNull
-        @PrimaryKey()
-        @ColumnInfo(name = "id")
         @SerializedName("id")
         String complaintID;
-        @ColumnInfo(name = "created_by")
         @SerializedName("created_by")
         User complaintCreatedBy;
-        @ColumnInfo(name = "description")
         @SerializedName("description")
         String description;
-        @ColumnInfo(name = "report_date")
         @SerializedName("report_date")
         Timestamp complaintReportDate;
-        @ColumnInfo(name = "status")
         @SerializedName("status")
         String status;
-        @ColumnInfo(name = "latitude")
         @SerializedName("latitude")
         Float latitude;
-        @ColumnInfo(name = "longitude")
         @SerializedName("longitude")
         Float longitude;
-        @ColumnInfo(name = "location_description")
         @SerializedName("location_description")
         String locationDescription;
-        @ColumnInfo(name = "tags")
         @SerializedName("tags")
         List<TagUri> tags;
-        @ColumnInfo(name = "users_up_voted")
         @SerializedName("users_up_voted")
         List<User> usersUpVoted;
-        @ColumnInfo(name = "images")
         @SerializedName("images")
         List<String> images;
         @SerializedName("comments")
@@ -169,14 +154,10 @@ public class Venter {
         }
     }
 
-    @Entity(tableName = "tag_uris")
     public static class TagUri {
         @NonNull
-        @PrimaryKey()
-        @ColumnInfo(name = "id")
         @SerializedName("id")
         String id;
-        @ColumnInfo(name = "tag_uri")
         @SerializedName("tag_uri")
         String tagUri;
 
@@ -198,21 +179,15 @@ public class Venter {
         }
     }
 
-    @Entity(tableName = "comment")
     public static class Comment {
 
         @NonNull
-        @PrimaryKey()
-        @ColumnInfo(name = "id")
         @SerializedName("id")
         String id;
-        @ColumnInfo(name = "time")
         @SerializedName("time")
         Timestamp time;
-        @ColumnInfo(name = "text")
         @SerializedName("text")
         String text;
-        @ColumnInfo(name = "commented_by")
         @SerializedName("commented_by")
         User commented_by;
 
