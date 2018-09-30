@@ -6,6 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -87,6 +92,7 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
         showBitmapNotification(
                 this,
                 remoteMessage.getData().get("image_url"),
+                remoteMessage.getData().get("large_icon"),
                 notification_id,
                 standardNotificationBuilder()
                     .setContentTitle(remoteMessage.getData().get("name"))
@@ -143,20 +149,21 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
     }
 
-    interface MyCallbackInterface {
-        void onDownloadFinished(String result);
-    }
-
     /** Gets a bitmap from a URL asynchronously and shows notification */
     public static void showBitmapNotification(
-            final Context context, final String imageUrl, final int notification_id,
-            final NotificationCompat.Builder builder, final String content){
+            final Context context, final String imageUrl, final String largeIconUrl,
+            final int notification_id, final NotificationCompat.Builder builder, final String content){
 
-        new AsyncTask<Void, Void, Bitmap>() {
+        new AsyncTask<Void, Void, Bitmap[]>() {
             @Override
-            protected Bitmap doInBackground(Void... params) {
+            protected Bitmap[] doInBackground(Void... params) {
                 try {
-                    return Picasso.get().load(imageUrl).get();
+                    Bitmap image = Picasso.get().load(imageUrl).get();
+                    Bitmap largeIcon = null;
+                    if (largeIconUrl != null) {
+                         largeIcon = getCroppedBitmap(Picasso.get().load(largeIconUrl).get());
+                    }
+                    return new Bitmap[]{image, largeIcon};
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -164,15 +171,41 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
             }
 
             @Override
-            protected void onPostExecute(Bitmap bitmap) {
-                builder.setStyle(
-                        new NotificationCompat.BigPictureStyle()
-                            .bigPicture(bitmap)
-                            .setSummaryText(content)
-                );
+            protected void onPostExecute(Bitmap[] bitmaps) {
+                if (bitmaps[0] != null) {
+                    builder.setStyle(
+                            new NotificationCompat.BigPictureStyle()
+                                    .bigPicture(bitmaps[0])
+                                    .setSummaryText(content)
+                    );
+                }
+
+                if (bitmaps[1] != null) {
+                    builder.setLargeIcon(bitmaps[1]);
+                }
                 showNotification(context, notification_id, builder.build());
-                super.onPostExecute(bitmap);
+                super.onPostExecute(bitmaps);
             }
         }.execute();
+    }
+
+    /** https://stackoverflow.com/a/12089127 */
+    public static Bitmap getCroppedBitmap(Bitmap bitmap) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
+                bitmap.getWidth() / 2, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        return output;
     }
 }
