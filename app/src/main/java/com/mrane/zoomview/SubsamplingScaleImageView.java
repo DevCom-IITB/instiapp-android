@@ -32,7 +32,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.media.ExifInterface;
+import android.support.media.ExifInterface;
 import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.os.Handler;
@@ -1493,7 +1493,7 @@ public class SubsamplingScaleImageView extends View {
      * guaranteed to be on screen.
      *
      * @param sCenter Target center point
-     * @return {@link AnimationBuilder} instance. Call {@link com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.AnimationBuilder#start()} to start the anim.
+     * @return {@link AnimationBuilder} instance.
      */
     public AnimationBuilder animateCenter(PointF sCenter) {
         if (!isImageReady()) {
@@ -1507,7 +1507,7 @@ public class SubsamplingScaleImageView extends View {
      * beyond the panning limits, the image is automatically panned during the animation.
      *
      * @param scale Target scale.
-     * @return {@link AnimationBuilder} instance. Call {@link com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.AnimationBuilder#start()} to start the anim.
+     * @return {@link AnimationBuilder} instance.
      */
     public AnimationBuilder animateScale(float scale) {
         if (!isImageReady()) {
@@ -1521,7 +1521,7 @@ public class SubsamplingScaleImageView extends View {
      * beyond the panning limits, the image is automatically panned during the animation.
      *
      * @param scale Target scale.
-     * @return {@link AnimationBuilder} instance. Call {@link com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.AnimationBuilder#start()} to start the anim.
+     * @return {@link AnimationBuilder} instance.
      */
     public AnimationBuilder animateScaleAndCenter(float scale, PointF sCenter) {
         if (!isImageReady()) {
