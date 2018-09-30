@@ -46,6 +46,7 @@ import app.insti.SessionManager;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
+import app.insti.api.model.UserFCMPatchRequest;
 import app.insti.data.Body;
 import app.insti.data.Event;
 import app.insti.data.Notification;
@@ -401,9 +402,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
-                String fcmId = instanceIdResult.getToken();
+                final String fcmId = instanceIdResult.getToken();
                 RetrofitInterface retrofitInterface = getRetrofitInterface();
-                retrofitInterface.getUserMe(getSessionIDHeader(), fcmId).enqueue(new Callback<User>() {
+
+                retrofitInterface.patchUserMe(getSessionIDHeader(), new UserFCMPatchRequest(fcmId)).enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         if (response.isSuccessful()) {

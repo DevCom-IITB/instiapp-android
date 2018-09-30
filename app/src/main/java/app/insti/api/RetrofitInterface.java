@@ -13,6 +13,7 @@ import app.insti.api.model.ImageUploadRequest;
 import app.insti.api.model.ImageUploadResponse;
 import app.insti.api.model.LoginResponse;
 import app.insti.api.model.NewsFeedResponse;
+import app.insti.api.model.UserFCMPatchRequest;
 import app.insti.data.Event;
 import app.insti.data.HostelMessMenu;
 import app.insti.data.NewsArticle;
@@ -25,6 +26,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -78,8 +80,8 @@ public interface RetrofitInterface {
     @GET("user-me")
     Call<User> getUserMe(@Header("Cookie") String sessionID);
 
-    @GET("user-me")
-    Call<User> getUserMe(@Header("Cookie") String sessionID, @Query("fcm_id") String fcmId);
+    @PATCH("user-me")
+    Call<User> patchUserMe(@Header("Cookie") String sessionID, @Body UserFCMPatchRequest userFCMPatchRequest);
 
     @GET("user-me/ues/{eventID}")
     Call<Void> updateUserEventStatus(@Header("Cookie") String sessionID, @Path("eventID") String eventID, @Query("status") int status);
