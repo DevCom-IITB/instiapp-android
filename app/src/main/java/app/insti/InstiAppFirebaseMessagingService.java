@@ -57,23 +57,11 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        String TAG = "NOTIFICATION";
         channel = getResources().getString(R.string.default_notification_channel_id);
 
-        // Check if message contains a data payload.
+        // Check for empty data notifications
         if (remoteMessage.getData().size() > 0) {
-            Log.wtf(TAG, "Message data payload: " + remoteMessage.getData());
-            String isData = remoteMessage.getData().get(Constants.FCM_BUNDLE_IS_DATA);
-            if (isData != null && isData.equals("true")) {
-                String type = remoteMessage.getData().get(Constants.FCM_BUNDLE_TYPE);
-                String action = remoteMessage.getData().get(Constants.FCM_BUNDLE_ACTION);
-
-                if (type.equals(Constants.DATA_TYPE_EVENT) && action.equals(Constants.FCM_BUNDLE_ACTION_STARTING)) {
-                    sendEventStartingNotification(remoteMessage);
-                }
-            } else {
-                sendMessageNotification(remoteMessage);
-            }
+            sendRichNotification(remoteMessage);
         }
 
         super.onMessageReceived(remoteMessage);
@@ -84,55 +72,25 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
         return (remoteMessage.getData().get(key) != null);
     }
 
-    /** Send a event is starting notification */
-    private void sendEventStartingNotification(RemoteMessage remoteMessage) {
-        if (!ensureKeyExists(remoteMessage, "name")) { return; }
+    /** Send a rich notification with image support */
+    private void sendRichNotification(RemoteMessage remoteMessage) {
+        if (!ensureKeyExists(remoteMessage, Constants.FCM_BUNDLE_TITLE) ||
+            !ensureKeyExists(remoteMessage, Constants.FCM_BUNDLE_VERB)) { return; }
 
-        final String message = "Event is about to start";
+        final String message = remoteMessage.getData().get(Constants.FCM_BUNDLE_VERB);
 
         int notification_id = NotificationId.getID();
         showBitmapNotification(
                 this,
-                remoteMessage.getData().get("image_url"),
-                remoteMessage.getData().get("large_icon"),
+                remoteMessage.getData().get(Constants.FCM_BUNDLE_IMAGE),
+                remoteMessage.getData().get(Constants.FCM_BUNDLE_LARGE_ICON),
                 notification_id,
                 standardNotificationBuilder()
-                    .setContentTitle(remoteMessage.getData().get("name"))
+                    .setContentTitle(remoteMessage.getData().get(Constants.FCM_BUNDLE_TITLE))
                     .setContentText(message)
                     .setContentIntent(getNotificationIntent(remoteMessage, notification_id)),
                 message
         );
-    }
-
-    /** Send a standard notification from foreground */
-    private void sendMessageNotification(RemoteMessage remoteMessage) {
-        /* Get data */
-        String title = remoteMessage.getNotification().getTitle();
-        String body = remoteMessage.getNotification().getBody();
-        Integer notification_id;
-        try {
-            notification_id = Integer.parseInt(remoteMessage.getData().get(Constants.FCM_BUNDLE_NOTIFICATION_ID));
-        } catch (NumberFormatException ignored) {
-            return;
-        }
-
-        /* Check malformed notifications */
-        if (title == null || body == null) { return; }
-
-        /* Build notification */
-        Notification notification = standardNotificationBuilder()
-                .setContentTitle(title)
-                .setContentText(body)
-                .setContentIntent(getNotificationIntent(remoteMessage, notification_id))
-                .build();
-
-        /* Show notification */
-        showNotification(notification_id, notification);
-    }
-
-    /** Show the notification */
-    private void showNotification(int id, Notification notification) {
-        showNotification(this, id, notification);
     }
 
     /** Show the notification */
@@ -160,7 +118,10 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
             @Override
             protected Bitmap[] doInBackground(Void... params) {
                 try {
-                    Bitmap image = Picasso.get().load(imageUrl).get();
+                    Bitmap image = null;
+                    if (imageUrl != null) {
+                        Picasso.get().load(imageUrl).get();
+                    }
                     Bitmap largeIcon = null;
                     if (largeIconUrl != null) {
                          largeIcon = getCroppedBitmap(Picasso.get().load(largeIconUrl).get(), 200);
@@ -174,7 +135,8 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
 
             @Override
             protected void onPostExecute(Bitmap[] bitmaps) {
-                if (bitmaps[0] != null) {
+                // Check if we loaded big image
+                if (bitmaps != null && bitmaps[0] != null) {
                     builder.setStyle(
                             new NotificationCompat.BigPictureStyle()
                                     .bigPicture(bitmaps[0])
@@ -182,9 +144,11 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
                     );
                 }
 
-                if (bitmaps[1] != null) {
+                // Check if we loaded large icon
+                if (bitmaps != null && bitmaps[1] != null) {
                     builder.setLargeIcon(bitmaps[1]);
                 }
+
                 showNotification(context, notification_id, builder.build());
                 super.onPostExecute(bitmaps);
             }

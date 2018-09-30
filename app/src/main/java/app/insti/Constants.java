@@ -34,7 +34,11 @@ public class Constants {
     public static final String FCM_BUNDLE_EXTRA = "extra";
     public static final String FCM_BUNDLE_NOTIFICATION_ID = "notification_id";
     public static final String FCM_BUNDLE_ACTION = "action";
-    public static final String FCM_BUNDLE_IS_DATA = "is_data";
+    public static final String FCM_BUNDLE_RICH = "rich";
+    public static final String FCM_BUNDLE_TITLE = "title";
+    public static final String FCM_BUNDLE_VERB = "verb";
+    public static final String FCM_BUNDLE_IMAGE = "image_url";
+    public static final String FCM_BUNDLE_LARGE_ICON = "large_icon";
 
     public static final String FCM_BUNDLE_ACTION_STARTING = "starting";
 
