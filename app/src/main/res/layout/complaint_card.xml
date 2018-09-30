@@ -1,0 +1,112 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardElevation="5dp"
+    card_view:cardBackgroundColor="@color/colorWhite"
+    android:layout_margin="5dp"
+    card_view:cardUseCompatPadding="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentRight="true"
+    card_view:cardCornerRadius="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewUserName"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="User"
+                android:layout_weight="4"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewStatus"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingHorizontal="10dp"
+                android:text="status"/>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/textViewReportDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGray"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textViewLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGray"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <TextView
+            android:id="@+id/textViewDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+
+            <Button
+                android:id="@+id/buttonComments"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:textColor="@color/colorWhite"
+                android:background="#12C1D6"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/buttonVotes"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:textColor="@color/colorWhite"
+                android:background="@android:color/black"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+</android.support.v7.widget.CardView>

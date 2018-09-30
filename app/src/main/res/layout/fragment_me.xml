@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#ededed">
+
+        <TextView
+            android:id="@+id/server_error_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:text="@string/server_is_down_at_the_moment"
+            android:textColor="@color/secondaryTextColor"
+            android:visibility="invisible" />
+
+        <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swipeContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewMe"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+
+    </android.support.design.widget.CoordinatorLayout>
+
+<!--=======================For Version 2=============================-->
+    <!--<LinearLayout-->
+        <!--android:id="@+id/layout_compl_vote"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="2">-->
+
+
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@color/colorPrimary"-->
+            <!--android:text="@string/my_complaints"-->
+            <!--android:textAllCaps="false"-->
+            <!--android:textColor="@color/colorWhite" />-->
+
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="@android:color/black"-->
+            <!--android:text="@string/voted_complaints"-->
+            <!--android:textAllCaps="false"-->
+            <!--android:textColor="@color/colorWhite" />-->
+
+    <!--</LinearLayout>-->
+
+
+</LinearLayout>
+
+
+
+
