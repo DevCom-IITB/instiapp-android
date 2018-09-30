@@ -78,16 +78,29 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
 
         final String message = remoteMessage.getData().get(Constants.FCM_BUNDLE_VERB);
 
+        /* Get unique id */
         int notification_id = NotificationId.getID();
+
+        /* Default options */
+        NotificationCompat.Builder builder = standardNotificationBuilder()
+                .setContentTitle(remoteMessage.getData().get(Constants.FCM_BUNDLE_TITLE))
+                .setContentText(message)
+                .setContentIntent(getNotificationIntent(remoteMessage, notification_id));
+
+        /* Check for article */
+        String largeContent = remoteMessage.getData().get(Constants.FCM_BUNDLE_LARGE_CONTENT);
+        if (largeContent != null) {
+            builder.setStyle(new NotificationCompat.BigTextStyle()
+                    .bigText(largeContent));
+        }
+
+        /* Get images and show */
         showBitmapNotification(
                 this,
                 remoteMessage.getData().get(Constants.FCM_BUNDLE_IMAGE),
                 remoteMessage.getData().get(Constants.FCM_BUNDLE_LARGE_ICON),
                 notification_id,
-                standardNotificationBuilder()
-                    .setContentTitle(remoteMessage.getData().get(Constants.FCM_BUNDLE_TITLE))
-                    .setContentText(message)
-                    .setContentIntent(getNotificationIntent(remoteMessage, notification_id)),
+                builder,
                 message
         );
     }
