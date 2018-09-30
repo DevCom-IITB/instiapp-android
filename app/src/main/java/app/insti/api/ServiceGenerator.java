@@ -84,17 +84,12 @@ public class ServiceGenerator {
     }
 
     public boolean isConnected() {
-        Log.wtf("cache", "MEOW");
         try {
             android.net.ConnectivityManager e = (android.net.ConnectivityManager) context.getSystemService(
                     Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetwork = e.getActiveNetworkInfo();
-            Log.wtf("cache", Boolean.toString(activeNetwork != null && activeNetwork.isConnectedOrConnecting()));
             return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-        } catch (Exception e) {
-            Log.w("cache", e.toString());
-        }
-
+        } catch (Exception e) {}
         return false;
     }
 

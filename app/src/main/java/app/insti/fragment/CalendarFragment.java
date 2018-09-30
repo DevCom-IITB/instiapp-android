@@ -28,12 +28,12 @@ import java.util.List;
 import java.util.TimeZone;
 
 import app.insti.Constants;
-import app.insti.ItemClickListener;
+import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.model.NewsFeedResponse;
+import app.insti.api.response.NewsFeedResponse;
 import app.insti.api.model.Event;
 import retrofit2.Call;
 import retrofit2.Callback;

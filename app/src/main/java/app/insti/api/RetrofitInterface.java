@@ -4,13 +4,14 @@ import com.google.gson.JsonObject;
 
 import java.util.List;
 
-import app.insti.api.model.EventCreateRequest;
-import app.insti.api.model.EventCreateResponse;
-import app.insti.api.model.ExploreResponse;
-import app.insti.api.model.ImageUploadRequest;
-import app.insti.api.model.ImageUploadResponse;
-import app.insti.api.model.LoginResponse;
-import app.insti.api.model.NewsFeedResponse;
+import app.insti.api.request.EventCreateRequest;
+import app.insti.api.response.EventCreateResponse;
+import app.insti.api.response.ExploreResponse;
+import app.insti.api.request.ImageUploadRequest;
+import app.insti.api.response.ImageUploadResponse;
+import app.insti.api.response.LoginResponse;
+import app.insti.api.response.NewsFeedResponse;
+import app.insti.api.request.UserFCMPatchRequest;
 import app.insti.api.model.Event;
 import app.insti.api.model.HostelMessMenu;
 import app.insti.api.model.NewsArticle;
@@ -23,6 +24,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -76,8 +78,8 @@ public interface RetrofitInterface {
     @GET("user-me")
     Call<User> getUserMe(@Header("Cookie") String sessionID);
 
-    @GET("user-me")
-    Call<User> getUserMe(@Header("Cookie") String sessionID, @Query("fcm_id") String fcmId);
+    @PATCH("user-me")
+    Call<User> patchUserMe(@Header("Cookie") String sessionID, @Body UserFCMPatchRequest userFCMPatchRequest);
 
     @GET("user-me/ues/{eventID}")
     Call<Void> updateUserEventStatus(@Header("Cookie") String sessionID, @Path("eventID") String eventID, @Query("status") int status);
@@ -98,7 +100,7 @@ public interface RetrofitInterface {
     Call<List<Notification>> getNotifications(@Header("Cookie") String sessionID);
 
     @GET("notifications/read/{notificationID}")
-    Call<Void> markNotificationRead(@Header("Cookie") String sessionID, @Path("notificationID") Integer notificationID);
+    Call<Void> markNotificationRead(@Header("Cookie") String sessionID, @Path("notificationID") String notificationID);
 
     @GET("logout")
     Call<Void> logout(@Header("Cookie") String sessionID);
