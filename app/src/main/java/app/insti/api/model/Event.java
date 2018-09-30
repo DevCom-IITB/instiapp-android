@@ -1,9 +1,5 @@
-package app.insti.data;
+package app.insti.api.model;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -12,62 +8,57 @@ import com.google.gson.annotations.SerializedName;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Entity(tableName = "events")
-
 public class Event {
     @NonNull()
-    @PrimaryKey()
-    @ColumnInfo(name = "id")
     @SerializedName("id")
-    String eventID;
-    @ColumnInfo(name = "str_id")
-    @SerializedName("str_id")
-    String eventStrID;
-    @ColumnInfo(name = "name")
-    @SerializedName("name")
-    String eventName;
-    @ColumnInfo(name = "description")
-    @SerializedName("description")
-    String eventDescription;
-    @ColumnInfo(name = "image_url")
-    @SerializedName("image_url")
-    String eventImageURL;
-    @ColumnInfo(name = "start_time")
-    @SerializedName("start_time")
-    Timestamp eventStartTime;
-    @ColumnInfo(name = "end_time")
-    @SerializedName("end_time")
-    Timestamp eventEndTime;
-    @ColumnInfo(name = "all_day")
-    @SerializedName("all_day")
-    boolean allDayEvent;
-    @ColumnInfo(name = "venues")
-    @SerializedName("venues")
-    List<Venue> eventVenues;
-    @ColumnInfo(name = "bodies")
-    @SerializedName("bodies")
-    List<Body> eventBodies;
-    @ColumnInfo(name = "interested_count")
-    @SerializedName("interested_count")
-    int eventInterestedCount;
-    @ColumnInfo(name = "going_count")
-    @SerializedName("going_count")
-    int eventGoingCount;
-    @ColumnInfo(name = "interested")
-    @SerializedName("interested")
-    List<User> eventInterested;
-    @ColumnInfo(name = "going")
-    @SerializedName("going")
-    List<User> eventGoing;
-    @ColumnInfo(name = "website_url")
-    @SerializedName("website_url")
-    String eventWebsiteURL;
-    @ColumnInfo(name = "user_ues")
-    @SerializedName("user_ues")
-    int eventUserUes;
+    private String eventID;
 
-    @Ignore
-    boolean eventBigImage = false;
+    @SerializedName("str_id")
+    private String eventStrID;
+
+    @SerializedName("name")
+    private String eventName;
+
+    @SerializedName("description")
+    private String eventDescription;
+
+    @SerializedName("image_url")
+    private String eventImageURL;
+
+    @SerializedName("start_time")
+    private Timestamp eventStartTime;
+
+    @SerializedName("end_time")
+    private Timestamp eventEndTime;
+
+    @SerializedName("all_day")
+    private boolean allDayEvent;
+
+    @SerializedName("venues")
+    private List<Venue> eventVenues;
+
+    @SerializedName("bodies")
+    private List<Body> eventBodies;
+
+    @SerializedName("interested_count")
+    private int eventInterestedCount;
+
+    @SerializedName("going_count")
+    private int eventGoingCount;
+
+    @SerializedName("interested")
+    private List<User> eventInterested;
+
+    @SerializedName("going")
+    private List<User> eventGoing;
+
+    @SerializedName("website_url")
+    private String eventWebsiteURL;
+
+    @SerializedName("user_ues")
+    private int eventUserUes;
+
+    private boolean eventBigImage = false;
 
     public Event(String eventID, String eventStrID, String eventName, String eventDescription, String eventImageURL, Timestamp eventStartTime, Timestamp eventEndTime, boolean allDayEvent, List<Venue> eventVenues, List<Body> eventBodies, int eventInterestedCount, int eventGoingCount, List<User> eventInterested, List<User> eventGoing, String eventWebsiteURL, int eventUserUes) {
         this.eventID = eventID;
@@ -121,6 +112,10 @@ public class Event {
     }
 
     public String getEventImageURL() {
+        // Fallback to body image if event has no image
+        if (eventImageURL == null) {
+            return getEventBodies().get(0).getBodyImageURL();
+        }
         return eventImageURL;
     }
 

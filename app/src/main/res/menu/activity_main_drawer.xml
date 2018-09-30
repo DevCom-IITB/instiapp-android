@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <!--TODO Update icons-->
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_feed"
@@ -13,11 +12,6 @@
             android:id="@+id/nav_news"
             android:icon="@drawable/baseline_rss_feed_black_48"
             android:title="News" />
-
-        <item
-            android:id="@+id/nav_my_events"
-            android:icon="@drawable/ic_event"
-            android:title="My Events" />
 
         <item
             android:id="@+id/nav_explore"

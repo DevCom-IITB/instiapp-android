@@ -1,56 +1,39 @@
-package app.insti.data;
+package app.insti.api.model;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-@Entity(tableName = "roles")
-
-
 public class Role {
     @NonNull()
-    @PrimaryKey()
-    @ColumnInfo(name = "id")
     @SerializedName("id")
-    String roleID;
+    private String roleID;
 
-    @ColumnInfo(name = "name")
     @SerializedName("name")
-    String roleName;
+    private String roleName;
 
-    @ColumnInfo(name = "inheritable")
     @SerializedName("inheritable")
-    boolean roleInheritable;
+    private boolean roleInheritable;
 
-    @ColumnInfo(name = "body")
     @SerializedName("body")
-    String roleBody;
+    private String roleBody;
 
-    @ColumnInfo(name = "body_detail")
     @SerializedName("body_detail")
-    Body roleBodyDetails;
+    private Body roleBodyDetails;
 
-    @ColumnInfo(name = "bodies")
     @SerializedName("bodies")
-    List<Body> roleBodies;
+    private List<Body> roleBodies;
 
-
-    @ColumnInfo(name = "permissions")
     @SerializedName("permissions")
-    List<String> rolePermissions;
+    private List<String> rolePermissions;
 
-    @ColumnInfo(name = "users")
     @SerializedName("users")
-    List<String> roleUsers;
+    private List<String> roleUsers;
 
-    @ColumnInfo(name = "users_detail")
     @SerializedName("users_detail")
-    List<User> roleUsersDetail;
+    private List<User> roleUsersDetail;
 
     public Role(String roleID, String roleName, boolean roleInheritable, String roleBody, Body roleBodyDetails, List<Body> roleBodies, List<String> rolePermissions, List<String> roleUsers, List<User> roleUsersDetail) {
         this.roleID = roleID;

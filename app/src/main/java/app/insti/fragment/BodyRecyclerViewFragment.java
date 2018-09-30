@@ -16,10 +16,10 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.ItemClickListener;
+import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.adapter.BodyAdapter;
-import app.insti.data.Body;
+import app.insti.api.model.Body;
 
 /**
  * A simple {@link Fragment} subclass.

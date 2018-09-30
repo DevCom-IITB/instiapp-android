@@ -1,8 +1,8 @@
 package app.insti;
 
-import app.insti.data.Body;
-import app.insti.data.Event;
-import app.insti.data.User;
+import app.insti.api.model.Body;
+import app.insti.api.model.Event;
+import app.insti.api.model.User;
 
 /**
  * Created by varun on 03-Apr-18.
