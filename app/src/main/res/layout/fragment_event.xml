@@ -232,7 +232,7 @@
 
     </RelativeLayout>
 
-    <app.insti.TouchImageView
+    <app.insti.view.TouchImageView
         android:id="@+id/expanded_image_event"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -1,4 +1,4 @@
-package app.insti;
+package app.insti.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
