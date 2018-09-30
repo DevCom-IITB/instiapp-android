@@ -5,19 +5,18 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.Xfermode;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -101,10 +100,13 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
 
     /** Common builder */
     private NotificationCompat.Builder standardNotificationBuilder() {
+        Uri soundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
         return new NotificationCompat.Builder(this, channel)
                 .setSmallIcon(R.drawable.ic_lotusgray)
                 .setColor(getResources().getColor(R.color.colorPrimary))
-                .setVibrate(new long[]{0, 400})
+                .setVibrate(new long[]{0, 200})
+                .setSound(soundUri)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
     }
