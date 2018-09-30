@@ -241,10 +241,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mChannel.enableLights(true);
         // Sets the notification light color for notifications posted to this
         // channel, if the device supports this feature.
-        mChannel.setLightColor(Color.RED);
+        mChannel.setLightColor(Color.BLUE);
 
         mChannel.enableVibration(true);
-        mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+        mChannel.setVibrationPattern(new long[]{0, 200});
 
         mNotificationManager.createNotificationChannel(mChannel);
     }
