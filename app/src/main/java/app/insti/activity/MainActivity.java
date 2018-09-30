@@ -47,7 +47,7 @@ import app.insti.SessionManager;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
-import app.insti.api.model.UserFCMPatchRequest;
+import app.insti.api.request.UserFCMPatchRequest;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.Notification;

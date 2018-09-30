@@ -23,7 +23,7 @@ import app.insti.R;
 import app.insti.SessionManager;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
-import app.insti.api.model.LoginResponse;
+import app.insti.api.response.LoginResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

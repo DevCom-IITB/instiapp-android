@@ -4,14 +4,14 @@ import com.google.gson.JsonObject;
 
 import java.util.List;
 
-import app.insti.api.model.EventCreateRequest;
-import app.insti.api.model.EventCreateResponse;
-import app.insti.api.model.ExploreResponse;
-import app.insti.api.model.ImageUploadRequest;
-import app.insti.api.model.ImageUploadResponse;
-import app.insti.api.model.LoginResponse;
-import app.insti.api.model.NewsFeedResponse;
-import app.insti.api.model.UserFCMPatchRequest;
+import app.insti.api.request.EventCreateRequest;
+import app.insti.api.response.EventCreateResponse;
+import app.insti.api.response.ExploreResponse;
+import app.insti.api.request.ImageUploadRequest;
+import app.insti.api.response.ImageUploadResponse;
+import app.insti.api.response.LoginResponse;
+import app.insti.api.response.NewsFeedResponse;
+import app.insti.api.request.UserFCMPatchRequest;
 import app.insti.api.model.Event;
 import app.insti.api.model.HostelMessMenu;
 import app.insti.api.model.NewsArticle;

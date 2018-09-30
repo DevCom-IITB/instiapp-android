@@ -1,8 +1,12 @@
-package app.insti.api.model;
+package app.insti.api.response;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+
+import app.insti.api.model.Body;
+import app.insti.api.model.Event;
+import app.insti.api.model.User;
 
 public class ExploreResponse {
     @SerializedName("bodies")
