@@ -27,7 +27,7 @@ import app.insti.adapter.BodyAdapter;
 import app.insti.adapter.FeedAdapter;
 import app.insti.adapter.UserAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.model.ExploreResponse;
+import app.insti.api.response.ExploreResponse;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.User;

@@ -1,4 +1,4 @@
-package app.insti.api.model;
+package app.insti.api.response;
 
 import com.google.gson.annotations.SerializedName;
 

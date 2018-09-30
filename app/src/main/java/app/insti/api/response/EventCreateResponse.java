@@ -1,4 +1,4 @@
-package app.insti.api.model;
+package app.insti.api.response;
 
 /**
  * Created by mrunz on 15/7/17.
