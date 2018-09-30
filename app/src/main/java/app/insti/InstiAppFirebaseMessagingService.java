@@ -130,46 +130,37 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
             final Context context, final String imageUrl, final String largeIconUrl,
             final int notification_id, final NotificationCompat.Builder builder, final String content){
 
-        new AsyncTask<Void, Void, Bitmap[]>() {
-            @Override
-            protected Bitmap[] doInBackground(Void... params) {
-                try {
-                    Bitmap image = null;
-                    if (imageUrl != null) {
-                        image = Picasso.get().load(imageUrl).get();
-                    }
-                    Bitmap largeIcon = null;
-                    if (largeIconUrl != null) {
-                         largeIcon = getCroppedBitmap(
-                                 Picasso.get().load(Constants.resizeImageUrl(largeIconUrl, 200)).get(), 200);
-                    }
-                    return new Bitmap[]{image, largeIcon};
-                } catch (IOException e) {
-                    e.printStackTrace();
+            Bitmap[] bitmaps = null;
+            try {
+                Bitmap image = null;
+                if (imageUrl != null) {
+                    image = Picasso.get().load(imageUrl).get();
                 }
-                return null;
+                Bitmap largeIcon = null;
+                if (largeIconUrl != null) {
+                     largeIcon = getCroppedBitmap(
+                             Picasso.get().load(Constants.resizeImageUrl(largeIconUrl, 200)).get(), 200);
+                }
+                bitmaps = new Bitmap[]{image, largeIcon};
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-            @Override
-            protected void onPostExecute(Bitmap[] bitmaps) {
-                // Check if we loaded big image
-                if (bitmaps != null && bitmaps[0] != null) {
-                    builder.setStyle(
-                            new NotificationCompat.BigPictureStyle()
-                                    .bigPicture(bitmaps[0])
-                                    .setSummaryText(content)
-                    );
-                }
-
-                // Check if we loaded large icon
-                if (bitmaps != null && bitmaps[1] != null) {
-                    builder.setLargeIcon(bitmaps[1]);
-                }
-
-                showNotification(context, notification_id, builder.build());
-                super.onPostExecute(bitmaps);
+            // Check if we loaded big image
+            if (bitmaps != null && bitmaps[0] != null) {
+                builder.setStyle(
+                        new NotificationCompat.BigPictureStyle()
+                                .bigPicture(bitmaps[0])
+                                .setSummaryText(content)
+                );
             }
-        }.execute();
+
+            // Check if we loaded large icon
+            if (bitmaps != null && bitmaps[1] != null) {
+                builder.setLargeIcon(bitmaps[1]);
+            }
+
+            showNotification(context, notification_id, builder.build());
     }
 
     /** Get circular center cropped bitmap */
