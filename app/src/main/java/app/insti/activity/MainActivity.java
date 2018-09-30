@@ -34,21 +34,25 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.SessionManager;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
-import app.insti.data.Body;
-import app.insti.data.Event;
-import app.insti.data.Notification;
-import app.insti.data.Role;
-import app.insti.data.User;
+import app.insti.api.request.UserFCMPatchRequest;
+import app.insti.api.model.Body;
+import app.insti.api.model.Event;
+import app.insti.api.model.Notification;
+import app.insti.api.model.Role;
+import app.insti.api.model.User;
 import app.insti.fragment.BackHandledFragment;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.CalendarFragment;
@@ -57,25 +61,27 @@ import app.insti.fragment.ExploreFragment;
 import app.insti.fragment.FeedFragment;
 import app.insti.fragment.MapFragment;
 import app.insti.fragment.MessMenuFragment;
-import app.insti.fragment.MyEventsFragment;
 import app.insti.fragment.NewsFragment;
 import app.insti.fragment.NotificationsFragment;
 import app.insti.fragment.PlacementBlogFragment;
-import app.insti.fragment.UserFragment;
 import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
-import app.insti.notifications.NotificationEventReceiver;
+import app.insti.fragment.UserFragment;
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
+import static app.insti.Constants.DATA_TYPE_BODY;
+import static app.insti.Constants.DATA_TYPE_EVENT;
+import static app.insti.Constants.DATA_TYPE_NEWS;
+import static app.insti.Constants.DATA_TYPE_PT;
+import static app.insti.Constants.DATA_TYPE_USER;
+import static app.insti.Constants.FCM_BUNDLE_NOTIFICATION_ID;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
-import static app.insti.notifications.NotificationIntentService.ACTION_OPEN_EVENT;
-
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, BackHandledFragment.BackHandlerInterface {
 
@@ -87,6 +93,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean showNotifications = false;
     private BackHandledFragment selectedFragment;
     private Menu menu;
+    private RetrofitInterface retrofitInterface;
+
+    /** which menu item should be checked on activity start */
+    private int initMenuChecked = R.id.nav_feed;
+
+    public RetrofitInterface getRetrofitInterface() {
+        return retrofitInterface;
+    }
 
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -106,6 +120,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             initPicasso();
         } catch (IllegalStateException ignored) {
         }
+
+        ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
+        this.retrofitInterface = serviceGenerator.getRetrofitInterface();
 
         /* Make notification channel on oreo */
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -129,27 +146,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Intent intent = getIntent();
         if (intent != null) {
-            if (intent.getAction() != null && intent.getAction().equals(ACTION_OPEN_EVENT)) {
-                EventFragment eventFragment = new EventFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.EVENT_JSON, intent.getStringExtra(Constants.EVENT_JSON));
-                eventFragment.setArguments(bundle);
-                updateFragment(eventFragment);
+            // Check for data passed by FCM
+            if (intent.getExtras() != null && intent.getBundleExtra(Constants.MAIN_INTENT_EXTRAS) != null) {
+                handleFCMIntent(intent.getBundleExtra(Constants.MAIN_INTENT_EXTRAS));
             } else {
                 handleIntent(intent);
             }
         }
 
-        fetchNotifications();
-
         checkLatestVersion();
-
-        NotificationEventReceiver.setupAlarm(getApplicationContext());
     }
 
     private void fetchNotifications() {
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-        retrofitInterface.getNotifications(getSessionIDHeader()).enqueue(new Callback<List<Notification>>() {
+        RetrofitInterface retrofitInterface = getRetrofitInterface();
+        retrofitInterface.getNotifications(getSessionIDHeader()).enqueue(new EmptyCallback<List<Notification>>() {
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
                 if (response.isSuccessful()) {
@@ -161,41 +171,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             }
+        });
+    }
 
+    /** Get version code we are currently on */
+    private int getCurrentVersion() {
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            return pInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException ignored) {
+            return 0;
+        }
+    }
+
+    /** Check for updates in andro.json */
+    private void checkLatestVersion() {
+        final int versionCode = getCurrentVersion();
+        if (versionCode == 0) { return; }
+        RetrofitInterface retrofitInterface = getRetrofitInterface();
+        retrofitInterface.getLatestVersion().enqueue(new EmptyCallback<JsonObject>() {
             @Override
-            public void onFailure(Call<List<Notification>> call, Throwable t) {
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    final JsonElement currentVersion = response.body().get("version");
+                    if (currentVersion != null && currentVersion.getAsInt() > versionCode) {
+                        showUpdateSnackBar(response.body().get("message").getAsString());
+                    }
+                }
             }
         });
     }
 
-    private void checkLatestVersion() {
-        try {
-            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
-            final int versionCode = pInfo.versionCode;
-            RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-            retrofitInterface.getLatestVersion().enqueue(new Callback<JsonObject>() {
-                @Override
-                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body().get("version").getAsInt() > versionCode) {
-                            showUpdateSnackBar();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                }
-            });
-        } catch (PackageManager.NameNotFoundException ignored) {
-
-        }
-    }
-
-    private void showUpdateSnackBar() {
+    private void showUpdateSnackBar(String message) {
         View parentLayout = findViewById(android.R.id.content);
-        Snackbar.make(parentLayout, "New Version Available", Snackbar.LENGTH_LONG).setAction("UPDATE", new View.OnClickListener() {
+        Snackbar.make(parentLayout, message, Snackbar.LENGTH_LONG).setAction("UPDATE", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
@@ -232,70 +241,129 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mChannel.enableLights(true);
         // Sets the notification light color for notifications posted to this
         // channel, if the device supports this feature.
-        mChannel.setLightColor(Color.RED);
+        mChannel.setLightColor(Color.BLUE);
 
         mChannel.enableVibration(true);
-        mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+        mChannel.setVibrationPattern(new long[]{0, 200});
 
         mNotificationManager.createNotificationChannel(mChannel);
     }
 
+    /** Handle opening event/body/blog from FCM notification */
+    private void handleFCMIntent(Bundle bundle) {
+        /* Mark the notification read */
+        final String notificationId = bundle.getString(FCM_BUNDLE_NOTIFICATION_ID);
+        if (notificationId != null) {
+            getRetrofitInterface().markNotificationRead(getSessionIDHeader(), notificationId).enqueue(new EmptyCallback<Void>());
+        }
+
+        /* Follow the notification */
+        chooseIntent(
+                bundle.getString(Constants.FCM_BUNDLE_TYPE),
+                bundle.getString(Constants.FCM_BUNDLE_ID),
+                bundle.getString(Constants.FCM_BUNDLE_EXTRA)
+        );
+    }
+
+    /** Handle intents for links */
     private void handleIntent(Intent appLinkIntent) {
         String appLinkAction = appLinkIntent.getAction();
         String appLinkData = appLinkIntent.getDataString();
         if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null) {
-            switch (getType(appLinkData)) {
-                case "body":
-                    Body body = new Body(getID(appLinkData));
-                    BodyFragment bodyFragment = BodyFragment.newInstance(body);
-                    updateFragment(bodyFragment);
-                    break;
-                case "user":
-                    UserFragment userFragment = UserFragment.newInstance(getID(appLinkData));
-                    updateFragment(userFragment);
-                    break;
-                case "event":
-                    RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-                    retrofitInterface.getEvent(getSessionIDHeader(), getID(appLinkData)).enqueue(new Callback<Event>() {
-                        @Override
-                        public void onResponse(Call<Event> call, Response<Event> response) {
-                            EventFragment eventFragment = new EventFragment();
-                            Bundle bundle = new Bundle();
-                            bundle.putString(Constants.EVENT_JSON, response.body().toString());
-                            eventFragment.setArguments(bundle);
-                            updateFragment(eventFragment);
-                        }
-
-                        @Override
-                        public void onFailure(Call<Event> call, Throwable t) {
-
-                        }
-                    });
-            }
+            chooseIntent(getType(appLinkData), getID(appLinkData));
         }
+    }
+
+    /** Open the proper fragment from given type and id */
+    private void chooseIntent(String type, String id) {
+        if (type == null || id == null) { return; }
+        switch (type) {
+            case DATA_TYPE_BODY:
+                openBodyFragment(id);
+                return;
+            case DATA_TYPE_USER:
+                openUserFragment(id);
+                return;
+            case DATA_TYPE_EVENT:
+                openEventFragment(id);
+                return;
+            case DATA_TYPE_NEWS:
+                initMenuChecked = R.id.nav_news;
+                updateFragment(new NewsFragment());
+                return;
+        }
+        Log.e("NOTIFICATIONS", "Server sent invalid notification?");
+    }
+
+    /** Open the proper fragment from given type, id and extra */
+    private void chooseIntent(String type, String id, String extra) {
+        if (extra == null) {
+            chooseIntent(type, id);
+        } else {
+            switch (type) {
+                case DATA_TYPE_PT:
+                    if (extra.contains("/trainingblog")) {
+                        initMenuChecked = R.id.nav_training_blog;
+                        openTrainingBlog();
+                    } else {
+                        initMenuChecked = R.id.nav_placement_blog;
+                        openPlacementBlog();
+                    }
+                    return;
+            }
+            chooseIntent(type, id);
+        }
+    }
+
+    /** Open user fragment from given id */
+    private void openUserFragment(String id) {
+        UserFragment userFragment = UserFragment.newInstance(id);
+        updateFragment(userFragment);
+    }
+
+    /** Open the body fragment from given id */
+    private void openBodyFragment(String id) {
+        Body body = new Body(id);
+        BodyFragment bodyFragment = BodyFragment.newInstance(body);
+        updateFragment(bodyFragment);
+    }
+
+    /** Open the event fragment from the provided id */
+    private void openEventFragment(String id) {
+        RetrofitInterface retrofitInterface = getRetrofitInterface();
+        retrofitInterface.getEvent(getSessionIDHeader(), id).enqueue(new EmptyCallback<Event>() {
+            @Override
+            public void onResponse(Call<Event> call, Response<Event> response) {
+                EventFragment eventFragment = new EventFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.EVENT_JSON, response.body().toString());
+                eventFragment.setArguments(bundle);
+                updateFragment(eventFragment);
+            }
+        });
     }
 
     private String getID(String appLinkData) {
         if (appLinkData.charAt(appLinkData.length() - 1) == '/')
             appLinkData = appLinkData.substring(0, appLinkData.length() - 1);
         switch (getType(appLinkData)) {
-            case "body":
+            case DATA_TYPE_BODY:
                 return appLinkData.substring(appLinkData.indexOf("org") + 4);
-            case "user":
+            case DATA_TYPE_USER:
                 return appLinkData.substring(appLinkData.indexOf("user") + 5);
-            case "event":
+            case DATA_TYPE_EVENT:
                 return appLinkData.substring(appLinkData.indexOf("event") + 6);
         }
         return null;
     }
 
     private String getType(String appLinkData) {
-        if (appLinkData.startsWith("http://insti.app/org/") || appLinkData.startsWith("https://insti.app/org/")) {
-            return "body";
-        } else if (appLinkData.startsWith("http://insti.app/user/") || appLinkData.startsWith("https://insti.app/user/")) {
-            return "user";
-        } else if (appLinkData.startsWith("http://insti.app/event/") || appLinkData.startsWith("https://insti.app/event/")) {
-            return "event";
+        if (appLinkData.contains("://insti.app/org/")) {
+            return DATA_TYPE_BODY;
+        } else if (appLinkData.contains("://insti.app/user/")) {
+            return DATA_TYPE_USER;
+        } else if (appLinkData.contains("://insti.app/event/")) {
+            return DATA_TYPE_EVENT;
         }
         return null;
     }
@@ -318,9 +386,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
-                String fcmId = instanceIdResult.getToken();
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
-                retrofitInterface.getUserMe(getSessionIDHeader(), fcmId).enqueue(new Callback<User>() {
+                final String fcmId = instanceIdResult.getToken();
+                RetrofitInterface retrofitInterface = getRetrofitInterface();
+
+                retrofitInterface.patchUserMe(getSessionIDHeader(), new UserFCMPatchRequest(fcmId, getCurrentVersion())).enqueue(new EmptyCallback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         if (response.isSuccessful()) {
@@ -332,10 +401,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Toast.makeText(MainActivity.this, "Your session has expired!", Toast.LENGTH_LONG).show();
                         }
                     }
-
-                    @Override
-                    public void onFailure(Call<User> call, Throwable t) {
-                    }
                 });
             }
         });
@@ -344,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_feed);
+        navigationView.setCheckedItem(initMenuChecked);
     }
 
     private void updateNavigationView() {
@@ -394,8 +459,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         this.menu = menu;
-        fetchNotifications();
         getMenuInflater().inflate(R.menu.main, this.menu);
+
+        // Fetch notifictions if logged in or hide icon
+        if (session.isLoggedIn()) {
+            fetchNotifications();
+        } else {
+            this.menu.findItem(R.id.action_notifications).setVisible(false);
+        }
+
         return true;
     }
 
@@ -412,7 +484,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -423,40 +494,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 feedFragment = new FeedFragment();
                 updateFragment(feedFragment);
                 break;
-            case R.id.nav_my_events:
-                if (session.isLoggedIn()) {
-                    MyEventsFragment myeventsFragment = new MyEventsFragment();
-                    updateFragment(myeventsFragment);
-                } else {
-                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
-                }
-                break;
 
             case R.id.nav_explore:
                 updateFragment(ExploreFragment.newInstance());
                 break;
 
             case R.id.nav_news:
-                NewsFragment newsFragment = new NewsFragment();
-                updateFragment(newsFragment);
+                updateFragment(new NewsFragment());
                 break;
 
             case R.id.nav_placement_blog:
-                if (session.isLoggedIn()) {
-                    PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
-                    updateFragment(placementBlogFragment);
-                } else {
-                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
-                }
+                openPlacementBlog();
                 break;
             case R.id.nav_training_blog:
-                if (session.isLoggedIn()) {
-                    TrainingBlogFragment trainingBlogFragment = new TrainingBlogFragment();
-                    updateFragment(trainingBlogFragment);
-                } else {
-                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
-                }
+                openTrainingBlog();
                 break;
+
             case R.id.nav_mess_menu:
                 MessMenuFragment messMenuFragment = new MessMenuFragment();
                 updateFragment(messMenuFragment);
@@ -477,9 +530,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_settings:
                 SettingsFragment settingsFragment = new SettingsFragment();
                 updateFragment(settingsFragment);
-                //Checking the about fragment
-                //AboutFragment aboutFragment = new AboutFragment();
-                //updateFragment(aboutFragment);
                 break;
         }
 
@@ -488,6 +538,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    /** Open placement blog fragment */
+    private void openPlacementBlog() {
+        if (session.isLoggedIn()) {
+            PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
+            updateFragment(placementBlogFragment);
+        } else {
+            Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void openTrainingBlog() {
+        if (session.isLoggedIn()) {
+            TrainingBlogFragment trainingBlogFragment = new TrainingBlogFragment();
+            updateFragment(trainingBlogFragment);
+        } else {
+            Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /** Change the active fragment to the supplied one */
     public void updateFragment(Fragment fragment) {
         Log.d(TAG, "updateFragment: " + fragment.toString());
         Bundle bundle = fragment.getArguments();
@@ -540,8 +610,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void initPicasso() {
         Picasso.Builder builder = new Picasso.Builder(getApplicationContext());
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+        Cache cache = new Cache(new File(getApplicationContext().getCacheDir(), "http-cache"), 100 * 1024 * 1024);
+        client.cache(cache);
         builder.downloader(new com.squareup.picasso.OkHttp3Downloader((
-                new OkHttpClient.Builder().build()
+                client.build()
         )));
         Picasso built = builder.build();
         built.setIndicatorsEnabled(false);

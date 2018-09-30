@@ -18,11 +18,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import app.insti.Constants;
 import app.insti.R;
 import app.insti.SessionManager;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
-import app.insti.api.model.LoginResponse;
+import app.insti.api.response.LoginResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,6 +41,11 @@ public class LoginActivity extends AppCompatActivity {
     private boolean loggingIn = false;
     private ProgressDialog progressDialog;
 
+    private RetrofitInterface retrofitInterface;
+    public RetrofitInterface getRetrofitInterface() {
+        return retrofitInterface;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +59,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void openMainActivity() {
         Intent i = new Intent(mContext, MainActivity.class);
+
+        /* Pass FCM data if available */
+        Intent myIntent = getIntent();
+        if (myIntent.getExtras() != null) {
+            i.putExtra(Constants.MAIN_INTENT_EXTRAS, myIntent.getExtras());
+        }
+
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
@@ -62,6 +75,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
+        this.retrofitInterface = serviceGenerator.getRetrofitInterface();
 
         WebView webview = (WebView) findViewById(R.id.login_webview);
         webview.getSettings().setJavaScriptEnabled(true);
@@ -80,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login(final String authorizationCode, final String redirectURL) {
         /* This can be null if play services is hung */
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = getRetrofitInterface();
         Call<LoginResponse> call;
         if (fcmId == null) {
             call = retrofitInterface.login(authorizationCode, redirectURL);
@@ -118,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
             progressDialog.show();
         }
 
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = getRetrofitInterface();
         Call<LoginResponse> call;
 
         /* This can be null if play services is hung */
