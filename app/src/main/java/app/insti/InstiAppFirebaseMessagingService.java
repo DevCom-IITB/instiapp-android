@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.Xfermode;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -161,7 +163,7 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
                     Bitmap image = Picasso.get().load(imageUrl).get();
                     Bitmap largeIcon = null;
                     if (largeIconUrl != null) {
-                         largeIcon = getCroppedBitmap(Picasso.get().load(largeIconUrl).get());
+                         largeIcon = getCroppedBitmap(Picasso.get().load(largeIconUrl).get(), 200);
                     }
                     return new Bitmap[]{image, largeIcon};
                 } catch (IOException e) {
@@ -189,23 +191,41 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
         }.execute();
     }
 
-    /** https://stackoverflow.com/a/12089127 */
-    public static Bitmap getCroppedBitmap(Bitmap bitmap) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+    /** Get circular center cropped bitmap */
+    public static Bitmap getCroppedBitmap(Bitmap bmp, int radius) {
+        Bitmap sbmp;
+
+        if (bmp.getWidth() != radius || bmp.getHeight() != radius) {
+            float smallest = Math.min(bmp.getWidth(), bmp.getHeight());
+            float factor = smallest / radius;
+            sbmp = Bitmap.createScaledBitmap(bmp, (int)(bmp.getWidth() / factor), (int)(bmp.getHeight() / factor), false);
+        } else {
+            sbmp = bmp;
+        }
+
+        Bitmap output = Bitmap.createBitmap(radius, radius,
+                Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
-        final int color = 0xff424242;
+        final int color = 0xffa19774;
         final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final Rect rect = new Rect(0, 0, radius, radius);
+        final Rect destRect = new Rect(
+                (sbmp.getWidth() - radius) / 2,
+                (sbmp.getHeight() - radius) / 2,
+                radius + (sbmp.getWidth() - radius) / 2,
+                radius + (sbmp.getHeight() - radius) / 2);
 
         paint.setAntiAlias(true);
+        paint.setFilterBitmap(true);
+        paint.setDither(true);
         canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
-                bitmap.getWidth() / 2, paint);
+        paint.setColor(Color.parseColor("#BAB399"));
+        canvas.drawCircle(radius / 2,
+                radius / 2, radius / 2, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
+        canvas.drawBitmap(sbmp, destRect, rect, paint);
+
         return output;
     }
 }
