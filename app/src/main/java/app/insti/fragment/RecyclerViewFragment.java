@@ -37,6 +37,7 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
     protected Class<S> adapterType;
     protected SwipeRefreshLayout swipeRefreshLayout;
     protected String searchQuery;
+    private S adapter = null;
 
     protected void updateData() {
         String sessionIDHeader = ((MainActivity) getActivity()).getSessionIDHeader();
@@ -66,7 +67,7 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
         if (getActivity() == null || getView() == null) return;
 
         try {
-            final S s = adapterType.getDeclaredConstructor(List.class, ItemClickListener.class).newInstance(result, new ItemClickListener() {
+            adapter = adapterType.getDeclaredConstructor(List.class, ItemClickListener.class).newInstance(result, new ItemClickListener() {
                 @Override
                 public void onItemClick(View v, int position) {
                     String link = result.get(position).getLink();
@@ -77,7 +78,7 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
             getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
                 @Override
                 public void run(Activity pActivity) {
-                    recyclerView.setAdapter(s);
+                    recyclerView.setAdapter(adapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         boolean loading = false;
@@ -96,13 +97,13 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
                                         public void onResponse(Call<List<T>> call, Response<List<T>> response) {
                                             if (response.isSuccessful()) {
                                                 loading = false;
-                                                List<T> posts = s.getPosts();
+                                                List<T> posts = adapter.getPosts();
                                                 posts.addAll(response.body());
                                                 if (response.body().size() == 0) {
                                                     showLoader = false;
                                                 }
-                                                s.setPosts(posts);
-                                                s.notifyDataSetChanged();
+                                                adapter.setPosts(posts);
+                                                adapter.notifyDataSetChanged();
                                             }
                                         }
 
@@ -121,6 +122,11 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
         } catch (java.lang.InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    protected int getPostCount() {
+        if (adapter == null) { return 0; }
+        return adapter.getPosts().size();
     }
 
     private void openWebURL(String URL) {

@@ -57,6 +57,6 @@ public class NewsFragment extends RecyclerViewFragment<NewsArticle, NewsAdapter>
 
     @Override
     Call<List<NewsArticle>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader) {
-        return retrofitInterface.getNews(sessionIDHeader, 0, 20, searchQuery);
+        return retrofitInterface.getNews(sessionIDHeader, getPostCount(), 20, searchQuery);
     }
 }

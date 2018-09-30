@@ -74,6 +74,6 @@ public class TrainingBlogFragment extends RecyclerViewFragment<TrainingBlogPost,
 
     @Override
     Call<List<TrainingBlogPost>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader) {
-        return retrofitInterface.getTrainingBlogFeed(sessionIDHeader, 0, 20, searchQuery);
+        return retrofitInterface.getTrainingBlogFeed(sessionIDHeader, getPostCount(), 20, searchQuery);
     }
 }
