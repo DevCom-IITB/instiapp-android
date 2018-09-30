@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void fetchNotifications() {
         RetrofitInterface retrofitInterface = getRetrofitInterface();
-        retrofitInterface.getNotifications(getSessionIDHeader()).enqueue(new Callback<List<Notification>>() {
+        retrofitInterface.getNotifications(getSessionIDHeader()).enqueue(new EmptyCallback<List<Notification>>() {
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
                 if (response.isSuccessful()) {
@@ -182,10 +182,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         menu.findItem(R.id.action_notifications).setIcon(R.drawable.ic_notifications_white_24dp);
                     }
                 }
-            }
-
-            @Override
-            public void onFailure(Call<List<Notification>> call, Throwable t) {
             }
         });
     }
@@ -347,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /** Open the event fragment from the provided id */
     private void openEventFragment(String id) {
         RetrofitInterface retrofitInterface = getRetrofitInterface();
-        retrofitInterface.getEvent(getSessionIDHeader(), id).enqueue(new Callback<Event>() {
+        retrofitInterface.getEvent(getSessionIDHeader(), id).enqueue(new EmptyCallback<Event>() {
             @Override
             public void onResponse(Call<Event> call, Response<Event> response) {
                 EventFragment eventFragment = new EventFragment();
@@ -356,9 +352,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 eventFragment.setArguments(bundle);
                 updateFragment(eventFragment);
             }
-
-            @Override
-            public void onFailure(Call<Event> call, Throwable t) {}
         });
     }
 
@@ -408,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 final String fcmId = instanceIdResult.getToken();
                 RetrofitInterface retrofitInterface = getRetrofitInterface();
 
-                retrofitInterface.patchUserMe(getSessionIDHeader(), new UserFCMPatchRequest(fcmId, getCurrentVersion())).enqueue(new Callback<User>() {
+                retrofitInterface.patchUserMe(getSessionIDHeader(), new UserFCMPatchRequest(fcmId, getCurrentVersion())).enqueue(new EmptyCallback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         if (response.isSuccessful()) {
@@ -420,9 +413,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Toast.makeText(MainActivity.this, "Your session has expired!", Toast.LENGTH_LONG).show();
                         }
                     }
-
-                    @Override
-                    public void onFailure(Call<User> call, Throwable t) {}
                 });
             }
         });
