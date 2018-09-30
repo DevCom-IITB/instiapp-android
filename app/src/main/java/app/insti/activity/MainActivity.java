@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
@@ -189,29 +190,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void checkLatestVersion() {
+    /** Get version code we are currently on */
+    private int getCurrentVersion() {
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
-            final int versionCode = pInfo.versionCode;
-            RetrofitInterface retrofitInterface = getRetrofitInterface();
-            retrofitInterface.getLatestVersion().enqueue(new Callback<JsonObject>() {
-                @Override
-                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    if (response.isSuccessful()) {
-                        if (response.body().get("version").getAsInt() > versionCode) {
-                            showUpdateSnackBar(response.body().get("message").getAsString());
-                        }
+            return pInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException ignored) {
+            return 0;
+        }
+    }
+
+    /** Check for updates in andro.json */
+    private void checkLatestVersion() {
+        final int versionCode = getCurrentVersion();
+        if (versionCode == 0) { return; }
+        RetrofitInterface retrofitInterface = getRetrofitInterface();
+        retrofitInterface.getLatestVersion().enqueue(new EmptyCallback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    final JsonElement currentVersion = response.body().get("version");
+                    if (currentVersion != null && currentVersion.getAsInt() > versionCode) {
+                        showUpdateSnackBar(response.body().get("message").getAsString());
                     }
                 }
-
-                @Override
-                public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                }
-            });
-        } catch (PackageManager.NameNotFoundException ignored) {
-
-        }
+            }
+        });
     }
 
     private void showUpdateSnackBar(String message) {
@@ -404,7 +408,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 final String fcmId = instanceIdResult.getToken();
                 RetrofitInterface retrofitInterface = getRetrofitInterface();
 
-                retrofitInterface.patchUserMe(getSessionIDHeader(), new UserFCMPatchRequest(fcmId)).enqueue(new Callback<User>() {
+                retrofitInterface.patchUserMe(getSessionIDHeader(), new UserFCMPatchRequest(fcmId, getCurrentVersion())).enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         if (response.isSuccessful()) {
