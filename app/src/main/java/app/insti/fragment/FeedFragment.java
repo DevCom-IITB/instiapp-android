@@ -163,7 +163,7 @@ public class FeedFragment extends BaseFragment {
             feedAdapter.notifyDataSetChanged();
         }
 
-        // Initialize adapter if necessary
+        // Initialize RecyclerView if necessary
         if (feedRecyclerView.getAdapter() != feedAdapter) {
             initRecyclerView();
         }
@@ -179,7 +179,6 @@ public class FeedFragment extends BaseFragment {
             public void run(Activity pActivity) {
                 try {
                     feedRecyclerView.setAdapter(feedAdapter);
-
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
