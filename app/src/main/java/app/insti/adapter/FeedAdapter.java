@@ -1,6 +1,5 @@
 package app.insti.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,10 +23,8 @@ import java.util.Calendar;
 
 
 import app.insti.Constants;
-import app.insti.Helpers;
-import app.insti.activity.MainActivity;
+import app.insti.Utils;
 import app.insti.fragment.EventFragment;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.api.model.Event;
 import app.insti.api.model.Venue;
@@ -134,10 +131,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         if (currentEvent.isEventBigImage()) {
             viewHolder.eventBigPicture.setVisibility(View.VISIBLE);
             viewHolder.eventPicture.setVisibility(View.GONE);
-            Helpers.loadImageWithPlaceholder(viewHolder.eventBigPicture, currentEvent.getEventImageURL());
+            Utils.loadImageWithPlaceholder(viewHolder.eventBigPicture, currentEvent.getEventImageURL());
         } else {
             Picasso.get().load(
-                    Helpers.resizeImageUrl(currentEvent.getEventImageURL())
+                    Utils.resizeImageUrl(currentEvent.getEventImageURL())
             ).into(viewHolder.eventPicture);
         }
     }

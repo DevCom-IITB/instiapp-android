@@ -33,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -41,7 +40,7 @@ import java.util.Date;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.Helpers;
+import app.insti.Utils;
 import app.insti.R;
 import app.insti.ShareURLMaker;
 import app.insti.activity.MainActivity;
@@ -153,7 +152,7 @@ public class EventFragment extends BackHandledFragment {
         webEventButton = getActivity().findViewById(R.id.web_event_button);
         shareEventButton = getActivity().findViewById(R.id.share_event_button);
 
-        Helpers.loadImageWithPlaceholder(eventPicture, event.getEventImageURL());
+        Utils.loadImageWithPlaceholder(eventPicture, event.getEventImageURL());
 
         eventTitle.setText(event.getEventName());
         Markwon.setMarkdown(eventDescription, event.getEventDescription());

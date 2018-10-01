@@ -7,7 +7,7 @@ import com.squareup.picasso.Picasso;
 
 import java.time.Instant;
 
-public final class Helpers {
+public final class Utils {
     public static final void loadImageWithPlaceholder(final ImageView imageView, final String url) {
         Picasso.get()
             .load(resizeImageUrl(url))

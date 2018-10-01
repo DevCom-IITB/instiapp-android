@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.Helpers;
+import app.insti.Utils;
 import app.insti.R;
 import app.insti.api.model.Body;
 import app.insti.fragment.BodyFragment;
@@ -73,7 +73,7 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
         holder.name.setText(body.getBodyName());
         holder.description.setText(body.getBodyShortDescription());
         Picasso.get().load(
-                Helpers.resizeImageUrl(body.getBodyImageURL())
+                Utils.resizeImageUrl(body.getBodyImageURL())
         ).into(holder.image);
 
     }
