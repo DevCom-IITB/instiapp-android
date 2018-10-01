@@ -134,25 +134,6 @@ public class UserFragment extends BackHandledFragment {
         /* Show tabs */
         getActivity().findViewById(R.id.tab_layout).setVisibility(VISIBLE);
 
-        final List<Role> roleList = user.getUserRoles();
-        List<Role> formerRoleList = user.getUserFormerRoles();
-        for (Role role : formerRoleList) {
-            role.setRoleName("Former " + role.getRoleName());
-        }
-        roleList.addAll(formerRoleList);
-        RecyclerView userRoleRecyclerView = getActivity().findViewById(R.id.role_recycler_view);
-        RoleAdapter roleAdapter = new RoleAdapter(roleList, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Role role = roleList.get(position);
-                Body roleBody = role.getRoleBodyDetails();
-                Utils.openBodyFragment(roleBody, getActivity());
-
-            }
-        });
-        userRoleRecyclerView.setAdapter(roleAdapter);
-        userRoleRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         Picasso.get()
                 .load(user.getUserProfilePictureUrl())
                 .resize(500, 0)
@@ -167,16 +148,24 @@ public class UserFragment extends BackHandledFragment {
         });
         mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
+        final List<Role> roleList = user.getUserRoles();
         final List<Body> bodyList = user.getUserFollowedBodies();
         final List<Event> eventList = user.getUserGoingEvents();
-        final List<Event> eventInterestedList = user.getUserInterestedEvents();
+        List<Role> formerRoleList = user.getUserFormerRoles();
+        for (Role role : formerRoleList) {
+            role.setRoleName("Former " + role.getRoleName());
+        }
+        roleList.addAll(formerRoleList);
+        List<Event> eventInterestedList = user.getUserInterestedEvents();
         eventList.removeAll(eventInterestedList);
         eventList.addAll(eventInterestedList);
-        BodyRecyclerViewFragment frag1 = BodyRecyclerViewFragment.newInstance(bodyList);
-        EventRecyclerViewFragment frag2 = EventRecyclerViewFragment.newInstance(eventList);
+        RoleRecyclerViewFragment frag1 = RoleRecyclerViewFragment.newInstance(roleList);
+        BodyRecyclerViewFragment frag2 = BodyRecyclerViewFragment.newInstance(bodyList);
+        EventRecyclerViewFragment frag3 = EventRecyclerViewFragment.newInstance(eventList);
         TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
-        tabAdapter.addFragment(frag1, "Following");
-        tabAdapter.addFragment(frag2, "Events");
+        tabAdapter.addFragment(frag1, "Associations");
+        tabAdapter.addFragment(frag2, "Following");
+        tabAdapter.addFragment(frag3, "Events");
         // Set up the ViewPager with the sections adapter.
         ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.viewPager);
         viewPager.setAdapter(tabAdapter);

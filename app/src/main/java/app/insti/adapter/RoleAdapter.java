@@ -2,6 +2,7 @@ package app.insti.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.api.model.Body;
 import app.insti.api.model.Role;
 import app.insti.interfaces.ItemClickListener;
@@ -22,12 +24,12 @@ import app.insti.interfaces.ItemClickListener;
 public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.ViewHolder> {
 
     private List<Role> roleList;
-    private ItemClickListener itemClickListener;
     private Context context;
+    private Fragment fragment;
 
-    public RoleAdapter(List<Role> roleList, ItemClickListener itemClickListener) {
+    public RoleAdapter(List<Role> roleList, Fragment mFragment) {
         this.roleList = roleList;
-        this.itemClickListener = itemClickListener;
+        this.fragment = mFragment;
     }
 
     @NonNull
@@ -41,7 +43,7 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.ViewHolder> {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                itemClickListener.onItemClick(view, postViewHolder.getAdapterPosition());
+                Utils.openBodyFragment(roleList.get(postViewHolder.getAdapterPosition()).getRoleBodyDetails(), fragment.getActivity());
             }
         });
 
@@ -55,7 +57,9 @@ public class RoleAdapter extends RecyclerView.Adapter<RoleAdapter.ViewHolder> {
         Body roleBody = role.getRoleBodyDetails();
         holder.bodyName.setText(roleBody.getBodyName());
         holder.role.setText(role.getRoleName());
-        Picasso.get().load(roleBody.getBodyImageURL()).into(holder.image);
+        Picasso.get().load(
+                Utils.resizeImageUrl(roleBody.getBodyImageURL())
+        ).into(holder.image);
 
     }
 
