@@ -297,12 +297,8 @@ public class FileComplaintFragment extends Fragment {
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                 .setCountry("IN")
                 .build();
-
         autocompleteFragment.setFilter(typeFilter);
-
         autocompleteFragment.setHint("Enter Location");
-
-
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
 
             @Override
@@ -312,7 +308,6 @@ public class FileComplaintFragment extends Fragment {
                 Address = place.getAddress().toString();
                 updateMap(Location, Name, Address, cursor); //on selecting the place will automatically shows the Details on the map.
                 cursor++;
-
             }
 
             @Override
@@ -374,7 +369,7 @@ public class FileComplaintFragment extends Fragment {
     }
 
     public void getMapReady() {
-        Log.i(TAG, "@@@@@@@@@@@@@@ in getMapReady");
+        Log.i(TAG, "in getMapReady");
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap map) {
@@ -387,18 +382,18 @@ public class FileComplaintFragment extends Fragment {
                 uiSettings.setScrollGesturesEnabled(true);
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                         && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "@@@@@@@@@@@@@@ No initial permission granted");
+                    Log.i(TAG, "No initial permission granted");
                     ActivityCompat.requestPermissions(getActivity(),
                             new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                             MY_PERMISSIONS_REQUEST_LOCATION);
                 } else {
-                    Log.i(TAG, "@@@@@@@@@@@@@@ Initial Permission Granted");
+                    Log.i(TAG, "Initial Permission Granted");
                     googleMap.setMyLocationEnabled(true);
                     googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                     googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
                         @Override
                         public boolean onMyLocationButtonClick() {
-                            Log.i(TAG, "@@@@@@@@@@@@@@ in onMyLocationButtonClick");
+                            Log.i(TAG, "in onMyLocationButtonClick");
                             locate();
                             return false;
                         }
@@ -409,12 +404,12 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void locate() {
-        Log.i(TAG, "@@@@@@@@@@@@@@ in locate");
+        Log.i(TAG, "In locate");
         if (!GPSIsSetup) {
-            Log.i(TAG, "@@@@@@@@@@@@@@ GPS not enabled");
+            Log.i(TAG, "GPS not enabled");
             displayLocationSettingsRequest();
         } else {
-            Log.i(TAG, "@@@@@@@@@@@@@@ GPS enabled");
+            Log.i(TAG, "GPS enabled");
             try {
                 mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
@@ -422,7 +417,7 @@ public class FileComplaintFragment extends Fragment {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             // Logic to handle location object
-                            Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@lat = " + location.getLatitude() + " lon = " + location.getLongitude());
+                            Log.i(TAG, "lat = " + location.getLatitude() + " lon = " + location.getLongitude());
                             Location = new LatLng(location.getLatitude(), location.getLongitude());
                             updateMap(Location, "Current Location", location.getLatitude() + ", " + location.getLongitude(), cursor);
                         } else {
@@ -445,7 +440,7 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void displayLocationSettingsRequest() {
-        Log.i(TAG, "@@@@@@@@@@@@@@ in displayLocationSettingsRequest");
+        Log.i(TAG, "In displayLocationSettingsRequest");
         if (getView() == null || getActivity() == null) return;
         LocationRequest mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -460,18 +455,17 @@ public class FileComplaintFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
                 try {
-                    Log.i(TAG,
-                            "@@@@@@@@@@@@@@ in displayLocationSettingsRequest try");
+                    Log.i(TAG, "In displayLocationSettingsRequest try");
                     LocationSettingsResponse result = task.getResult(ApiException.class);
                     if (result.getLocationSettingsStates().isGpsPresent() &&
                             result.getLocationSettingsStates().isGpsUsable() &&
                             result.getLocationSettingsStates().isLocationPresent() &&
                             result.getLocationSettingsStates().isLocationUsable()) {
-                        Log.i(TAG, "@@@@@@@@@@@@@@ in displayLocationSettingsRequest if setupGPS called");
+                        Log.i(TAG, "In displayLocationSettingsRequest if setupGPS called");
                         setupGPS();
                     }
                 } catch (ApiException ex) {
-                    Log.i(TAG, "@@@@@@@@@@@@@@ in displayLocationSettingsRequest catch");
+                    Log.i(TAG, "In displayLocationSettingsRequest catch");
                     switch (ex.getStatusCode()) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                             try {
@@ -479,7 +473,7 @@ public class FileComplaintFragment extends Fragment {
                                         (ResolvableApiException) ex;
                                 resolvableApiException
                                         .startResolutionForResult(getActivity(), 87);
-                                Log.i(TAG, "@@@@@@@@@@@@@@ in displayLocationSettingsRequest catch case1 try setupGPS called");
+                                Log.i(TAG, "In displayLocationSettingsRequest catch case1 try setupGPS called");
                                 setupGPS();
                             } catch (IntentSender.SendIntentException e) {
                             }
@@ -494,7 +488,7 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void setupGPS() {
-        Log.i(TAG, "@@@@@@@@@@@@@@ in setup");
+        Log.i(TAG, "In setup");
         if (getView() == null || getActivity() == null) return;
         // Permissions stuff
         if (ContextCompat.checkSelfPermission(getActivity(),
@@ -511,7 +505,7 @@ public class FileComplaintFragment extends Fragment {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             // Logic to handle location object
-                            Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@lat = " + location.getLatitude() + " lon = " + location.getLongitude());
+                            Log.i(TAG, "lat = " + location.getLatitude() + " lon = " + location.getLongitude());
                             Location = new LatLng(location.getLatitude(), location.getLongitude());
                             updateMap(Location, "Current Location", location.getLatitude() + ", " + location.getLongitude(), cursor);
                         } else {
@@ -590,7 +584,7 @@ public class FileComplaintFragment extends Fragment {
     private void addComplaint() {
         String complaint = "Complaint: " + autoCompleteTextView.getText().toString();
         String suggestion = null;
-        Log.i(TAG, "@@@@@@@@@@@@@@ Suggestion: " + editTextSuggestions.getText().toString());
+        Log.i(TAG, "Suggestion: " + editTextSuggestions.getText().toString());
         if (!(editTextSuggestions.getText().toString().isEmpty())) {
             suggestion = "\nSuggestion: " + editTextSuggestions.getText().toString();
         } else {
@@ -617,7 +611,7 @@ public class FileComplaintFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<ComplaintCreateResponse> call, Throwable t) {
-                    Log.i(TAG, "@@@@@@@@@@@@@@@ failure: " + t.toString());
+                    Log.i(TAG, "failure in addComplaint: " + t.toString());
                     Toast.makeText(getContext(), "Complaint Creation Failed", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -625,7 +619,7 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void updateMap(LatLng Location, String Name, String Address, int cursor) {
-        Log.i(TAG, "@@@@@@@@@@@@@@ in updateMap");
+        Log.i(TAG, "In updateMap");
         LocationAPIUtils locationAPIUtils = new LocationAPIUtils(googleMap, mMapView);
         locationAPIUtils.callGoogleToShowLocationOnMap(Location, Name, Address, cursor);
         showAnalysis();
@@ -711,7 +705,7 @@ public class FileComplaintFragment extends Fragment {
                     ImageUploadResponse imageUploadResponse = response.body();
                     uploadedImagesUrl.add(imageUploadResponse.getPictureURL());
                     showImage(uploadedImagesUrl);
-                    Log.i(TAG, "@@@@@@@@@@ ImageURL: " + uploadedImagesUrl.toString());
+                    Log.i(TAG, "ImageURL: " + uploadedImagesUrl.toString());
                 } else {
                     progressDialog.dismiss();
                     Toast.makeText(getContext(), getString(R.string.error_message), Toast.LENGTH_LONG).show();
@@ -720,7 +714,7 @@ public class FileComplaintFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-                Log.i(TAG, "@@@@@@@@@@@ failure: " + t.toString());
+                Log.i(TAG, "failure in sendImage: " + t.toString());
                 progressDialog.dismiss();
                 Toast.makeText(getContext(), getString(R.string.error_message), Toast.LENGTH_LONG).show();
             }

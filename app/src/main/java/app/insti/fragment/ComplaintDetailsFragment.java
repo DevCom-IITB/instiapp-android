@@ -79,7 +79,7 @@ public class ComplaintDetailsFragment extends Fragment {
         userId = bundle.getString("userId");
 
         if (bundle != null) {
-            Log.i(TAG, "@@@@@@@@@@@@@@@ bundle != null");
+            Log.i(TAG, "bundle != null");
             callServerToGetDetailedComplaint();
         }
     }
@@ -100,7 +100,7 @@ public class ComplaintDetailsFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<Venter.Complaint> call, Throwable t) {
-                    Log.i(TAG, "@@@@@@@@@@@@@@@ failure in up vote: " + t.toString());
+                    Log.i(TAG, "failure in up vote: " + t.toString());
                 }
             });
         } else {
@@ -129,7 +129,7 @@ public class ComplaintDetailsFragment extends Fragment {
             @Override
             public void onFailure(Call<Venter.Complaint> call, Throwable t) {
                 if (t != null) {
-                    Log.i(TAG, "@@@@@@@@@@@@@@@error and t = " + t.toString());
+                    Log.i(TAG, "error and t = " + t.toString());
                 }
             }
         });
@@ -138,7 +138,6 @@ public class ComplaintDetailsFragment extends Fragment {
     private void initViewPagerForImages(Venter.Complaint detailedComplaint) {
 
         viewPager = mview.findViewById(R.id.complaint_image_view_pager);
-
         if (viewPager != null) {
             try {
                 ImageViewPagerAdapter imageFragmentPagerAdapter = new ImageViewPagerAdapter(getChildFragmentManager(), detailedComplaint);
@@ -167,7 +166,7 @@ public class ComplaintDetailsFragment extends Fragment {
             if (detailedComplaint != null) {
                 viewPager = mview.findViewById(R.id.tab_viewpager_details);
                 if (viewPager != null) {
-                    Log.i(TAG, "@@@@@@@@@@@@@ viewPager != null");
+                    Log.i(TAG, "viewPager != null");
                     complaintDetailsPagerAdapter = new ComplaintDetailsPagerAdapter(getChildFragmentManager(), detailedComplaint, getContext(), sessionID, complaintId, userId);
 
                     viewPager.setAdapter(complaintDetailsPagerAdapter);
@@ -199,7 +198,6 @@ public class ComplaintDetailsFragment extends Fragment {
                             } else {
                                 slidingTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
                             }
-
                         }
                     });
 
@@ -224,7 +222,7 @@ public class ComplaintDetailsFragment extends Fragment {
                             "android:switcher:" + R.id.tab_viewpager_details + ":0"
                     );
 
-                    Log.i(TAG, "@@@@@@@@@@@@ detailedComplaintFragment: " + detailedComplaint);
+                    Log.i(TAG, "detailedComplaintFragment: " + detailedComplaint);
 
                     /*For Relevant Complaint Fragment
                     * RelevantComplaintFragment relevantComplaintFragment = (RelevantComplaintFragment) getSupportFragmentManager().findFragmentByTag(
@@ -232,7 +230,7 @@ public class ComplaintDetailsFragment extends Fragment {
                     */
 
                     if (detailedComplaintFragment != null) {
-                        Log.i(TAG, "@@@@@@@@@@@@ detailedComplinatFragment != null");
+                        Log.i(TAG, "detailedComplinatFragment != null");
                         detailedComplaintFragment.setDetailedComplaint(detailedComplaint);
                     }
                 }

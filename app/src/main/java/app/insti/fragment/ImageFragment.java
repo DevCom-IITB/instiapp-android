@@ -31,7 +31,7 @@ public class ImageFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "@@@@@@@@@@@@@ getArguments" + getArguments());
+        Log.i(TAG, "getArguments in ImageFragment" + getArguments());
         if (getArguments() != null) {
             image = getArguments().getString("image");
             indexChosen = getArguments().getInt("index", 0);

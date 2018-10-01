@@ -67,6 +67,7 @@ public class AboutFragment extends BaseFragment {
             put(R.id.amangourimg, "amangour.jpg");
             put(R.id.wnccimg, "wncc.jpg");
             put(R.id.safwanimg, "safwan.jpg");
+            put(R.id.shivamimg, "shivam.jpg");
         }};
 
         /* Show team pics */

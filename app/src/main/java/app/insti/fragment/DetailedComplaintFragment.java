@@ -78,7 +78,6 @@ public class DetailedComplaintFragment extends Fragment {
 
     private void initialiseViews(View view) {
         textViewUserName = view.findViewById(R.id.textViewUserName);
-        Log.i(TAG, "@@@@@@@@@@ textViewUser: "+textViewUserName);
         textViewReportDate = view.findViewById(R.id.textViewReportDate);
         textViewLocation = view.findViewById(R.id.textViewLocation);
         textViewDescription = view.findViewById(R.id.textViewDescription);
@@ -104,13 +103,11 @@ public class DetailedComplaintFragment extends Fragment {
         commentList = new ArrayList<>();
         initialiseViews(view);
 
-        commentListAdapter = new CommentRecyclerViewAdapter(getActivity(),getContext(), sId, uId);
+        commentListAdapter = new CommentRecyclerViewAdapter(getActivity(), getContext(), sId, uId);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerViewComments.setLayoutManager(linearLayoutManager);
         recyclerViewComments.setHasFixedSize(true);
         recyclerViewComments.setAdapter(commentListAdapter);
-
-//        commentListAdapter.setUpdateCommentElements(imageButtonSend, editTextComment);
 
         mMapView = view.findViewById(R.id.google_map);
         mMapView.onCreate(savedInstanceState);
@@ -132,7 +129,6 @@ public class DetailedComplaintFragment extends Fragment {
                 }
             }
         });
-
         return view;
     }
 
@@ -152,7 +148,7 @@ public class DetailedComplaintFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Venter.Comment> call, Throwable t) {
-                Log.i(TAG, "@@@@@@@@@@@@@@@@@ failure in posting comments: " + t.toString());
+                Log.i(TAG, "failure in posting comments: " + t.toString());
             }
         });
     }
@@ -161,7 +157,7 @@ public class DetailedComplaintFragment extends Fragment {
         commentList.add(newComment);
         commentListAdapter.setCommentList(commentList);
         commentListAdapter.notifyItemInserted(commentList.indexOf(newComment));
-        commentListAdapter.notifyItemRangeChanged(0,commentListAdapter.getItemCount());
+        commentListAdapter.notifyItemRangeChanged(0, commentListAdapter.getItemCount());
         recyclerViewComments.post(new Runnable() {
             @Override
             public void run() {
@@ -216,13 +212,11 @@ public class DetailedComplaintFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         try {
             textViewCommentLabel.setText("COMMENTS");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         try {
             textViewVoteUpLabel.setText("UP VOTES");
         } catch (Exception e) {
@@ -272,9 +266,7 @@ public class DetailedComplaintFragment extends Fragment {
     }
 
     public void addVotesToView(Venter.Complaint detailedComplaint) {
-
         layoutVotes.removeAllViews();
-
         for (User users : detailedComplaint.getUsersUpVoted()) {
             View voteView = inflater.inflate(R.layout.vote_up_card, null);
             CircleImageView circleImageView = voteView.findViewById(R.id.circleImageViewUserUpVoteImage);
@@ -285,7 +277,6 @@ public class DetailedComplaintFragment extends Fragment {
                 Picasso.get().load(R.drawable.baseline_account_circle_black_48).into(circleImageView);
             TextView textViewName = voteView.findViewById(R.id.textViewUserUpVoteName);
             textViewName.setText(users.getUserName());
-
             layoutVotes.addView(voteView);
         }
     }
