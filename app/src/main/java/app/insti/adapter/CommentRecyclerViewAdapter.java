@@ -27,6 +27,7 @@ import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Venter;
+import app.insti.utils.DateTimeUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -92,8 +93,13 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 e.printStackTrace();
             }
             try {
-                textViewCommentTime.setText(comment.getTime().toString());
+                String time = DateTimeUtil.getDate(comment.getTime().toString());
+                Log.i(TAG, "@@@@@@@@@@@@ time: " + time);
+                Log.i(TAG, "@@@@@@@@@@@@inside try");
+                textViewCommentTime.setText(time);
+
             } catch (Exception e) {
+                Log.i(TAG, "@@@@@@@@@@@@@@@@@Inside catch");
                 e.printStackTrace();
             }
             try {

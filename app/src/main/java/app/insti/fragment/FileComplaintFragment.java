@@ -460,7 +460,8 @@ public class FileComplaintFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
                 try {
-                    Log.i(TAG, "@@@@@@@@@@@@@@ in displayLocationSettingsRequest try");
+                    Log.i(TAG,
+                            "@@@@@@@@@@@@@@ in displayLocationSettingsRequest try");
                     LocationSettingsResponse result = task.getResult(ApiException.class);
                     if (result.getLocationSettingsStates().isGpsPresent() &&
                             result.getLocationSettingsStates().isGpsUsable() &&

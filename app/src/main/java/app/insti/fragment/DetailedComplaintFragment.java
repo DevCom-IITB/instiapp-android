@@ -36,6 +36,7 @@ import app.insti.api.RetrofitInterface;
 import app.insti.api.request.CommentCreateRequest;
 import app.insti.api.model.User;
 import app.insti.api.model.Venter;
+import app.insti.utils.DateTimeUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -181,8 +182,13 @@ public class DetailedComplaintFragment extends Fragment {
             e.printStackTrace();
         }
         try {
-            textViewReportDate.setText(detailedComplaint.getComplaintReportDate().toString());
+            String time = DateTimeUtil.getDate(detailedComplaint.getComplaintReportDate().toString());
+            Log.i(TAG, "@@@@@@@@@@@@ time: " + time);
+            Log.i(TAG, "@@@@@@@@@@@@inside try");
+            textViewReportDate.setText(time);
+
         } catch (Exception e) {
+            Log.i(TAG, "@@@@@@@@@@@@@@@@@Inside catch");
             e.printStackTrace();
         }
         try {

@@ -2,8 +2,6 @@ package app.insti.api.model;
 
 import android.support.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
-
-import java.sql.Timestamp;
 import java.util.List;
 
 import app.insti.api.model.User;
@@ -14,6 +12,10 @@ import app.insti.api.model.User;
 
 public class Venter {
 
+    public Venter(){
+
+    }
+
     public static class Complaint {
         @NonNull
         @SerializedName("id")
@@ -23,7 +25,7 @@ public class Venter {
         @SerializedName("description")
         String description;
         @SerializedName("report_date")
-        Timestamp complaintReportDate;
+        String complaintReportDate;
         @SerializedName("status")
         String status;
         @SerializedName("latitude")
@@ -41,7 +43,7 @@ public class Venter {
         @SerializedName("comments")
         List<Comment> comment;
 
-        public Complaint(@NonNull String complaintID, User complaintCreatedBy, String description, Timestamp complaintReportDate, String status, Float latitude, Float longitude, String locationDescription, List<TagUri> tags, List<User> usersUpVoted, List<String> images, List<Comment> comment) {
+        public Complaint(@NonNull String complaintID, User complaintCreatedBy, String description, String complaintReportDate, String status, Float latitude, Float longitude, String locationDescription, List<TagUri> tags, List<User> usersUpVoted, List<String> images, List<Comment> comment) {
             this.complaintID = complaintID;
             this.complaintCreatedBy = complaintCreatedBy;
             this.description = description;
@@ -81,11 +83,11 @@ public class Venter {
             this.description = description;
         }
 
-        public Timestamp getComplaintReportDate() {
+        public String getComplaintReportDate() {
             return complaintReportDate;
         }
 
-        public void setComplaintReportDate(Timestamp complaintReportDate) {
+        public void setComplaintReportDate(String complaintReportDate) {
             this.complaintReportDate = complaintReportDate;
         }
 
@@ -185,7 +187,7 @@ public class Venter {
         @SerializedName("id")
         String id;
         @SerializedName("time")
-        Timestamp time;
+        String time;
         @SerializedName("text")
         String text;
         @SerializedName("commented_by")
@@ -200,11 +202,11 @@ public class Venter {
             this.id = id;
         }
 
-        public Timestamp getTime() {
+        public String getTime() {
             return time;
         }
 
-        public void setTime(Timestamp time) {
+        public void setTime(String time) {
             this.time = time;
         }
 

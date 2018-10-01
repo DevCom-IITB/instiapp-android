@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +16,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import app.insti.R;
 import app.insti.api.model.Venter;
 import app.insti.fragment.ComplaintDetailsFragment;
+import app.insti.utils.DateTimeUtil;
 import app.insti.utils.GsonProvider;
 
 /**
@@ -46,6 +51,7 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         private TextView textViewUserName;
         private TextView textViewReportDate;
         private TextView textViewStatus;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
         private int pos;
 
@@ -111,10 +117,15 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            Log.i(TAG, "@@@@@@@@@@@@@outside try");
             try {
-                textViewReportDate.setText(complaint.getComplaintReportDate().toString());
+                String time = DateTimeUtil.getDate(complaint.getComplaintReportDate().toString());
+                Log.i(TAG, "@@@@@@@@@@@@ time: " + time);
+                Log.i(TAG, "@@@@@@@@@@@@inside try");
+                textViewReportDate.setText(time);
 
             } catch (Exception e) {
+                Log.i(TAG, "@@@@@@@@@@@@@@@@@Inside catch");
                 e.printStackTrace();
             }
             try {
