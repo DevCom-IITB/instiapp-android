@@ -89,9 +89,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SessionManager session;
     FeedFragment feedFragment;
     private User currentUser;
-    private boolean showNotifications = false;
     private BackHandledFragment selectedFragment;
     private Menu menu;
+    private RetrofitInterface retrofitInterface;
+    private List<Notification> notifications = null;
 
     /** which menu item should be checked on activity start */
     private int initMenuChecked = R.id.nav_feed;
@@ -147,21 +148,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkLatestVersion();
     }
 
+    /** Get the notifications from memory cache or network */
     private void fetchNotifications() {
+        // Try memory cache
+        if (notifications != null) {
+            showNotifications();
+            return;
+        }
+
+        // Get from network
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.getNotifications(Utils.getSessionIDHeader()).enqueue(new EmptyCallback<List<Notification>>() {
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
                 if (response.isSuccessful()) {
-                    List<Notification> notifications = response.body();
-                    if (notifications != null && !notifications.isEmpty()) {
-                        menu.findItem(R.id.action_notifications).setIcon(R.drawable.baseline_notifications_active_white_24);
-                    } else {
-                        menu.findItem(R.id.action_notifications).setIcon(R.drawable.ic_notifications_white_24dp);
-                    }
+                    notifications = response.body();
+                    showNotifications();
                 }
             }
         });
+    }
+
+    /** Show the right notification icon */
+    private void showNotifications() {
+        if (notifications != null && !notifications.isEmpty()) {
+            menu.findItem(R.id.action_notifications).setIcon(R.drawable.baseline_notifications_active_white_24);
+        } else {
+            menu.findItem(R.id.action_notifications).setIcon(R.drawable.ic_notifications_white_24dp);
+        }
     }
 
     /** Get version code we are currently on */
@@ -458,7 +472,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.action_notifications) {
-            showNotifications = true;
             NotificationsFragment notificationsFragment = new NotificationsFragment();
             updateFragment(notificationsFragment);
             return true;
