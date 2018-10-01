@@ -2,31 +2,36 @@ package app.insti.api;
 
 import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
-import app.insti.api.model.EventCreateRequest;
-import app.insti.api.model.EventCreateResponse;
-import app.insti.api.model.ExploreResponse;
-import app.insti.api.model.ImageUploadRequest;
-import app.insti.api.model.ImageUploadResponse;
-import app.insti.api.model.LoginResponse;
-import app.insti.api.model.NewsFeedResponse;
-import app.insti.data.Event;
-import app.insti.data.HostelMessMenu;
-import app.insti.data.NewsArticle;
-import app.insti.data.Notification;
-import app.insti.data.PlacementBlogPost;
-import app.insti.data.TrainingBlogPost;
-import app.insti.data.User;
-import app.insti.data.Venter;
-import app.insti.data.Venue;
+import app.insti.api.request.CommentCreateRequest;
+import app.insti.api.request.ComplaintCreateRequest;
+import app.insti.api.response.ComplaintCreateResponse;
+import app.insti.api.request.EventCreateRequest;
+import app.insti.api.response.EventCreateResponse;
+import app.insti.api.response.ExploreResponse;
+import app.insti.api.request.ImageUploadRequest;
+import app.insti.api.response.ImageUploadResponse;
+import app.insti.api.response.LoginResponse;
+import app.insti.api.response.NewsFeedResponse;
+import app.insti.api.request.UserFCMPatchRequest;
+import app.insti.api.model.Event;
+import app.insti.api.model.HostelMessMenu;
+import app.insti.api.model.NewsArticle;
+import app.insti.api.model.Notification;
+import app.insti.api.model.PlacementBlogPost;
+import app.insti.api.model.TrainingBlogPost;
+import app.insti.api.model.User;
+import app.insti.api.model.Venue;
+import app.insti.api.model.Venter;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -65,10 +70,10 @@ public interface RetrofitInterface {
     Call<User> getUser(@Header("Cookie") String sessionId, @Path("uuid") String uuid);
 
     @GET("bodies/{uuid}")
-    Call<app.insti.data.Body> getBody(@Header("Cookie") String sessionId, @Path("uuid") String uuid);
+    Call<app.insti.api.model.Body> getBody(@Header("Cookie") String sessionId, @Path("uuid") String uuid);
 
     @GET("bodies")
-    Call<List<app.insti.data.Body>> getAllBodies(@Header("Cookie") String sessionId);
+    Call<List<app.insti.api.model.Body>> getAllBodies(@Header("Cookie") String sessionId);
 
     @GET("bodies/{bodyID}/follow")
     Call<Void> updateBodyFollowing(@Header("Cookie") String sessionID, @Path("bodyID") String eventID, @Query("action") int action);
@@ -79,8 +84,8 @@ public interface RetrofitInterface {
     @GET("user-me")
     Call<User> getUserMe(@Header("Cookie") String sessionID);
 
-    @GET("user-me")
-    Call<User> getUserMe(@Header("Cookie") String sessionID, @Query("fcm_id") String fcmId);
+    @PATCH("user-me")
+    Call<User> patchUserMe(@Header("Cookie") String sessionID, @Body UserFCMPatchRequest userFCMPatchRequest);
 
     @GET("user-me/ues/{eventID}")
     Call<Void> updateUserEventStatus(@Header("Cookie") String sessionID, @Path("eventID") String eventID, @Query("status") int status);
@@ -101,7 +106,7 @@ public interface RetrofitInterface {
     Call<List<Notification>> getNotifications(@Header("Cookie") String sessionID);
 
     @GET("notifications/read/{notificationID}")
-    Call<Void> markNotificationRead(@Header("Cookie") String sessionID, @Path("notificationID") Integer notificationID);
+    Call<Void> markNotificationRead(@Header("Cookie") String sessionID, @Path("notificationID") String notificationID);
 
     @GET("logout")
     Call<Void> logout(@Header("Cookie") String sessionID);
@@ -109,5 +114,27 @@ public interface RetrofitInterface {
     @GET("search")
     Call<ExploreResponse> search(@Header("Cookie") String sessionID, @Query("query") String query);
 
+    @GET("complaints")
+    Call<List<Venter.Complaint>> getAllComplaints(@Header("Cookie") String sessionId);
 
+    @GET("complaints?filter=me")
+    Call<List<Venter.Complaint>> getUserComplaints(@Header("Cookie") String sessionId);
+
+    @GET("complaints/{complaintId}")
+    Call<Venter.Complaint> getComplaint(@Header("Cookie") String sessionId, @Path("complaintId") String complaintId);
+
+    @PUT("complaints/{complaintId}")
+    Call<Venter.Complaint> upVote(@Header("Cookie") String sessionId, @Path("complaintId") String complaintId);
+
+    @POST("complaints")
+    Call<ComplaintCreateResponse> postComplaint(@Header("Cookie") String sessionId, @Body ComplaintCreateRequest complaintCreateRequest);
+
+    @POST("complaints/{complaintId}/comments")
+    Call<Venter.Comment> postComment(@Header("Cookie") String sessionId, @Path("complaintId") String commentId, @Body CommentCreateRequest commentCreateRequest);
+
+    @PUT("comments/{commentId}")
+    Call<Venter.Comment> updateComment(@Header("Cookie") String sessionId, @Path("commentId") String commentId, @Body CommentCreateRequest commentCreateRequest);
+
+    @DELETE("comments/{commentId}")
+    Call<String> deleteComment(@Header("Cookie") String sessionId, @Path("commentId") String commentId);
 }

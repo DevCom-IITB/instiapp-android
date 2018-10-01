@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import app.insti.data.Venter;
+import app.insti.api.model.Venter;
 import app.insti.fragment.DetailedComplaintFragment;
 
 /**
@@ -32,11 +32,6 @@ public class ComplaintDetailsPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return DetailedComplaintFragment.getInstance(sessionid, complaintid, userid);
-
-//            case 1:
-//                RelevantComplaintFragment relevantComplaintFragment = RelevantComplaintFragment.getInstance();
-//                return relevantComplaintFragment;
-
             default:
                 return DetailedComplaintFragment.getInstance(sessionid, complaintid, userid);
         }
@@ -50,13 +45,6 @@ public class ComplaintDetailsPagerAdapter extends FragmentPagerAdapter {
         } else {
             return "Complaint Details"; //Change the else as follows for Relevant COmplaints
         }
-
-        /* For Showing Relevant Complaints
-        else
-        {
-            return context.getString(R.string.relevant_complaints);
-        }
-        */
     }
 
     @Override

@@ -16,13 +16,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import app.insti.ItemClickListener;
+import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
-import app.insti.data.NewsArticle;
+import app.insti.interfaces.Readable;
+import app.insti.interfaces.Writable;
+import app.insti.api.model.NewsArticle;
 import app.insti.fragment.NewsFragment;
 import ru.noties.markwon.Markwon;
 
-public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Readable<NewsArticle>,Writable<NewsArticle> {
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
 
@@ -35,12 +37,14 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.itemClickListener = itemClickListener;
     }
 
-    public List<NewsArticle> getNewsArticles() {
+    @Override
+    public List<NewsArticle> getPosts() {
         return newsArticles;
     }
 
-    public void setNewsArticles(List<NewsArticle> newsArticles) {
-        this.newsArticles = newsArticles;
+    @Override
+    public void setPosts(List<NewsArticle> posts) {
+        this.newsArticles = posts;
     }
 
     @NonNull

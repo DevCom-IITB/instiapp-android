@@ -2,7 +2,6 @@ package app.insti.fragment;
 
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,12 +23,11 @@ import java.util.Locale;
 import app.insti.ActivityBuffer;
 import app.insti.Constants;
 import app.insti.R;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.MessMenuAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.AppDatabase;
-import app.insti.data.HostelMessMenu;
-import app.insti.data.MessMenu;
+import app.insti.api.model.HostelMessMenu;
+import app.insti.api.model.MessMenu;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,7 +39,6 @@ public class MessMenuFragment extends BaseFragment {
 
     private RecyclerView messMenuRecyclerView;
     private SwipeRefreshLayout messMenuSwipeRefreshLayout;
-    private AppDatabase appDatabase;
     private Spinner hostelSpinner;
     private String hostel;
 
@@ -106,14 +103,11 @@ public class MessMenuFragment extends BaseFragment {
     }
 
     private void displayMenu(final String hostel) {
-        appDatabase = AppDatabase.getAppDatabase(getContext());
-        new showMessMenuFromDB().execute(hostel);
-
         updateMessMenu(hostel);
     }
 
     private void updateMessMenu(final String hostel) {
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getInstituteMessMenu("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<List<HostelMessMenu>>() {
             @Override
             public void onResponse(Call<List<HostelMessMenu>> call, Response<List<HostelMessMenu>> response) {
@@ -122,8 +116,6 @@ public class MessMenuFragment extends BaseFragment {
                     HostelMessMenu hostelMessMenu = findMessMenu(instituteMessMenu, hostel);
                     if(hostelMessMenu != null)
                         displayMessMenu(hostelMessMenu);
-
-                    new updateDatabase().execute(instituteMessMenu);
                 }
                 //Server Error
                 messMenuSwipeRefreshLayout.setRefreshing(false);
@@ -185,28 +177,5 @@ public class MessMenuFragment extends BaseFragment {
             }
         });
         getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-    }
-
-    private class updateDatabase extends AsyncTask<List<HostelMessMenu>, Void, Integer> {
-        @Override
-        protected Integer doInBackground(List<HostelMessMenu>... menus) {
-            appDatabase.dbDao().deleteHostelMessMenus();
-            appDatabase.dbDao().insertHostelMessMenus(menus[0]);
-            return 1;
-        }
-    }
-
-    public class showMessMenuFromDB extends AsyncTask<String, Void, HostelMessMenu> {
-
-        @Override
-        protected HostelMessMenu doInBackground(String... strings) {
-            return findMessMenu(appDatabase.dbDao().getAllHostelMessMenus(), strings[0]);
-        }
-
-        @Override
-        protected void onPostExecute(HostelMessMenu hostelMessMenu) {
-            if (hostelMessMenu != null)
-                displayMessMenu(hostelMessMenu);
-        }
     }
 }

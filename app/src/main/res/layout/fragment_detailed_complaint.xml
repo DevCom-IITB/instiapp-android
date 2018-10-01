@@ -40,14 +40,13 @@
                         android:id="@+id/textViewStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
                         android:paddingHorizontal="10dp"
                         android:text="STATUS"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
             </LinearLayout>
-
 
             <TextView
                 android:id="@+id/textViewReportDate"
@@ -77,28 +76,18 @@
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
 
-
         </LinearLayout>
-
-
-        <!--<fragment
-            android:id="@+id/google_map"
-            android:name="com.google.android.gms.maps.MapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"/>-->
 
         <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/google_map"
             android:layout_width="match_parent"
             android:layout_height="200dp" />
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:orientation="vertical">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -132,7 +121,7 @@
                 <com.cunoraz.tagview.TagView
                     android:id="@+id/tag_group"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="10dp" />
 
             </ScrollView>
@@ -143,12 +132,10 @@
 
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -167,7 +154,6 @@
 
             </LinearLayout>
 
-
             <android.support.design.widget.CoordinatorLayout
                 android:id="@+id/layoutComments"
                 android:layout_width="match_parent"
@@ -175,12 +161,10 @@
                 android:orientation="vertical"
                 android:padding="10dp">
 
-
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerViewComments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
 
             </android.support.design.widget.CoordinatorLayout>
 
@@ -201,7 +185,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="9"
-                    android:hint="Enter Comment" />
+                    android:hint="@string/enter_comment" />
 
                 <ImageButton
                     android:id="@+id/send_comment"
@@ -211,16 +195,13 @@
 
             </LinearLayout>
 
-
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:orientation="vertical">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -247,14 +228,12 @@
 
             </LinearLayout>
 
-
         </LinearLayout>
-
 
         <View
             android:layout_width="match_parent"
             android:layout_height="20dp" />
 
-
     </LinearLayout>
+
 </android.support.v4.widget.NestedScrollView>

@@ -12,9 +12,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import app.insti.ItemClickListener;
+import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
-import app.insti.data.User;
+import app.insti.api.model.User;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 

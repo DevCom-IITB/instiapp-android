@@ -8,8 +8,8 @@ android {
         manifestPlaceholders 'appAuthRedirectScheme': 'https'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 16
-        versionName "1.0.11"
+        versionCode 17
+        versionName "1.0.12"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
         vectorDrawables.useSupportLibrary = true
@@ -25,52 +25,35 @@ android {
 ext {
     supportLibVersion = '27.1.1'
     playServicesVersion = '15.0.1'
-    butterKnifeVersion = '8.8.1'
     retrofitVersion = '2.3.0'
     okhttpVersion = '3.11.0'
     picassoVersion = '2.71828'
-    archRoomVersion = '1.1.1'
     circleImageViewVersion = '2.2.0'
     markwonVersion = '1.0.6'
     commonsIOVersion = '2.4'
     tagViewVersion = '1.3'
-    volleyVersion = '1.0.0'
     circleIndicatorVersion = '1.2.2@aar'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    //noinspection GradleCompatible
-    implementation 'com.google.firebase:firebase-messaging:17.3.0'
-    //noinspection GradleCompatible
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    testImplementation "junit:junit:4.12"
+    implementation 'com.google.firebase:firebase-messaging:17.1.0'
     implementation "com.android.support:design:${supportLibVersion}"
     implementation "com.android.support:support-v4:${supportLibVersion}"
-    implementation "com.jakewharton:butterknife:${butterKnifeVersion}"
     implementation "com.google.android.gms:play-services-gcm:${playServicesVersion}"
     implementation "com.google.android.gms:play-services-maps:${playServicesVersion}"
     implementation "com.google.android.gms:play-services-location:${playServicesVersion}"
     implementation "com.google.android.gms:play-services-places:${playServicesVersion}"
-    annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
     implementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     implementation "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
     implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     implementation "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}"
     implementation "com.squareup.picasso:picasso:${picassoVersion}"
-    implementation "com.android.support:customtabs:${supportLibVersion}"
-    implementation "android.arch.persistence.room:runtime:${archRoomVersion}"
-    annotationProcessor "android.arch.persistence.room:compiler:${archRoomVersion}"
     implementation "com.android.support:cardview-v7:${supportLibVersion}"
     implementation "de.hdodenhof:circleimageview:${circleImageViewVersion}"
     implementation "ru.noties:markwon:${markwonVersion}"
     implementation "commons-io:commons-io:${commonsIOVersion}"
     implementation "com.github.Cutta:TagView:${tagViewVersion}"
-    implementation "com.android.volley:volley:${volleyVersion}"
     implementation "me.relex:circleindicator:${circleIndicatorVersion}"
 
 }

@@ -15,13 +15,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import app.insti.ItemClickListener;
+import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
-import app.insti.data.PlacementBlogPost;
+import app.insti.api.model.PlacementBlogPost;
 import app.insti.fragment.PlacementBlogFragment;
+import app.insti.interfaces.Readable;
+import app.insti.interfaces.Writable;
 import ru.noties.markwon.Markwon;
 
-public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Readable<PlacementBlogPost>,Writable<PlacementBlogPost> {
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
     private List<PlacementBlogPost> posts;

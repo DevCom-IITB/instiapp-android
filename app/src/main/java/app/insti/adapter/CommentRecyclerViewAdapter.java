@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.R;
-import app.insti.api.ComplaintAPI;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.Venter;
+import app.insti.activity.MainActivity;
+import app.insti.api.RetrofitInterface;
+import app.insti.api.model.Venter;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,23 +43,17 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private Context context;
     private LayoutInflater inflater;
     private String sessionId, userId;
-    private EditText editTextComment;
-    private ImageButton imageButtonSend;
+    private Activity activity;
 
     private List<Venter.Comment> commentList = new ArrayList<>();
 
-    public CommentRecyclerViewAdapter(Context context, String sessionId, String userId) {
+    public CommentRecyclerViewAdapter(Activity activity, Context context, String sessionId, String userId) {
         this.context = context;
         this.sessionId = sessionId;
         this.userId = userId;
         inflater = LayoutInflater.from(context);
+        this.activity = activity;
     }
-
-//    public void setUpdateCommentElements(ImageButton imageButtonSend, EditText editTextComment) {
-//        this.editTextComment = editTextComment;
-//        this.imageButtonSend = imageButtonSend;
-//
-//    }
 
     public class CommentsViewHolder extends RecyclerView.ViewHolder {
 
@@ -68,6 +62,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         private TextView textViewName;
         private TextView textViewCommentTime;
         private TextView textViewComment;
+        final RetrofitInterface retrofitInterface = activity != null ? ((MainActivity) activity).getRetrofitInterface() : null;
 
         public CommentsViewHolder(View itemView) {
             super(itemView);
@@ -110,7 +105,6 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             cardView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(final View v) {
-                    final ComplaintAPI complaintAPI = ServiceGenerator.createService(ComplaintAPI.class);
                     PopupMenu popupMenu = new PopupMenu(context, cardView);
                     if (!(comment.getUser().getUserID().equals(userId))) {
                         popupMenu.inflate(R.menu.comments_options_secondary_menu);
@@ -120,7 +114,6 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-
                             switch (item.getItemId()) {
                                 case R.id.copy_comment_option:
                                     ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
@@ -129,7 +122,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                                     Toast.makeText(context, "Comment Copied", Toast.LENGTH_SHORT).show();
                                     break;
                                 case R.id.delete_comment_option:
-                                    complaintAPI.deleteComment("sessionid=" + sessionId, comment.getId()).enqueue(new Callback<String>() {
+                                    retrofitInterface.deleteComment("sessionid=" + sessionId, comment.getId()).enqueue(new Callback<String>() {
                                         @Override
                                         public void onResponse(Call<String> call, Response<String> response) {
                                             if (response.isSuccessful()) {
@@ -146,51 +139,15 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                                         @Override
                                         public void onFailure(Call<String> call, Throwable t) {
                                             Log.i(TAG, "@@@@@@@@@ failure in deleting: " + t.toString());
-
                                         }
                                     });
                                     break;
-//                                case R.id.edit_comment_option:
-//                                    Log.i(TAG, "@@@@@@@@@@@@@@ Current User Id: "+ userId);
-//                                    Log.i(TAG, "@@@@@@@@@@@@@@ Comment User Id: "+ comment.getUser().getUserID());
-//                                    Log.i(TAG, "@@@@@@@@@@@@@@ !(comment.getUser().getUserID().equals(userId)): "+ !(comment.getUser().getUserID().equals(userId)));
-//                                    if (!(comment.getUser().getUserID().equals(userId))) {
-//                                        Toast.makeText(activity, "You can't edit this comment", Toast.LENGTH_SHORT).show();
-//                                    } else {
-//                                        editTextComment.setText(textViewComment.getText().toString());
-//                                        imageButtonSend.setOnClickListener(new View.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(View v) {
-//                                                CommentCreateRequest commentCreateRequest = new CommentCreateRequest(editTextComment.getText().toString());
-//                                                complaintAPI.updateComment("sessionid=" + sessionId, comment.getId(), commentCreateRequest).enqueue(new Callback<Venter.Comment>() {
-//                                                    @Override
-//                                                    public void onResponse(Call<Venter.Comment> call, Response<Venter.Comment> response) {
-//                                                        if (response.isSuccessful()) {
-//                                                            Venter.Comment commentResponse = response.body();
-//                                                            textViewComment.setText(commentResponse.getText());
-//                                                            Toast.makeText(activity, "Comment Updated", Toast.LENGTH_SHORT).show();
-//                                                            editTextComment.setText(null);
-//                                                        } else {
-//                                                            Toast.makeText(activity, "You can't edit this comment", Toast.LENGTH_SHORT).show();
-//                                                        }
-//                                                    }
-//
-//                                                    @Override
-//                                                    public void onFailure(Call<Venter.Comment> call, Throwable t) {
-//                                                        Log.i(TAG, "@@@@@@@@@@@@@@@ failure in editing: " + t.toString());
-//                                                    }
-//                                                });
-//                                            }
-//                                        });
-//                                    }
-//                                    break;
                             }
                             return true;
                         }
                     });
                     popupMenu.show();
                     return true;
-
                 }
             });
         }

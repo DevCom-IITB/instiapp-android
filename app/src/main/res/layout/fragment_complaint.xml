@@ -4,11 +4,6 @@
     android:layout_height="match_parent"
     tools:context="app.insti.fragment.ComplaintFragment">
 
-    <include
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/fragment_loading" />
-
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -22,14 +17,12 @@
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:contentScrim="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
 
                 <LinearLayout
                     android:id="@+id/layoutTopCardViewHolder"
@@ -78,17 +71,7 @@
 
                 </LinearLayout>
 
-
-                <!--<android.support.v7.widget.Toolbar-->
-                <!--android:id="@+id/mToolbar"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="?attr/actionBarSize"-->
-                <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
-                <!--app:layout_collapseMode="pin"/>-->
-
-
             </android.support.design.widget.CollapsingToolbarLayout>
-
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/sliding_tab_layout"
@@ -101,30 +84,11 @@
 
         </android.support.design.widget.AppBarLayout>
 
-
         <android.support.v4.view.ViewPager
             android:id="@+id/tab_viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-
-
-
-        <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fabButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:fabSize="normal"-->
-        <!--app:backgroundTint="@color/material_orange"-->
-        <!--android:src="@drawable/ic_write"-->
-        <!--android:layout_gravity="end|bottom"-->
-        <!--android:layout_marginRight="16dp"-->
-        <!--android:visibility="visible"-->
-        <!--android:layout_marginBottom="35dp"/>-->
-
-
-
 
     </android.support.design.widget.CoordinatorLayout>
 

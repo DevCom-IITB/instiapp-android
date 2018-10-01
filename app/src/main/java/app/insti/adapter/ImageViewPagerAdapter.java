@@ -5,12 +5,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import app.insti.data.Venter;
+import app.insti.api.model.Venter;
 import app.insti.fragment.AddImageFragment;
 import app.insti.fragment.ImageFragment;
 
@@ -21,7 +19,6 @@ import app.insti.fragment.ImageFragment;
 public class ImageViewPagerAdapter extends FragmentPagerAdapter {
 
     private static final String TAG = ImageViewPagerAdapter.class.getSimpleName();
-
     private List<String> images = new ArrayList<>();
     Venter.Complaint detailedComplaint;
 

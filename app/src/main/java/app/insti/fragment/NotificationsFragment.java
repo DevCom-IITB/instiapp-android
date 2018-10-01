@@ -17,14 +17,14 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.ItemClickListener;
+import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.NotificationsAdapter;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
-import app.insti.data.Notification;
-import app.insti.data.PlacementBlogPost;
+import app.insti.api.model.Notification;
+import app.insti.api.model.PlacementBlogPost;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,7 +57,7 @@ public class NotificationsFragment extends BaseFragment {
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Notifications");
 
-        RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.getNotifications(((MainActivity) getActivity()).getSessionIDHeader()).enqueue(new Callback<List<Notification>>() {
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
@@ -87,17 +87,9 @@ public class NotificationsFragment extends BaseFragment {
                 Notification notification = notifications.get(position);
 
                 /* Mark notification read */
-                RetrofitInterface retrofitInterface = ServiceGenerator.createService(RetrofitInterface.class);
+                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
                 String sessId = ((MainActivity) getActivity()).getSessionIDHeader();
-                retrofitInterface.markNotificationRead(sessId, notification.getNotificationId()).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                    }
-                });
+                retrofitInterface.markNotificationRead(sessId, notification.getNotificationId().toString()).enqueue(new EmptyCallback<Void>());
 
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();

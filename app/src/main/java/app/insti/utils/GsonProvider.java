@@ -19,5 +19,4 @@ public class GsonProvider {
     public static Gson getGsonOutput() {
         return gsonOutput;
     }
-
 }
