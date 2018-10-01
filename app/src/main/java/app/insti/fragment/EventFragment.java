@@ -237,7 +237,7 @@ public class EventFragment extends BackHandledFragment {
         final FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.edit_fab);
 
         if (((MainActivity) getActivity()).editEventAccess(event)) {
-            fab.setVisibility(View.VISIBLE);
+            fab.show();
             NestedScrollView nsv = (NestedScrollView) getView().findViewById(R.id.event_scrollview);
             nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
                 @Override
