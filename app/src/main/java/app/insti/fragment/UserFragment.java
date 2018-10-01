@@ -31,6 +31,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import app.insti.Constants;
+import app.insti.Utils;
 import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.ShareURLMaker;
@@ -147,12 +148,7 @@ public class UserFragment extends BackHandledFragment {
             public void onItemClick(View v, int position) {
                 Role role = roleList.get(position);
                 Body roleBody = role.getRoleBodyDetails();
-                BodyFragment bodyFragment = BodyFragment.newInstance(roleBody);
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
-                ft.addToBackStack(bodyFragment.getTag());
-                ft.commit();
+                Utils.openBodyFragment(roleBody, getActivity());
 
             }
         });

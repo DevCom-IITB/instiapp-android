@@ -105,16 +105,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         postView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String eventJson = new Gson().toJson(events.get(postViewHolder.getAdapterPosition()));
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.EVENT_JSON, eventJson);
-                EventFragment eventFragment = new EventFragment();
-                eventFragment.setArguments(bundle);
-                FragmentManager manager = mFragment.getActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                transaction.addToBackStack(eventFragment.getTag()).commit();
+                Utils.openEventFragment(events.get(postViewHolder.getAdapterPosition()), mFragment.getActivity());
             }
         });
 
