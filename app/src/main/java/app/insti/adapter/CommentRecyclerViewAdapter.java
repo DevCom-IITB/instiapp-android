@@ -79,7 +79,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             final Venter.Comment comment = commentList.get(position);
             try {
                 String profileUrl = comment.getUser().getUserProfilePictureUrl();
-                Log.i(TAG, "@@@@@@@@@@@@@@@@@ PROFILE URL: " + profileUrl);
+                Log.i(TAG, "PROFILE URL: " + profileUrl);
                 if (profileUrl != null)
                     Picasso.get().load(profileUrl).into(circleImageView);
                 else
@@ -94,12 +94,12 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             }
             try {
                 String time = DateTimeUtil.getDate(comment.getTime().toString());
-                Log.i(TAG, "@@@@@@@@@@@@ time: " + time);
-                Log.i(TAG, "@@@@@@@@@@@@inside try");
+                Log.i(TAG, "time: " + time);
+                Log.i(TAG, "inside try");
                 textViewCommentTime.setText(time);
 
             } catch (Exception e) {
-                Log.i(TAG, "@@@@@@@@@@@@@@@@@Inside catch");
+                Log.i(TAG, "Inside catch");
                 e.printStackTrace();
             }
             try {
@@ -144,7 +144,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                                         @Override
                                         public void onFailure(Call<String> call, Throwable t) {
-                                            Log.i(TAG, "@@@@@@@@@ failure in deleting: " + t.toString());
+                                            Log.i(TAG, " failure in deleting: " + t.toString());
                                         }
                                     });
                                     break;

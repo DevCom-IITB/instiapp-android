@@ -51,7 +51,6 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         private TextView textViewUserName;
         private TextView textViewReportDate;
         private TextView textViewStatus;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
         private int pos;
 
@@ -117,15 +116,12 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.i(TAG, "@@@@@@@@@@@@@outside try");
             try {
                 String time = DateTimeUtil.getDate(complaint.getComplaintReportDate().toString());
-                Log.i(TAG, "@@@@@@@@@@@@ time: " + time);
-                Log.i(TAG, "@@@@@@@@@@@@inside try");
+                Log.i(TAG, "time: " + time);
                 textViewReportDate.setText(time);
 
             } catch (Exception e) {
-                Log.i(TAG, "@@@@@@@@@@@@@@@@@Inside catch");
                 e.printStackTrace();
             }
             try {

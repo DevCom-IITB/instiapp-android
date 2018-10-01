@@ -18,13 +18,13 @@ public class DateTimeUtil {
             long seconds = TimeUnit.MILLISECONDS.toSeconds(now.getTime() - date.getTime());
             long minutes = TimeUnit.MILLISECONDS.toMinutes(now.getTime() - date.getTime());
             long hours = TimeUnit.MILLISECONDS.toHours(now.getTime() - date.getTime());
-            if (seconds == 0) {
+            if (seconds <= 0) {
                 return time_ago = "now";
-            } else if (seconds < 60) {
+            } else if (seconds < 60 && seconds > 0) {
                 return time_ago = seconds + " seconds ago";
-            } else if (minutes < 60) {
+            } else if (minutes < 60 && minutes > 0) {
                 return time_ago = minutes + " minutes ago";
-            } else if (hours < 24) {
+            } else if (hours < 24 && hours > 0) {
                 return hours + " hours ago";
             } else {
                 long days = Math.round(diff / (24.0 * 60 * 60 * 1000));

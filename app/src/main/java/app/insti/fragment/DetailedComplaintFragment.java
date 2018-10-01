@@ -179,12 +179,12 @@ public class DetailedComplaintFragment extends Fragment {
         }
         try {
             String time = DateTimeUtil.getDate(detailedComplaint.getComplaintReportDate().toString());
-            Log.i(TAG, "@@@@@@@@@@@@ time: " + time);
-            Log.i(TAG, "@@@@@@@@@@@@inside try");
+            Log.i(TAG, " time: " + time);
+            Log.i(TAG, "inside try");
             textViewReportDate.setText(time);
 
         } catch (Exception e) {
-            Log.i(TAG, "@@@@@@@@@@@@@@@@@Inside catch");
+            Log.i(TAG, "Inside catch");
             e.printStackTrace();
         }
         try {
