@@ -42,9 +42,16 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
     boolean loading = false;
     private boolean allLoaded = false;
 
+    /** Update the data clearing existing */
     protected void updateData() {
+        // Skip if we're already destroyed
+        if (getActivity() == null || getView() == null) return;
+
+        // Clear variables
         clearPosts();
         allLoaded = false;
+
+        // Make the request
         String sessionIDHeader = ((MainActivity) getActivity()).getSessionIDHeader();
         RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         Call<List<T>> call = getCall(retrofitInterface, sessionIDHeader);
