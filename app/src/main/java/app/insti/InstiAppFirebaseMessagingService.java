@@ -120,6 +120,7 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
                 .setColor(getResources().getColor(R.color.colorPrimary))
                 .setVibrate(new long[]{0, 200})
                 .setSound(soundUri)
+                .setLights(Color.BLUE, 500, 500)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
     }

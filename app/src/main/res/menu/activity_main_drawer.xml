@@ -44,6 +44,11 @@
             android:title="Map" />
 
         <item
+            android:id="@+id/nav_complaint"
+            android:icon="@drawable/baseline_description_black_48"
+            android:title="Complaints/Suggestions" />
+
+        <item
             android:id="@+id/nav_qlinks"
             android:icon="@drawable/ic_link_black_24dp"
             android:title="Quick Links" />
