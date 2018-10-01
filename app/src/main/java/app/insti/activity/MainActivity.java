@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
@@ -55,9 +59,11 @@ import app.insti.api.request.UserFCMPatchRequest;
 import app.insti.fragment.BackHandledFragment;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.CalendarFragment;
+import app.insti.fragment.ComplaintFragment;
 import app.insti.fragment.EventFragment;
 import app.insti.fragment.ExploreFragment;
 import app.insti.fragment.FeedFragment;
+import app.insti.fragment.FileComplaintFragment;
 import app.insti.fragment.MapFragment;
 import app.insti.fragment.MessMenuFragment;
 import app.insti.fragment.NewsFragment;
@@ -77,6 +83,7 @@ import static app.insti.Constants.DATA_TYPE_PT;
 import static app.insti.Constants.DATA_TYPE_USER;
 import static app.insti.Constants.FCM_BUNDLE_NOTIFICATION_ID;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
+import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
 
@@ -519,7 +526,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 MapFragment mapFragment = new MapFragment();
                 updateFragment(mapFragment);
                 break;
-
+            case R.id.nav_complaint:
+                if (session.isLoggedIn()) {
+                    ComplaintFragment complaintFragment = new ComplaintFragment();
+                    updateFragment(complaintFragment);
+                } else {
+                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
+                }
+                break;
             case R.id.nav_settings:
                 SettingsFragment settingsFragment = new SettingsFragment();
                 updateFragment(settingsFragment);
@@ -552,7 +566,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /** Change the active fragment to the supplied one */
     public void updateFragment(Fragment fragment) {
-        Log.d(TAG, "updateFragment: " + fragment.toString());
+        Log.i(TAG, "updateFragment: " + fragment.toString());
         Bundle bundle = fragment.getArguments();
         if (bundle == null) {
             bundle = new Bundle();
@@ -561,6 +575,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (fragment instanceof MessMenuFragment)
             bundle.putString(Constants.USER_HOSTEL, session.isLoggedIn() && currentUser.getHostel() != null ? currentUser.getHostel() : "1");
         if (fragment instanceof SettingsFragment && session.isLoggedIn())
+            bundle.putString(Constants.USER_ID, currentUser.getUserID());
+        if (fragment instanceof ComplaintFragment && session.isLoggedIn())
             bundle.putString(Constants.USER_ID, currentUser.getUserID());
         fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
@@ -594,8 +610,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
                     toast.show();
                 }
+                break;
+            case MY_PERMISSIONS_REQUEST_LOCATION:
+                Log.i(TAG, "Permission request captured");
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "Permission Granted");
+                    FileComplaintFragment.getMainActivity().getMapReady();
+                } else {
+                    Log.i(TAG, "Permission Cancelled");
+                    Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
         }
     }
+
 
     public String getSessionIDHeader() {
         return "sessionid=" + session.getSessionID();

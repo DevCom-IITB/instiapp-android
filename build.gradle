@@ -20,8 +20,14 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven { url 'https://maven.google.com' }
-        google()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
+        maven {
+            url "https://jitpack.io"
+//            dont use proxy when syncing it
+        }
     }
 }
 

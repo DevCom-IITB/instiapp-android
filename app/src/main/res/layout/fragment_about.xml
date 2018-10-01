@@ -374,13 +374,6 @@
 
             </LinearLayout>
 
-
-
-
-
-
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -434,7 +427,6 @@
 
             </LinearLayout>
 
-
             <TextView
                 android:id="@+id/alumni"
                 android:layout_width="wrap_content"
@@ -445,11 +437,6 @@
                 android:text="Alumni"
                 android:textSize="18sp"
                 android:textStyle="bold" />
-
-
-
-
-
 
 
             <LinearLayout
