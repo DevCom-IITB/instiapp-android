@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -46,8 +47,9 @@ public class CalendarFragment extends BaseFragment {
 
     FloatingActionButton fab;
     private View view;
-    private Toast toast;
+    private FeedAdapter feedAdapter = null;
     private List<Event> events;
+
 
     public CalendarFragment() {
         // Required empty public constructor
@@ -165,9 +167,20 @@ public class CalendarFragment extends BaseFragment {
         }
 
         RecyclerView eventRecyclerView = (RecyclerView) getActivity().findViewById(R.id.calendar_event_card_recycler_view);
-        FeedAdapter eventAdapter = new FeedAdapter(filteredEvents, this);
-        eventRecyclerView.setAdapter(eventAdapter);
-        eventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Initialize or refresh adapter
+        if (feedAdapter == null) {
+            feedAdapter = new FeedAdapter(filteredEvents, this);
+        } else {
+            feedAdapter.setEvents(filteredEvents);
+            feedAdapter.notifyDataSetChanged();
+        }
+
+        // Initialize recycler view
+        if (eventRecyclerView.getAdapter() != feedAdapter) {
+            eventRecyclerView.setAdapter(feedAdapter);
+            eventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
 
         getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }

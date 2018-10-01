@@ -162,25 +162,32 @@ public class FeedFragment extends BaseFragment {
         // Initialize adapter
         if (feedAdapter == null) {
             feedAdapter = new FeedAdapter(events, this);
-            getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
-                @Override
-                public void run(Activity pActivity) {
-                    try {
-                        feedRecyclerView.setAdapter(feedAdapter);
-                        //feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
         } else {
             feedAdapter.setEvents(events);
             feedAdapter.notifyDataSetChanged();
         }
 
+        // Initialize adapter if necessary
+        if (feedRecyclerView.getAdapter() != feedAdapter) {
+            initRecyclerView();
+        }
+
         View view = getActivity().findViewById(R.id.loadingPanel);
         if (view != null)
             view.setVisibility(View.GONE);
+    }
+
+    private void initRecyclerView() {
+        getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
+            @Override
+            public void run(Activity pActivity) {
+                try {
+                    feedRecyclerView.setAdapter(feedAdapter);
+
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }
