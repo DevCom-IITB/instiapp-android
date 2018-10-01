@@ -57,7 +57,7 @@ public class SettingsFragment extends Fragment {
         populateViews();
 
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        retrofitInterface.getUser("sessionid=" + getArguments().getString(Constants.SESSION_ID), userID).enqueue(new Callback<User>() {
+        retrofitInterface.getUser(Utils.getSessionIDHeader(), userID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
@@ -133,7 +133,7 @@ public class SettingsFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-                    retrofitInterface.logout("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<Void>() {
+                    retrofitInterface.logout(Utils.getSessionIDHeader()).enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if (response.isSuccessful()) {

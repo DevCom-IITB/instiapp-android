@@ -109,7 +109,7 @@ public class MessMenuFragment extends BaseFragment {
 
     private void updateMessMenu(final String hostel) {
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        retrofitInterface.getInstituteMessMenu("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<List<HostelMessMenu>>() {
+        retrofitInterface.getInstituteMessMenu(Utils.getSessionIDHeader()).enqueue(new Callback<List<HostelMessMenu>>() {
             @Override
             public void onResponse(Call<List<HostelMessMenu>> call, Response<List<HostelMessMenu>> response) {
                 if (response.isSuccessful()) {
