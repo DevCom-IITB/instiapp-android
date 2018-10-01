@@ -14,16 +14,17 @@ import android.view.MenuItem;
 import android.view.View;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.ActivityBuffer;
+import app.insti.R;
+import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.interfaces.Browsable;
 import app.insti.interfaces.ItemClickListener;
-import app.insti.R;
 import app.insti.interfaces.Readable;
 import app.insti.interfaces.Writable;
-import app.insti.activity.MainActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,8 +39,12 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
     protected SwipeRefreshLayout swipeRefreshLayout;
     protected String searchQuery;
     private S adapter = null;
+    boolean loading = false;
+    private boolean allLoaded = false;
 
     protected void updateData() {
+        clearPosts();
+        allLoaded = false;
         String sessionIDHeader = ((MainActivity) getActivity()).getSessionIDHeader();
         RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         Call<List<T>> call = getCall(retrofitInterface, sessionIDHeader);
@@ -66,6 +71,18 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
         /* Skip if we're already destroyed */
         if (getActivity() == null || getView() == null) return;
 
+        if (adapter == null) {
+            initAdapter(result);
+        } else {
+            adapter.setPosts(result);
+            adapter.notifyDataSetChanged();
+        }
+
+        getActivity().findViewById(R.id.loadingPanel).setVisibility(GONE);
+    }
+
+    /** Initialize the adapter */
+    private void initAdapter(final List<T> result) {
         try {
             adapter = adapterType.getDeclaredConstructor(List.class, ItemClickListener.class).newInstance(result, new ItemClickListener() {
                 @Override
@@ -75,52 +92,63 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
                         openWebURL(link);
                 }
             });
-            getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
-                @Override
-                public void run(Activity pActivity) {
-                    recyclerView.setAdapter(adapter);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                        boolean loading = false;
+            initRecyclerView();
 
-                        @Override
-                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                            if (dy > 0) {
-                                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                                if (((layoutManager.getChildCount() + layoutManager.findFirstVisibleItemPosition()) > (layoutManager.getItemCount() - 5)) && (!loading)) {
-                                    loading = true;
-                                    String sessionIDHeader = ((MainActivity) getActivity()).getSessionIDHeader();
-                                    RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-                                    Call<List<T>> call = getCall(retrofitInterface, sessionIDHeader);
-                                    call.enqueue(new Callback<List<T>>() {
-                                        @Override
-                                        public void onResponse(Call<List<T>> call, Response<List<T>> response) {
-                                            if (response.isSuccessful()) {
-                                                loading = false;
-                                                List<T> posts = adapter.getPosts();
-                                                posts.addAll(response.body());
-                                                if (response.body().size() == 0) {
-                                                    showLoader = false;
-                                                }
-                                                adapter.setPosts(posts);
-                                                adapter.notifyDataSetChanged();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<List<T>> call, Throwable t) {
-                                            loading = false;
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-            getActivity().findViewById(R.id.loadingPanel).setVisibility(GONE);
         } catch (java.lang.InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
+        }
+    }
+
+    /** Initialize scrolling on the adapter */
+    private void initRecyclerView() {
+        getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
+            @Override
+            public void run(Activity pActivity) {
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        if (dy > 0) {
+                            LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                            if (((layoutManager.getChildCount() + layoutManager.findFirstVisibleItemPosition()) > (layoutManager.getItemCount() - 5)) && (!loading) && (!allLoaded)) {
+                                loading = true;
+                                String sessionIDHeader = ((MainActivity) getActivity()).getSessionIDHeader();
+                                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
+                                Call<List<T>> call = getCall(retrofitInterface, sessionIDHeader);
+                                call.enqueue(new Callback<List<T>>() {
+                                    @Override
+                                    public void onResponse(Call<List<T>> call, Response<List<T>> response) {
+                                        if (getActivity() == null || getView() == null) return;
+                                        loading = false;
+                                        if (response.isSuccessful()) {
+                                            List<T> posts = adapter.getPosts();
+                                            posts.addAll(response.body());
+                                            if (response.body().size() == 0) {
+                                                showLoader = false;
+                                                allLoaded = true;
+                                            }
+                                            adapter.setPosts(posts);
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<List<T>> call, Throwable t) {
+                                        loading = false;
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    protected void clearPosts() {
+        if (adapter != null) {
+            adapter.setPosts(new ArrayList<T>());
         }
     }
 
