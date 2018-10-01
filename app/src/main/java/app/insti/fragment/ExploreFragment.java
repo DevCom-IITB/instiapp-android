@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
 import app.insti.adapter.FeedAdapter;
@@ -77,7 +78,7 @@ public class ExploreFragment extends Fragment {
         super.onStart();
 
         // Initialize
-        sessionId = ((MainActivity) getActivity()).getSessionIDHeader();
+        sessionId = Utils.getSessionIDHeader();
         initRecyclerViews();
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
@@ -85,7 +86,7 @@ public class ExploreFragment extends Fragment {
 
         // Get all bodies
         if (allBodies.size() == 0) {
-            RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
+            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
             retrofitInterface.getAllBodies(sessionId).enqueue(new EmptyCallback<List<Body>>() {
                 @Override
                 public void onResponse(Call<List<Body>> call, Response<List<Body>> response) {
@@ -136,7 +137,7 @@ public class ExploreFragment extends Fragment {
         currentQuery = query;
 
         // Make request
-        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.search(sessionId, query).enqueue(new EmptyCallback<ExploreResponse>() {
             @Override
             public void onResponse(Call<ExploreResponse> call, Response<ExploreResponse> response) {

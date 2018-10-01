@@ -275,8 +275,8 @@ public class EventFragment extends BackHandledFragment {
             @Override
             public void onClick(View view) {
                 final int endStatus = event.getEventUserUes() == status ? 0 : status;
-                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-                retrofitInterface.updateUserEventStatus(((MainActivity) getActivity()).getSessionIDHeader(), event.getEventID(), endStatus).enqueue(new Callback<Void>() {
+                RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+                retrofitInterface.updateUserEventStatus(Utils.getSessionIDHeader(), event.getEventID(), endStatus).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {

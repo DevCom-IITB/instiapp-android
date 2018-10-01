@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import app.insti.Constants;
+import app.insti.Utils;
 import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.activity.MainActivity;
@@ -118,8 +119,8 @@ public class CalendarFragment extends BaseFragment {
         final String oneMonthBack = isoFormatter.format(oneMonthBackDate).toString();
         final String oneMonthOn = isoFormatter.format(oneMonthOnDate).toString();
 
-        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-        retrofitInterface.getEventsBetweenDates(((MainActivity) getActivity()).getSessionIDHeader(), oneMonthBack, oneMonthOn).enqueue(new Callback<NewsFeedResponse>() {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.getEventsBetweenDates(Utils.getSessionIDHeader(), oneMonthBack, oneMonthOn).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {

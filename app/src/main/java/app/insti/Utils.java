@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.User;
@@ -19,6 +20,8 @@ import app.insti.fragment.EventFragment;
 import app.insti.fragment.UserFragment;
 
 public final class Utils {
+    private static String sessionId;
+    private static RetrofitInterface retrofitInterface;
     public static UpdatableList<Event> eventCache = new UpdatableList<>();
 
     public static final void loadImageWithPlaceholder(final ImageView imageView, final String url) {
@@ -78,5 +81,21 @@ public final class Utils {
         UserFragment userFragment = new UserFragment();
         userFragment.setArguments(bundle);
         updateFragment(userFragment, fragmentActivity);
+    }
+
+    public static void setSessionId(String sessionId1) {
+        sessionId = sessionId1;
+    }
+
+    public static String getSessionIDHeader() {
+        return "sessionid=" + sessionId;
+    }
+
+    public static RetrofitInterface getRetrofitInterface() {
+        return retrofitInterface;
+    }
+
+    public static void setRetrofitInterface(RetrofitInterface retrofitInterface) {
+        Utils.retrofitInterface = retrofitInterface;
     }
 }

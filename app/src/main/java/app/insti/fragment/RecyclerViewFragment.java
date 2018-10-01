@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import app.insti.ActivityBuffer;
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.interfaces.Browsable;
@@ -55,8 +56,8 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
         final String requestSearchQuery = searchQuery;
 
         // Make the request
-        String sessionIDHeader = ((MainActivity) getActivity()).getSessionIDHeader();
-        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
+        String sessionIDHeader = Utils.getSessionIDHeader();
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         Call<List<T>> call = getCall(retrofitInterface, sessionIDHeader, 0);
         call.enqueue(new Callback<List<T>>() {
             @Override
@@ -129,8 +130,8 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
                             LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                             if (((layoutManager.getChildCount() + layoutManager.findFirstVisibleItemPosition()) > (layoutManager.getItemCount() - 5)) && (!loading) && (!allLoaded)) {
                                 loading = true;
-                                String sessionIDHeader = ((MainActivity) getActivity()).getSessionIDHeader();
-                                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
+                                String sessionIDHeader = Utils.getSessionIDHeader();
+                                RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
                                 Call<List<T>> call = getCall(retrofitInterface, sessionIDHeader, getPostCount());
                                 call.enqueue(new Callback<List<T>>() {
                                     @Override

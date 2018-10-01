@@ -108,7 +108,7 @@ public class UserFragment extends BackHandledFragment {
         Bundle bundle = getArguments();
         String userID = bundle.getString(Constants.USER_ID);
 
-        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.getUser("sessionid=" + getArguments().getString(Constants.SESSION_ID), userID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {

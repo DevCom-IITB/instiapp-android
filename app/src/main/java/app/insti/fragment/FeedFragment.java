@@ -100,8 +100,8 @@ public class FeedFragment extends BaseFragment {
 
     private void updateFeed() {
 
-        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-        retrofitInterface.getNewsFeed(((MainActivity)getActivity()).getSessionIDHeader()).enqueue(new Callback<NewsFeedResponse>() {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.getNewsFeed(Utils.getSessionIDHeader()).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
