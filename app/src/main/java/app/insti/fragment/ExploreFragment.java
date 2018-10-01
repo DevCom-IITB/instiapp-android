@@ -49,6 +49,8 @@ public class ExploreFragment extends Fragment {
     private FeedAdapter eventsAdapter;
     private UserAdapter userAdapter;
 
+    private String currentQuery = null;
+
     public ExploreFragment() {
         // Required empty public constructor
     }
@@ -124,17 +126,25 @@ public class ExploreFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_explore, container, false);
     }
 
-    public void doSearch(String query) {
+    public void doSearch(final String query) {
         if (getActivity() == null || getView() == null) return;
 
         // Show loading spinner
         getView().findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+
+        // Set the lastest query
+        currentQuery = query;
 
         // Make request
         RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.search(sessionId, query).enqueue(new EmptyCallback<ExploreResponse>() {
             @Override
             public void onResponse(Call<ExploreResponse> call, Response<ExploreResponse> response) {
+                // Check if we already have a new query pending
+                if (!currentQuery.equals(query)) {
+                    return;
+                }
+
                 // Get data
                 bodies = response.body().getBodies();
                 events = response.body().getEvents();
