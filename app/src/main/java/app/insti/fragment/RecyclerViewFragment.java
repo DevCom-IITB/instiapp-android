@@ -48,13 +48,12 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
         if (getActivity() == null || getView() == null) return;
 
         // Clear variables
-        clearPosts();
         allLoaded = false;
 
         // Make the request
         String sessionIDHeader = ((MainActivity) getActivity()).getSessionIDHeader();
         RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-        Call<List<T>> call = getCall(retrofitInterface, sessionIDHeader);
+        Call<List<T>> call = getCall(retrofitInterface, sessionIDHeader, 0);
         call.enqueue(new Callback<List<T>>() {
             @Override
             public void onResponse(Call<List<T>> call, Response<List<T>> response) {
@@ -72,7 +71,7 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
         });
     }
 
-    abstract Call<List<T>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader);
+    abstract Call<List<T>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader, int postCount);
 
     private void displayData(final List<T> result) {
         /* Skip if we're already destroyed */
@@ -122,7 +121,7 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
                                 loading = true;
                                 String sessionIDHeader = ((MainActivity) getActivity()).getSessionIDHeader();
                                 RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-                                Call<List<T>> call = getCall(retrofitInterface, sessionIDHeader);
+                                Call<List<T>> call = getCall(retrofitInterface, sessionIDHeader, getPostCount());
                                 call.enqueue(new Callback<List<T>>() {
                                     @Override
                                     public void onResponse(Call<List<T>> call, Response<List<T>> response) {
@@ -151,12 +150,6 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
                 });
             }
         });
-    }
-
-    protected void clearPosts() {
-        if (adapter != null) {
-            adapter.setPosts(new ArrayList<T>());
-        }
     }
 
     protected int getPostCount() {
