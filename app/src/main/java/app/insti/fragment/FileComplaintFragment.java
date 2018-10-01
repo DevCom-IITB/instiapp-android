@@ -312,7 +312,7 @@ public class FileComplaintFragment extends Fragment {
 
             @Override
             public void onError(Status status) {
-                Log.i(TAG, "@@@@@@@@@@@@@@@@@An error occurred: " + status);
+                Log.i(TAG, "An error occurred: " + status);
 
             }
         });
@@ -330,7 +330,7 @@ public class FileComplaintFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         tagView.remove(i);
                         tagList2.remove(i);
-                        Log.i(TAG, "@@@@@@@@@@@@@@@@@tagList2: " + tagList2.toString());
+                        Log.i(TAG, "tagList2: " + tagList2.toString());
                         Toast.makeText(getContext(), "\"" + tag.text + "\" deleted", Toast.LENGTH_SHORT).show();
                     }
                 });
