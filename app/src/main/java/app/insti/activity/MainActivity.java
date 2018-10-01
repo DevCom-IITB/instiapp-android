@@ -619,12 +619,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 break;
             case MY_PERMISSIONS_REQUEST_LOCATION:
-                Log.i(TAG, "@@@@@@@@@@@@@@ Permission request captured");
+                Log.i(TAG, "Permission request captured");
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "@@@@@@@@@@@@@@ Permission Granted");
+                    Log.i(TAG, "Permission Granted");
                     FileComplaintFragment.getMainActivity().getMapReady();
                 } else {
-                    Log.i(TAG, "@@@@@@@@@@@@@@ Permission Cancelled");
+                    Log.i(TAG, "Permission Cancelled");
                     Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
                     toast.show();
                 }

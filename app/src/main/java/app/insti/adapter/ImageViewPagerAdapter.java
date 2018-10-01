@@ -45,15 +45,15 @@ public class ImageViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Log.i(TAG, "@@@@@@@@@@@@@@images = " + images.size());
-        Log.i(TAG, "@@@@@@@@@@@@@@size = " + getCount());
-        Log.i(TAG, "@@@@@@@@@@@@@@@pos = " + position);
+        Log.i(TAG, "images = " + images.size());
+        Log.i(TAG, "size = " + getCount());
+        Log.i(TAG, "pos = " + position);
 
         if (images.size() == 0){
-            Log.i(TAG,"@@@@@@@@@@@@@calling 1");
+            Log.i(TAG,"calling 1");
             return new AddImageFragment();
         }else {
-            Log.i(TAG,"@@@@@@@@@@@@@calling 2");
+            Log.i(TAG,"calling 2");
             return ImageFragment.newInstance(images.get(position),position);
         }
     }

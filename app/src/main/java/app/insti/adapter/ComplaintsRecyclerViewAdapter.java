@@ -63,7 +63,7 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
         public void bindHolder(int position) {
             this.pos = position;
-            Log.i(TAG, "@@@@@@@@@@@@json = " + GsonProvider.getGsonOutput().toJson(complaintList.get(pos)));
+            Log.i(TAG, "json = " + GsonProvider.getGsonOutput().toJson(complaintList.get(pos)));
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -142,8 +142,7 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         view = inflater.inflate(R.layout.complaint_card, parent, false);
-        ComplaintsViewHolder complaintsViewHolder = new ComplaintsViewHolder(view);
-        return complaintsViewHolder;
+        return new ComplaintsViewHolder(view);
     }
 
     @Override

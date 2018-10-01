@@ -33,7 +33,7 @@ public class HomeFragment extends Fragment {
 
     private static String TAG = HomeFragment.class.getSimpleName();
     private boolean isCalled = false;
-    private TextView server_error;
+    private TextView error_message_home;
     static String sID, uID;
 
     public static HomeFragment getInstance(String sessionID, String userID) {
@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment {
         recyclerViewHome = (RecyclerView) view.findViewById(R.id.recyclerViewHome);
         homeListAdapter = new ComplaintsRecyclerViewAdapter(getActivity(), sID, uID);
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-        server_error = view.findViewById(R.id.server_error_home);
+        error_message_home = view.findViewById(R.id.error_message_home);
 
         LinearLayoutManager llm = new LinearLayoutManager(activity);
         recyclerViewHome.setLayoutManager(llm);
@@ -89,7 +89,6 @@ public class HomeFragment extends Fragment {
             });
             isCalled = true;
         }
-
         return view;
     }
 
@@ -100,23 +99,23 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onResponse(@NonNull Call<List<Venter.Complaint>> call, @NonNull Response<List<Venter.Complaint>> response) {
                     if (response.body() != null && !(response.body().isEmpty())) {
-                        Log.i(TAG, "@@@@@@@@@@@@ response.body != null");
-                        Log.i(TAG, "@@@@@@@@@@@@ response: " + response.body());
+                        Log.i(TAG, "response.body != null");
+                        Log.i(TAG, "response: " + response.body());
                         initialiseRecyclerView(response.body());
                         swipeContainer.setRefreshing(false);
                     } else {
-                        Log.i(TAG, "@@@@@@@@@@@@ response.body == null");
-                        server_error.setVisibility(View.VISIBLE);
-                        server_error.setText(getString(R.string.no_complaints));
+                        Log.i(TAG, "response.body is empty");
+                        error_message_home.setVisibility(View.VISIBLE);
+                        error_message_home.setText(getString(R.string.no_complaints));
                         swipeContainer.setRefreshing(false);
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<List<Venter.Complaint>> call, @NonNull Throwable t) {
-                    Log.i(TAG, "@@@@@@@@@@@@@failure" + t.toString());
+                    Log.i(TAG, "failure" + t.toString());
                     swipeContainer.setRefreshing(false);
-                    server_error.setVisibility(View.VISIBLE);
+                    error_message_home.setVisibility(View.VISIBLE);
                 }
             });
         } catch (Exception e) {
@@ -126,10 +125,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void initialiseRecyclerView(List<Venter.Complaint> list) {
-
         homeListAdapter.setcomplaintList(list);
         homeListAdapter.notifyDataSetChanged();
-
-
     }
 }

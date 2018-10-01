@@ -30,7 +30,7 @@ public class MeFragment extends Fragment {
     Activity activity;
     RecyclerView recyclerViewMe;
     ComplaintsRecyclerViewAdapter meListAdapter;
-    TextView server_error;
+    TextView error_message_me;
     SwipeRefreshLayout swipeContainer;
     private static String TAG = MeFragment.class.getSimpleName();
     private boolean isCalled = false;
@@ -61,7 +61,7 @@ public class MeFragment extends Fragment {
         recyclerViewMe = view.findViewById(R.id.recyclerViewMe);
         meListAdapter = new ComplaintsRecyclerViewAdapter(getActivity(), sID, uID);
         swipeContainer = view.findViewById(R.id.swipeContainer);
-        server_error = view.findViewById(R.id.server_error_me);
+        error_message_me = view.findViewById(R.id.error_message_me);
 
         LinearLayoutManager llm = new LinearLayoutManager(activity);
         recyclerViewMe.setLayoutManager(llm);
@@ -99,30 +99,28 @@ public class MeFragment extends Fragment {
                 @Override
                 public void onResponse(@NonNull Call<List<Venter.Complaint>> call, @NonNull Response<List<Venter.Complaint>> response) {
                     if (response.body() != null && !(response.body().isEmpty())) {
-                        Log.i(TAG, "@@@@@@@@@@@@ response.body != null");
-                        Log.i(TAG, "@@@@@@@@@@@@ response: " + response.body());
+                        Log.i(TAG, "response.body != null");
+                        Log.i(TAG, "response: " + response.body());
                         initialiseRecyclerView(response.body());
                         swipeContainer.setRefreshing(false);
                     } else {
-                        Log.i(TAG, "@@@@@@@@@@@@ response.body == null");
-                        server_error.setVisibility(View.VISIBLE);
-                        server_error.setText(getString(R.string.no_complaints));
+                        error_message_me.setVisibility(View.VISIBLE);
+                        error_message_me.setText(getString(R.string.no_complaints));
                         swipeContainer.setRefreshing(false);
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<List<Venter.Complaint>> call, @NonNull Throwable t) {
-                    Log.i(TAG, "@@@@@@@@@@@@@ failure" + t.toString());
+                    Log.i(TAG, "failure" + t.toString());
                     swipeContainer.setRefreshing(false);
-                    server_error.setVisibility(View.VISIBLE);
+                    error_message_me.setVisibility(View.VISIBLE);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
             swipeContainer.setRefreshing(false);
         }
-
     }
 
     private void initialiseRecyclerView(List<Venter.Complaint> list) {
