@@ -40,15 +40,14 @@ public class FeedFragment extends BaseFragment {
     private RecyclerView feedRecyclerView;
     private SwipeRefreshLayout feedSwipeRefreshLayout;
     private FloatingActionButton fab;
-    private boolean freshEventsDisplayed = false;
     LinearLayoutManager mLayoutManager;
     public static int index = -1, top = -1;
+    public static List<Event> eventList = null;
     private FeedAdapter feedAdapter = null;
 
     public FeedFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,8 +75,14 @@ public class FeedFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        fab = (FloatingActionButton) getView().findViewById(R.id.fab);
-        updateFeed();
+        fab = getView().findViewById(R.id.fab);
+
+        // Initialize the feed
+        if (eventList == null) {
+            updateFeed();
+        } else {
+            displayEvents(eventList);
+        }
     }
 
 
@@ -94,8 +99,7 @@ public class FeedFragment extends BaseFragment {
     public void onResume()
     {
         super.onResume();
-        if(index != -1)
-        {
+        if(index != -1) {
             mLayoutManager.scrollToPositionWithOffset( index, top);
         }
     }
@@ -107,10 +111,8 @@ public class FeedFragment extends BaseFragment {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
-                    NewsFeedResponse newsFeedResponse = response.body();
-                    List<Event> events = newsFeedResponse.getEvents();
-                    freshEventsDisplayed = true;
-                    displayEvents(events);
+                    eventList = response.body().getEvents();
+                    displayEvents(eventList);
                 }
                 //Server Error
                 feedSwipeRefreshLayout.setRefreshing(false);
