@@ -94,6 +94,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.widget.Toast.LENGTH_SHORT;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 
 public class MapFragment extends Fragment implements TextWatcher,
@@ -490,7 +491,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int id, long arg3) {
         if (adapter.getResultSize() == 0) {
-            toast.setText(message);
+            toast = Toast.makeText(getContext(), message, LENGTH_SHORT);
             toast.show();
         } else {
             String selection = editText.getText().toString();
