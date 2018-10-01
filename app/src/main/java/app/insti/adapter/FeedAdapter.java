@@ -48,18 +48,18 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             subtitle += "Event ended | ";
         else if(eventStarted)
         {
-            int difference = (int) (endTime.getTime() - timeNow.getTime());
-            int minutes = difference / (60 * 1000 ) % 60;
-            int hours = difference / (60 * 60 * 1000) % 24;
-            int days = (int) difference / (24 * 60 * 60 * 1000);
+            long difference = endTime.getTime() - timeNow.getTime();
+            long minutes = difference / (60 * 1000 ) % 60;
+            long hours = difference / (60 * 60 * 1000) % 24;
+            long days = difference / (24 * 60 * 60 * 1000);
             String timeDiff = "";
             if (days > 0)
-                timeDiff += Integer.toString(days) + "D ";
+                timeDiff += Long.toString(days) + "D ";
             if (hours > 0)
-                timeDiff += Integer.toString(hours) + "H ";
+                timeDiff += Long.toString(hours) + "H ";
 
 
-            timeDiff += Integer.toString(minutes) + "M";
+            timeDiff += Long.toString(minutes) + "M";
 
             subtitle += "Ends in " + timeDiff + " | " ;
         }
