@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#536dfe</color>
-    <color name="primaryLightColor">#8f9bff</color>
     <color name="colorPrimaryDark">#0043ca</color>
     <color name="colorAccent">#ffd740</color>
 
     <color name="colorSecondary">#ffd740</color>
 
-    <color name="secondaryLightColor">#ffff74</color>
-    <color name="secondaryDarkColor">#c8a600</color>
     <color name="primaryTextColor">#fafafa</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="colorCalendarWeek">#000000</color>
-    <color name="colorGray">#757575</color>
     <color name="colorWhite">#FFFFFF</color>
 
     <!-- Map -->
     <item name="transparent_black" type="color">#20000000</item>
     <item name="list_item_gray_even" type="color">#ffe6e6e6</item>
-    <item name="list_item_gray_odd" type="color">#ffececec</item>
 </resources>

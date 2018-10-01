@@ -4,14 +4,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
-
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="Cancel">Cancel</string>
-    <string name="gps_network_not_enabled">Location is not enabled. Please turn on your location from the settings.</string>
-    <string name="open_location_settings">Open Location Settings</string>
     <string name="django_api"> <a href="https://github.com/wncc/IITBapp"> Django API</a></string>
     <string name="android_app"> <a href="https://github.com/wncc/InstiApp"> Android App</a></string>
     <string name="angular_pwa"> <a href="https://github.com/pulsejet/iitb-app-angular"> Angular PWA </a></string>
@@ -37,7 +31,5 @@
         <item>QIP</item>
     </string-array>
 
-    <string name="drawer_open">Open the drawer</string>
-    <string name="drawer_close">Close the drawer</string>
     <string name="default_notification_channel_id">INSTIAPP_NOTIFS</string>
 </resources>

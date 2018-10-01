@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,19 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
-
 import java.util.List;
 
 import app.insti.ActivityBuffer;
-import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.response.NewsFeedResponse;
 import app.insti.api.model.Event;
+import app.insti.api.response.NewsFeedResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,13 +35,13 @@ public class FeedFragment extends BaseFragment {
     private RecyclerView feedRecyclerView;
     private SwipeRefreshLayout feedSwipeRefreshLayout;
     private FloatingActionButton fab;
-    private boolean freshEventsDisplayed = false;
     LinearLayoutManager mLayoutManager;
     public static int index = -1, top = -1;
+    private FeedAdapter feedAdapter = null;
+
     public FeedFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,8 +69,14 @@ public class FeedFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        fab = (FloatingActionButton) getView().findViewById(R.id.fab);
-        updateFeed();
+        fab = getView().findViewById(R.id.fab);
+
+        // Initialize the feed
+        if (Utils.eventCache.getCache() == null || Utils.eventCache.getCache().size() == 0) {
+            updateFeed();
+        } else {
+            displayEvents(Utils.eventCache.getCache());
+        }
     }
 
 
@@ -92,23 +93,20 @@ public class FeedFragment extends BaseFragment {
     public void onResume()
     {
         super.onResume();
-        if(index != -1)
-        {
+        if(index != -1) {
             mLayoutManager.scrollToPositionWithOffset( index, top);
         }
     }
 
     private void updateFeed() {
 
-        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-        retrofitInterface.getNewsFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<NewsFeedResponse>() {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.getNewsFeed(Utils.getSessionIDHeader()).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
-                    NewsFeedResponse newsFeedResponse = response.body();
-                    List<Event> events = newsFeedResponse.getEvents();
-                    freshEventsDisplayed = true;
-                    displayEvents(events);
+                    Utils.eventCache.setCache(response.body().getEvents());
+                    displayEvents(Utils.eventCache.getCache());
                 }
                 //Server Error
                 feedSwipeRefreshLayout.setRefreshing(false);
@@ -122,12 +120,10 @@ public class FeedFragment extends BaseFragment {
         });
     }
 
-    private void displayEvents(final List<Event> events) {
-        /* Skip if we're already destroyed */
-        if (getActivity() == null || getView() == null) return;
-
+    /** Initialize the add event fab if the user has permission */
+    private void initFab() {
         if (((MainActivity) getActivity()).createEventAccess()) {
-            fab.setVisibility(View.VISIBLE);
+            fab.show();
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -145,43 +141,48 @@ public class FeedFragment extends BaseFragment {
                 }
             });
         }
+    }
+
+    private void displayEvents(final List<Event> events) {
+        /* Skip if we're already destroyed */
+        if (getActivity() == null || getView() == null) return;
+
+        /* Initialize */
+        initFab();
 
         /* Make first event image big */
         if (events.size() > 1) {
             events.get(0).setEventBigImage(true);
         }
 
-        final FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                String eventJson = new Gson().toJson(events.get(position));
-                Bundle bundle = getArguments();
-                if (bundle == null)
-                    bundle = new Bundle();
-                bundle.putString(Constants.EVENT_JSON, eventJson);
-                EventFragment eventFragment = new EventFragment();
-                eventFragment.setArguments(bundle);
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                transaction.addToBackStack(eventFragment.getTag()).commit();
-            }
-        });
+        // Initialize adapter
+        if (feedAdapter == null) {
+            feedAdapter = new FeedAdapter(events, this);
+        } else {
+            feedAdapter.setEvents(events);
+            feedAdapter.notifyDataSetChanged();
+        }
+
+        // Initialize RecyclerView if necessary
+        if (feedRecyclerView.getAdapter() != feedAdapter) {
+            initRecyclerView();
+        }
+
+        View view = getActivity().findViewById(R.id.loadingPanel);
+        if (view != null)
+            view.setVisibility(View.GONE);
+    }
+
+    private void initRecyclerView() {
         getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
             @Override
             public void run(Activity pActivity) {
                 try {
                     feedRecyclerView.setAdapter(feedAdapter);
-                    //feedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }
         });
-        View view = getActivity().findViewById(R.id.loadingPanel);
-        if (view != null)
-            view.setVisibility(View.GONE);
     }
 }

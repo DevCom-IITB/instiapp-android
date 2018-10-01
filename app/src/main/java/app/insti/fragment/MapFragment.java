@@ -87,6 +87,7 @@ import java.util.regex.Pattern;
 
 import app.insti.Constants;
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Venue;
@@ -94,6 +95,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.widget.Toast.LENGTH_SHORT;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 
 public class MapFragment extends Fragment implements TextWatcher,
@@ -226,7 +228,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void getAPILocations() {
-        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.getAllVenues().enqueue(new Callback<List<Venue>>() {
             @Override
             public void onResponse(Call<List<Venue>> call, Response<List<Venue>> response) {
@@ -490,7 +492,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int id, long arg3) {
         if (adapter.getResultSize() == 0) {
-            toast.setText(message);
+            toast = Toast.makeText(getContext(), message, LENGTH_SHORT);
             toast.show();
         } else {
             String selection = editText.getText().toString();

@@ -1,6 +1,7 @@
 package app.insti.adapter;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,19 +13,19 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.api.model.User;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private List<User> userList;
-    private ItemClickListener itemClickListener;
     private Context context;
+    private Fragment fragment;
 
-    public UserAdapter(List<User> userList, ItemClickListener itemClickListener) {
+    public UserAdapter(List<User> userList, Fragment mFragment) {
         this.userList = userList;
-        this.itemClickListener = itemClickListener;
+        fragment = mFragment;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                itemClickListener.onItemClick(view, postViewHolder.getAdapterPosition());
+                Utils.openUserFragment(userList.get(postViewHolder.getAdapterPosition()), fragment.getActivity());
             }
         });
 

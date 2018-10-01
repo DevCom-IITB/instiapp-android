@@ -2,7 +2,6 @@ package app.insti.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.adapter.FeedAdapter;
 import app.insti.api.model.Event;
@@ -63,21 +61,7 @@ public class EventRecyclerViewFragment extends Fragment {
         super.onStart();
 
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.event_recycler_view);
-        feedAdapter = new FeedAdapter(eventList, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Event event = eventList.get(position);
-                EventFragment eventFragment = new EventFragment();
-                Bundle arguments = getArguments();
-                arguments.putString(Constants.EVENT_JSON, new Gson().toJson(event));
-                eventFragment.setArguments(getArguments());
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                ft.addToBackStack(eventFragment.getTag());
-                ft.commit();
-            }
-        });
+        feedAdapter = new FeedAdapter(eventList, this);
         recyclerView.setAdapter(feedAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

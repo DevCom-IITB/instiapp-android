@@ -26,7 +26,7 @@ import com.google.gson.Gson;
 
 import app.insti.Constants;
 import app.insti.R;
-import app.insti.activity.MainActivity;
+import app.insti.Utils;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
@@ -77,7 +77,7 @@ public class AddEventFragment extends BaseFragment {
             webView.setWebViewClient(new MyWebViewClient());
 
             CookieManager cookieManager = CookieManager.getInstance();
-            String cookieString = ((MainActivity) getActivity()).getSessionIDHeader();
+            String cookieString = Utils.getSessionIDHeader();
             cookieManager.setCookie(host, cookieString);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                 CookieManager.getInstance().flush();
@@ -166,8 +166,8 @@ public class AddEventFragment extends BaseFragment {
             if (url.contains("/event/")) {
                 url = url.substring(url.lastIndexOf("/") + 1);
 
-                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-                retrofitInterface.getEvent(((MainActivity) getActivity()).getSessionIDHeader(), url).enqueue(new Callback<Event>() {
+                RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+                retrofitInterface.getEvent(Utils.getSessionIDHeader(), url).enqueue(new Callback<Event>() {
                     @Override
                     public void onResponse(Call<Event> call, Response<Event> response) {
                         if (response.isSuccessful()) {
@@ -184,8 +184,8 @@ public class AddEventFragment extends BaseFragment {
             } else if (url.contains("/org/")) {
                 url = url.substring(url.lastIndexOf("/") + 1);
 
-                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-                retrofitInterface.getBody(((MainActivity) getActivity()).getSessionIDHeader(), url).enqueue(new Callback<Body>() {
+                RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+                retrofitInterface.getBody(Utils.getSessionIDHeader(), url).enqueue(new Callback<Body>() {
                     @Override
                     public void onResponse(Call<Body> call, Response<Body> response) {
                         if (response.isSuccessful()) {

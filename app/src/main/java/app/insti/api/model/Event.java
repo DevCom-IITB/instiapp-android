@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 public class Event {
     @NonNull()
@@ -222,5 +223,18 @@ public class Event {
 
     public void setEventBigImage(boolean eventBigImage) {
         this.eventBigImage = eventBigImage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return Objects.equals(eventID, event.eventID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(eventID);
     }
 }

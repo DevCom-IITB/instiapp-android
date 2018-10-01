@@ -11,7 +11,6 @@ android {
         versionCode 17
         versionName "1.0.12-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {

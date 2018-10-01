@@ -3,7 +3,6 @@ package app.insti.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.adapter.BodyAdapter;
 import app.insti.api.model.Body;
@@ -65,21 +63,7 @@ public class BodyRecyclerViewFragment extends Fragment {
         super.onStart();
 
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.body_recycler_view);
-        bodyAdapter = new BodyAdapter(bodyList, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Body body = bodyList.get(position);
-                BodyFragment bodyFragment = new BodyFragment();
-                Bundle arguments = getArguments();
-                arguments.putString(Constants.BODY_JSON, new Gson().toJson(body));
-                bodyFragment.setArguments(getArguments());
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
-                ft.addToBackStack(bodyFragment.getTag());
-                ft.commit();
-            }
-        });
+        bodyAdapter = new BodyAdapter(bodyList, this);
         recyclerView.setAdapter(bodyAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,15 +29,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.ShareURLMaker;
+import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
 import app.insti.adapter.FeedAdapter;
@@ -148,8 +146,8 @@ public class BodyFragment extends BackHandledFragment {
     }
 
     private void updateBody() {
-        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-        retrofitInterface.getBody(((MainActivity) getActivity()).getSessionIDHeader(), min_body.getBodyID()).enqueue(new Callback<Body>() {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.getBody(Utils.getSessionIDHeader(), min_body.getBodyID()).enqueue(new Callback<Body>() {
             @Override
             public void onResponse(Call<Body> call, Response<Body> response) {
                 if (response.isSuccessful()) {
@@ -200,7 +198,7 @@ public class BodyFragment extends BackHandledFragment {
 
         /* Set body information */
         bodyName.setText(body.getBodyName());
-        Picasso.get().load(body.getBodyImageURL()).into(bodyPicture);
+        Utils.loadImageWithPlaceholder(bodyPicture, body.getBodyImageURL());
 
         bodyPicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,8 +223,8 @@ public class BodyFragment extends BackHandledFragment {
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-                retrofitInterface.updateBodyFollowing(((MainActivity) getActivity()).getSessionIDHeader(), body.getBodyID(), body.getBodyUserFollows() ? 0 : 1).enqueue(new Callback<Void>() {
+                RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+                retrofitInterface.updateBodyFollowing(Utils.getSessionIDHeader(), body.getBodyID(), body.getBodyUserFollows() ? 0 : 1).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
@@ -276,21 +274,7 @@ public class BodyFragment extends BackHandledFragment {
         /* Initialize events */
         final List<Event> eventList = body.getBodyEvents();
         RecyclerView eventRecyclerView = (RecyclerView) getActivity().findViewById(R.id.event_card_recycler_view);
-        FeedAdapter eventAdapter = new FeedAdapter(eventList, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Event event = eventList.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.EVENT_JSON, new Gson().toJson(event));
-                EventFragment eventFragment = new EventFragment();
-                eventFragment.setArguments(bundle);
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                ft.addToBackStack(eventFragment.getTag());
-                ft.commit();
-            }
-        });
+        FeedAdapter eventAdapter =  new FeedAdapter(eventList, this);
         eventRecyclerView.setAdapter(eventAdapter);
         eventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -308,43 +292,19 @@ public class BodyFragment extends BackHandledFragment {
 
         /* Initialize People */
         RecyclerView userRecyclerView = (RecyclerView) getActivity().findViewById(R.id.people_card_recycler_view);
-        UserAdapter userAdapter = new UserAdapter(users, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                User user = users.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.USER_ID, user.getUserID());
-                UserFragment userFragment = new UserFragment();
-                userFragment.setArguments(bundle);
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.framelayout_for_fragment, userFragment, userFragment.getTag());
-                ft.addToBackStack(userFragment.getTag());
-                ft.commit();
-            }
-        });
+        UserAdapter userAdapter = new UserAdapter(users, this);
         userRecyclerView.setAdapter(userAdapter);
         userRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         /* Initialize Parent bodies */
         RecyclerView parentsRecyclerView = (RecyclerView) getActivity().findViewById(R.id.parentorg_card_recycler_view);
-        BodyAdapter parentAdapter = new BodyAdapter(body.getBodyParents(), new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                openBody(body.getBodyParents().get(position));
-            }
-        });
+        BodyAdapter parentAdapter = new BodyAdapter(body.getBodyParents(), this);
         parentsRecyclerView.setAdapter(parentAdapter);
         parentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         /* Initialize child bodies */
         RecyclerView childrenRecyclerView = (RecyclerView) getActivity().findViewById(R.id.org_card_recycler_view);
-        BodyAdapter childrenAdapter = new BodyAdapter(body.getBodyChildren(), new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                openBody(body.getBodyChildren().get(position));
-            }
-        });
+        BodyAdapter childrenAdapter = new BodyAdapter(body.getBodyChildren(), this);
         childrenRecyclerView.setAdapter(childrenAdapter);
         childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -353,7 +313,7 @@ public class BodyFragment extends BackHandledFragment {
         /* Show update button if role */
         if (((MainActivity) getActivity()).editBodyAccess(body)) {
             final FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.edit_fab);
-            fab.setVisibility(View.VISIBLE);
+            fab.show();
             NestedScrollView nsv = (NestedScrollView) getView().findViewById(R.id.body_scrollview);
             nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
                 @Override
@@ -374,21 +334,6 @@ public class BodyFragment extends BackHandledFragment {
                 }
             });
         }
-    }
-
-    /**
-     * Open body fragment for a body
-     */
-    private void openBody(Body body) {
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.BODY_JSON, new Gson().toJson(body));
-        BodyFragment bodyFragment = new BodyFragment();
-        bodyFragment.setArguments(bundle);
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-        ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
-        ft.addToBackStack(bodyFragment.getTag());
-        ft.commit();
     }
 
     @Override

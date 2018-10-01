@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -42,9 +40,9 @@ import java.util.Date;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.ShareURLMaker;
+import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
 import app.insti.api.RetrofitInterface;
@@ -154,7 +152,8 @@ public class EventFragment extends BackHandledFragment {
         webEventButton = getActivity().findViewById(R.id.web_event_button);
         shareEventButton = getActivity().findViewById(R.id.share_event_button);
 
-        Picasso.get().load(event.getEventImageURL()).into(eventPicture);
+        Utils.loadImageWithPlaceholder(eventPicture, event.getEventImageURL());
+
         eventTitle.setText(event.getEventName());
         Markwon.setMarkdown(eventDescription, event.getEventDescription());
         Timestamp timestamp = event.getEventStartTime();
@@ -171,18 +170,7 @@ public class EventFragment extends BackHandledFragment {
 
         final List<Body> bodyList = event.getEventBodies();
         bodyRecyclerView = (RecyclerView) getActivity().findViewById(R.id.body_card_recycler_view);
-        BodyAdapter bodyAdapter = new BodyAdapter(bodyList, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Body body = bodyList.get(position);
-                BodyFragment bodyFragment = BodyFragment.newInstance(body);
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
-                ft.addToBackStack(bodyFragment.getTag());
-                ft.commit();
-            }
-        });
+        BodyAdapter bodyAdapter = new BodyAdapter(bodyList, this);
         bodyRecyclerView.setAdapter(bodyAdapter);
         bodyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -250,7 +238,7 @@ public class EventFragment extends BackHandledFragment {
         final FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.edit_fab);
 
         if (((MainActivity) getActivity()).editEventAccess(event)) {
-            fab.setVisibility(View.VISIBLE);
+            fab.show();
             NestedScrollView nsv = (NestedScrollView) getView().findViewById(R.id.event_scrollview);
             nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
                 @Override
@@ -287,8 +275,8 @@ public class EventFragment extends BackHandledFragment {
             @Override
             public void onClick(View view) {
                 final int endStatus = event.getEventUserUes() == status ? 0 : status;
-                RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-                retrofitInterface.updateUserEventStatus(((MainActivity) getActivity()).getSessionIDHeader(), event.getEventID(), endStatus).enqueue(new Callback<Void>() {
+                RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+                retrofitInterface.updateUserEventStatus(Utils.getSessionIDHeader(), event.getEventID(), endStatus).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
@@ -318,6 +306,9 @@ public class EventFragment extends BackHandledFragment {
 
                             event.setEventUserUes(endStatus);
                             setFollowButtonColors(endStatus);
+
+                            // Update global memory cache
+                            Utils.eventCache.updateCache(event);
                         }
                     }
 

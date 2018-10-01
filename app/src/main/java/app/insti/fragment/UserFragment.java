@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,10 +30,9 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.ShareURLMaker;
-import app.insti.activity.MainActivity;
+import app.insti.Utils;
 import app.insti.adapter.RoleAdapter;
 import app.insti.adapter.TabAdapter;
 import app.insti.api.RetrofitInterface;
@@ -42,6 +40,7 @@ import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.Role;
 import app.insti.api.model.User;
+import app.insti.interfaces.ItemClickListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -107,8 +106,8 @@ public class UserFragment extends BackHandledFragment {
         Bundle bundle = getArguments();
         String userID = bundle.getString(Constants.USER_ID);
 
-        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-        retrofitInterface.getUser("sessionid=" + getArguments().getString(Constants.SESSION_ID), userID).enqueue(new Callback<User>() {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.getUser(Utils.getSessionIDHeader(), userID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
@@ -147,12 +146,7 @@ public class UserFragment extends BackHandledFragment {
             public void onItemClick(View v, int position) {
                 Role role = roleList.get(position);
                 Body roleBody = role.getRoleBodyDetails();
-                BodyFragment bodyFragment = BodyFragment.newInstance(roleBody);
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
-                ft.addToBackStack(bodyFragment.getTag());
-                ft.commit();
+                Utils.openBodyFragment(roleBody, getActivity());
 
             }
         });

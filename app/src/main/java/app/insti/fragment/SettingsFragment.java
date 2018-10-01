@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.SessionManager;
+import app.insti.Utils;
 import app.insti.activity.LoginActivity;
 import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
@@ -57,8 +56,8 @@ public class SettingsFragment extends Fragment {
 
         populateViews();
 
-        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-        retrofitInterface.getUser("sessionid=" + getArguments().getString(Constants.SESSION_ID), userID).enqueue(new Callback<User>() {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.getUser(Utils.getSessionIDHeader(), userID).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
@@ -123,12 +122,7 @@ public class SettingsFragment extends Fragment {
         aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AboutFragment aboutFragment = new AboutFragment();
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                transaction.replace(R.id.framelayout_for_fragment, aboutFragment, aboutFragment.getTag());
-                transaction.addToBackStack(aboutFragment.getTag()).commit();
+                Utils.updateFragment(new AboutFragment(), getActivity());
             }
         });
 
@@ -138,8 +132,8 @@ public class SettingsFragment extends Fragment {
             logoutButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-                    retrofitInterface.logout("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<Void>() {
+                    RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+                    retrofitInterface.logout(Utils.getSessionIDHeader()).enqueue(new Callback<Void>() {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if (response.isSuccessful()) {

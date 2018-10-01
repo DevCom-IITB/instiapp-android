@@ -23,7 +23,7 @@ import java.util.Locale;
 import app.insti.ActivityBuffer;
 import app.insti.Constants;
 import app.insti.R;
-import app.insti.activity.MainActivity;
+import app.insti.Utils;
 import app.insti.adapter.MessMenuAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.HostelMessMenu;
@@ -107,8 +107,8 @@ public class MessMenuFragment extends BaseFragment {
     }
 
     private void updateMessMenu(final String hostel) {
-        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-        retrofitInterface.getInstituteMessMenu("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<List<HostelMessMenu>>() {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.getInstituteMessMenu(Utils.getSessionIDHeader()).enqueue(new Callback<List<HostelMessMenu>>() {
             @Override
             public void onResponse(Call<List<HostelMessMenu>> call, Response<List<HostelMessMenu>> response) {
                 if (response.isSuccessful()) {
