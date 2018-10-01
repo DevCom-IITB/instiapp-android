@@ -24,6 +24,7 @@ import java.util.Calendar;
 
 
 import app.insti.Constants;
+import app.insti.Helpers;
 import app.insti.activity.MainActivity;
 import app.insti.fragment.EventFragment;
 import app.insti.interfaces.ItemClickListener;
@@ -133,7 +134,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         if (currentEvent.isEventBigImage()) {
             viewHolder.eventBigPicture.setVisibility(View.VISIBLE);
             viewHolder.eventPicture.setVisibility(View.GONE);
-            Picasso.get().load(currentEvent.getEventImageURL()).into(viewHolder.eventBigPicture);
+            Helpers.loadImageWithPlaceholder(viewHolder.eventBigPicture, currentEvent.getEventImageURL());
         } else {
             Picasso.get().load(
                     Constants.resizeImageUrl(currentEvent.getEventImageURL(), 200)

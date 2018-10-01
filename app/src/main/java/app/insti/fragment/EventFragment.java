@@ -41,6 +41,7 @@ import java.util.Date;
 import java.util.List;
 
 import app.insti.Constants;
+import app.insti.Helpers;
 import app.insti.R;
 import app.insti.ShareURLMaker;
 import app.insti.activity.MainActivity;
@@ -152,7 +153,8 @@ public class EventFragment extends BackHandledFragment {
         webEventButton = getActivity().findViewById(R.id.web_event_button);
         shareEventButton = getActivity().findViewById(R.id.share_event_button);
 
-        Picasso.get().load(event.getEventImageURL()).into(eventPicture);
+        Helpers.loadImageWithPlaceholder(eventPicture, event.getEventImageURL());
+
         eventTitle.setText(event.getEventName());
         Markwon.setMarkdown(eventDescription, event.getEventDescription());
         Timestamp timestamp = event.getEventStartTime();

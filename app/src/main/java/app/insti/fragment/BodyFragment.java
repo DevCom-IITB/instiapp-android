@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.Constants;
+import app.insti.Helpers;
 import app.insti.R;
 import app.insti.ShareURLMaker;
 import app.insti.activity.MainActivity;
@@ -198,7 +199,7 @@ public class BodyFragment extends BackHandledFragment {
 
         /* Set body information */
         bodyName.setText(body.getBodyName());
-        Picasso.get().load(body.getBodyImageURL()).into(bodyPicture);
+        Helpers.loadImageWithPlaceholder(bodyPicture, body.getBodyImageURL());
 
         bodyPicture.setOnClickListener(new View.OnClickListener() {
             @Override
