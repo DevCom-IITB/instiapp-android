@@ -13,13 +13,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.api.model.Event;
 import app.insti.api.model.NewsArticle;
 import app.insti.api.model.Notification;
 import app.insti.api.model.PlacementBlogPost;
+import app.insti.interfaces.ItemClickListener;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.Viewholder> {
     private List<Notification> notifications;
@@ -55,13 +55,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         if (appNotification.getNotificationActorType().contains("event")) {
             Event event = gson.fromJson(gson.toJson(appNotification.getNotificationActor()), Event.class);
             Picasso.get().load(
-                    Constants.resizeImageUrl(event.getEventImageURL(), 200)
+                    Utils.resizeImageUrl(event.getEventImageURL())
             ).into(viewholder.notificationPicture);
             viewholder.notificationTitle.setText(event.getEventName());
         } else if (appNotification.getNotificationActorType().contains("newsentry")) {
             NewsArticle article = gson.fromJson(gson.toJson(appNotification.getNotificationActor()), NewsArticle.class);
             Picasso.get().load(
-                    Constants.resizeImageUrl(article.getBody().getBodyImageURL(), 200)
+                    Utils.resizeImageUrl(article.getBody().getBodyImageURL())
             ).into(viewholder.notificationPicture);
             viewholder.notificationTitle.setText(article.getTitle());
         } else if (appNotification.getNotificationActorType().contains("blogentry")) {

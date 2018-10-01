@@ -1,38 +1,21 @@
 package app.insti.fragment;
 
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import app.insti.ActivityBuffer;
-import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
-import app.insti.activity.MainActivity;
 import app.insti.adapter.PlacementBlogAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.PlacementBlogPost;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,7 +56,7 @@ public class PlacementBlogFragment extends RecyclerViewFragment<PlacementBlogPos
     }
 
     @Override
-    Call<List<PlacementBlogPost>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader) {
-        return retrofitInterface.getPlacementBlogFeed(sessionIDHeader, getPostCount(), 20, searchQuery);
+    Call<List<PlacementBlogPost>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader, int postCount) {
+        return retrofitInterface.getPlacementBlogFeed(sessionIDHeader, postCount, 20, searchQuery);
     }
 }

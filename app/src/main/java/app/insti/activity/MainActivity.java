@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -43,6 +44,7 @@ import java.util.List;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.SessionManager;
+import app.insti.Utils;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
@@ -90,14 +92,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean showNotifications = false;
     private BackHandledFragment selectedFragment;
     private Menu menu;
-    private RetrofitInterface retrofitInterface;
 
     /** which menu item should be checked on activity start */
     private int initMenuChecked = R.id.nav_feed;
-
-    public RetrofitInterface getRetrofitInterface() {
-        return retrofitInterface;
-    }
 
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -115,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
 
         ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
-        this.retrofitInterface = serviceGenerator.getRetrofitInterface();
+        Utils.setRetrofitInterface(serviceGenerator.getRetrofitInterface());
 
         /* Make notification channel on oreo */
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -151,8 +148,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void fetchNotifications() {
-        RetrofitInterface retrofitInterface = getRetrofitInterface();
-        retrofitInterface.getNotifications(getSessionIDHeader()).enqueue(new EmptyCallback<List<Notification>>() {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.getNotifications(Utils.getSessionIDHeader()).enqueue(new EmptyCallback<List<Notification>>() {
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
                 if (response.isSuccessful()) {
@@ -181,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void checkLatestVersion() {
         final int versionCode = getCurrentVersion();
         if (versionCode == 0) { return; }
-        RetrofitInterface retrofitInterface = getRetrofitInterface();
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.getLatestVersion().enqueue(new EmptyCallback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -247,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /* Mark the notification read */
         final String notificationId = bundle.getString(FCM_BUNDLE_NOTIFICATION_ID);
         if (notificationId != null) {
-            getRetrofitInterface().markNotificationRead(getSessionIDHeader(), notificationId).enqueue(new EmptyCallback<Void>());
+            Utils.getRetrofitInterface().markNotificationRead(Utils.getSessionIDHeader(), notificationId).enqueue(new EmptyCallback<Void>());
         }
 
         /* Follow the notification */
@@ -316,22 +313,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /** Open the body fragment from given id */
     private void openBodyFragment(String id) {
-        Body body = new Body(id);
-        BodyFragment bodyFragment = BodyFragment.newInstance(body);
-        updateFragment(bodyFragment);
+        Utils.openBodyFragment(new Body(id), this);
     }
 
     /** Open the event fragment from the provided id */
     private void openEventFragment(String id) {
-        RetrofitInterface retrofitInterface = getRetrofitInterface();
-        retrofitInterface.getEvent(getSessionIDHeader(), id).enqueue(new EmptyCallback<Event>() {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        final FragmentActivity self = this;
+        retrofitInterface.getEvent(Utils.getSessionIDHeader(), id).enqueue(new EmptyCallback<Event>() {
             @Override
             public void onResponse(Call<Event> call, Response<Event> response) {
-                EventFragment eventFragment = new EventFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.EVENT_JSON, response.body().toString());
-                eventFragment.setArguments(bundle);
-                updateFragment(eventFragment);
+                Utils.openEventFragment(response.body(), self);
             }
         });
     }
@@ -366,6 +358,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         initNavigationView();
         if (session.isLoggedIn()) {
+            Utils.setSessionId(session.getSessionID());
             currentUser = User.fromString(session.pref.getString(Constants.CURRENT_USER, ""));
             updateNavigationView();
             updateFCMId();
@@ -380,9 +373,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 final String fcmId = instanceIdResult.getToken();
-                RetrofitInterface retrofitInterface = getRetrofitInterface();
+                RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
 
-                retrofitInterface.patchUserMe(getSessionIDHeader(), new UserFCMPatchRequest(fcmId, getCurrentVersion())).enqueue(new EmptyCallback<User>() {
+                retrofitInterface.patchUserMe(Utils.getSessionIDHeader(), new UserFCMPatchRequest(fcmId, getCurrentVersion())).enqueue(new EmptyCallback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         if (response.isSuccessful()) {
@@ -411,11 +404,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.USER_ID, currentUser.getUserID());
-                UserFragment userFragment = new UserFragment();
-                userFragment.setArguments(bundle);
-                updateFragment(userFragment);
+                openUserFragment(currentUser.getUserID());
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
             }
@@ -595,10 +584,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     toast.show();
                 }
         }
-    }
-
-    public String getSessionIDHeader() {
-        return "sessionid=" + session.getSessionID();
     }
 
     @Override

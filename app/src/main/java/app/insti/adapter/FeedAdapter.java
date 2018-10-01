@@ -1,6 +1,7 @@
 package app.insti.adapter;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +13,12 @@ import com.squareup.picasso.Picasso;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Calendar;
 
-
-import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.api.model.Event;
 import app.insti.api.model.Venue;
 
@@ -27,11 +26,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
     private List<Event> events;
     private Context context;
-    private ItemClickListener itemClickListener;
+    private Fragment mFragment;
 
-    public FeedAdapter(List<Event> events, ItemClickListener itemClickListener) {
+    public FeedAdapter(List<Event> events, Fragment fragment) {
         this.events = events;
-        this.itemClickListener = itemClickListener;
+        mFragment = fragment;
     }
 
     public void getSubtitle(ViewHolder viewHolder, Event currentEvent)
@@ -90,7 +89,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
         context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View postView = inflater.inflate(R.layout.feed_card, viewGroup, false);
@@ -98,8 +97,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         final ViewHolder postViewHolder = new ViewHolder(postView);
         postView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                itemClickListener.onItemClick(v, postViewHolder.getAdapterPosition());
+            public void onClick(View view) {
+                Utils.openEventFragment(events.get(postViewHolder.getAdapterPosition()), mFragment.getActivity());
             }
         });
 
@@ -116,10 +115,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         if (currentEvent.isEventBigImage()) {
             viewHolder.eventBigPicture.setVisibility(View.VISIBLE);
             viewHolder.eventPicture.setVisibility(View.GONE);
-            Picasso.get().load(currentEvent.getEventImageURL()).into(viewHolder.eventBigPicture);
+            Utils.loadImageWithPlaceholder(viewHolder.eventBigPicture, currentEvent.getEventImageURL());
         } else {
             Picasso.get().load(
-                    Constants.resizeImageUrl(currentEvent.getEventImageURL(), 200)
+                    Utils.resizeImageUrl(currentEvent.getEventImageURL())
             ).into(viewHolder.eventPicture);
         }
     }

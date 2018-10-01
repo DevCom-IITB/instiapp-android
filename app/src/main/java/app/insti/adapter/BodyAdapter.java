@@ -1,6 +1,7 @@
 package app.insti.adapter;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,21 +13,20 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.api.model.Body;
 
 
 public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
 
     private List<Body> bodyList;
-    private ItemClickListener itemClickListener;
     private Context context;
+    private Fragment fragment;
 
-    public BodyAdapter(List<Body> bodyList, ItemClickListener itemClickListener) {
+    public BodyAdapter(List<Body> bodyList, Fragment mFragment) {
         this.bodyList = bodyList;
-        this.itemClickListener = itemClickListener;
+        fragment = mFragment;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                itemClickListener.onItemClick(view, postViewHolder.getAdapterPosition());
+                Utils.openBodyFragment(bodyList.get(postViewHolder.getAdapterPosition()), fragment.getActivity());
             }
         });
 
@@ -53,7 +53,7 @@ public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {
         holder.name.setText(body.getBodyName());
         holder.description.setText(body.getBodyShortDescription());
         Picasso.get().load(
-                Constants.resizeImageUrl(body.getBodyImageURL(), 200)
+                Utils.resizeImageUrl(body.getBodyImageURL())
         ).into(holder.image);
 
     }

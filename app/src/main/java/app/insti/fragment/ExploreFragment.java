@@ -3,7 +3,6 @@ package app.insti.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,25 +13,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
-import app.insti.activity.MainActivity;
+import app.insti.Utils;
 import app.insti.adapter.BodyAdapter;
 import app.insti.adapter.FeedAdapter;
 import app.insti.adapter.UserAdapter;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.response.ExploreResponse;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.User;
+import app.insti.api.response.ExploreResponse;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -43,14 +38,16 @@ import retrofit2.Response;
 public class ExploreFragment extends Fragment {
 
     private String sessionId;
-    private List<Body> allBodies = new ArrayList<>();
-    private List<Body> bodies = new ArrayList<>();
-    private List<Event> events = new ArrayList<>();
-    private List<User> users = new ArrayList<>();
+    private static List<Body> allBodies = new ArrayList<>();
+    private static List<Body> bodies = new ArrayList<>();
+    private static List<Event> events = new ArrayList<>();
+    private static List<User> users = new ArrayList<>();
 
     private BodyAdapter bodyAdapter;
     private FeedAdapter eventsAdapter;
     private UserAdapter userAdapter;
+
+    private String currentQuery = null;
 
     public ExploreFragment() {
         // Required empty public constructor
@@ -78,7 +75,7 @@ public class ExploreFragment extends Fragment {
         super.onStart();
 
         // Initialize
-        sessionId = ((MainActivity) getActivity()).getSessionIDHeader();
+        sessionId = Utils.getSessionIDHeader();
         initRecyclerViews();
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
@@ -86,20 +83,17 @@ public class ExploreFragment extends Fragment {
 
         // Get all bodies
         if (allBodies.size() == 0) {
-            RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-            retrofitInterface.getAllBodies(sessionId).enqueue(new Callback<List<Body>>() {
+            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+            retrofitInterface.getAllBodies(sessionId).enqueue(new EmptyCallback<List<Body>>() {
                 @Override
                 public void onResponse(Call<List<Body>> call, Response<List<Body>> response) {
                     allBodies = response.body();
                     bodies = allBodies;
-                    updateAdapters(bodies, new ArrayList<Event>(), new ArrayList<User>());
-                }
-
-                @Override
-                public void onFailure(Call<List<Body>> call, Throwable t) {
+                    updateAdapters(allBodies, new ArrayList<Event>(), new ArrayList<User>());
                 }
             });
         } else {
+            updateAdapters(bodies, events, users);
             getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         }
 
@@ -107,20 +101,17 @@ public class ExploreFragment extends Fragment {
         final EditText searchEditText = getView().findViewById(R.id.explore_search);
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (searchEditText.getText().length() >= 3) {
                     doSearch(searchEditText.getText().toString());
                 } else if (searchEditText.getText().length() == 0) {
-                    bodies = allBodies;
-                    updateAdapters(bodies, new ArrayList<Event>(), new ArrayList<User>());
+                    updateAdapters(allBodies, new ArrayList<Event>(), new ArrayList<User>());
                 }
             }
         });
@@ -133,27 +124,30 @@ public class ExploreFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_explore, container, false);
     }
 
-    public void doSearch(String query) {
+    public void doSearch(final String query) {
         if (getActivity() == null || getView() == null) return;
 
         // Show loading spinner
         getView().findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
 
+        // Set the lastest query
+        currentQuery = query;
+
         // Make request
-        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-        retrofitInterface.search(sessionId, query).enqueue(new Callback<ExploreResponse>() {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.search(sessionId, query).enqueue(new EmptyCallback<ExploreResponse>() {
             @Override
             public void onResponse(Call<ExploreResponse> call, Response<ExploreResponse> response) {
+                // Check if we already have a new query pending
+                if (!currentQuery.equals(query)) {
+                    return;
+                }
+
                 // Get data
                 bodies = response.body().getBodies();
                 events = response.body().getEvents();
                 users = response.body().getUsers();
                 updateAdapters(bodies, events, users);
-            }
-
-            @Override
-            public void onFailure(Call<ExploreResponse> call, Throwable t) {
-                // Request failed
             }
         });
     }
@@ -178,53 +172,20 @@ public class ExploreFragment extends Fragment {
         if (getActivity() == null || getView() == null) return;
         // Bodies
         RecyclerView bodiesRecyclerView = getView().findViewById(R.id.explore_body_recycler_view);
-        bodyAdapter = new BodyAdapter(bodies, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.BODY_JSON, new Gson().toJson(bodies.get(position)));
-                updateFragment(new BodyFragment(), bundle);
-            }
-        });
+        bodyAdapter = new BodyAdapter(bodies, this);
         bodiesRecyclerView.setAdapter(bodyAdapter);
         bodiesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Events
         RecyclerView eventsRecyclerView = getView().findViewById(R.id.explore_event_recycler_view);
-        eventsAdapter = new FeedAdapter(events, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Event event = events.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.EVENT_JSON, new Gson().toJson(event));
-                updateFragment(new EventFragment(), bundle);
-            }
-        });
+        eventsAdapter = new FeedAdapter(events, this);
         eventsRecyclerView.setAdapter(eventsAdapter);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Users
         RecyclerView usersRecyclerView = getView().findViewById(R.id.explore_user_recycler_view);
-        userAdapter = new UserAdapter(users, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                User user = users.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.USER_ID, user.getUserID());
-                updateFragment(new UserFragment(), bundle);
-            }
-        });
+        userAdapter = new UserAdapter(users, this);
         usersRecyclerView.setAdapter(userAdapter);
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
-
-    public void updateFragment(Fragment fragment, Bundle bundle) {
-        MainActivity.hideKeyboard(getActivity());
-        fragment.setArguments(bundle);
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-        ft.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());
-        ft.addToBackStack(fragment.getTag());
-        ft.commit();
     }
 }
