@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,19 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
-
 import java.util.List;
 
 import app.insti.ActivityBuffer;
-import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.response.NewsFeedResponse;
 import app.insti.api.model.Event;
+import app.insti.api.response.NewsFeedResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,7 +37,6 @@ public class FeedFragment extends BaseFragment {
     private FloatingActionButton fab;
     LinearLayoutManager mLayoutManager;
     public static int index = -1, top = -1;
-    public static List<Event> eventList = null;
     private FeedAdapter feedAdapter = null;
 
     public FeedFragment() {
@@ -78,10 +72,10 @@ public class FeedFragment extends BaseFragment {
         fab = getView().findViewById(R.id.fab);
 
         // Initialize the feed
-        if (eventList == null) {
+        if (Utils.eventCache.getCache() == null || Utils.eventCache.getCache().size() == 0) {
             updateFeed();
         } else {
-            displayEvents(eventList);
+            displayEvents(Utils.eventCache.getCache());
         }
     }
 
@@ -111,8 +105,8 @@ public class FeedFragment extends BaseFragment {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
-                    eventList = response.body().getEvents();
-                    displayEvents(eventList);
+                    Utils.eventCache.setCache(response.body().getEvents());
+                    displayEvents(Utils.eventCache.getCache());
                 }
                 //Server Error
                 feedSwipeRefreshLayout.setRefreshing(false);

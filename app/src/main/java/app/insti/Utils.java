@@ -5,9 +5,11 @@ import android.widget.ImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.time.Instant;
+import app.insti.api.model.Event;
 
 public final class Utils {
+    public static UpdatableList<Event> eventCache = new UpdatableList<>();
+
     public static final void loadImageWithPlaceholder(final ImageView imageView, final String url) {
         Picasso.get()
             .load(resizeImageUrl(url))
