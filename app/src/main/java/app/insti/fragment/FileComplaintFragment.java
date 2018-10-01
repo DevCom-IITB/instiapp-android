@@ -2,6 +2,7 @@ package app.insti.fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -15,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -25,6 +27,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -38,7 +41,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
-import android.support.v7.widget.Toolbar;
 
 import com.cunoraz.tagview.Tag;
 import com.cunoraz.tagview.TagView;
@@ -66,6 +68,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.Constants;
+/*import app.insti.FileComplaintActivity;
+import app.insti.MainActivity;*/
 import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.ImageViewPagerAdapter;
@@ -80,6 +84,7 @@ import app.insti.api.model.ImageUploadResponse;
 import app.insti.uicomponents.CustomAutoCompleteTextView;
 import app.insti.uicomponents.TagClass;
 import app.insti.utils.TagCategories;
+
 import butterknife.ButterKnife;
 import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
@@ -89,6 +94,7 @@ import retrofit2.Response;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
+
 
 public class FileComplaintFragment extends Fragment {
 
@@ -124,9 +130,16 @@ public class FileComplaintFragment extends Fragment {
     View view;
     NestedScrollView nestedScrollView;
     LinearLayout linearLayoutAddImage;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    float zoom = 15;
+    private static FileComplaintFragment mainActivity;
 
     public FileComplaintFragment() {
         // Required empty public constructor
+    }
+
+    public static FileComplaintFragment getMainActivity() {
+        return mainActivity;
     }
 
     @Override
@@ -143,6 +156,13 @@ public class FileComplaintFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Toast.makeText(getContext(), "Please provide the complaint description before submitting", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        mainActivity = this;
+        super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -275,7 +295,7 @@ public class FileComplaintFragment extends Fragment {
                 Location = place.getLatLng();
                 Name = place.getName().toString();
                 Address = place.getAddress().toString();
-                callServerToPostComplaint(Location, Name, Address, cursor); //on selecting the place will automatically shows the Details on the map.
+                updateMap(Location, Name, Address, cursor); //on selecting the place will automatically shows the Details on the map.
                 cursor++;
 
             }
@@ -422,20 +442,27 @@ public class FileComplaintFragment extends Fragment {
 
     }
 
-    private void setupGPS() {
+    public void setupGPS() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_LOCATION);
         }
-
         if (!GPSIsEnabled) {
             Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@GPSIsEnabled? = " + !(GPSIsEnabled));
             enableGPSRequest();
         } else {
             Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@Inside else");
-            final FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-            mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
+            FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+            Task location = mFusedLocationClient.getLastLocation();
+            location.addOnCompleteListener(new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    android.location.Location currentLocation = (android.location.Location) task.getResult();
+                    getLocation(currentLocation);
+                }
+            });
+            /*mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     // Got last known location. In some rare situations this can be null.
@@ -443,54 +470,23 @@ public class FileComplaintFragment extends Fragment {
                         // Logic to handle location object
                         Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@lat = " + location.getLatitude() + " lon = " + location.getLongitude());
                         Location = new LatLng(location.getLatitude(), location.getLongitude());
-                        callServerToPostComplaint(Location, location.getLatitude() + ", " + location.getLongitude(), " ", cursor);
+                        updateMap(Location, location.getLatitude() + ", " + location.getLongitude(), " ", cursor);
                     }
                 }
-            });
+            });*/
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    public void getLocation(Location myLocation){
+        LocationAPIUtils locationAPIUtils  = new LocationAPIUtils(googleMap, mMapView);
+        locationAPIUtils.showCurrentLocation(myLocation, getContext());
+    }
 
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(getContext(),
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
+    private void updateMap(final LatLng Location, String Name, String Address, int cursor) {
+        LocationAPIUtils locationAPIUtils = new LocationAPIUtils(googleMap, mMapView);
+        locationAPIUtils.callGoogleToShowLocationOnMap(getContext(), Location, Name, Address, cursor);
 
-                        if (!GPSIsEnabled) {
-                            enableGPSRequest();
-                        }
-                        final FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-                        mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<android.location.Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-                                    // Logic to handle location object
-                                    Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@lat = " + location.getLatitude() + " lon = " + location.getLongitude());
-                                    Location = new LatLng(location.getLatitude(), location.getLongitude());
-                                    callServerToPostComplaint(Location, location.getLatitude() + ", " + location.getLongitude(), " ", cursor);
-                                }
-                            }
-                        });
-
-                    }
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-
-                }
-                return;
-        }
+        showAnalysis();
     }
 
     private void enableGPSRequest() {
@@ -575,12 +571,6 @@ public class FileComplaintFragment extends Fragment {
                 Toast.makeText(getContext(), "Complaint Creation Failed", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void callServerToPostComplaint(LatLng Location, String Name, String Address, int cursor) {
-        LocationAPIUtils locationAPIUtils = new LocationAPIUtils(googleMap, mMapView);
-        locationAPIUtils.callGoogleToShowLocationOnMap(getContext(), Location, Name, Address, cursor);
-        showAnalysis();
     }
 
     private void showAnalysis() {

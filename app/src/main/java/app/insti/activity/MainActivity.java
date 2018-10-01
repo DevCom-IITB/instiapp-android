@@ -56,6 +56,7 @@ import app.insti.fragment.ComplaintFragment;
 import app.insti.fragment.EventFragment;
 import app.insti.fragment.ExploreFragment;
 import app.insti.fragment.FeedFragment;
+import app.insti.fragment.FileComplaintFragment;
 import app.insti.fragment.MapFragment;
 import app.insti.fragment.MessMenuFragment;
 import app.insti.fragment.MyEventsFragment;
@@ -73,6 +74,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
+import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
 import static app.insti.notifications.NotificationIntentService.ACTION_OPEN_EVENT;
@@ -537,6 +539,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case MY_PERMISSIONS_REQUEST_ACCESS_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     MapFragment.getMainActivity().setupGPS();
+                } else {
+                    Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                return;
+            case MY_PERMISSIONS_REQUEST_LOCATION:
+                Log.i(TAG, "@@@@@@@@@@@@@@ permission request called");
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "@@@@@@@@@@@@@@ permission granted");
+                    FileComplaintFragment.getMainActivity().setupGPS();
                 } else {
                     Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
                     toast.show();

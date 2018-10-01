@@ -72,5 +72,6 @@ dependencies {
     implementation "com.github.Cutta:TagView:${tagViewVersion}"
     implementation "com.android.volley:volley:${volleyVersion}"
     implementation "me.relex:circleindicator:${circleIndicatorVersion}"
+
 }
 apply plugin: 'com.google.gms.google-services'

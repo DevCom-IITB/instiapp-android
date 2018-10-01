@@ -1,9 +1,13 @@
 package app.insti.api;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,7 +45,7 @@ public class LocationAPIUtils {
 
     GoogleMap googleMap;
     MapView mMapView;
-
+    float zoom = 15f;
     public LocationAPIUtils(GoogleMap googleMap,
                             MapView mMapView) {
 
@@ -50,8 +54,38 @@ public class LocationAPIUtils {
 
     }
 
+    public void showCurrentLocation(final Location currentLocation, final Context context){
+
+        /*final Location myLocation = currentLocation;*/
+
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+
+                googleMap = mMap;
+
+                /*if (cursor != 0) {
+                    googleMap.clear();
+                }
+
+
+                googleMap.addMarker(new MarkerOptions().position(location).title(name).snippet(address));
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(location).zoom(17).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                Log.i(TAG, "curser = " + cursor);*/
+
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), zoom));
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                googleMap.setMyLocationEnabled(true);
+            }
+        });
+    }
     public void callGoogleToShowLocationOnMap(final Context context, final LatLng location, final String name, final String address, final int cursor) {
         mMapView.getMapAsync(new OnMapReadyCallback() {
+
 
             @Override
             public void onMapReady(GoogleMap mMap) {
