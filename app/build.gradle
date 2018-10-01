@@ -8,8 +8,8 @@ android {
         manifestPlaceholders 'appAuthRedirectScheme': 'https'
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 17
-        versionName "1.0.12-beta"
+        versionCode 18
+        versionName "1.0.12-beta2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
