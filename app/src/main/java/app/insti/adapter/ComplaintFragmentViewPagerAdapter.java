@@ -4,9 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 import app.insti.fragment.HomeFragment;
 import app.insti.fragment.MeFragment;
@@ -15,13 +13,13 @@ import app.insti.fragment.MeFragment;
  * Created by Shivam Sharma on 15-08-2018.
  */
 
-public class ComplaintFragmentPageViewPagerAdapter extends FragmentStatePagerAdapter {
+public class ComplaintFragmentViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private static final String TAG = ComplaintFragmentPageViewPagerAdapter.class.getSimpleName();
+    private static final String TAG = ComplaintFragmentViewPagerAdapter.class.getSimpleName();
     Context context;
     String userID, sessionID;
 
-    public ComplaintFragmentPageViewPagerAdapter(FragmentManager fm,Context context, String userID, String sessionID) {
+    public ComplaintFragmentViewPagerAdapter(FragmentManager fm, Context context, String userID, String sessionID) {
         super(fm);
         this.context = context;
         this.userID = userID;
@@ -31,18 +29,13 @@ public class ComplaintFragmentPageViewPagerAdapter extends FragmentStatePagerAda
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-
             case 0:
                 return HomeFragment.getInstance(sessionID, userID);
-
             case 1:
                 return MeFragment.getInstance(sessionID,userID);
-
             default:
                 return HomeFragment.getInstance(sessionID, userID);
-
         }
-
     }
 
     @Nullable

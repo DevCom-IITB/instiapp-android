@@ -1,4 +1,4 @@
-package app.insti.uicomponents;
+package app.insti;
 
 import android.content.Context;
 import android.os.Handler;

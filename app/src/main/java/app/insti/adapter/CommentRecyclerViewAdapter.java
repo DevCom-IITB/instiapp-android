@@ -43,32 +43,26 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private Context context;
     private LayoutInflater inflater;
     private String sessionId, userId;
-    private EditText editTextComment;
-    private ImageButton imageButtonSend;
+    private Activity activity;
 
     private List<Venter.Comment> commentList = new ArrayList<>();
 
-    public CommentRecyclerViewAdapter(Context context, String sessionId, String userId) {
+    public CommentRecyclerViewAdapter(Activity activity, Context context, String sessionId, String userId) {
         this.context = context;
         this.sessionId = sessionId;
         this.userId = userId;
         inflater = LayoutInflater.from(context);
+        this.activity = activity;
     }
-
-//    public void setUpdateCommentElements(ImageButton imageButtonSend, EditText editTextComment) {
-//        this.editTextComment = editTextComment;
-//        this.imageButtonSend = imageButtonSend;
-//
-//    }
 
     public class CommentsViewHolder extends RecyclerView.ViewHolder {
 
-        Activity activity;
         private CardView cardView;
         private CircleImageView circleImageView;
         private TextView textViewName;
         private TextView textViewCommentTime;
         private TextView textViewComment;
+        final RetrofitInterface retrofitInterface = activity != null ? ((MainActivity) activity).getRetrofitInterface() : null;
 
         public CommentsViewHolder(View itemView) {
             super(itemView);
@@ -111,7 +105,6 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             cardView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(final View v) {
-                    final RetrofitInterface retrofitInterface = ((MainActivity) activity).getRetrofitInterface();
                     PopupMenu popupMenu = new PopupMenu(context, cardView);
                     if (!(comment.getUser().getUserID().equals(userId))) {
                         popupMenu.inflate(R.menu.comments_options_secondary_menu);
@@ -121,7 +114,6 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-
                             switch (item.getItemId()) {
                                 case R.id.copy_comment_option:
                                     ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
@@ -147,7 +139,6 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                                         @Override
                                         public void onFailure(Call<String> call, Throwable t) {
                                             Log.i(TAG, "@@@@@@@@@ failure in deleting: " + t.toString());
-
                                         }
                                     });
                                     break;
@@ -157,7 +148,6 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     });
                     popupMenu.show();
                     return true;
-
                 }
             });
         }

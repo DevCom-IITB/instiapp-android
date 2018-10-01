@@ -3,5 +3,6 @@
 
     <item
         android:id="@+id/copy_comment_option"
-        android:title="Copy"/>
+        android:title="Copy" />
+
 </menu>

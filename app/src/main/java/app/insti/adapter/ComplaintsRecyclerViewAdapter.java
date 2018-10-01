@@ -33,9 +33,7 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
     private Activity context;
     private String sessionID;
     private String userID;
-
     private static final String TAG = ComplaintsRecyclerViewAdapter.class.getSimpleName();
-
     List<Venter.Complaint> complaintList = new ArrayList<>();
 
     public class ComplaintsViewHolder extends RecyclerView.ViewHolder {
@@ -138,7 +136,6 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         this.userID = userID;
         inflater = LayoutInflater.from(ctx);
     }
-
 
     @NonNull
     @Override

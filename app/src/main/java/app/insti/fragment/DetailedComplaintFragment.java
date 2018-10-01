@@ -33,7 +33,7 @@ import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.CommentRecyclerViewAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.model.CommentCreateRequest;
+import app.insti.api.request.CommentCreateRequest;
 import app.insti.api.model.User;
 import app.insti.api.model.Venter;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -103,7 +103,7 @@ public class DetailedComplaintFragment extends Fragment {
         commentList = new ArrayList<>();
         initialiseViews(view);
 
-        commentListAdapter = new CommentRecyclerViewAdapter(getContext(), sId, uId);
+        commentListAdapter = new CommentRecyclerViewAdapter(getActivity(),getContext(), sId, uId);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerViewComments.setLayoutManager(linearLayoutManager);
         recyclerViewComments.setHasFixedSize(true);

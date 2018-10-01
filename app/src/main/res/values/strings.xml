@@ -41,7 +41,7 @@
     <string name="drawer_close">Close the drawer</string>
     <string name="default_notification_channel_id">INSTIAPP_NOTIFS</string>
 
-    <!--compalint side-->
+    <!--NSS side-->
     <string name="google_maps_api_key">AIzaSyC0T4chZbdcKjLkgEts9YVonPFyP7ckMIE</string>
     <string name="enter_title">Enter title</string>
     <string name="enter_description">Enter Complaint Description</string>
@@ -57,5 +57,12 @@
     <string name="nobody_taking_care_of_your_civic_complaints_be_it_garbage_water_potholes_etc">Nobody taking care of your civic complaints? Be it garbage, water, potholes etc.</string>
     <string name="my_complaints">My complaints</string>
     <string name="voted_complaints">Voted Complaints</string>
-    <string name="server_is_down_at_the_moment">Server is down at the moment</string>
+    <string name="error_message">Please check your Network Connectivity</string>
+    <string name="enter_comment">Enter Comment</string>
+    <string name="enter_suggestions_if_any">Enter Suggestions (if any)</string>
+    <string name="no_complaints">No complaints at the moment</string>
+    <string name="initial_message_file_complaint">Please provide the complaint description before submitting</string>
+    <string name="getting_current_location">Getting current location. Please try after some time</string>
+    <string name="GPS_not_enables">GPS is not enabled!</string>
+    <string name="no_permission">No permission!</string>
 </resources>

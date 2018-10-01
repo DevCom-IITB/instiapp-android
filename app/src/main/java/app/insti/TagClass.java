@@ -1,4 +1,4 @@
-package app.insti.uicomponents;
+package app.insti;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -11,12 +11,9 @@ public class TagClass {
     private String name;
     private String color;
 
-
     public TagClass(String name) {
-
         this.name = name;
         this.color = getRandomColor();
-
     }
 
     public String getRandomColor() {
@@ -31,7 +28,6 @@ public class TagClass {
         colors.add("#FFC000");
         colors.add("#7F7F7F");
         colors.add("#4800FF");
-
         return colors.get(new Random().nextInt(colors.size()));
     }
 
@@ -50,5 +46,4 @@ public class TagClass {
     public void setColor(String color) {
         this.color = color;
     }
-
 }

@@ -99,8 +99,15 @@ public class HomeFragment extends Fragment {
             retrofitInterface.getAllComplaints("sessionid=" + sID).enqueue(new Callback<List<Venter.Complaint>>() {
                 @Override
                 public void onResponse(@NonNull Call<List<Venter.Complaint>> call, @NonNull Response<List<Venter.Complaint>> response) {
-                    if (response.body() != null) {
+                    if (response.body() != null && !(response.body().isEmpty())) {
+                        Log.i(TAG, "@@@@@@@@@@@@ response.body != null");
+                        Log.i(TAG, "@@@@@@@@@@@@ response: " + response.body());
                         initialiseRecyclerView(response.body());
+                        swipeContainer.setRefreshing(false);
+                    } else {
+                        Log.i(TAG, "@@@@@@@@@@@@ response.body == null");
+                        server_error.setVisibility(View.VISIBLE);
+                        server_error.setText(getString(R.string.no_complaints));
                         swipeContainer.setRefreshing(false);
                     }
                 }

@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import app.insti.Constants;
 import app.insti.R;
-import app.insti.adapter.ComplaintFragmentPageViewPagerAdapter;
+import app.insti.adapter.ComplaintFragmentViewPagerAdapter;
 
 public class ComplaintFragment extends BaseFragment {
 
@@ -77,7 +77,7 @@ public class ComplaintFragment extends BaseFragment {
 
     private void setupViewPager(final ViewPager viewPager) {
 
-        viewPager.setAdapter(new ComplaintFragmentPageViewPagerAdapter(getChildFragmentManager(), getContext(), userID, getArguments().getString(Constants.SESSION_ID)));
+        viewPager.setAdapter(new ComplaintFragmentViewPagerAdapter(getChildFragmentManager(), getContext(), userID, getArguments().getString(Constants.SESSION_ID)));
         slidingTabLayout.setupWithViewPager(viewPager);
         slidingTabLayout.post(new Runnable() {
             @Override

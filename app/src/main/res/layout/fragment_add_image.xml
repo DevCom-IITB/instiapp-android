@@ -9,5 +9,4 @@
         android:src="@drawable/ic_add_a_photo_black_24dp"
         android:id="@+id/image_view_image"/>
 
-
 </LinearLayout>

@@ -4,9 +4,9 @@ import com.google.gson.JsonObject;
 
 import java.util.List;
 
-import app.insti.api.model.CommentCreateRequest;
-import app.insti.api.model.ComplaintCreateRequest;
-import app.insti.api.model.ComplaintCreateResponse;
+import app.insti.api.request.CommentCreateRequest;
+import app.insti.api.request.ComplaintCreateRequest;
+import app.insti.api.response.ComplaintCreateResponse;
 import app.insti.api.request.EventCreateRequest;
 import app.insti.api.response.EventCreateResponse;
 import app.insti.api.response.ExploreResponse;
@@ -115,50 +115,26 @@ public interface RetrofitInterface {
     Call<ExploreResponse> search(@Header("Cookie") String sessionID, @Query("query") String query);
 
     @GET("complaints")
-    Call<List<Venter.Complaint>> getAllComplaints(
-            @Header("Cookie") String sessionId
-    );
+    Call<List<Venter.Complaint>> getAllComplaints(@Header("Cookie") String sessionId);
 
     @GET("complaints?filter=me")
-    Call<List<Venter.Complaint>> getUserComplaints(
-            @Header("Cookie") String sessionId
-    );
+    Call<List<Venter.Complaint>> getUserComplaints(@Header("Cookie") String sessionId);
 
     @GET("complaints/{complaintId}")
-    Call<Venter.Complaint> getComplaint(
-            @Header("Cookie") String sessionId,
-            @Path("complaintId") String complaintId
-    );
+    Call<Venter.Complaint> getComplaint(@Header("Cookie") String sessionId, @Path("complaintId") String complaintId);
 
     @PUT("complaints/{complaintId}")
-    Call<Venter.Complaint> upVote(
-            @Header("Cookie") String sessionId,
-            @Path("complaintId") String complaintId
-    );
+    Call<Venter.Complaint> upVote(@Header("Cookie") String sessionId, @Path("complaintId") String complaintId);
 
     @POST("complaints")
-    Call<ComplaintCreateResponse> postComplaint(
-            @Header("Cookie") String sessionId,
-            @Body ComplaintCreateRequest complaintCreateRequest
-    );
+    Call<ComplaintCreateResponse> postComplaint(@Header("Cookie") String sessionId, @Body ComplaintCreateRequest complaintCreateRequest);
 
     @POST("complaints/{complaintId}/comments")
-    Call<Venter.Comment> postComment(
-            @Header("Cookie") String sessionId,
-            @Path("complaintId") String commentId,
-            @Body CommentCreateRequest commentCreateRequest
-    );
+    Call<Venter.Comment> postComment(@Header("Cookie") String sessionId, @Path("complaintId") String commentId, @Body CommentCreateRequest commentCreateRequest);
 
     @PUT("comments/{commentId}")
-    Call<Venter.Comment> updateComment(
-            @Header("Cookie") String sessionId,
-            @Path("commentId") String commentId,
-            @Body CommentCreateRequest commentCreateRequest
-    );
+    Call<Venter.Comment> updateComment(@Header("Cookie") String sessionId, @Path("commentId") String commentId, @Body CommentCreateRequest commentCreateRequest);
 
     @DELETE("comments/{commentId}")
-    Call<String> deleteComment(
-            @Header("Cookie") String sessionId,
-            @Path("commentId") String commentId
-    );
+    Call<String> deleteComment(@Header("Cookie") String sessionId, @Path("commentId") String commentId);
 }

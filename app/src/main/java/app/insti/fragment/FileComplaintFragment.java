@@ -2,6 +2,7 @@ package app.insti.fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -44,7 +45,6 @@ import android.support.v7.widget.Toolbar;
 import com.cunoraz.tagview.Tag;
 import com.cunoraz.tagview.TagView;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -61,7 +61,6 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -77,13 +76,12 @@ import app.insti.activity.MainActivity;
 import app.insti.adapter.ImageViewPagerAdapter;
 import app.insti.api.LocationAPIUtils;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.ServiceGenerator;
-import app.insti.api.model.ComplaintCreateRequest;
-import app.insti.api.model.ComplaintCreateResponse;
+import app.insti.api.request.ComplaintCreateRequest;
+import app.insti.api.response.ComplaintCreateResponse;
 import app.insti.api.request.ImageUploadRequest;
 import app.insti.api.response.ImageUploadResponse;
-import app.insti.uicomponents.CustomAutoCompleteTextView;
-import app.insti.uicomponents.TagClass;
+import app.insti.CustomAutoCompleteTextView;
+import app.insti.TagClass;
 import app.insti.utils.TagCategories;
 import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
@@ -117,7 +115,6 @@ public class FileComplaintFragment extends Fragment {
     private int cursor = 1;
     private List<TagClass> tagList2 = new ArrayList<>();
 
-    //    private boolean GPSIsEnabled = false;
     private String base64Image;
     private ImageViewPagerAdapter imageViewPagerAdapter;
     private ViewPager viewPager;
@@ -130,10 +127,7 @@ public class FileComplaintFragment extends Fragment {
     LinearLayout linearLayoutAddImage;
     private boolean GPSIsSetup = false;
     FusedLocationProviderClient mFusedLocationClient;
-    private GoogleApiClient mGoogleApiClient;
-    private LocationRequest mLocationRequest;
-    Location mLastLocation;
-    private Marker mCurrLocationMarker;
+    ProgressDialog progressDialog;
 
     public FileComplaintFragment() {
         // Required empty public constructor
@@ -156,7 +150,7 @@ public class FileComplaintFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Toast.makeText(getContext(), "Please provide the complaint description before submitting", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getString(R.string.initial_message_file_complaint), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -181,6 +175,8 @@ public class FileComplaintFragment extends Fragment {
         userId = bundle.getString(Constants.USER_ID);
 
         prepareTags();
+
+        progressDialog = new ProgressDialog(getContext());
 
         LinearLayout imageViewHolder = view.findViewById(R.id.image_holder_view);
         CollapsingToolbarLayout.LayoutParams layoutParams = new CollapsingToolbarLayout.LayoutParams(
@@ -229,7 +225,7 @@ public class FileComplaintFragment extends Fragment {
                         layout_buttons.setVisibility(View.VISIBLE);
                         buttonSubmit.setVisibility(View.VISIBLE);
                     } else {
-                        Toast.makeText(getContext(), "Please provide the complaint description before submitting", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.initial_message_file_complaint), Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
@@ -292,7 +288,6 @@ public class FileComplaintFragment extends Fragment {
         mMapView = view.findViewById(R.id.google_map);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
-//        mMapView.getMapAsync(this);
 
         getMapReady();
 
@@ -431,7 +426,7 @@ public class FileComplaintFragment extends Fragment {
                             Location = new LatLng(location.getLatitude(), location.getLongitude());
                             updateMap(Location, "Current Location", location.getLatitude() + ", " + location.getLongitude(), cursor);
                         } else {
-                            Toast.makeText(getContext(), "Getting current location. Please try after some time", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.getting_current_location), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -444,7 +439,7 @@ public class FileComplaintFragment extends Fragment {
                 });
                 GPSIsSetup = true;
             } catch (SecurityException ignored) {
-                Toast.makeText(getContext(), "No permission!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getString(R.string.no_permission), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -489,7 +484,7 @@ public class FileComplaintFragment extends Fragment {
                             }
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            Toast.makeText(getContext(), "GPS is not enabled!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), getString(R.string.GPS_not_enables), Toast.LENGTH_LONG).show();
                             break;
                     }
                 }
@@ -519,7 +514,7 @@ public class FileComplaintFragment extends Fragment {
                             Location = new LatLng(location.getLatitude(), location.getLongitude());
                             updateMap(Location, "Current Location", location.getLatitude() + ", " + location.getLongitude(), cursor);
                         } else {
-                            Toast.makeText(getContext(), "Getting Current location. Please try after some time", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.getting_current_location), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -532,37 +527,30 @@ public class FileComplaintFragment extends Fragment {
                 });
                 GPSIsSetup = true;
             } catch (SecurityException ignored) {
-                Toast.makeText(getContext(), "No permission!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), getString(R.string.no_permission), Toast.LENGTH_LONG).show();
             }
         }
     }
 
     private void populateTags(String cs) {
         tagList2.add(new TagClass(cs));
-
         ArrayList<Tag> tags = new ArrayList<>();
         Tag tag;
-
-
         for (int i = 0; i < tagList2.size(); i++) {
             tag = new Tag(tagList2.get(i).getName());
             tag.radius = 10f;
             tag.layoutColor = Color.parseColor(tagList2.get(i).getColor());
             tag.isDeletable = true;
             tags.add(tag);
-
         }
         tagView.addTags(tags);
     }
 
     private void setTags(CharSequence cs) {
-
         if (!cs.toString().equals("")) {
             String text = cs.toString();
             ArrayList<Tag> tags = new ArrayList<>();
             Tag tag;
-
-
             for (int i = 0; i < tagList.size(); i++) {
                 if (tagList.get(i).getName().toLowerCase().contains(text.toLowerCase())) {
                     tagsLayout.setVisibility(View.VISIBLE);
@@ -596,7 +584,6 @@ public class FileComplaintFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void addComplaint() {
@@ -604,38 +591,42 @@ public class FileComplaintFragment extends Fragment {
         String suggestion = null;
         Log.i(TAG, "@@@@@@@@@@@@@@ Suggestion: " + editTextSuggestions.getText().toString());
         if (!(editTextSuggestions.getText().toString().isEmpty())) {
-            suggestion = " ; Suggestion: " + editTextSuggestions.getText().toString();
+            suggestion = "\nSuggestion: " + editTextSuggestions.getText().toString();
         } else {
             suggestion = "";
         }
-        ComplaintCreateRequest complaintCreateRequest = new ComplaintCreateRequest(complaint + suggestion, Address, (float) Location.latitude, (float) Location.longitude, Tags, uploadedImagesUrl);
-        RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-        retrofitInterface.postComplaint("sessionid=" + getArguments().getString(Constants.SESSION_ID), complaintCreateRequest).enqueue(new Callback<ComplaintCreateResponse>() {
-            @Override
-            public void onResponse(Call<ComplaintCreateResponse> call, Response<ComplaintCreateResponse> response) {
-                Toast.makeText(getContext(), "Complaint successfully posted", Toast.LENGTH_LONG).show();
-                Bundle bundle = getArguments();
-                bundle.putString(Constants.USER_ID, userId);
-                ComplaintFragment complaintFragment = new ComplaintFragment();
-                complaintFragment.setArguments(bundle);
-                FragmentManager manager = getFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.framelayout_for_fragment, complaintFragment, complaintFragment.getTag());
-                transaction.commit();
-            }
+        if (Location == null) {
+            Toast.makeText(getContext(), "Please specify the location", Toast.LENGTH_LONG).show();
+        } else {
+            ComplaintCreateRequest complaintCreateRequest = new ComplaintCreateRequest(complaint + suggestion, Address, (float) Location.latitude, (float) Location.longitude, Tags, uploadedImagesUrl);
+            RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
+            retrofitInterface.postComplaint("sessionid=" + getArguments().getString(Constants.SESSION_ID), complaintCreateRequest).enqueue(new Callback<ComplaintCreateResponse>() {
+                @Override
+                public void onResponse(Call<ComplaintCreateResponse> call, Response<ComplaintCreateResponse> response) {
+                    Toast.makeText(getContext(), "Complaint successfully posted", Toast.LENGTH_LONG).show();
+                    Bundle bundle = getArguments();
+                    bundle.putString(Constants.USER_ID, userId);
+                    ComplaintFragment complaintFragment = new ComplaintFragment();
+                    complaintFragment.setArguments(bundle);
+                    FragmentManager manager = getFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.framelayout_for_fragment, complaintFragment, complaintFragment.getTag());
+                    transaction.commit();
+                }
 
-            @Override
-            public void onFailure(Call<ComplaintCreateResponse> call, Throwable t) {
-                Log.i(TAG, "@@@@@@@@@@@@@@@ failure: " + t.toString());
-                Toast.makeText(getContext(), "Complaint Creation Failed", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<ComplaintCreateResponse> call, Throwable t) {
+                    Log.i(TAG, "@@@@@@@@@@@@@@@ failure: " + t.toString());
+                    Toast.makeText(getContext(), "Complaint Creation Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void updateMap(LatLng Location, String Name, String Address, int cursor) {
         Log.i(TAG, "@@@@@@@@@@@@@@ in updateMap");
         LocationAPIUtils locationAPIUtils = new LocationAPIUtils(googleMap, mMapView);
-        locationAPIUtils.callGoogleToShowLocationOnMap(getActivity(), getContext(), Location, Name, Address, cursor);
+        locationAPIUtils.callGoogleToShowLocationOnMap(Location, Name, Address, cursor);
         showAnalysis();
     }
 
@@ -684,12 +675,18 @@ public class FileComplaintFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK && requestCode == Constants.REQUEST_CAMERA_INT_ID && data != null) {
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
             Bundle bundle = data.getExtras();
             Bitmap bitmap = (Bitmap) bundle.get("data");
             base64Image = convertImageToString(bitmap);
             sendImage();
 
         } else if (resultCode == Activity.RESULT_OK && requestCode == Constants.RESULT_LOAD_IMAGE && data != null) {
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
@@ -703,6 +700,7 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void sendImage() {
+        progressDialog.setMessage("Uploading Image");
         ImageUploadRequest imageUploadRequest = new ImageUploadRequest(base64Image);
         RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
         retrofitInterface.uploadImage("sessionid=" + getArguments().getString(Constants.SESSION_ID), imageUploadRequest).enqueue(new Callback<ImageUploadResponse>() {
@@ -713,12 +711,17 @@ public class FileComplaintFragment extends Fragment {
                     uploadedImagesUrl.add(imageUploadResponse.getPictureURL());
                     showImage(uploadedImagesUrl);
                     Log.i(TAG, "@@@@@@@@@@ ImageURL: " + uploadedImagesUrl.toString());
+                } else {
+                    progressDialog.dismiss();
+                    Toast.makeText(getContext(), getString(R.string.error_message), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
                 Log.i(TAG, "@@@@@@@@@@@ failure: " + t.toString());
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), getString(R.string.error_message), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -738,6 +741,7 @@ public class FileComplaintFragment extends Fragment {
                 }
                 imageViewPagerAdapter.notifyDataSetChanged();
                 Toast.makeText(getContext(), "Picture Taken", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             } catch (Exception e) {
                 e.printStackTrace();
             }

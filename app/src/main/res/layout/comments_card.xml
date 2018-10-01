@@ -61,6 +61,7 @@
                     android:scrollHorizontally="true"
                     android:text="Comment"
                     android:textSize="16sp" />
+
             </LinearLayout>
 
         </LinearLayout>

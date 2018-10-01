@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
-            android:text="@string/server_is_down_at_the_moment"
+            android:text="@string/error_message"
             android:textColor="@color/secondaryTextColor"
             android:visibility="invisible" />
 
@@ -32,6 +32,6 @@
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
-
     </android.support.design.widget.CoordinatorLayout>
+
 </LinearLayout>

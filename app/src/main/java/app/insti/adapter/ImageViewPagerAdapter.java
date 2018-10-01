@@ -19,7 +19,6 @@ import app.insti.fragment.ImageFragment;
 public class ImageViewPagerAdapter extends FragmentPagerAdapter {
 
     private static final String TAG = ImageViewPagerAdapter.class.getSimpleName();
-
     private List<String> images = new ArrayList<>();
     Venter.Complaint detailedComplaint;
 
