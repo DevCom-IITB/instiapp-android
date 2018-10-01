@@ -123,6 +123,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         session = new SessionManager(getApplicationContext());
 
+        if (session.isLoggedIn()) {
+            Utils.setSessionId(session.getSessionID());
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -372,7 +376,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         initNavigationView();
         if (session.isLoggedIn()) {
-            Utils.setSessionId(session.getSessionID());
             currentUser = User.fromString(session.pref.getString(Constants.CURRENT_USER, ""));
             updateNavigationView();
             updateFCMId();
