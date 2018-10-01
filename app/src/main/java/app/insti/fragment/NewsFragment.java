@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import app.insti.R;
-import app.insti.activity.MainActivity;
 import app.insti.adapter.NewsAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.NewsArticle;

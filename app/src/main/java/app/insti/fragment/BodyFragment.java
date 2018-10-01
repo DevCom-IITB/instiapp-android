@@ -34,9 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.Utils;
 import app.insti.R;
 import app.insti.ShareURLMaker;
+import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
 import app.insti.adapter.FeedAdapter;

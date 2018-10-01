@@ -1,7 +1,5 @@
 package app.insti;
 
-import android.os.Handler;
-
 import java.util.ArrayList;
 import java.util.List;
 

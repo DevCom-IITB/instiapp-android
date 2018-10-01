@@ -3,8 +3,6 @@ package app.insti.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,17 +14,15 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import app.insti.Constants;
-import app.insti.Utils;
-import app.insti.api.model.Event;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
-import app.insti.activity.MainActivity;
+import app.insti.Utils;
 import app.insti.adapter.NotificationsAdapter;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
+import app.insti.api.model.Event;
 import app.insti.api.model.Notification;
 import app.insti.api.model.PlacementBlogPost;
+import app.insti.interfaces.ItemClickListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

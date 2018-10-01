@@ -4,7 +4,6 @@ package app.insti.fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,9 +13,6 @@ import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -28,15 +24,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import app.insti.Constants;
-import app.insti.Utils;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.response.NewsFeedResponse;
 import app.insti.api.model.Event;
+import app.insti.api.response.NewsFeedResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

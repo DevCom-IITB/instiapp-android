@@ -1,9 +1,7 @@
 package app.insti.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +13,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import app.insti.Constants;
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.api.model.User;
-import app.insti.fragment.UserFragment;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 

@@ -15,10 +15,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.api.model.TrainingBlogPost;
 import app.insti.fragment.TrainingBlogFragment;
+import app.insti.interfaces.ItemClickListener;
 import app.insti.interfaces.Readable;
 import app.insti.interfaces.Writable;
 import ru.noties.markwon.Markwon;

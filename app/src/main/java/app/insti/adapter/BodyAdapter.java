@@ -1,10 +1,7 @@
 package app.insti.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,17 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import app.insti.Constants;
-import app.insti.Utils;
 import app.insti.R;
-import app.insti.activity.MainActivity;
+import app.insti.Utils;
 import app.insti.api.model.Body;
-import app.insti.fragment.BodyFragment;
 
 
 public class BodyAdapter extends RecyclerView.Adapter<BodyAdapter.ViewHolder> {

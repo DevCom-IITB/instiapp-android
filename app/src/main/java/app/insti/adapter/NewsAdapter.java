@@ -16,12 +16,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
-import app.insti.interfaces.Readable;
-import app.insti.interfaces.Writable;
 import app.insti.api.model.NewsArticle;
 import app.insti.fragment.NewsFragment;
+import app.insti.interfaces.ItemClickListener;
+import app.insti.interfaces.Readable;
+import app.insti.interfaces.Writable;
 import ru.noties.markwon.Markwon;
 
 public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Readable<NewsArticle>,Writable<NewsArticle> {

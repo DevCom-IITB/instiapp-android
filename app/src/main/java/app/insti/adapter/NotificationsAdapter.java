@@ -13,13 +13,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import app.insti.Utils;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.api.model.Event;
 import app.insti.api.model.NewsArticle;
 import app.insti.api.model.Notification;
 import app.insti.api.model.PlacementBlogPost;
+import app.insti.interfaces.ItemClickListener;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.Viewholder> {
     private List<Notification> notifications;
