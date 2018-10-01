@@ -43,6 +43,8 @@ public class FeedFragment extends BaseFragment {
     private boolean freshEventsDisplayed = false;
     LinearLayoutManager mLayoutManager;
     public static int index = -1, top = -1;
+    private FeedAdapter feedAdapter = null;
+
     public FeedFragment() {
         // Required empty public constructor
     }
@@ -101,7 +103,7 @@ public class FeedFragment extends BaseFragment {
     private void updateFeed() {
 
         RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-        retrofitInterface.getNewsFeed("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<NewsFeedResponse>() {
+        retrofitInterface.getNewsFeed(((MainActivity)getActivity()).getSessionIDHeader()).enqueue(new Callback<NewsFeedResponse>() {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
@@ -122,12 +124,10 @@ public class FeedFragment extends BaseFragment {
         });
     }
 
-    private void displayEvents(final List<Event> events) {
-        /* Skip if we're already destroyed */
-        if (getActivity() == null || getView() == null) return;
-
+    /** Initialize the add event fab if the user has permission */
+    private void initFab() {
         if (((MainActivity) getActivity()).createEventAccess()) {
-            fab.setVisibility(View.VISIBLE);
+            fab.show();
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -145,29 +145,22 @@ public class FeedFragment extends BaseFragment {
                 }
             });
         }
+    }
+
+    private void displayEvents(final List<Event> events) {
+        /* Skip if we're already destroyed */
+        if (getActivity() == null || getView() == null) return;
+
+        /* Initialize */
+        initFab();
 
         /* Make first event image big */
         if (events.size() > 1) {
             events.get(0).setEventBigImage(true);
         }
 
-        final FeedAdapter feedAdapter = new FeedAdapter(events, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                String eventJson = new Gson().toJson(events.get(position));
-                Bundle bundle = getArguments();
-                if (bundle == null)
-                    bundle = new Bundle();
-                bundle.putString(Constants.EVENT_JSON, eventJson);
-                EventFragment eventFragment = new EventFragment();
-                eventFragment.setArguments(bundle);
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                transaction.addToBackStack(eventFragment.getTag()).commit();
-            }
-        });
+        feedAdapter = new FeedAdapter(events, this);
+
         getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
             @Override
             public void run(Activity pActivity) {

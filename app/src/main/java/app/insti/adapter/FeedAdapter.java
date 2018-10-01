@@ -1,6 +1,11 @@
 package app.insti.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.sql.Timestamp;
@@ -18,6 +24,8 @@ import java.util.Calendar;
 
 
 import app.insti.Constants;
+import app.insti.activity.MainActivity;
+import app.insti.fragment.EventFragment;
 import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.api.model.Event;
@@ -27,11 +35,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
     private List<Event> events;
     private Context context;
-    private ItemClickListener itemClickListener;
+    private Fragment mFragment;
 
-    public FeedAdapter(List<Event> events, ItemClickListener itemClickListener) {
+    public FeedAdapter(List<Event> events, Fragment fragment) {
         this.events = events;
-        this.itemClickListener = itemClickListener;
+        mFragment = fragment;
     }
 
     public void getSubtitle(ViewHolder viewHolder, Event currentEvent)
@@ -90,7 +98,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
         context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View postView = inflater.inflate(R.layout.feed_card, viewGroup, false);
@@ -98,8 +106,17 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         final ViewHolder postViewHolder = new ViewHolder(postView);
         postView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                itemClickListener.onItemClick(v, postViewHolder.getAdapterPosition());
+            public void onClick(View view) {
+                String eventJson = new Gson().toJson(events.get(postViewHolder.getAdapterPosition()));
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.EVENT_JSON, eventJson);
+                EventFragment eventFragment = new EventFragment();
+                eventFragment.setArguments(bundle);
+                FragmentManager manager = mFragment.getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+                transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
+                transaction.addToBackStack(eventFragment.getTag()).commit();
             }
         });
 

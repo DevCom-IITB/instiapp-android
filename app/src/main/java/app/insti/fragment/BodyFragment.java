@@ -276,21 +276,7 @@ public class BodyFragment extends BackHandledFragment {
         /* Initialize events */
         final List<Event> eventList = body.getBodyEvents();
         RecyclerView eventRecyclerView = (RecyclerView) getActivity().findViewById(R.id.event_card_recycler_view);
-        FeedAdapter eventAdapter = new FeedAdapter(eventList, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Event event = eventList.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.EVENT_JSON, new Gson().toJson(event));
-                EventFragment eventFragment = new EventFragment();
-                eventFragment.setArguments(bundle);
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                ft.addToBackStack(eventFragment.getTag());
-                ft.commit();
-            }
-        });
+        FeedAdapter eventAdapter =  new FeedAdapter(eventList, this);
         eventRecyclerView.setAdapter(eventAdapter);
         eventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -353,7 +339,7 @@ public class BodyFragment extends BackHandledFragment {
         /* Show update button if role */
         if (((MainActivity) getActivity()).editBodyAccess(body)) {
             final FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.edit_fab);
-            fab.setVisibility(View.VISIBLE);
+            fab.show();
             NestedScrollView nsv = (NestedScrollView) getView().findViewById(R.id.body_scrollview);
             nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
                 @Override

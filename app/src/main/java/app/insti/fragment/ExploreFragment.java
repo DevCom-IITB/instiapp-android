@@ -191,15 +191,7 @@ public class ExploreFragment extends Fragment {
 
         // Events
         RecyclerView eventsRecyclerView = getView().findViewById(R.id.explore_event_recycler_view);
-        eventsAdapter = new FeedAdapter(events, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Event event = events.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.EVENT_JSON, new Gson().toJson(event));
-                updateFragment(new EventFragment(), bundle);
-            }
-        });
+        eventsAdapter = new FeedAdapter(events, this);
         eventsRecyclerView.setAdapter(eventsAdapter);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

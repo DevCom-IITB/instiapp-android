@@ -63,21 +63,7 @@ public class EventRecyclerViewFragment extends Fragment {
         super.onStart();
 
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.event_recycler_view);
-        feedAdapter = new FeedAdapter(eventList, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Event event = eventList.get(position);
-                EventFragment eventFragment = new EventFragment();
-                Bundle arguments = getArguments();
-                arguments.putString(Constants.EVENT_JSON, new Gson().toJson(event));
-                eventFragment.setArguments(getArguments());
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
-                ft.addToBackStack(eventFragment.getTag());
-                ft.commit();
-            }
-        });
+        feedAdapter = new FeedAdapter(eventList, this);
         recyclerView.setAdapter(feedAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
