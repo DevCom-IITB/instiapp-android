@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,7 +46,6 @@ import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.Role;
 import app.insti.api.model.User;
-import app.insti.interfaces.ItemClickListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -294,21 +292,7 @@ public class BodyFragment extends BackHandledFragment {
 
         /* Initialize People */
         RecyclerView userRecyclerView = (RecyclerView) getActivity().findViewById(R.id.people_card_recycler_view);
-        UserAdapter userAdapter = new UserAdapter(users, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                User user = users.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.USER_ID, user.getUserID());
-                UserFragment userFragment = new UserFragment();
-                userFragment.setArguments(bundle);
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.framelayout_for_fragment, userFragment, userFragment.getTag());
-                ft.addToBackStack(userFragment.getTag());
-                ft.commit();
-            }
-        });
+        UserAdapter userAdapter = new UserAdapter(users, this);
         userRecyclerView.setAdapter(userAdapter);
         userRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

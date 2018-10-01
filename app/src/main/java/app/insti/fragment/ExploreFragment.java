@@ -17,7 +17,6 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.insti.Constants;
 import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
@@ -28,7 +27,6 @@ import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.User;
 import app.insti.api.response.ExploreResponse;
-import app.insti.interfaces.ItemClickListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -188,15 +186,7 @@ public class ExploreFragment extends Fragment {
 
         // Users
         RecyclerView usersRecyclerView = getView().findViewById(R.id.explore_user_recycler_view);
-        userAdapter = new UserAdapter(users, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                User user = users.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.USER_ID, user.getUserID());
-                updateFragment(new UserFragment(), bundle);
-            }
-        });
+        userAdapter = new UserAdapter(users, this);
         usersRecyclerView.setAdapter(userAdapter);
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }

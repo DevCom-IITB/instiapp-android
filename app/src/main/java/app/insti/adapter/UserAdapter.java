@@ -1,6 +1,9 @@
 package app.insti.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,19 +15,20 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import app.insti.interfaces.ItemClickListener;
+import app.insti.Constants;
 import app.insti.R;
 import app.insti.api.model.User;
+import app.insti.fragment.UserFragment;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private List<User> userList;
-    private ItemClickListener itemClickListener;
     private Context context;
+    private Fragment fragment;
 
-    public UserAdapter(List<User> userList, ItemClickListener itemClickListener) {
+    public UserAdapter(List<User> userList, Fragment mFragment) {
         this.userList = userList;
-        this.itemClickListener = itemClickListener;
+        fragment = mFragment;
     }
 
     @Override
@@ -37,7 +41,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                itemClickListener.onItemClick(view, postViewHolder.getAdapterPosition());
+                User user = userList.get(postViewHolder.getAdapterPosition());
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.USER_ID, user.getUserID());
+                UserFragment userFragment = new UserFragment();
+                userFragment.setArguments(bundle);
+                FragmentTransaction ft = fragment.getActivity().getSupportFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+                ft.replace(R.id.framelayout_for_fragment, userFragment, userFragment.getTag());
+                ft.addToBackStack(userFragment.getTag());
+                ft.commit();
             }
         });
 
