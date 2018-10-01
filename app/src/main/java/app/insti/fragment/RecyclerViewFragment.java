@@ -16,6 +16,7 @@ import android.view.View;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import app.insti.ActivityBuffer;
 import app.insti.R;
@@ -50,6 +51,9 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
         // Clear variables
         allLoaded = false;
 
+        // Keep current search query
+        final String requestSearchQuery = searchQuery;
+
         // Make the request
         String sessionIDHeader = ((MainActivity) getActivity()).getSessionIDHeader();
         RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
@@ -57,6 +61,12 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
         call.enqueue(new Callback<List<T>>() {
             @Override
             public void onResponse(Call<List<T>> call, Response<List<T>> response) {
+                // Check if search query was changed in the meanwhile
+                if (!Objects.equals(requestSearchQuery, searchQuery)) {
+                    return;
+                }
+
+                // Update display
                 if (response.isSuccessful()) {
                     List<T> posts = response.body();
                     displayData(posts);
