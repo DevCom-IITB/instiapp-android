@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -312,22 +313,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /** Open the body fragment from given id */
     private void openBodyFragment(String id) {
-        Body body = new Body(id);
-        BodyFragment bodyFragment = BodyFragment.newInstance(body);
-        updateFragment(bodyFragment);
+        Utils.openBodyFragment(new Body(id), this);
     }
 
     /** Open the event fragment from the provided id */
     private void openEventFragment(String id) {
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        final FragmentActivity self = this;
         retrofitInterface.getEvent(Utils.getSessionIDHeader(), id).enqueue(new EmptyCallback<Event>() {
             @Override
             public void onResponse(Call<Event> call, Response<Event> response) {
-                EventFragment eventFragment = new EventFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.EVENT_JSON, response.body().toString());
-                eventFragment.setArguments(bundle);
-                updateFragment(eventFragment);
+                Utils.openEventFragment(response.body(), self);
             }
         });
     }
@@ -408,11 +404,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.USER_ID, currentUser.getUserID());
-                UserFragment userFragment = new UserFragment();
-                userFragment.setArguments(bundle);
-                updateFragment(userFragment);
+                openUserFragment(currentUser.getUserID());
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
             }
