@@ -17,8 +17,8 @@ public class UpdatableList<T> extends ArrayList<T> {
     /** Update existing or add */
     public void updateCache(T t) {
         for (int i = 0; i < cache.size(); i++) {
-            T cachedEvent = cache.get(i);
-            if (cachedEvent.equals(t)) {
+            T cachedT = cache.get(i);
+            if (cachedT.equals(t)) {
                 cache.set(i, t);
                 return;
             }
