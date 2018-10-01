@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.SessionManager;
+import app.insti.Utils;
 import app.insti.activity.LoginActivity;
 import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
@@ -123,12 +122,7 @@ public class SettingsFragment extends Fragment {
         aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AboutFragment aboutFragment = new AboutFragment();
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                transaction.replace(R.id.framelayout_for_fragment, aboutFragment, aboutFragment.getTag());
-                transaction.addToBackStack(aboutFragment.getTag()).commit();
+                Utils.updateFragment(new AboutFragment(), getActivity());
             }
         });
 
