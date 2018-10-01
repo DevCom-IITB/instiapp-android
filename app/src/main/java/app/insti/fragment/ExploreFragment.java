@@ -22,6 +22,7 @@ import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
 import app.insti.adapter.FeedAdapter;
 import app.insti.adapter.UserAdapter;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
@@ -39,10 +40,10 @@ import retrofit2.Response;
 public class ExploreFragment extends Fragment {
 
     private String sessionId;
-    private List<Body> allBodies = new ArrayList<>();
-    private List<Body> bodies = new ArrayList<>();
-    private List<Event> events = new ArrayList<>();
-    private List<User> users = new ArrayList<>();
+    private static List<Body> allBodies = new ArrayList<>();
+    private static List<Body> bodies = new ArrayList<>();
+    private static List<Event> events = new ArrayList<>();
+    private static List<User> users = new ArrayList<>();
 
     private BodyAdapter bodyAdapter;
     private FeedAdapter eventsAdapter;
@@ -83,19 +84,16 @@ public class ExploreFragment extends Fragment {
         // Get all bodies
         if (allBodies.size() == 0) {
             RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-            retrofitInterface.getAllBodies(sessionId).enqueue(new Callback<List<Body>>() {
+            retrofitInterface.getAllBodies(sessionId).enqueue(new EmptyCallback<List<Body>>() {
                 @Override
                 public void onResponse(Call<List<Body>> call, Response<List<Body>> response) {
                     allBodies = response.body();
                     bodies = allBodies;
-                    updateAdapters(bodies, new ArrayList<Event>(), new ArrayList<User>());
-                }
-
-                @Override
-                public void onFailure(Call<List<Body>> call, Throwable t) {
+                    updateAdapters(allBodies, new ArrayList<Event>(), new ArrayList<User>());
                 }
             });
         } else {
+            updateAdapters(bodies, events, users);
             getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         }
 
@@ -103,20 +101,17 @@ public class ExploreFragment extends Fragment {
         final EditText searchEditText = getView().findViewById(R.id.explore_search);
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (searchEditText.getText().length() >= 3) {
                     doSearch(searchEditText.getText().toString());
                 } else if (searchEditText.getText().length() == 0) {
-                    bodies = allBodies;
-                    updateAdapters(bodies, new ArrayList<Event>(), new ArrayList<User>());
+                    updateAdapters(allBodies, new ArrayList<Event>(), new ArrayList<User>());
                 }
             }
         });
@@ -137,7 +132,7 @@ public class ExploreFragment extends Fragment {
 
         // Make request
         RetrofitInterface retrofitInterface = ((MainActivity) getActivity()).getRetrofitInterface();
-        retrofitInterface.search(sessionId, query).enqueue(new Callback<ExploreResponse>() {
+        retrofitInterface.search(sessionId, query).enqueue(new EmptyCallback<ExploreResponse>() {
             @Override
             public void onResponse(Call<ExploreResponse> call, Response<ExploreResponse> response) {
                 // Get data
@@ -145,11 +140,6 @@ public class ExploreFragment extends Fragment {
                 events = response.body().getEvents();
                 users = response.body().getUsers();
                 updateAdapters(bodies, events, users);
-            }
-
-            @Override
-            public void onFailure(Call<ExploreResponse> call, Throwable t) {
-                // Request failed
             }
         });
     }
