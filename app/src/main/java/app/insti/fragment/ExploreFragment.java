@@ -14,23 +14,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
 import app.insti.adapter.FeedAdapter;
 import app.insti.adapter.UserAdapter;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.response.ExploreResponse;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.User;
+import app.insti.api.response.ExploreResponse;
+import app.insti.interfaces.ItemClickListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -178,14 +176,7 @@ public class ExploreFragment extends Fragment {
         if (getActivity() == null || getView() == null) return;
         // Bodies
         RecyclerView bodiesRecyclerView = getView().findViewById(R.id.explore_body_recycler_view);
-        bodyAdapter = new BodyAdapter(bodies, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.BODY_JSON, new Gson().toJson(bodies.get(position)));
-                updateFragment(new BodyFragment(), bundle);
-            }
-        });
+        bodyAdapter = new BodyAdapter(bodies, this);
         bodiesRecyclerView.setAdapter(bodyAdapter);
         bodiesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

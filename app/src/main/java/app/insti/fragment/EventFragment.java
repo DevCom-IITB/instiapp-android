@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,7 +41,6 @@ import java.util.Date;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.ShareURLMaker;
 import app.insti.activity.MainActivity;
@@ -171,18 +169,7 @@ public class EventFragment extends BackHandledFragment {
 
         final List<Body> bodyList = event.getEventBodies();
         bodyRecyclerView = (RecyclerView) getActivity().findViewById(R.id.body_card_recycler_view);
-        BodyAdapter bodyAdapter = new BodyAdapter(bodyList, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Body body = bodyList.get(position);
-                BodyFragment bodyFragment = BodyFragment.newInstance(body);
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-                ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
-                ft.addToBackStack(bodyFragment.getTag());
-                ft.commit();
-            }
-        });
+        BodyAdapter bodyAdapter = new BodyAdapter(bodyList, this);
         bodyRecyclerView.setAdapter(bodyAdapter);
         bodyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

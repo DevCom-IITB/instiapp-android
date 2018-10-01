@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.ShareURLMaker;
 import app.insti.activity.MainActivity;
@@ -48,6 +47,7 @@ import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.Role;
 import app.insti.api.model.User;
+import app.insti.interfaces.ItemClickListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -314,23 +314,13 @@ public class BodyFragment extends BackHandledFragment {
 
         /* Initialize Parent bodies */
         RecyclerView parentsRecyclerView = (RecyclerView) getActivity().findViewById(R.id.parentorg_card_recycler_view);
-        BodyAdapter parentAdapter = new BodyAdapter(body.getBodyParents(), new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                openBody(body.getBodyParents().get(position));
-            }
-        });
+        BodyAdapter parentAdapter = new BodyAdapter(body.getBodyParents(), this);
         parentsRecyclerView.setAdapter(parentAdapter);
         parentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         /* Initialize child bodies */
         RecyclerView childrenRecyclerView = (RecyclerView) getActivity().findViewById(R.id.org_card_recycler_view);
-        BodyAdapter childrenAdapter = new BodyAdapter(body.getBodyChildren(), new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                openBody(body.getBodyChildren().get(position));
-            }
-        });
+        BodyAdapter childrenAdapter = new BodyAdapter(body.getBodyChildren(), this);
         childrenRecyclerView.setAdapter(childrenAdapter);
         childrenRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -360,21 +350,6 @@ public class BodyFragment extends BackHandledFragment {
                 }
             });
         }
-    }
-
-    /**
-     * Open body fragment for a body
-     */
-    private void openBody(Body body) {
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.BODY_JSON, new Gson().toJson(body));
-        BodyFragment bodyFragment = new BodyFragment();
-        bodyFragment.setArguments(bundle);
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-        ft.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
-        ft.addToBackStack(bodyFragment.getTag());
-        ft.commit();
     }
 
     @Override
