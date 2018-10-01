@@ -4,17 +4,10 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="links_margin_start">8dp</dimen>
 
     <!-- Map -->
-    <dimen name="card_height">360dp</dimen>
     <dimen name="hidden_card_height">80dp</dimen>
     <dimen name="expanded_card_height">280dp</dimen>
     <dimen name="place_name_text_size">20sp</dimen>
     <dimen name="place_sub_head_text_size">16sp</dimen>
-    <dimen name="index_header_text_size">20sp</dimen>
-    <dimen name="index_item_text_size">16sp</dimen>
-    <dimen name="list_item_text_size">16sp</dimen>
-    <dimen name="searchbar_text_size">16sp</dimen>
 </resources>
