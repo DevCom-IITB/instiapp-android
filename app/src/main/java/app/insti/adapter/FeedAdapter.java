@@ -137,7 +137,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             Helpers.loadImageWithPlaceholder(viewHolder.eventBigPicture, currentEvent.getEventImageURL());
         } else {
             Picasso.get().load(
-                    Constants.resizeImageUrl(currentEvent.getEventImageURL(), 200)
+                    Helpers.resizeImageUrl(currentEvent.getEventImageURL())
             ).into(viewHolder.eventPicture);
         }
     }

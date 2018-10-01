@@ -10,7 +10,7 @@ import java.time.Instant;
 public final class Helpers {
     public static final void loadImageWithPlaceholder(final ImageView imageView, final String url) {
         Picasso.get()
-            .load(Constants.resizeImageUrl(url, 200))
+            .load(resizeImageUrl(url))
             .into(imageView, new Callback() {
                 @Override
                 public void onSuccess() {
@@ -22,5 +22,14 @@ public final class Helpers {
                 @Override
                 public void onError(Exception ex) {}
             });
+    }
+
+    public static final String resizeImageUrl(String url) {
+        return resizeImageUrl(url, 200);
+    }
+
+    public static final String resizeImageUrl(String url, Integer dim) {
+        if (url == null) { return url; }
+        return url.replace("api.insti.app/static/", "img.insti.app/static/" + dim.toString() + "/");
     }
 }

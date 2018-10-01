@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import app.insti.Constants;
+import app.insti.Helpers;
 import app.insti.interfaces.ItemClickListener;
 import app.insti.R;
 import app.insti.api.model.Event;
@@ -55,13 +56,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         if (appNotification.getNotificationActorType().contains("event")) {
             Event event = gson.fromJson(gson.toJson(appNotification.getNotificationActor()), Event.class);
             Picasso.get().load(
-                    Constants.resizeImageUrl(event.getEventImageURL(), 200)
+                    Helpers.resizeImageUrl(event.getEventImageURL())
             ).into(viewholder.notificationPicture);
             viewholder.notificationTitle.setText(event.getEventName());
         } else if (appNotification.getNotificationActorType().contains("newsentry")) {
             NewsArticle article = gson.fromJson(gson.toJson(appNotification.getNotificationActor()), NewsArticle.class);
             Picasso.get().load(
-                    Constants.resizeImageUrl(article.getBody().getBodyImageURL(), 200)
+                    Helpers.resizeImageUrl(article.getBody().getBodyImageURL())
             ).into(viewholder.notificationPicture);
             viewholder.notificationTitle.setText(article.getTitle());
         } else if (appNotification.getNotificationActorType().contains("blogentry")) {
