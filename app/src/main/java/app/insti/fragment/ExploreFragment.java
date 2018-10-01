@@ -190,14 +190,4 @@ public class ExploreFragment extends Fragment {
         usersRecyclerView.setAdapter(userAdapter);
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
-
-    public void updateFragment(Fragment fragment, Bundle bundle) {
-        MainActivity.hideKeyboard(getActivity());
-        fragment.setArguments(bundle);
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
-        ft.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());
-        ft.addToBackStack(fragment.getTag());
-        ft.commit();
-    }
 }
