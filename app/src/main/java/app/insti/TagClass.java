@@ -1,5 +1,10 @@
 package app.insti;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -13,22 +18,6 @@ public class TagClass {
 
     public TagClass(String name) {
         this.name = name;
-        this.color = getRandomColor();
-    }
-
-    public String getRandomColor() {
-        ArrayList<String> colors = new ArrayList<>();
-        colors.add("#ED7D31");
-        colors.add("#00B0F0");
-        colors.add("#FF0000");
-        colors.add("#D0CECE");
-        colors.add("#00B050");
-        colors.add("#9999FF");
-        colors.add("#FF5FC6");
-        colors.add("#FFC000");
-        colors.add("#7F7F7F");
-        colors.add("#4800FF");
-        return colors.get(new Random().nextInt(colors.size()));
     }
 
     public String getName() {
@@ -37,13 +26,5 @@ public class TagClass {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
     }
 }

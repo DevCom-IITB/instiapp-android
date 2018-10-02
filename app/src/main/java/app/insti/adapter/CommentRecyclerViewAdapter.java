@@ -90,20 +90,9 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             }
             try {
                 textViewName.setText(comment.getUser().getUserName());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
                 String time = DateTimeUtil.getDate(comment.getTime().toString());
                 Log.i(TAG, "time: " + time);
-                Log.i(TAG, "inside try");
                 textViewCommentTime.setText(time);
-
-            } catch (Exception e) {
-                Log.i(TAG, "Inside catch");
-                e.printStackTrace();
-            }
-            try {
                 textViewComment.setText(comment.getText());
             } catch (Exception e) {
                 e.printStackTrace();

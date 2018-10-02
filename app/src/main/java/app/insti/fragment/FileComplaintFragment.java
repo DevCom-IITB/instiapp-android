@@ -535,7 +535,6 @@ public class FileComplaintFragment extends Fragment {
         for (int i = 0; i < tagList2.size(); i++) {
             tag = new Tag(tagList2.get(i).getName());
             tag.radius = 10f;
-            tag.layoutColor = Color.parseColor(tagList2.get(i).getColor());
             tag.isDeletable = true;
             tags.add(tag);
         }
@@ -552,7 +551,6 @@ public class FileComplaintFragment extends Fragment {
                     tagsLayout.setVisibility(View.VISIBLE);
                     tag = new Tag(tagList.get(i).getName());
                     tag.radius = 10f;
-                    tag.layoutColor = Color.parseColor(tagList.get(i).getColor());
                     tag.isDeletable = false;
                     tags.add(tag);
                 }

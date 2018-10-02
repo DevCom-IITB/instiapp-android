@@ -86,50 +86,23 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             Venter.Complaint complaint = complaintList.get(position);
             try {
                 textViewDescription.setText(complaint.getDescription());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
                 textViewLocation.setText(complaint.getLocationDescription());
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
                 textViewUserName.setText(complaint.getComplaintCreatedBy().getUserName());
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
                 textViewStatus.setText(complaint.getStatus().toUpperCase());
                 if (complaint.getStatus().equalsIgnoreCase("Reported")) {
-                    textViewStatus.setBackgroundColor(Color.parseColor("#FF0000"));
+                    textViewStatus.setBackgroundColor(context.getResources().getColor(R.color.colorRed));
                     textViewStatus.setTextColor(context.getResources().getColor(R.color.primaryTextColor));
                 } else if (complaint.getStatus().equalsIgnoreCase("In Progress")) {
                     textViewStatus.setBackgroundColor(context.getResources().getColor(R.color.colorSecondary));
                     textViewStatus.setTextColor(context.getResources().getColor(R.color.secondaryTextColor));
                 } else if (complaint.getStatus().equalsIgnoreCase("Resolved")) {
-                    textViewStatus.setBackgroundColor(Color.parseColor("#00FF00"));
+                    textViewStatus.setBackgroundColor(context.getResources().getColor(R.color.colorGreen));
                     textViewStatus.setTextColor(context.getResources().getColor(R.color.secondaryTextColor));
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
                 String time = DateTimeUtil.getDate(complaint.getComplaintReportDate().toString());
                 Log.i(TAG, "time: " + time);
                 textViewReportDate.setText(time);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
                 buttonComments.setText("COMMENTS(" + complaint.getComment().size() + ")");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
                 buttonVotes.setText("UP VOTES(" + complaint.getUsersUpVoted().size() + ")");
             } catch (Exception e) {
                 e.printStackTrace();

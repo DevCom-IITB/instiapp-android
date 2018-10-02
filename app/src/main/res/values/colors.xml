@@ -12,6 +12,8 @@
     <color name="colorGray">#757575</color>
     <color name="colorWhite">#FFFFFF</color>
 
+    <color name="colorRed">#FF0000</color>
+    <color name="colorGreen">#00FF00</color>
     <!-- Map -->
     <item name="transparent_black" type="color">#20000000</item>
     <item name="list_item_gray_even" type="color">#ffe6e6e6</item>

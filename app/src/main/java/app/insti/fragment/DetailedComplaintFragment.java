@@ -175,30 +175,11 @@ public class DetailedComplaintFragment extends Fragment {
     private void populateViews() {
         try {
             textViewUserName.setText(detailedComplaint.getComplaintCreatedBy().getUserName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             String time = DateTimeUtil.getDate(detailedComplaint.getComplaintReportDate().toString());
             Log.i(TAG, " time: " + time);
-            Log.i(TAG, "inside try");
             textViewReportDate.setText(time);
-
-        } catch (Exception e) {
-            Log.i(TAG, "Inside catch");
-            e.printStackTrace();
-        }
-        try {
             textViewLocation.setText(detailedComplaint.getLocationDescription());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             textViewDescription.setText(detailedComplaint.getDescription());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             textViewStatus.setText(detailedComplaint.getStatus().toUpperCase());
             if (detailedComplaint.getStatus().equalsIgnoreCase("Reported")) {
                 textViewStatus.setBackgroundColor(Color.parseColor("#FF0000"));
@@ -210,25 +191,9 @@ public class DetailedComplaintFragment extends Fragment {
                 textViewStatus.setBackgroundColor(Color.parseColor("#00FF00"));
                 textViewStatus.setTextColor(getResources().getColor(R.color.secondaryTextColor));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             textViewCommentLabel.setText("COMMENTS");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             textViewVoteUpLabel.setText("UP VOTES");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             addVotesToView(detailedComplaint);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             addCommentsToView(detailedComplaint);
         } catch (Exception e) {
             e.printStackTrace();
