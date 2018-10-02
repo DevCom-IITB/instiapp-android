@@ -2,11 +2,9 @@ package app.insti;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Shivam Sharma on 13-08-2018.
