@@ -57,9 +57,11 @@ import app.insti.api.request.UserFCMPatchRequest;
 import app.insti.fragment.BackHandledFragment;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.CalendarFragment;
+import app.insti.fragment.ComplaintFragment;
 import app.insti.fragment.EventFragment;
 import app.insti.fragment.ExploreFragment;
 import app.insti.fragment.FeedFragment;
+import app.insti.fragment.FileComplaintFragment;
 import app.insti.fragment.MapFragment;
 import app.insti.fragment.MessMenuFragment;
 import app.insti.fragment.NewsFragment;
@@ -79,6 +81,7 @@ import static app.insti.Constants.DATA_TYPE_PT;
 import static app.insti.Constants.DATA_TYPE_USER;
 import static app.insti.Constants.FCM_BUNDLE_NOTIFICATION_ID;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
+import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
 
@@ -94,7 +97,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private RetrofitInterface retrofitInterface;
     private List<Notification> notifications = null;
 
-    /** which menu item should be checked on activity start */
+    /**
+     * which menu item should be checked on activity start
+     */
     private int initMenuChecked = R.id.nav_feed;
 
     public static void hideKeyboard(Activity activity) {
@@ -152,7 +157,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkLatestVersion();
     }
 
-    /** Get the notifications from memory cache or network */
+    /**
+     * Get the notifications from memory cache or network
+     */
     private void fetchNotifications() {
         // Try memory cache
         if (notifications != null) {
@@ -173,7 +180,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    /** Show the right notification icon */
+    /**
+     * Show the right notification icon
+     */
     private void showNotifications() {
         if (notifications != null && !notifications.isEmpty()) {
             menu.findItem(R.id.action_notifications).setIcon(R.drawable.baseline_notifications_active_white_24);
@@ -182,7 +191,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /** Get version code we are currently on */
+    /**
+     * Get version code we are currently on
+     */
     private int getCurrentVersion() {
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -192,10 +203,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /** Check for updates in andro.json */
+    /**
+     * Check for updates in andro.json
+     */
     private void checkLatestVersion() {
         final int versionCode = getCurrentVersion();
-        if (versionCode == 0) { return; }
+        if (versionCode == 0) {
+            return;
+        }
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.getLatestVersion().enqueue(new EmptyCallback<JsonObject>() {
             @Override
@@ -257,7 +272,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mNotificationManager.createNotificationChannel(mChannel);
     }
 
-    /** Handle opening event/body/blog from FCM notification */
+    /**
+     * Handle opening event/body/blog from FCM notification
+     */
     private void handleFCMIntent(Bundle bundle) {
         /* Mark the notification read */
         final String notificationId = bundle.getString(FCM_BUNDLE_NOTIFICATION_ID);
@@ -273,7 +290,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         );
     }
 
-    /** Handle intents for links */
+    /**
+     * Handle intents for links
+     */
     private void handleIntent(Intent appLinkIntent) {
         String appLinkAction = appLinkIntent.getAction();
         String appLinkData = appLinkIntent.getDataString();
@@ -282,9 +301,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /** Open the proper fragment from given type and id */
+    /**
+     * Open the proper fragment from given type and id
+     */
     private void chooseIntent(String type, String id) {
-        if (type == null || id == null) { return; }
+        if (type == null || id == null) {
+            return;
+        }
         switch (type) {
             case DATA_TYPE_BODY:
                 openBodyFragment(id);
@@ -303,7 +326,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.e("NOTIFICATIONS", "Server sent invalid notification?");
     }
 
-    /** Open the proper fragment from given type, id and extra */
+    /**
+     * Open the proper fragment from given type, id and extra
+     */
     private void chooseIntent(String type, String id, String extra) {
         if (extra == null) {
             chooseIntent(type, id);
@@ -323,18 +348,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /** Open user fragment from given id */
+    /**
+     * Open user fragment from given id
+     */
     private void openUserFragment(String id) {
         UserFragment userFragment = UserFragment.newInstance(id);
         updateFragment(userFragment);
     }
 
-    /** Open the body fragment from given id */
+    /**
+     * Open the body fragment from given id
+     */
     private void openBodyFragment(String id) {
         Utils.openBodyFragment(new Body(id), this);
     }
 
-    /** Open the event fragment from the provided id */
+    /**
+     * Open the event fragment from the provided id
+     */
     private void openEventFragment(String id) {
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         final FragmentActivity self = this;
@@ -525,6 +556,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 updateFragment(mapFragment);
                 break;
 
+            case R.id.nav_complaint:
+                if (session.isLoggedIn()) {
+                    ComplaintFragment complaintFragment = new ComplaintFragment();
+                    updateFragment(complaintFragment);
+                } else {
+                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
+                }
+                break;
+
             case R.id.nav_settings:
                 SettingsFragment settingsFragment = new SettingsFragment();
                 updateFragment(settingsFragment);
@@ -536,7 +576,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    /** Open placement blog fragment */
+    /**
+     * Open placement blog fragment
+     */
     private void openPlacementBlog() {
         if (session.isLoggedIn()) {
             PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
@@ -555,7 +597,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /** Change the active fragment to the supplied one */
+    /**
+     * Change the active fragment to the supplied one
+     */
     public void updateFragment(Fragment fragment) {
         Log.d(TAG, "updateFragment: " + fragment.toString());
         Bundle bundle = fragment.getArguments();
@@ -565,7 +609,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bundle.putString(Constants.SESSION_ID, session.pref.getString(Constants.SESSION_ID, ""));
         if (fragment instanceof MessMenuFragment)
             bundle.putString(Constants.USER_HOSTEL, session.isLoggedIn() && currentUser.getHostel() != null ? currentUser.getHostel() : "1");
-        if (fragment instanceof SettingsFragment && session.isLoggedIn())
+        if (fragment instanceof SettingsFragment && session.isLoggedIn() || fragment instanceof ComplaintFragment && session.isLoggedIn())
             bundle.putString(Constants.USER_ID, currentUser.getUserID());
         fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
@@ -596,6 +640,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     MapFragment.getMainActivity().setupGPS();
                 } else {
+                    Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                break;
+            case MY_PERMISSIONS_REQUEST_LOCATION:
+                Log.i(TAG, "Permission request captured");
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "Permission Granted");
+                    FileComplaintFragment.getMainActivity().getMapReady();
+                } else {
+                    Log.i(TAG, "Permission Cancelled");
                     Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
                     toast.show();
                 }

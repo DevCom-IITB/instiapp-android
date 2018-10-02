@@ -39,4 +39,18 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/CustomTextAppearance</item>
+    </style>
+
+    <style name="CustomTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">15sp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="edit_text_hint_apperarance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#999</item>
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>

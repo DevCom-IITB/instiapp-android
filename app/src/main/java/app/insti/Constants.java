@@ -5,6 +5,7 @@ public class Constants {
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_LOCATION = 2;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 3;
     public static final int RESULT_LOAD_IMAGE = 11;
+    public static final int REQUEST_CAMERA_INT_ID = 101;
     public static final String NOTIFICATIONS_RESPONSE_JSON = "notifications_json";
     public static final String EVENT_ID = "event_id";
     public static final String EVENT_LATITUDE = "event_latitude";
