@@ -36,7 +36,6 @@ ext {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    //noinspection GradleCompatible
     implementation 'com.google.firebase:firebase-messaging:17.3.2'
     implementation "com.android.support:design:${supportLibVersion}"
     implementation "com.android.support:exifinterface:${supportLibVersion}"
