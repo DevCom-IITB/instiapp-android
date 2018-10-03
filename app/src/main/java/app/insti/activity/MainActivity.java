@@ -97,9 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private RetrofitInterface retrofitInterface;
     private List<Notification> notifications = null;
 
-    /**
-     * which menu item should be checked on activity start
-     */
+    /** which menu item should be checked on activity start */
     private int initMenuChecked = R.id.nav_feed;
 
     public static void hideKeyboard(Activity activity) {
@@ -157,9 +155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkLatestVersion();
     }
 
-    /**
-     * Get the notifications from memory cache or network
-     */
+    /** Get the notifications from memory cache or network */
     private void fetchNotifications() {
         // Try memory cache
         if (notifications != null) {
@@ -180,9 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    /**
-     * Show the right notification icon
-     */
+    /** Show the right notification icon */
     private void showNotifications() {
         if (notifications != null && !notifications.isEmpty()) {
             menu.findItem(R.id.action_notifications).setIcon(R.drawable.baseline_notifications_active_white_24);
@@ -191,9 +185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /**
-     * Get version code we are currently on
-     */
+    /** Get version code we are currently on */
     private int getCurrentVersion() {
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -203,14 +195,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /**
-     * Check for updates in andro.json
-     */
+    /** Check for updates in andro.json */
     private void checkLatestVersion() {
         final int versionCode = getCurrentVersion();
-        if (versionCode == 0) {
-            return;
-        }
+        if (versionCode == 0) { return; }
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.getLatestVersion().enqueue(new EmptyCallback<JsonObject>() {
             @Override
@@ -272,9 +260,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mNotificationManager.createNotificationChannel(mChannel);
     }
 
-    /**
-     * Handle opening event/body/blog from FCM notification
-     */
+    /** Handle opening event/body/blog from FCM notification */
     private void handleFCMIntent(Bundle bundle) {
         /* Mark the notification read */
         final String notificationId = bundle.getString(FCM_BUNDLE_NOTIFICATION_ID);
@@ -290,9 +276,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         );
     }
 
-    /**
-     * Handle intents for links
-     */
+    /** Handle intents for links */
     private void handleIntent(Intent appLinkIntent) {
         String appLinkAction = appLinkIntent.getAction();
         String appLinkData = appLinkIntent.getDataString();
@@ -301,13 +285,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /**
-     * Open the proper fragment from given type and id
-     */
+    /** Open the proper fragment from given type and id */
     private void chooseIntent(String type, String id) {
-        if (type == null || id == null) {
-            return;
-        }
+        if (type == null || id == null) { return; }
         switch (type) {
             case DATA_TYPE_BODY:
                 openBodyFragment(id);
@@ -326,9 +306,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.e("NOTIFICATIONS", "Server sent invalid notification?");
     }
 
-    /**
-     * Open the proper fragment from given type, id and extra
-     */
+    /** Open the proper fragment from given type, id and extra */
     private void chooseIntent(String type, String id, String extra) {
         if (extra == null) {
             chooseIntent(type, id);
@@ -348,24 +326,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /**
-     * Open user fragment from given id
-     */
+    /** Open user fragment from given id */
     private void openUserFragment(String id) {
         UserFragment userFragment = UserFragment.newInstance(id);
         updateFragment(userFragment);
     }
 
-    /**
-     * Open the body fragment from given id
-     */
+    /** Open the body fragment from given id */
     private void openBodyFragment(String id) {
         Utils.openBodyFragment(new Body(id), this);
     }
 
-    /**
-     * Open the event fragment from the provided id
-     */
+    /** Open the event fragment from the provided id */
     private void openEventFragment(String id) {
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         final FragmentActivity self = this;
@@ -576,9 +548,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    /**
-     * Open placement blog fragment
-     */
+    /** Open placement blog fragment */
     private void openPlacementBlog() {
         if (session.isLoggedIn()) {
             PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
@@ -597,9 +567,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /**
-     * Change the active fragment to the supplied one
-     */
+    /** Change the active fragment to the supplied one */
     public void updateFragment(Fragment fragment) {
         Log.d(TAG, "updateFragment: " + fragment.toString());
         Bundle bundle = fragment.getArguments();
