@@ -133,11 +133,6 @@ public class FileComplaintFragment extends Fragment {
     private boolean GPSIsSetup = false;
     FusedLocationProviderClient mFusedLocationClient;
     ProgressDialog progressDialog;
-    int GLOBAL_TOUCH_POSITION_X = 0;
-    int GLOBAL_TOUCH_CURRENT_POSITION_X = 0;
-    boolean isMaptouched = true;
-    boolean isBlockedScrollView = false;
-    LinearLayout mapLinearLayout;
     CollapsingToolbarLayout collapsing_toolbar;
 
     public FileComplaintFragment() {
@@ -387,7 +382,6 @@ public class FileComplaintFragment extends Fragment {
 
     public void getMapReady() {
 
-        /*mapLinearLayout.requestDisallowInterceptTouchEvent(true);*/
         Log.i(TAG, "in getMapReady");
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -418,29 +412,6 @@ public class FileComplaintFragment extends Fragment {
                         }
                     });
                 }
-                /*googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-                    @Override
-                    public void onCameraIdle() {
-                        Log.e(TAG,"==camera idle=="+ googleMap.getCameraPosition().target);
-
-                    }
-                });
-                googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
-                    @Override
-                    public void onCameraMoveStarted(int reason) {
-                        if (reason ==REASON_GESTURE) {
-                            isMaptouched = true;
-                            Toast.makeText(getActivity(), "The user gestured on the map.",
-                                    Toast.LENGTH_SHORT).show();
-                        } else if (reason ==REASON_API_ANIMATION) {
-                            Toast.makeText(getActivity(), "The user tapped something on the map.",
-                                    Toast.LENGTH_SHORT).show();
-                        } else if (reason ==REASON_DEVELOPER_ANIMATION) {
-                            Toast.makeText(getActivity(), "The app moved the camera.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });*/
             }
         });
     }
