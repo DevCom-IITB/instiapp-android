@@ -39,22 +39,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <android.support.design.widget.FloatingActionButton
-                            android:id="@+id/fabButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_gravity="bottom|end"
-                            android:layout_marginEnd="20dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:src="@drawable/ic_add_a_photo_black_24dp"
-                            app:backgroundTint="@color/colorSecondary"
-                            app:borderWidth="0dp"
-                            app:fabSize="normal"
-                            app:layout_anchorGravity="bottom|end" />
-
                         <LinearLayout
                             android:id="@+id/linearLayoutAddImage"
                             android:layout_width="match_parent"
@@ -66,7 +50,7 @@
                                 android:id="@+id/imageViewAddImage"
                                 android:layout_width="100dp"
                                 android:layout_height="100dp"
-                                android:src="@drawable/baseline_photo_size_select_actual_black_48"/>
+                                android:src="@drawable/baseline_photo_size_select_actual_black_48" />
 
                         </LinearLayout>
 
@@ -91,7 +75,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <app.insti.utils.CustomScrollView
             android:id="@+id/nested_scrollview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -187,10 +171,18 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:id="@+id/google_map"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp" />
+                    <LinearLayout
+                        android:id="@+id/mapLinearLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="300dp"
+                        android:orientation="vertical">
+
+                        <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:id="@+id/google_map"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp" />
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -204,13 +196,19 @@
                             android:background="#ccc"
                             android:padding="10dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="TAGS"
-                                android:textColor="#4A4A4A"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="TAGS"
+                                    android:textColor="#4A4A4A"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                            </RelativeLayout>
 
                         </LinearLayout>
 
@@ -288,9 +286,26 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </app.insti.utils.CustomScrollView>
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_add_a_photo_black_24dp"
+            app:backgroundTint="@color/colorSecondary"
+            app:borderWidth="0dp"
+            app:fabSize="normal"
+            android:padding="100dp"/>
     </android.support.design.widget.CoordinatorLayout>
+
 
     <LinearLayout
         android:id="@+id/layout_buttons"

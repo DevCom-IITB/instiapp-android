@@ -3,6 +3,7 @@ package app.insti.fragment;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -33,10 +34,12 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -83,6 +86,7 @@ import app.insti.api.request.ComplaintCreateRequest;
 import app.insti.api.request.ImageUploadRequest;
 import app.insti.api.response.ComplaintCreateResponse;
 import app.insti.api.response.ImageUploadResponse;
+import app.insti.utils.CustomScrollView;
 import app.insti.utils.TagCategories;
 import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
@@ -129,6 +133,12 @@ public class FileComplaintFragment extends Fragment {
     private boolean GPSIsSetup = false;
     FusedLocationProviderClient mFusedLocationClient;
     ProgressDialog progressDialog;
+    int GLOBAL_TOUCH_POSITION_X = 0;
+    int GLOBAL_TOUCH_CURRENT_POSITION_X = 0;
+    boolean isMaptouched = true;
+    boolean isBlockedScrollView = false;
+    LinearLayout mapLinearLayout;
+    CollapsingToolbarLayout collapsing_toolbar;
 
     public FileComplaintFragment() {
         // Required empty public constructor
@@ -175,6 +185,8 @@ public class FileComplaintFragment extends Fragment {
         Bundle bundle = getArguments();
         userId = bundle.getString(Constants.USER_ID);
 
+        /*mapLinearLayout = (LinearLayout) view.findViewById(R.id.mapLinearLayout);*/
+
         prepareTags();
 
         progressDialog = new ProgressDialog(getContext());
@@ -185,11 +197,15 @@ public class FileComplaintFragment extends Fragment {
                 getResources().getDisplayMetrics().heightPixels / 2
         );
 
+        collapsing_toolbar = view.findViewById(R.id.collapsing_toolbar);
+        collapsing_toolbar.setVisibility(View.GONE);
+
         imageViewHolder.setLayoutParams(layoutParams);
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Add Complaint");
 
         nestedScrollView = view.findViewById(R.id.nested_scrollview);
+
         layout_buttons = view.findViewById(R.id.layout_buttons);
         layout_buttons.setVisibility(View.GONE);
 
@@ -370,6 +386,8 @@ public class FileComplaintFragment extends Fragment {
     }
 
     public void getMapReady() {
+
+        /*mapLinearLayout.requestDisallowInterceptTouchEvent(true);*/
         Log.i(TAG, "in getMapReady");
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -400,6 +418,29 @@ public class FileComplaintFragment extends Fragment {
                         }
                     });
                 }
+                /*googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                    @Override
+                    public void onCameraIdle() {
+                        Log.e(TAG,"==camera idle=="+ googleMap.getCameraPosition().target);
+
+                    }
+                });
+                googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+                    @Override
+                    public void onCameraMoveStarted(int reason) {
+                        if (reason ==REASON_GESTURE) {
+                            isMaptouched = true;
+                            Toast.makeText(getActivity(), "The user gestured on the map.",
+                                    Toast.LENGTH_SHORT).show();
+                        } else if (reason ==REASON_API_ANIMATION) {
+                            Toast.makeText(getActivity(), "The user tapped something on the map.",
+                                    Toast.LENGTH_SHORT).show();
+                        } else if (reason ==REASON_DEVELOPER_ANIMATION) {
+                            Toast.makeText(getActivity(), "The app moved the camera.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });*/
             }
         });
     }
@@ -675,6 +716,7 @@ public class FileComplaintFragment extends Fragment {
             Bundle bundle = data.getExtras();
             Bitmap bitmap = (Bitmap) bundle.get("data");
             base64Image = convertImageToString(bitmap);
+            collapsing_toolbar.setVisibility(View.VISIBLE);
             sendImage();
 
         } else if (resultCode == Activity.RESULT_OK && requestCode == Constants.RESULT_LOAD_IMAGE && data != null) {
@@ -689,6 +731,7 @@ public class FileComplaintFragment extends Fragment {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             base64Image = convertImageToString(getScaledBitmap(picturePath, 800, 800));
+            collapsing_toolbar.setVisibility(View.VISIBLE);
             sendImage();
         }
     }
