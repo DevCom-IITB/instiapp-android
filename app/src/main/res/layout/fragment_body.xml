@@ -95,9 +95,9 @@
 
                             <TextView
                                 android:id="@+id/body_subtitle"
-                                android:textColor="@color/colorWhite"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorWhite" />
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
 
@@ -138,6 +138,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="12dp"
                         android:textColor="#333"
+                        android:textColorLink="@color/colorPrimary"
                         android:textSize="16sp" />
 
                     <TextView
