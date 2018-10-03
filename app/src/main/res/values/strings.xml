@@ -35,20 +35,11 @@
 
     <!--NSS side-->
     <string name="google_maps_api_key">AIzaSyC0T4chZbdcKjLkgEts9YVonPFyP7ckMIE</string>
-    <string name="enter_title">Enter title</string>
-    <string name="enter_description">Enter Complaint Description</string>
     <string name="take_photo_using_camera">Take photo using Camera</string>
     <string name="choose_from_library">Choose from gallery</string>
     <string name="add_photo">Add Image</string>
-    <string name="select_file">Select File</string>
-    <string name="please_try_again">Please try again</string>
-    <string name="relevant_complaints">Relevant Complaints</string>
-    <string name="complaint_details">Complaint Details</string>
-    <string name="more">MORE</string>
     <string name="vent_your_issues_now">Vent your issues now!</string>
     <string name="venter_super_head">Nobody taking care of your civic complaints? Be it garbage, water, potholes etc.</string>
-    <string name="my_complaints">My complaints</string>
-    <string name="voted_complaints">Voted Complaints</string>
     <string name="error_message">Please check your Network Connectivity</string>
     <string name="enter_comment">Enter Comment</string>
     <string name="enter_suggestions_if_any">Enter Suggestions (if any)</string>
