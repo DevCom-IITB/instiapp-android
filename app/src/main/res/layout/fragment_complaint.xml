@@ -48,7 +48,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="@string/nobody_taking_care_of_your_civic_complaints_be_it_garbage_water_potholes_etc"
+                                android:text="@string/venter_super_head"
                                 android:textColor="@color/primaryTextColor"
                                 android:textStyle="bold" />
 
