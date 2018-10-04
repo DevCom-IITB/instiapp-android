@@ -75,7 +75,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <app.insti.utils.CustomScrollView
+        <android.support.v4.widget.NestedScrollView
             android:id="@+id/nested_scrollview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -190,41 +190,30 @@
                         android:layout_marginTop="20dp"
                         android:orientation="vertical">
 
-                        <LinearLayout
+                        <android.support.design.widget.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="#ccc"
-                            android:padding="10dp">
+                            app:hintTextAppearance="@style/edit_text_hint_apperarance">
 
-                            <RelativeLayout
+                            <EditText
+                                android:id="@+id/editTextLocationDetails"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_height="wrap_content"
+                                android:gravity="top"
+                                android:hint="@string/enter_location_details"
+                                android:imeOptions="flagNoExtractUi|actionSearch"
+                                android:inputType="textMultiLine"
+                                android:minLines="3"
+                                android:textColor="@android:color/black"
+                                android:textSize="14sp" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="TAGS"
-                                    android:textColor="#4A4A4A"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-
-                            </RelativeLayout>
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="7dp" />
+                        </android.support.design.widget.TextInputLayout>
 
                         <com.cunoraz.tagview.TagView
                             android:id="@+id/tag_view"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_margin="10dp" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="7dp" />
 
                     </LinearLayout>
 
@@ -245,7 +234,7 @@
                                 android:id="@+id/editTextTags"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Add more Tags"
+                                android:hint="Add Tags"
                                 android:inputType="text"
                                 android:textColor="@android:color/black"
                                 android:textColorHint="#66000000"
@@ -274,7 +263,9 @@
                             android:id="@+id/tag_populate"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="10dp" />
+                            android:layout_margin="10dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"/>
 
                     </ScrollView>
 
@@ -286,7 +277,7 @@
 
             </LinearLayout>
 
-        </app.insti.utils.CustomScrollView>
+        </android.support.v4.widget.NestedScrollView>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabButton"
@@ -302,8 +293,7 @@
             android:src="@drawable/ic_add_a_photo_black_24dp"
             app:backgroundTint="@color/colorSecondary"
             app:borderWidth="0dp"
-            app:fabSize="normal"
-            android:padding="100dp"/>
+            app:fabSize="normal" />
     </android.support.design.widget.CoordinatorLayout>
 
 
