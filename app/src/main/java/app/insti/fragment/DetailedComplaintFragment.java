@@ -1,5 +1,6 @@
 package app.insti.fragment;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -182,14 +183,14 @@ public class DetailedComplaintFragment extends Fragment {
             textViewDescription.setText(detailedComplaint.getDescription());
             textViewStatus.setText(detailedComplaint.getStatus().toUpperCase());
             if (detailedComplaint.getStatus().equalsIgnoreCase("Reported")) {
-                textViewStatus.setBackgroundColor(Color.parseColor("#FF0000"));
-                textViewStatus.setTextColor(getResources().getColor(R.color.primaryTextColor));
+                textViewStatus.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.colorRed)));
+                textViewStatus.setTextColor(getContext().getResources().getColor(R.color.primaryTextColor));
             } else if (detailedComplaint.getStatus().equalsIgnoreCase("In Progress")) {
-                textViewStatus.setBackgroundColor(getResources().getColor(R.color.colorSecondary));
-                textViewStatus.setTextColor(getResources().getColor(R.color.secondaryTextColor));
+                textViewStatus.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.colorSecondary)));
+                textViewStatus.setTextColor(getContext().getResources().getColor(R.color.secondaryTextColor));
             } else if (detailedComplaint.getStatus().equalsIgnoreCase("Resolved")) {
-                textViewStatus.setBackgroundColor(Color.parseColor("#00FF00"));
-                textViewStatus.setTextColor(getResources().getColor(R.color.secondaryTextColor));
+                textViewStatus.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.colorGreen)));
+                textViewStatus.setTextColor(getContext().getResources().getColor(R.color.secondaryTextColor));
             }
             textViewCommentLabel.setText("COMMENTS");
             textViewVoteUpLabel.setText("UP VOTES");

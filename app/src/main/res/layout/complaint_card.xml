@@ -1,6 +1,5 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -17,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,7 +42,8 @@
                 android:text="status"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:background="@drawable/customborder" />
 
         </LinearLayout>
 
@@ -51,6 +51,7 @@
             android:id="@+id/textViewReportDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="report date"
             android:textColor="@color/colorGray"
             android:textSize="14sp" />
 
@@ -58,6 +59,7 @@
             android:id="@+id/textViewLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="location"
             android:textColor="@color/colorGray"
             android:textSize="14sp" />
 
@@ -69,31 +71,69 @@
             android:id="@+id/textViewDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="location"
             android:textColor="@android:color/black"
             android:textSize="14sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_gravity="center_horizontal"
+            android:paddingStart="50dp"
+            android:paddingEnd="20dp"
+            android:weightSum="2"
+            android:background="@drawable/customborder">
 
-            <Button
-                android:id="@+id/buttonComments"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="#12C1D6"
-                android:textColor="@color/colorWhite" />
+                android:weightSum="2">
 
-            <Button
-                android:id="@+id/buttonVotes"
+                <ImageButton
+                    android:id="@+id/buttonComments"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="10dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/baseline_comment_24" />
+
+                <TextView
+                    android:id="@+id/text_comments"
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/secondaryTextColor"
+                    android:layout_weight="1"
+                    android:text="12"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@android:color/black"
-                android:textColor="@color/colorWhite" />
+                android:weightSum="2">
+
+                <ImageButton
+                    android:id="@+id/buttonVotes"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="10dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/baseline_arrow_upward_24" />
+
+                <TextView
+                    android:id="@+id/text_votes"
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="23"
+                    android:textColor="@color/secondaryTextColor"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

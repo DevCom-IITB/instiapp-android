@@ -1,7 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linear_layout_file_complaint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -38,21 +37,6 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <LinearLayout
-                            android:id="@+id/linearLayoutAddImage"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/imageViewAddImage"
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
-                                android:src="@drawable/baseline_photo_size_select_actual_black_48" />
-
-                        </LinearLayout>
 
                         <android.support.v4.view.ViewPager
                             android:id="@+id/complaint_image_view_pager"
@@ -92,14 +76,17 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <FrameLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="5dp"
+                        android:weightSum="10">
 
                         <android.support.design.widget.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:id="@+id/editTextIncCreditScoreLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_weight="8"
                             app:hintTextAppearance="@style/edit_text_hint_apperarance">
 
                             <app.insti.CustomAutoCompleteTextView
@@ -114,6 +101,7 @@
                                 android:textColor="@android:color/black"
                                 android:textColorHint="#4a4a4a"
                                 android:textSize="14sp" />
+
                         </android.support.design.widget.TextInputLayout>
 
                         <ProgressBar
@@ -121,13 +109,24 @@
                             style="?android:attr/progressBarStyleSmall"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical|right"
+                            android:layout_gravity="right|center_vertical"
                             android:visibility="gone" />
-                    </FrameLayout>
+
+                        <android.support.v7.widget.AppCompatImageButton
+                            android:id="@+id/fabButton"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|right"
+                            android:layout_weight="1"
+                            style="@style/Widget.AppCompat.Button.Borderless"
+                            android:src="@drawable/ic_add_a_photo_black_24dp" />
+
+                    </LinearLayout>
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="5dp">
 
                         <android.support.design.widget.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:layout_width="match_parent"
@@ -140,7 +139,6 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="top"
                                 android:hint="@string/enter_suggestions_if_any"
-                                android:imeOptions="flagNoExtractUi|actionSearch"
                                 android:inputType="textMultiLine"
                                 android:minLines="3"
                                 android:textColor="@android:color/black"
@@ -150,10 +148,37 @@
 
                     </FrameLayout>
 
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="5dp">
+
+                        <android.support.design.widget.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:hintTextAppearance="@style/edit_text_hint_apperarance">
+
+                            <EditText
+                                android:id="@+id/editTextLocationDetails"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="top"
+                                android:hint="@string/enter_location_details"
+                                android:inputType="textMultiLine"
+                                android:minLines="3"
+                                android:textColor="@android:color/black"
+                                android:textColorHint="#4a4a4a"
+                                android:textSize="14sp" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                    </FrameLayout>
+
                     <android.support.v7.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5sp">
+                        android:layout_margin="5sp"
+                        android:paddingHorizontal="5dp">
 
                         <fragment
                             android:id="@+id/place_autocomplete_fragment"
@@ -168,46 +193,18 @@
                 <LinearLayout
                     android:id="@+id/layoutAnalyse"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/mapLinearLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="300dp"
-                        android:orientation="vertical">
-
-                        <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
-                            android:id="@+id/google_map"
-                            android:layout_width="match_parent"
-                            android:layout_height="300dp" />
-
-                    </LinearLayout>
+                    <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/google_map"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
                         android:orientation="vertical">
-
-                        <android.support.design.widget.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:hintTextAppearance="@style/edit_text_hint_apperarance">
-
-                            <EditText
-                                android:id="@+id/editTextLocationDetails"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="top"
-                                android:hint="@string/enter_location_details"
-                                android:imeOptions="flagNoExtractUi|actionSearch"
-                                android:inputType="textMultiLine"
-                                android:minLines="3"
-                                android:textColor="@android:color/black"
-                                android:textSize="14sp" />
-
-                        </android.support.design.widget.TextInputLayout>
 
                         <com.cunoraz.tagview.TagView
                             android:id="@+id/tag_view"
@@ -221,6 +218,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
+                        android:paddingHorizontal="5dp"
                         android:weightSum="100">
 
                         <android.support.design.widget.TextInputLayout
@@ -244,10 +242,11 @@
 
                         <ImageButton
                             android:id="@+id/imageButtonAddTags"
-                            android:layout_width="wrap_content"
+                            android:layout_width="40dp"
                             android:layout_height="match_parent"
                             android:layout_weight="10"
-                            app:srcCompat="@android:drawable/ic_input_add" />
+                            style="@style/Widget.AppCompat.Button.Borderless"
+                            app:srcCompat="@drawable/ic_add_black_24dp" />
 
                     </LinearLayout>
 
@@ -263,9 +262,7 @@
                             android:id="@+id/tag_populate"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="10dp"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"/>
+                            android:layout_margin="10dp" />
 
                     </ScrollView>
 
@@ -279,49 +276,36 @@
 
         </android.support.v4.widget.NestedScrollView>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabButton"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/layout_buttons"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:src="@drawable/ic_add_a_photo_black_24dp"
-            app:backgroundTint="@color/colorSecondary"
-            app:borderWidth="0dp"
-            app:fabSize="normal" />
+            android:backgroundTintMode="screen"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:weightSum="2"
+            android:layout_gravity="bottom">
+
+            <Button
+                android:id="@+id/button_analysis"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:text="ANALYSIS"
+                android:textColor="@color/colorWhite" />
+
+            <Button
+                android:id="@+id/buttonSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@color/colorSecondary"
+                android:text="SUBMIT"
+                android:textColor="@color/secondaryTextColor" />
+
+        </RelativeLayout>
+
     </android.support.design.widget.CoordinatorLayout>
-
-
-    <LinearLayout
-        android:id="@+id/layout_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/button_analysis"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
-            android:text="ANALYSIS"
-            android:textColor="@color/colorWhite" />
-
-        <Button
-            android:id="@+id/buttonSubmit"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@color/colorSecondary"
-            android:text="SUBMIT"
-            android:textColor="@color/secondaryTextColor" />
-
-    </LinearLayout>
 
 </LinearLayout>
