@@ -48,4 +48,5 @@
     <string name="getting_current_location">Getting current location. Please try after some time</string>
     <string name="GPS_not_enables">GPS is not enabled!</string>
     <string name="no_permission">No permission!</string>
+    <string name="enter_location_details">Enter Location Details</string>
 </resources>

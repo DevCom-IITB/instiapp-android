@@ -3,6 +3,7 @@ package app.insti.fragment;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -18,6 +19,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -33,10 +35,12 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -83,6 +87,7 @@ import app.insti.api.request.ComplaintCreateRequest;
 import app.insti.api.request.ImageUploadRequest;
 import app.insti.api.response.ComplaintCreateResponse;
 import app.insti.api.response.ImageUploadResponse;
+import app.insti.utils.CustomScrollView;
 import app.insti.utils.TagCategories;
 import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
@@ -102,6 +107,7 @@ public class FileComplaintFragment extends Fragment {
     private CustomAutoCompleteTextView autoCompleteTextView;
     private EditText editTextSuggestions;
     private EditText editTextTags;
+    private EditText editTextLocationDetails;
     private MapView mMapView;
     GoogleMap googleMap;
     private TagView tagView;
@@ -129,6 +135,8 @@ public class FileComplaintFragment extends Fragment {
     private boolean GPSIsSetup = false;
     FusedLocationProviderClient mFusedLocationClient;
     ProgressDialog progressDialog;
+    CollapsingToolbarLayout collapsing_toolbar;
+    LinearLayout linear_layout_file_complaint;
 
     public FileComplaintFragment() {
         // Required empty public constructor
@@ -175,6 +183,8 @@ public class FileComplaintFragment extends Fragment {
         Bundle bundle = getArguments();
         userId = bundle.getString(Constants.USER_ID);
 
+        /*mapLinearLayout = (LinearLayout) view.findViewById(R.id.mapLinearLayout);*/
+
         prepareTags();
 
         progressDialog = new ProgressDialog(getContext());
@@ -185,11 +195,15 @@ public class FileComplaintFragment extends Fragment {
                 getResources().getDisplayMetrics().heightPixels / 2
         );
 
+        collapsing_toolbar = view.findViewById(R.id.collapsing_toolbar);
+        collapsing_toolbar.setVisibility(View.GONE);
+
         imageViewHolder.setLayoutParams(layoutParams);
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Add Complaint");
 
         nestedScrollView = view.findViewById(R.id.nested_scrollview);
+
         layout_buttons = view.findViewById(R.id.layout_buttons);
         layout_buttons.setVisibility(View.GONE);
 
@@ -206,14 +220,17 @@ public class FileComplaintFragment extends Fragment {
         viewPager = view.findViewById(R.id.complaint_image_view_pager);
         indicator = view.findViewById(R.id.indicator);
         linearLayoutAddImage = view.findViewById(R.id.linearLayoutAddImage);
+        linear_layout_file_complaint = view.findViewById(R.id.linear_layout_file_complaint);
 
         floatingActionButton = view.findViewById(R.id.fabButton);
+        floatingActionButton.show();
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 giveOptionsToAddImage();
             }
         });
+
         ImageButton imageButtonAddTags = (ImageButton) view.findViewById(R.id.imageButtonAddTags);
 
         autoCompleteTextView = (CustomAutoCompleteTextView) view.findViewById(R.id.dynamicAutoCompleteTextView);
@@ -237,6 +254,8 @@ public class FileComplaintFragment extends Fragment {
         });
 
         editTextSuggestions = view.findViewById(R.id.editTextSuggestions);
+
+        editTextLocationDetails = view.findViewById(R.id.editTextLocationDetails);
 
         editTextTags = view.findViewById(R.id.editTextTags);
 
@@ -319,6 +338,8 @@ public class FileComplaintFragment extends Fragment {
         });
         //        ends here
 
+
+
         tagView = view.findViewById(R.id.tag_view);
 
         tagView.setOnTagDeleteListener(new TagView.OnTagDeleteListener() {
@@ -370,6 +391,7 @@ public class FileComplaintFragment extends Fragment {
     }
 
     public void getMapReady() {
+
         Log.i(TAG, "in getMapReady");
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -565,9 +587,11 @@ public class FileComplaintFragment extends Fragment {
             @Override
             public void run() {
                 nestedScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+
             }
         });
     }
+
 
     private void prepareTags() {
         tagList = new ArrayList<>();
@@ -583,38 +607,44 @@ public class FileComplaintFragment extends Fragment {
     private void addComplaint() {
         String complaint = "Complaint: " + autoCompleteTextView.getText().toString();
         String suggestion = null;
+        String locationDetails = null;
         Log.i(TAG, "Suggestion: " + editTextSuggestions.getText().toString());
         if (!(editTextSuggestions.getText().toString().isEmpty())) {
             suggestion = "\nSuggestion: " + editTextSuggestions.getText().toString();
         } else {
             suggestion = "";
         }
-        if (Location == null) {
-            Toast.makeText(getContext(), "Please specify the location", Toast.LENGTH_LONG).show();
+        if (!(editTextLocationDetails.getText().toString().isEmpty())) {
+            locationDetails = "\nLocation Details: " + editTextLocationDetails.getText().toString();
         } else {
-            ComplaintCreateRequest complaintCreateRequest = new ComplaintCreateRequest(complaint + suggestion, Address, (float) Location.latitude, (float) Location.longitude, Tags, uploadedImagesUrl);
-            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-            retrofitInterface.postComplaint("sessionid=" + getArguments().getString(Constants.SESSION_ID), complaintCreateRequest).enqueue(new Callback<ComplaintCreateResponse>() {
-                @Override
-                public void onResponse(Call<ComplaintCreateResponse> call, Response<ComplaintCreateResponse> response) {
-                    Toast.makeText(getContext(), "Complaint successfully posted", Toast.LENGTH_LONG).show();
-                    Bundle bundle = getArguments();
-                    bundle.putString(Constants.USER_ID, userId);
-                    ComplaintFragment complaintFragment = new ComplaintFragment();
-                    complaintFragment.setArguments(bundle);
-                    FragmentManager manager = getFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.framelayout_for_fragment, complaintFragment, complaintFragment.getTag());
-                    transaction.commit();
-                }
-
-                @Override
-                public void onFailure(Call<ComplaintCreateResponse> call, Throwable t) {
-                    Log.i(TAG, "failure in addComplaint: " + t.toString());
-                    Toast.makeText(getContext(), "Complaint Creation Failed", Toast.LENGTH_SHORT).show();
-                }
-            });
+            locationDetails = "";
         }
+        if (Location == null) {
+            Location = new LatLng(19.1208, 72.9014);
+            Address = "IIT Area";
+        }
+        ComplaintCreateRequest complaintCreateRequest = new ComplaintCreateRequest(complaint + suggestion + locationDetails, Address, (float) Location.latitude, (float) Location.longitude, Tags, uploadedImagesUrl);
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.postComplaint("sessionid=" + getArguments().getString(Constants.SESSION_ID), complaintCreateRequest).enqueue(new Callback<ComplaintCreateResponse>() {
+            @Override
+            public void onResponse(Call<ComplaintCreateResponse> call, Response<ComplaintCreateResponse> response) {
+                Toast.makeText(getContext(), "Complaint successfully posted", Toast.LENGTH_LONG).show();
+                Bundle bundle = getArguments();
+                bundle.putString(Constants.USER_ID, userId);
+                ComplaintFragment complaintFragment = new ComplaintFragment();
+                complaintFragment.setArguments(bundle);
+                FragmentManager manager = getFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.framelayout_for_fragment, complaintFragment, complaintFragment.getTag());
+                transaction.commit();
+            }
+
+            @Override
+            public void onFailure(Call<ComplaintCreateResponse> call, Throwable t) {
+                Log.i(TAG, "failure in addComplaint: " + t.toString());
+                Toast.makeText(getContext(), "Complaint Creation Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void updateMap(LatLng Location, String Name, String Address, int cursor) {
@@ -675,6 +705,7 @@ public class FileComplaintFragment extends Fragment {
             Bundle bundle = data.getExtras();
             Bitmap bitmap = (Bitmap) bundle.get("data");
             base64Image = convertImageToString(bitmap);
+            collapsing_toolbar.setVisibility(View.VISIBLE);
             sendImage();
 
         } else if (resultCode == Activity.RESULT_OK && requestCode == Constants.RESULT_LOAD_IMAGE && data != null) {
@@ -689,6 +720,7 @@ public class FileComplaintFragment extends Fragment {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             base64Image = convertImageToString(getScaledBitmap(picturePath, 800, 800));
+            collapsing_toolbar.setVisibility(View.VISIBLE);
             sendImage();
         }
     }
