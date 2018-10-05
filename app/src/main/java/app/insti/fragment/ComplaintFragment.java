@@ -61,7 +61,7 @@ public class ComplaintFragment extends BaseFragment {
                 fileComplaintFragment.setArguments(getArguments());
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.framelayout_for_fragment, fileComplaintFragment, fileComplaintFragment.getTag());
-                fragmentTransaction.addToBackStack(fileComplaintFragment.getTag()).commit();
+                fragmentTransaction.addToBackStack("Complaint Fragment").commit();
             }
         });
 
