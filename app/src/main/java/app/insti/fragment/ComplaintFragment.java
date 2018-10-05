@@ -39,7 +39,6 @@ public class ComplaintFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_complaint, container, false);
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
@@ -64,7 +63,7 @@ public class ComplaintFragment extends BaseFragment {
                 fileComplaintFragment.setArguments(getArguments());
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.framelayout_for_fragment, fileComplaintFragment, fileComplaintFragment.getTag());
-                fragmentTransaction.addToBackStack("ComplaintFragment").commit();
+                fragmentTransaction.addToBackStack("Complaint Fragment").commit();
             }
         });
 

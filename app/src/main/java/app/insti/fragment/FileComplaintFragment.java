@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,6 +37,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -98,10 +97,11 @@ public class FileComplaintFragment extends Fragment {
     private static final String TAG = FileComplaintFragment.class.getSimpleName();
     private static FileComplaintFragment mainactivity;
     private Button buttonSubmit;
-    private FloatingActionButton floatingActionButton;
+    private ImageButton imageActionButton;
     private CustomAutoCompleteTextView autoCompleteTextView;
     private EditText editTextSuggestions;
     private EditText editTextTags;
+    private EditText editTextLocationDetails;
     private MapView mMapView;
     GoogleMap googleMap;
     private TagView tagView;
@@ -121,7 +121,7 @@ public class FileComplaintFragment extends Fragment {
     private ViewPager viewPager;
     private CircleIndicator indicator;
     private Button buttonAnalysis;
-    private LinearLayout layout_buttons;
+    private RelativeLayout layout_buttons;
     String userId;
     View view;
     NestedScrollView nestedScrollView;
@@ -129,6 +129,8 @@ public class FileComplaintFragment extends Fragment {
     private boolean GPSIsSetup = false;
     FusedLocationProviderClient mFusedLocationClient;
     ProgressDialog progressDialog;
+    CollapsingToolbarLayout collapsing_toolbar;
+    LinearLayout linearLayoutAnalyse;
 
     public FileComplaintFragment() {
         // Required empty public constructor
@@ -146,12 +148,6 @@ public class FileComplaintFragment extends Fragment {
         android.app.FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.remove(fragment);
         ft.commit();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Toast.makeText(getContext(), getString(R.string.initial_message_file_complaint), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -175,6 +171,8 @@ public class FileComplaintFragment extends Fragment {
         Bundle bundle = getArguments();
         userId = bundle.getString(Constants.USER_ID);
 
+        Toast.makeText(getContext(), getString(R.string.initial_message_file_complaint), Toast.LENGTH_LONG).show();
+
         prepareTags();
 
         progressDialog = new ProgressDialog(getContext());
@@ -185,11 +183,16 @@ public class FileComplaintFragment extends Fragment {
                 getResources().getDisplayMetrics().heightPixels / 2
         );
 
+        collapsing_toolbar = view.findViewById(R.id.collapsing_toolbar);
+        collapsing_toolbar.setVisibility(View.GONE);
+
         imageViewHolder.setLayoutParams(layoutParams);
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Add Complaint");
 
         nestedScrollView = view.findViewById(R.id.nested_scrollview);
+
+        linearLayoutAnalyse = view.findViewById(R.id.layoutAnalyse);
         layout_buttons = view.findViewById(R.id.layout_buttons);
         layout_buttons.setVisibility(View.GONE);
 
@@ -205,15 +208,15 @@ public class FileComplaintFragment extends Fragment {
 
         viewPager = view.findViewById(R.id.complaint_image_view_pager);
         indicator = view.findViewById(R.id.indicator);
-        linearLayoutAddImage = view.findViewById(R.id.linearLayoutAddImage);
 
-        floatingActionButton = view.findViewById(R.id.fabButton);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        imageActionButton = view.findViewById(R.id.fabButton);
+        imageActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 giveOptionsToAddImage();
             }
         });
+
         ImageButton imageButtonAddTags = (ImageButton) view.findViewById(R.id.imageButtonAddTags);
 
         autoCompleteTextView = (CustomAutoCompleteTextView) view.findViewById(R.id.dynamicAutoCompleteTextView);
@@ -223,6 +226,10 @@ public class FileComplaintFragment extends Fragment {
                 if (!hasFocus) {
 
                     if (!(autoCompleteTextView.getText().toString().trim().isEmpty())) {
+                        int paddingDp = 60;
+                        float density = getContext().getResources().getDisplayMetrics().density;
+                        int paddingPixel = (int) (paddingDp * density);
+                        linearLayoutAnalyse.setPadding(0, 0, 0, paddingPixel);
                         layout_buttons.setVisibility(View.VISIBLE);
                         buttonSubmit.setVisibility(View.VISIBLE);
                     } else {
@@ -237,6 +244,8 @@ public class FileComplaintFragment extends Fragment {
         });
 
         editTextSuggestions = view.findViewById(R.id.editTextSuggestions);
+
+        editTextLocationDetails = view.findViewById(R.id.editTextLocationDetails);
 
         editTextTags = view.findViewById(R.id.editTextTags);
 
@@ -370,6 +379,7 @@ public class FileComplaintFragment extends Fragment {
     }
 
     public void getMapReady() {
+
         Log.i(TAG, "in getMapReady");
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -397,6 +407,27 @@ public class FileComplaintFragment extends Fragment {
                             Log.i(TAG, "in onMyLocationButtonClick");
                             locate();
                             return false;
+                        }
+                    });
+                    mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                // Logic to handle location object
+                                Log.i(TAG, "lat = " + location.getLatitude() + " lon = " + location.getLongitude());
+                                Location = new LatLng(location.getLatitude(), location.getLongitude());
+                                updateMap(Location, "Current Location", location.getLatitude() + ", " + location.getLongitude(), cursor);
+                            } else {
+                                Toast.makeText(getContext(), getString(R.string.getting_current_location), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                    mFusedLocationClient.getLastLocation().addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(Exception e) {
+                            e.printStackTrace();
                         }
                     });
                 }
@@ -529,16 +560,20 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void populateTags(String cs) {
-        tagList2.add(new TagClass(cs));
-        ArrayList<Tag> tags = new ArrayList<>();
-        Tag tag;
-        for (int i = 0; i < tagList2.size(); i++) {
-            tag = new Tag(tagList2.get(i).getName());
-            tag.radius = 10f;
-            tag.isDeletable = true;
-            tags.add(tag);
+        if (!(cs.isEmpty())) {
+            tagList2.add(new TagClass(cs));
+            ArrayList<Tag> tags = new ArrayList<>();
+            Tag tag;
+            for (int i = 0; i < tagList2.size(); i++) {
+                tag = new Tag(tagList2.get(i).getName());
+                tag.radius = 10f;
+                tag.isDeletable = true;
+                tags.add(tag);
+            }
+            tagView.addTags(tags);
+        } else {
+            Toast.makeText(getContext(), "Please enter some tags", Toast.LENGTH_SHORT).show();
         }
-        tagView.addTags(tags);
     }
 
     private void setTags(CharSequence cs) {
@@ -581,18 +616,68 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void addComplaint() {
-        String complaint = "Complaint: " + autoCompleteTextView.getText().toString();
-        String suggestion = null;
+        final String complaint = "Complaint: " + autoCompleteTextView.getText().toString();
+        final String suggestion;
+        final String locationDetails;
         Log.i(TAG, "Suggestion: " + editTextSuggestions.getText().toString());
         if (!(editTextSuggestions.getText().toString().isEmpty())) {
             suggestion = "\nSuggestion: " + editTextSuggestions.getText().toString();
         } else {
             suggestion = "";
         }
-        if (Location == null) {
-            Toast.makeText(getContext(), "Please specify the location", Toast.LENGTH_LONG).show();
+        if (!(editTextLocationDetails.getText().toString().isEmpty())) {
+            locationDetails = "\nLocation Details: " + editTextLocationDetails.getText().toString();
         } else {
-            ComplaintCreateRequest complaintCreateRequest = new ComplaintCreateRequest(complaint + suggestion, Address, (float) Location.latitude, (float) Location.longitude, Tags, uploadedImagesUrl);
+            locationDetails = "";
+        }
+        if (Location == null) {
+            // Show an explanation to the user *asynchronously* -- don't block
+            // this thread waiting for the user's response!
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Location Needed")
+                    .setMessage("You have not specified your location. The app will by default make \"IIT Area\" as your location.")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Location = new LatLng(19.133810, 72.913257);
+                            Address = "IIT Area";
+                            ComplaintCreateRequest complaintCreateRequest = new ComplaintCreateRequest(complaint + suggestion + locationDetails, Address, (float) Location.latitude, (float) Location.longitude, Tags, uploadedImagesUrl);
+                            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+                            retrofitInterface.postComplaint("sessionid=" + getArguments().getString(Constants.SESSION_ID), complaintCreateRequest).enqueue(new Callback<ComplaintCreateResponse>() {
+                                @Override
+                                public void onResponse(Call<ComplaintCreateResponse> call, Response<ComplaintCreateResponse> response) {
+                                    Toast.makeText(getContext(), "Complaint successfully posted", Toast.LENGTH_LONG).show();
+                                    Bundle bundle = getArguments();
+                                    bundle.putString(Constants.USER_ID, userId);
+                                    ComplaintFragment complaintFragment = new ComplaintFragment();
+                                    complaintFragment.setArguments(bundle);
+                                    FragmentManager manager = getFragmentManager();
+                                    FragmentTransaction transaction = manager.beginTransaction();
+                                    transaction.replace(R.id.framelayout_for_fragment, complaintFragment, complaintFragment.getTag());
+                                    transaction.addToBackStack(complaintFragment.getTag());
+                                    manager.popBackStackImmediate("Complaint Fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                    transaction.commit();
+                                }
+
+                                @Override
+                                public void onFailure(Call<ComplaintCreateResponse> call, Throwable t) {
+                                    Log.i(TAG, "failure in addComplaint: " + t.toString());
+                                    Toast.makeText(getContext(), "Complaint Creation Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(getContext(), "Submission aborted", Toast.LENGTH_SHORT).show();
+                            dialog.cancel();
+                        }
+                    })
+                    .create()
+                    .show();
+        } else {
+            ComplaintCreateRequest complaintCreateRequest = new ComplaintCreateRequest(complaint + suggestion + locationDetails, Address, (float) Location.latitude, (float) Location.longitude, Tags, uploadedImagesUrl);
             RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
             retrofitInterface.postComplaint("sessionid=" + getArguments().getString(Constants.SESSION_ID), complaintCreateRequest).enqueue(new Callback<ComplaintCreateResponse>() {
                 @Override
@@ -606,7 +691,7 @@ public class FileComplaintFragment extends Fragment {
                     FragmentTransaction transaction = manager.beginTransaction();
                     transaction.replace(R.id.framelayout_for_fragment, complaintFragment, complaintFragment.getTag());
                     transaction.addToBackStack(complaintFragment.getTag());
-                    manager.popBackStackImmediate("ComplaintFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    manager.popBackStackImmediate("Complaint Fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     transaction.commit();
                 }
 
@@ -677,6 +762,7 @@ public class FileComplaintFragment extends Fragment {
             Bundle bundle = data.getExtras();
             Bitmap bitmap = (Bitmap) bundle.get("data");
             base64Image = convertImageToString(bitmap);
+            collapsing_toolbar.setVisibility(View.VISIBLE);
             sendImage();
 
         } else if (resultCode == Activity.RESULT_OK && requestCode == Constants.RESULT_LOAD_IMAGE && data != null) {
@@ -691,6 +777,7 @@ public class FileComplaintFragment extends Fragment {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             base64Image = convertImageToString(getScaledBitmap(picturePath, 800, 800));
+            collapsing_toolbar.setVisibility(View.VISIBLE);
             sendImage();
         }
     }
