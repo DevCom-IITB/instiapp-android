@@ -3,13 +3,16 @@ package app.insti.fragment;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +39,7 @@ public class ComplaintFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_complaint, container, false);
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
@@ -53,7 +57,6 @@ public class ComplaintFragment extends BaseFragment {
 
         buttonVentIssues = view.findViewById(R.id.buttonVentIssues);
 
-
         buttonVentIssues.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,7 +64,7 @@ public class ComplaintFragment extends BaseFragment {
                 fileComplaintFragment.setArguments(getArguments());
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.framelayout_for_fragment, fileComplaintFragment, fileComplaintFragment.getTag());
-                fragmentTransaction.addToBackStack(fileComplaintFragment.getTag()).commit();
+                fragmentTransaction.addToBackStack("ComplaintFragment").commit();
             }
         });
 

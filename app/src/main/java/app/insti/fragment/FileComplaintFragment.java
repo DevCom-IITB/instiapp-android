@@ -605,6 +605,8 @@ public class FileComplaintFragment extends Fragment {
                     FragmentManager manager = getFragmentManager();
                     FragmentTransaction transaction = manager.beginTransaction();
                     transaction.replace(R.id.framelayout_for_fragment, complaintFragment, complaintFragment.getTag());
+                    transaction.addToBackStack(complaintFragment.getTag());
+                    manager.popBackStackImmediate("ComplaintFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     transaction.commit();
                 }
 
