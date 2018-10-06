@@ -71,25 +71,6 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:weightSum="2"
-            android:layout_gravity="bottom">
-
-            <Button
-                android:id="@+id/buttonVoteUp"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:textColor="@color/secondaryTextColor"
-                android:background="@color/colorSecondary"
-                android:text="Upvote"
-                android:layout_weight="2"/>
-
-        </RelativeLayout>
-
     </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>

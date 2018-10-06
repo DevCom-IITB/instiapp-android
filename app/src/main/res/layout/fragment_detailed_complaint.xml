@@ -10,8 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingTop="10dp"
-        android:paddingBottom="60dp">
+        android:paddingTop="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,11 +41,11 @@
                         android:id="@+id/textViewStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/customborder"
                         android:paddingHorizontal="10dp"
                         android:text="STATUS"
                         android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:background="@drawable/customborder"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -95,16 +94,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/darker_gray"
                 android:padding="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TAGS"
+                    android:text="Tags"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -143,17 +140,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/darker_gray"
                 android:padding="10dp">
 
                 <TextView
                     android:id="@+id/comment_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="COMMENTS"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -174,26 +168,42 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/comment_user_image"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop" />
 
-                <EditText
-                    android:id="@+id/edit_comment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <android.support.design.widget.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="9"
-                    android:hint="@string/enter_comment" />
+                    android:paddingHorizontal="10dp"
+                    app:hintTextAppearance="@style/edit_text_hint_apperarance">
+
+                    <EditText
+                        android:id="@+id/edit_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="top"
+                        android:hint="Enter Comment"
+                        android:inputType="textMultiLine"
+                        android:textColor="@android:color/black"
+                        android:textColorHint="#4a4a4a"
+                        android:textSize="14sp" />
+
+                </android.support.design.widget.TextInputLayout>
 
                 <ImageButton
                     android:id="@+id/send_comment"
-                    android:layout_width="wrap_content"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="30dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     app:srcCompat="@android:drawable/ic_menu_send" />
 
             </LinearLayout>
@@ -209,17 +219,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/darker_gray"
                 android:padding="10dp">
 
                 <TextView
                     android:id="@+id/up_vote_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="VoteUp"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -233,9 +240,25 @@
 
         </LinearLayout>
 
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/buttonVoteUp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="2"
+                android:background="@color/colorSecondary"
+                android:text="Upvote"
+                android:textColor="@color/secondaryTextColor" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

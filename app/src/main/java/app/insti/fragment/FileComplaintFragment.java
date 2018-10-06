@@ -239,6 +239,7 @@ public class FileComplaintFragment extends Fragment {
                 } else {
                     buttonSubmit.setVisibility(View.INVISIBLE);
                     buttonSubmit.setVisibility(View.GONE);
+                    linearLayoutAnalyse.setPadding(0, 0, 0, 0);
                 }
             }
         });

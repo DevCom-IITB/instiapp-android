@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -65,16 +66,19 @@ public class DetailedComplaintFragment extends Fragment {
     private ImageButton imageButtonSend;
     private CircleImageView circleImageViewCommentUserImage;
     private RecyclerView recyclerViewComments;
+    private Button buttonVoteUp;
 
     private static String sId, cId, uId;
     private CommentRecyclerViewAdapter commentListAdapter;
     private List<Venter.Comment> commentList;
+    private static int voteCount;
 
 
-    public static DetailedComplaintFragment getInstance(String sessionid, String complaintid, String userid) {
+    public static DetailedComplaintFragment getInstance(String sessionid, String complaintid, String userid, int vCount) {
         sId = sessionid;
         cId = complaintid;
         uId = userid;
+        voteCount = vCount;
         return new DetailedComplaintFragment();
     }
 
@@ -93,6 +97,7 @@ public class DetailedComplaintFragment extends Fragment {
         imageButtonSend = view.findViewById(R.id.send_comment);
         circleImageViewCommentUserImage = view.findViewById(R.id.comment_user_image);
         Picasso.get().load(R.drawable.baseline_account_circle_black_36).into(circleImageViewCommentUserImage);
+        buttonVoteUp = view.findViewById(R.id.buttonVoteUp);
     }
 
 
@@ -105,7 +110,7 @@ public class DetailedComplaintFragment extends Fragment {
         commentList = new ArrayList<>();
         initialiseViews(view);
 
-        commentListAdapter = new CommentRecyclerViewAdapter(getActivity(), getContext(), sId, uId);
+        commentListAdapter = new CommentRecyclerViewAdapter(getActivity(), getContext(), sId, uId, textViewCommentLabel);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerViewComments.setLayoutManager(linearLayoutManager);
         recyclerViewComments.setHasFixedSize(true);
@@ -131,6 +136,14 @@ public class DetailedComplaintFragment extends Fragment {
                 }
             }
         });
+
+        buttonVoteUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upVote();
+            }
+        });
+
         return view;
     }
 
@@ -160,6 +173,7 @@ public class DetailedComplaintFragment extends Fragment {
         commentListAdapter.setCommentList(commentList);
         commentListAdapter.notifyItemInserted(commentList.indexOf(newComment));
         commentListAdapter.notifyItemRangeChanged(0, commentListAdapter.getItemCount());
+        textViewCommentLabel.setText("Comments (" + commentList.size() + ")");
         recyclerViewComments.post(new Runnable() {
             @Override
             public void run() {
@@ -175,6 +189,7 @@ public class DetailedComplaintFragment extends Fragment {
 
     private void populateViews() {
         try {
+            buttonVoteUp.setText("UpVote");
             textViewUserName.setText(detailedComplaint.getComplaintCreatedBy().getUserName());
             String time = DateTimeUtil.getDate(detailedComplaint.getComplaintReportDate().toString());
             Log.i(TAG, " time: " + time);
@@ -192,8 +207,8 @@ public class DetailedComplaintFragment extends Fragment {
                 textViewStatus.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.colorGreen)));
                 textViewStatus.setTextColor(getContext().getResources().getColor(R.color.secondaryTextColor));
             }
-            textViewCommentLabel.setText("COMMENTS");
-            textViewVoteUpLabel.setText("UP VOTES");
+            textViewCommentLabel.setText("Comments (" + detailedComplaint.getComment().size() + ")");
+            textViewVoteUpLabel.setText("Up Votes (" + detailedComplaint.getUsersUpVoted().size() + ")");
             addVotesToView(detailedComplaint);
             addCommentsToView(detailedComplaint);
         } catch (Exception e) {
@@ -232,6 +247,30 @@ public class DetailedComplaintFragment extends Fragment {
         commentListAdapter.notifyDataSetChanged();
     }
 
+    private void upVote() {
+        if (voteCount == 0) {
+            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+            retrofitInterface.upVote("sessionid=" + sId, cId).enqueue(new Callback<Venter.Complaint>() {
+                @Override
+                public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
+                    if (response.isSuccessful()) {
+                        Venter.Complaint complaint = response.body();
+                        addVotesToView(complaint);
+                        Toast.makeText(getActivity().getApplicationContext(), "You have Up Voted this complaint", Toast.LENGTH_SHORT).show();
+                        voteCount++;
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
+                    Log.i(TAG, "failure in up vote: " + t.toString());
+                }
+            });
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), "You have already UpVoted this complaint", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void addVotesToView(Venter.Complaint detailedComplaint) {
         layoutVotes.removeAllViews();
         for (User users : detailedComplaint.getUsersUpVoted()) {
@@ -246,6 +285,7 @@ public class DetailedComplaintFragment extends Fragment {
             textViewName.setText(users.getUserName());
             layoutVotes.addView(voteView);
         }
+        textViewVoteUpLabel.setText("Up Votes (" + detailedComplaint.getUsersUpVoted().size() + ")");
     }
 
     @Override
