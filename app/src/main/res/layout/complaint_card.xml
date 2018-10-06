@@ -93,30 +93,6 @@
                 android:weightSum="2">
 
                 <ImageButton
-                    android:id="@+id/buttonComments"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:layout_width="10dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/baseline_comment_24" />
-
-                <TextView
-                    android:id="@+id/text_comments"
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/secondaryTextColor"
-                    android:layout_weight="1"
-                    android:text="12"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:weightSum="2">
-
-                <ImageButton
                     android:id="@+id/buttonVotes"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="10dp"
@@ -133,6 +109,30 @@
                     android:text="23"
                     android:textColor="@color/secondaryTextColor"/>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:weightSum="2">
+
+                <ImageButton
+                    android:id="@+id/buttonComments"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="10dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/baseline_comment_24" />
+
+                <TextView
+                    android:id="@+id/text_comments"
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/secondaryTextColor"
+                    android:layout_weight="1"
+                    android:text="12"/>
             </LinearLayout>
 
         </LinearLayout>
