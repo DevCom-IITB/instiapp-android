@@ -36,14 +36,13 @@ import retrofit2.Response;
 public class ComplaintDetailsFragment extends Fragment {
 
     private static final String TAG = ComplaintDetailsFragment.class.getSimpleName();
-    Button buttonVoteUp;
     TabLayout slidingTabLayout;
     ViewPager viewPager;
     View mview;
     private String complaintId, sessionID, userId;
     private ComplaintDetailsPagerAdapter complaintDetailsPagerAdapter;
-    private int voteCount;
     CircleIndicator circleIndicator;
+    private int voteCount = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +55,6 @@ public class ComplaintDetailsFragment extends Fragment {
                         getResources().getDisplayMetrics().heightPixels / 2);
         imageViewHolder.setLayoutParams(layoutParams);
 
-        buttonVoteUp = view.findViewById(R.id.buttonVoteUp);
         slidingTabLayout = view.findViewById(R.id.sliding_tab_layout);
         circleIndicator = view.findViewById(R.id.indicator);
         this.mview = view;
@@ -67,13 +65,6 @@ public class ComplaintDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        buttonVoteUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                upVote();
-            }
-        });
-
         Bundle bundle = getArguments();
         complaintId = bundle.getString("id");
         sessionID = bundle.getString("sessionId");
@@ -82,27 +73,6 @@ public class ComplaintDetailsFragment extends Fragment {
         if (bundle != null) {
             Log.i(TAG, "bundle != null");
             callServerToGetDetailedComplaint();
-        }
-    }
-
-    private void upVote() {
-        if (voteCount == 0) {
-            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-            retrofitInterface.upVote("sessionid=" + sessionID, complaintId).enqueue(new Callback<Venter.Complaint>() {
-                @Override
-                public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
-                    if (response.isSuccessful()) {
-                        Venter.Complaint complaint = response.body();
-                        initTabViews(complaint);
-                        voteCount++;
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
-                    Log.i(TAG, "failure in up vote: " + t.toString());
-                }
-            });
         }
     }
 
@@ -154,18 +124,13 @@ public class ComplaintDetailsFragment extends Fragment {
     }
 
     private void initTabViews(final Venter.Complaint detailedComplaint) {
-        try {
-            buttonVoteUp.setText("UpVote");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         try {
             if (detailedComplaint != null) {
                 viewPager = mview.findViewById(R.id.tab_viewpager_details);
                 if (viewPager != null) {
                     Log.i(TAG, "viewPager != null");
-                    complaintDetailsPagerAdapter = new ComplaintDetailsPagerAdapter(getChildFragmentManager(), detailedComplaint, getContext(), sessionID, complaintId, userId);
+                    complaintDetailsPagerAdapter = new ComplaintDetailsPagerAdapter(getChildFragmentManager(), detailedComplaint, getContext(), sessionID, complaintId, userId, voteCount);
 
                     viewPager.setAdapter(complaintDetailsPagerAdapter);
                     slidingTabLayout.setupWithViewPager(viewPager);
@@ -186,8 +151,9 @@ public class ComplaintDetailsFragment extends Fragment {
                                 int mActionBarSize = (int) styledAttributes.getDimension(0, 0);
                                 styledAttributes.recycle();
 
+//                                Replace second parameter to mActionBarSize after adding "Relevant Complaints"
                                 AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(AppBarLayout.LayoutParams.MATCH_PARENT,
-                                        mActionBarSize);
+                                        0);
                                 slidingTabLayout.setLayoutParams(layoutParams);
 
                                 slidingTabLayout.setTabMode(TabLayout.MODE_FIXED);
@@ -220,17 +186,8 @@ public class ComplaintDetailsFragment extends Fragment {
                             "android:switcher:" + R.id.tab_viewpager_details + ":0"
                     );
 
-                    Log.i(TAG, "detailedComplaintFragment: " + detailedComplaint);
-
-                    /*For Relevant Complaint Fragment
-                    * RelevantComplaintFragment relevantComplaintFragment = (RelevantComplaintFragment) getSupportFragmentManager().findFragmentByTag(
-                            "android:switcher:" + R.id.tab_viewpager + ":1");
-                    */
-
-                    if (detailedComplaintFragment != null) {
-                        Log.i(TAG, "detailedComplinatFragment != null");
+                    if (detailedComplaintFragment != null)
                         detailedComplaintFragment.setDetailedComplaint(detailedComplaint);
-                    }
                 }
             }
         } catch (Exception e) {

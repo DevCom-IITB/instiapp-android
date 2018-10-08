@@ -144,6 +144,7 @@
                                 android:textColor="@android:color/black"
                                 android:textColorHint="#4a4a4a"
                                 android:textSize="14sp" />
+
                         </android.support.design.widget.TextInputLayout>
 
                     </FrameLayout>

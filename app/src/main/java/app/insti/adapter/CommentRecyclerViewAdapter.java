@@ -45,16 +45,18 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private Context context;
     private LayoutInflater inflater;
     private String sessionId, userId;
-    private Activity activity;
+    Activity activity;
+    private TextView textViewCommentLabel;
 
     private List<Venter.Comment> commentList = new ArrayList<>();
 
-    public CommentRecyclerViewAdapter(Activity activity, Context context, String sessionId, String userId) {
+    public CommentRecyclerViewAdapter(Activity activity, Context context, String sessionId, String userId, TextView textViewCommentLabel) {
         this.context = context;
         this.sessionId = sessionId;
         this.userId = userId;
         inflater = LayoutInflater.from(context);
         this.activity = activity;
+        this.textViewCommentLabel = textViewCommentLabel;
     }
 
     public class CommentsViewHolder extends RecyclerView.ViewHolder {
