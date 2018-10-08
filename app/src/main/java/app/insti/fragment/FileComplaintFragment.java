@@ -125,7 +125,6 @@ public class FileComplaintFragment extends Fragment {
     String userId;
     View view;
     NestedScrollView nestedScrollView;
-    LinearLayout linearLayoutAddImage;
     private boolean GPSIsSetup = false;
     FusedLocationProviderClient mFusedLocationClient;
     ProgressDialog progressDialog;
@@ -327,6 +326,7 @@ public class FileComplaintFragment extends Fragment {
             }
         });
         //        ends here
+
 
         tagView = view.findViewById(R.id.tag_view);
 
@@ -600,9 +600,11 @@ public class FileComplaintFragment extends Fragment {
             @Override
             public void run() {
                 nestedScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+
             }
         });
     }
+
 
     private void prepareTags() {
         tagList = new ArrayList<>();
@@ -814,7 +816,7 @@ public class FileComplaintFragment extends Fragment {
         if (viewPager != null) {
             try {
                 imageViewPagerAdapter = new ImageViewPagerAdapter(getFragmentManager(), uploadedImagesUrl);
-                linearLayoutAddImage.setVisibility(View.GONE);
+                collapsing_toolbar.setVisibility(View.VISIBLE);
                 viewPager.setAdapter(imageViewPagerAdapter);
                 indicator.setViewPager(viewPager);
                 imageViewPagerAdapter.registerDataSetObserver(indicator.getDataSetObserver());

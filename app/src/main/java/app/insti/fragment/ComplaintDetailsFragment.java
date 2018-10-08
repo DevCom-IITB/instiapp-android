@@ -94,7 +94,6 @@ public class ComplaintDetailsFragment extends Fragment {
                     if (response.isSuccessful()) {
                         Venter.Complaint complaint = response.body();
                         initTabViews(complaint);
-                        Toast.makeText(getActivity().getApplicationContext(), "You have Up Voted this complaint", Toast.LENGTH_SHORT).show();
                         voteCount++;
                     }
                 }
@@ -104,8 +103,6 @@ public class ComplaintDetailsFragment extends Fragment {
                     Log.i(TAG, "failure in up vote: " + t.toString());
                 }
             });
-        } else {
-            Toast.makeText(getActivity().getApplicationContext(), "You have already UpVoted this complaint", Toast.LENGTH_SHORT).show();
         }
     }
 
