@@ -1,5 +1,8 @@
 InstiApp
 ===============
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/af13461ad31742ceaab84c070a1c5f8a)](https://app.codacy.com/app/pulsejet/InstiApp?utm_source=github.com&utm_medium=referral&utm_content=wncc/InstiApp&utm_campaign=Badge_Grade_Dashboard)
+
 ### Powered by the Web and Coding Club, IIT Bombay
 
 All IITB content in one place. InstiApp is the result of WnCC's coordinated efforts to build an application that makes it easier to discover IITB content on the go.
