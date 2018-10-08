@@ -27,7 +27,7 @@ Check http://github.com/wncc for more information about all development activiti
 Development
 -----------
 
-Read the [Development Documentation](https://iitbapp1.docs.apiary.io/).
+Read the [API Documentation](https://wncc.github.io/IITBapp/).
 
 See the [Frontend Design](https://drive.google.com/open?id=1YJRUvsyqR5QtfWYug_PoBJ08p-criCPo).
 
