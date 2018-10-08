@@ -5,6 +5,9 @@ InstiApp
 All IITB content in one place. InstiApp is the result of WnCC's coordinated efforts to build an application that makes it easier to discover IITB content on the go.
 InstiApp features the Placement Blog, Upcoming Events and general information on every active club/body in the Institute
 
+[![CircleCI](https://circleci.com/gh/wncc/InstiApp/tree/master.svg?style=shield)](https://circleci.com/gh/wncc/InstiApp/tree/master)
+[![GitHub license](https://img.shields.io/github/license/wncc/InstiApp.svg)](https://github.com/wncc/InstiApp/blob/master/LICENSE.md)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7807da12fc174c3da45ad538ebc170d3)](https://www.codacy.com/app/wncc/InstiApp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=wncc/InstiApp&amp;utm_campaign=Badge_Grade)
 
 ### Features:
 * Events Directory
@@ -26,7 +29,7 @@ Check http://github.com/wncc for more information about all development activiti
 Development
 -----------
 
-Read the [Development Documentation](https://iitbapp1.docs.apiary.io/).
+Read the [API Documentation](https://wncc.github.io/IITBapp/).
 
 See the [Frontend Design](https://drive.google.com/open?id=1YJRUvsyqR5QtfWYug_PoBJ08p-criCPo).
 
