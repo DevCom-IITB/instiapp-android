@@ -1,7 +1,7 @@
 InstiApp
 ===============
-
 ### Powered by the Web and Coding Club, IIT Bombay
+
 All IITB content in one place. InstiApp is the result of WnCC's coordinated efforts to build an application that makes it easier to discover IITB content on the go.
 InstiApp features the Placement Blog, Upcoming Events and general information on every active club/body in the Institute
 
