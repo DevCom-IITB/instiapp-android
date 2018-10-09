@@ -13,12 +13,10 @@ import java.util.List;
 
 import app.insti.R;
 import app.insti.api.model.AboutIndividual;
-import app.insti.interfaces.ItemClickListener;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AboutIndividualAdapter extends BaseAdapter {
     private List<AboutIndividual> individuals;
-    private Context context;
 
     public AboutIndividualAdapter(List<AboutIndividual> individuals) {
         this.individuals = individuals;
@@ -41,7 +39,7 @@ public class AboutIndividualAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        context = parent.getContext();
+        Context context = parent.getContext();
         ViewHolder holder = new ViewHolder();
         View rowView;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -57,7 +55,7 @@ public class AboutIndividualAdapter extends BaseAdapter {
     }
 
     public class ViewHolder {
-        CircleImageView pictureImageView;
-        TextView nameTextView;
+        private CircleImageView pictureImageView;
+        private TextView nameTextView;
     }
 }

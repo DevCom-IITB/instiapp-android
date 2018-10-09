@@ -71,8 +71,8 @@ public class AboutCategoryAdapter extends RecyclerView.Adapter<AboutCategoryAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView;
-        ScrollResistantGridView individualsGridView;
+        private TextView nameTextView;
+        private ScrollResistantGridView individualsGridView;
 
         public ViewHolder(View itemView) {
             super(itemView);
