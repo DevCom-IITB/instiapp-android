@@ -8,7 +8,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
 
-import app.insti.Utils;
 import app.insti.interfaces.Clickable;
 
 import static app.insti.Utils.openWebURL;
