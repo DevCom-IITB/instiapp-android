@@ -1,14 +1,19 @@
 package app.insti.api.model;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
 
-import app.insti.interfaces.Browsable;
+import app.insti.Utils;
+import app.insti.interfaces.Clickable;
 
-public class NewsArticle implements Browsable {
+import static app.insti.Utils.openWebURL;
+
+public class NewsArticle implements Clickable {
     @NonNull()
     @SerializedName("id")
     private String articleID;
@@ -83,5 +88,17 @@ public class NewsArticle implements Browsable {
 
     public void setBody(Body body) {
         this.body = body;
+    }
+
+    @Override
+    public View.OnClickListener getOnClickListener(final Context context) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (link != null && !link.isEmpty()) {
+                    openWebURL(context, link);
+                }
+            }
+        };
     }
 }
