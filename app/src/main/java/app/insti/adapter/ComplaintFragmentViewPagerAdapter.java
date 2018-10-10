@@ -15,7 +15,7 @@ import app.insti.fragment.ComplaintsMeFragment;
 
 public class ComplaintFragmentViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    Context context;
+    private Context context;
     private String userID, sessionID, userProfileUrl;
 
     public ComplaintFragmentViewPagerAdapter(FragmentManager fm, Context context, String userID, String sessionID, String userProfileUrl) {

@@ -14,8 +14,8 @@ import app.insti.fragment.ComplaintDetailsFragment;
 
 public class ComplaintDetailsPagerAdapter extends FragmentPagerAdapter {
 
-    Venter.Complaint detailedComplaint;
-    Context context;
+    private Venter.Complaint detailedComplaint;
+    private Context context;
     private String sessionid, complaintid, userid, userProfileUrl;
 
     public ComplaintDetailsPagerAdapter(FragmentManager fm, Venter.Complaint detailedComplaint, Context context, String sessionid, String complaintid, String userid, String userProfileUrl) {

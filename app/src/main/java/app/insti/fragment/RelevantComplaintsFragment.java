@@ -19,15 +19,12 @@ import app.insti.api.model.Venter;
 
 public class RelevantComplaintsFragment extends Fragment {
 
-    Activity activity;
-    ComplaintsAdapter relevantComplaintsAdapter;
-    RecyclerView recyclerViewRelevantComplaints;
+    private Activity activity;
+    private ComplaintsAdapter relevantComplaintsAdapter;
+    private RecyclerView recyclerViewRelevantComplaints;
     private SwipeRefreshLayout swipeContainer;
-
-    private static String TAG = RelevantComplaintsFragment.class.getSimpleName();
     private boolean isCalled = false;
-    private TextView error_message_relevant_complaints;
-    static String sID, uID;
+    private static String sID, uID;
 
     public static RelevantComplaintsFragment getInstance(String sessionID, String userID) {
         sID = sessionID;
@@ -60,7 +57,7 @@ public class RelevantComplaintsFragment extends Fragment {
         recyclerViewRelevantComplaints = (RecyclerView) view.findViewById(R.id.recyclerViewRelevantComplaints);
         relevantComplaintsAdapter = new ComplaintsAdapter(getActivity(), sID, uID, ""); //Change userProfileUrl to the current user Profile Pic
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-        error_message_relevant_complaints = view.findViewById(R.id.error_message_relevant_complaints);
+        TextView error_message_relevant_complaints = view.findViewById(R.id.error_message_relevant_complaints);
 
         LinearLayoutManager llm = new LinearLayoutManager(activity);
         recyclerViewRelevantComplaints.setLayoutManager(llm);
@@ -92,7 +89,7 @@ public class RelevantComplaintsFragment extends Fragment {
     }
 
     private void callServerToGetRelevantComplaints(){
-
+        //Get Relevant Complaints from Server
     }
 
     private void initialiseRecyclerView(List<Venter.Complaint> list) {

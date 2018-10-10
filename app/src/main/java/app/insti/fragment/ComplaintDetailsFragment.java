@@ -46,8 +46,6 @@ public class ComplaintDetailsFragment extends Fragment {
     private final String TAG = ComplaintDetailsFragment.class.getSimpleName();
     private Venter.Complaint detailedComplaint;
     private MapView mMapView;
-    private GoogleMap googleMap;
-
     private TextView textViewUserName;
     private TextView textViewReportDate;
     private TextView textViewLocation;
@@ -69,8 +67,8 @@ public class ComplaintDetailsFragment extends Fragment {
     private List<Venter.Comment> commentList;
     private List<User> upVotesList;
     private LinearLayout linearLayoutTags;
-    TextView textViewUserUpVoteName;
-    List<String> tagsList;
+    private TextView textViewUserUpVoteName;
+    private List<String> tagsList;
 
     public static ComplaintDetailsFragment getInstance(String sessionid, String complaintid, String userid, String userProfileUrl) {
         sId = sessionid;
@@ -189,7 +187,7 @@ public class ComplaintDetailsFragment extends Fragment {
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap mGoogleMap) {
-                googleMap = mGoogleMap;
+                GoogleMap googleMap = mGoogleMap;
 
                 // For dropping a marker at a point on the Map
                 LatLng loc = new LatLng(detailedComplaint.getLatitude(), detailedComplaint.getLongitude());

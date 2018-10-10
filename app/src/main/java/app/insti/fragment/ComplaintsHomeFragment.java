@@ -24,15 +24,15 @@ import retrofit2.Response;
 
 public class ComplaintsHomeFragment extends Fragment {
 
-    Activity activity;
-    ComplaintsAdapter homeListAdapter;
-    RecyclerView recyclerViewHome;
+    private Activity activity;
+    private ComplaintsAdapter homeListAdapter;
+    private RecyclerView recyclerViewHome;
     private SwipeRefreshLayout swipeContainer;
 
     private static String TAG = ComplaintsHomeFragment.class.getSimpleName();
     private boolean isCalled = false;
     private TextView error_message_home;
-    static String sID, uID, uProfileUrl;
+    private static String sID, uID, uProfileUrl;
 
     public static ComplaintsHomeFragment getInstance(String sessionID, String userID, String userProfileUrl) {
         sID = sessionID;

@@ -21,16 +21,12 @@ import app.insti.adapter.ComplaintFragmentViewPagerAdapter;
 
 public class ComplaintsFragment extends BaseFragment {
 
-    String userID, userProfileUrl;
-    Context context;
-    Button buttonVentIssues;
-    ViewPager viewPager;
+    private String userID, userProfileUrl;
+    private Context context;
+    private Button buttonVentIssues;
+    private ViewPager viewPager;
     private TabLayout slidingTabLayout;
-    CollapsingToolbarLayout collapsingToolbarLayout;
-
-    public ComplaintsFragment() {
-        // Required empty public constructor
-    }
+    private CollapsingToolbarLayout collapsingToolbarLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -116,12 +112,12 @@ public class ComplaintsFragment extends BaseFragment {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                //On Tab Unselected
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                //On Tab Reselected
             }
         });
 

@@ -16,7 +16,7 @@ public class ImageFragment extends BaseFragment {
 
     private static final String TAG = ImageFragment.class.getSimpleName();
     private String image;
-    int indexChosen;
+    private int indexChosen;
 
     public static ImageFragment newInstance(String image, int index) {
         ImageFragment fragment = new ImageFragment();

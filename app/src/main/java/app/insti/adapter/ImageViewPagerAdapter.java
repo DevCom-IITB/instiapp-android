@@ -20,7 +20,7 @@ public class ImageViewPagerAdapter extends FragmentPagerAdapter {
 
     private static final String TAG = ImageViewPagerAdapter.class.getSimpleName();
     private List<String> images = new ArrayList<>();
-    Venter.Complaint detailedComplaint;
+    private Venter.Complaint detailedComplaint;
 
     public ImageViewPagerAdapter(FragmentManager fragmentManager, List<String> images) {
         super(fragmentManager);

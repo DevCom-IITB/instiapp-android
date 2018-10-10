@@ -4,9 +4,6 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
-import app.insti.api.model.User;
-import app.insti.interfaces.Browsable;
-
 /**
  * Created by Shivam Sharma on 04-09-2018.
  */
@@ -14,11 +11,10 @@ import app.insti.interfaces.Browsable;
 public class Venter {
 
     public static class Complaint{
-        @NonNull
         @SerializedName("id")
         private String complaintID;
         @SerializedName("created_by")
-        User complaintCreatedBy;
+        private User complaintCreatedBy;
         @SerializedName("description")
         private String description;
         @SerializedName("report_date")
@@ -163,11 +159,10 @@ public class Venter {
     }
 
     public static class TagUri {
-        @NonNull
         @SerializedName("id")
-        String id;
+        private String id;
         @SerializedName("tag_uri")
-        String tagUri;
+        private String tagUri;
 
         @NonNull
         public String getId() {
@@ -189,15 +184,14 @@ public class Venter {
 
     public static class Comment {
 
-        @NonNull
         @SerializedName("id")
-        String id;
+        private String id;
         @SerializedName("time")
-        String time;
+        private String time;
         @SerializedName("text")
-        String text;
+        private String text;
         @SerializedName("commented_by")
-        User commented_by;
+        private User commented_by;
 
         @NonNull
         public String getId() {

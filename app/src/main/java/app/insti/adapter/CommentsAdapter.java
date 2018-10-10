@@ -43,8 +43,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
     private LayoutInflater inflater;
     private String sessionId, userId;
-    Activity activity;
-    TextView textViewCommentLabel;
+    private Activity activity;
+    private TextView textViewCommentLabel;
     private Fragment fragment;
 
     private List<Venter.Comment> commentList = new ArrayList<>();
@@ -136,6 +136,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         }
                                     });
                                     break;
+
+                                default:
+                                    clipboardManager = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
+                                    clipData = ClipData.newPlainText("Text Copied", textViewComment.getText().toString());
+                                    clipboardManager.setPrimaryClip(clipData);
+                                    Toast.makeText(context, "Comment Copied", Toast.LENGTH_SHORT).show();
                             }
                             return true;
                         }

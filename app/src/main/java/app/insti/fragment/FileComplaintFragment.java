@@ -90,6 +90,7 @@ import retrofit2.Response;
 
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
+import static app.insti.Constants.REQUEST_CAMERA_INT_ID;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
 
 public class FileComplaintFragment extends Fragment {
@@ -97,43 +98,35 @@ public class FileComplaintFragment extends Fragment {
     private static final String TAG = FileComplaintFragment.class.getSimpleName();
     private static FileComplaintFragment mainactivity;
     private Button buttonSubmit;
-    private ImageButton imageActionButton;
     private CustomAutoCompleteTextView autoCompleteTextView;
     private EditText editTextSuggestions;
     private EditText editTextTags;
     private EditText editTextLocationDetails;
     private MapView mMapView;
-    GoogleMap googleMap;
+    private GoogleMap googleMap;
     private TagView tagView;
     private TagView tagViewPopulate;
     private ScrollView tagsLayout;
     private LatLng Location;
-    private String Name;
     private String Address;
     private List<String> Tags;
     private ArrayList<ComplaintTag> tagList;
     private List<String> uploadedImagesUrl = new ArrayList<>();
     private int cursor = 1;
     private List<ComplaintTag> tagList2 = new ArrayList<>();
-
     private String base64Image;
     private ImageViewPagerAdapter imageViewPagerAdapter;
     private ViewPager viewPager;
     private CircleIndicator indicator;
-    private Button buttonAnalysis;
     private RelativeLayout layout_buttons;
-    String userId;
-    View view;
-    NestedScrollView nestedScrollView;
+    private String userId;
+    private View view;
+    private NestedScrollView nestedScrollView;
     private boolean GPSIsSetup = false;
     private ProgressDialog progressDialog;
     private CollapsingToolbarLayout collapsing_toolbar;
-    LinearLayout linearLayoutAnalyse;
+    private LinearLayout linearLayoutAnalyse;
     private LinearLayout linearLayoutScrollTags;
-
-    public FileComplaintFragment() {
-        // Required empty public constructor
-    }
 
     public static FileComplaintFragment getMainActivity() {
         return mainactivity;
@@ -196,7 +189,7 @@ public class FileComplaintFragment extends Fragment {
         buttonSubmit.setVisibility(View.INVISIBLE);
         buttonSubmit.setVisibility(View.GONE);
 
-        buttonAnalysis = view.findViewById(R.id.button_analysis);
+        Button buttonAnalysis = view.findViewById(R.id.button_analysis);
         buttonAnalysis.setVisibility(View.INVISIBLE);
         buttonAnalysis.setVisibility(View.GONE);
 
@@ -209,7 +202,7 @@ public class FileComplaintFragment extends Fragment {
         viewPager = view.findViewById(R.id.complaint_image_view_pager);
         indicator = view.findViewById(R.id.indicator);
 
-        imageActionButton = view.findViewById(R.id.fabButton);
+        ImageButton imageActionButton = view.findViewById(R.id.fabButton);
         imageActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -320,7 +313,7 @@ public class FileComplaintFragment extends Fragment {
             @Override
             public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
                 Location = place.getLatLng();
-                Name = place.getName().toString();
+                String Name = place.getName().toString();
                 Address = place.getAddress().toString();
                 updateMap(Location, Name, Address, cursor); //on selecting the place will automatically shows the Details on the map.
                 cursor++;
@@ -529,6 +522,8 @@ public class FileComplaintFragment extends Fragment {
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                             Toast.makeText(getContext(), getString(R.string.GPS_not_enables), Toast.LENGTH_LONG).show();
                             break;
+                        default:
+                            Toast.makeText(getContext(), getString(R.string.GPS_not_enables), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -784,7 +779,7 @@ public class FileComplaintFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == Activity.RESULT_OK && requestCode == Constants.REQUEST_CAMERA_INT_ID && data != null) {
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CAMERA_INT_ID && data != null) {
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(false);
             progressDialog.show();
@@ -794,7 +789,7 @@ public class FileComplaintFragment extends Fragment {
             collapsing_toolbar.setVisibility(View.VISIBLE);
             sendImage();
 
-        } else if (resultCode == Activity.RESULT_OK && requestCode == Constants.RESULT_LOAD_IMAGE && data != null) {
+        } else if (resultCode == Activity.RESULT_OK && requestCode == RESULT_LOAD_IMAGE && data != null) {
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(false);
             progressDialog.show();

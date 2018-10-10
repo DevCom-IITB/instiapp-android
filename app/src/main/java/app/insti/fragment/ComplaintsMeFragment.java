@@ -26,7 +26,7 @@ public class ComplaintsMeFragment extends Fragment {
 
     private static String uID, sID, uProfileUrl;
     private Activity activity;
-    RecyclerView recyclerViewMe;
+    private RecyclerView recyclerViewMe;
     private ComplaintsAdapter meListAdapter;
     private TextView error_message_me;
     private SwipeRefreshLayout swipeContainer;
