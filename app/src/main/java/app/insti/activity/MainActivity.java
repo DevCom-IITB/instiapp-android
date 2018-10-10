@@ -55,10 +55,8 @@ import app.insti.api.model.Role;
 import app.insti.api.model.User;
 import app.insti.api.request.UserFCMPatchRequest;
 import app.insti.fragment.BackHandledFragment;
-import app.insti.fragment.BodyFragment;
 import app.insti.fragment.CalendarFragment;
-import app.insti.fragment.ComplaintFragment;
-import app.insti.fragment.EventFragment;
+import app.insti.fragment.ComplaintsFragment;
 import app.insti.fragment.ExploreFragment;
 import app.insti.fragment.FeedFragment;
 import app.insti.fragment.FileComplaintFragment;
@@ -530,8 +528,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.nav_complaint:
                 if (session.isLoggedIn()) {
-                    ComplaintFragment complaintFragment = new ComplaintFragment();
-                    updateFragment(complaintFragment);
+                    ComplaintsFragment complaintsFragment = new ComplaintsFragment();
+                    updateFragment(complaintsFragment);
                 } else {
                     Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
                 }
@@ -577,8 +575,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bundle.putString(Constants.SESSION_ID, session.pref.getString(Constants.SESSION_ID, ""));
         if (fragment instanceof MessMenuFragment)
             bundle.putString(Constants.USER_HOSTEL, session.isLoggedIn() && currentUser.getHostel() != null ? currentUser.getHostel() : "1");
-        if (fragment instanceof SettingsFragment && session.isLoggedIn() || fragment instanceof ComplaintFragment && session.isLoggedIn())
+        if (fragment instanceof SettingsFragment && session.isLoggedIn())
             bundle.putString(Constants.USER_ID, currentUser.getUserID());
+        if (fragment instanceof ComplaintsFragment && session.isLoggedIn()){
+            bundle.putString(Constants.USER_ID, currentUser.getUserID());
+            bundle.putString(Constants.CURRENT_USER_PROFILE_PICTURE, currentUser.getUserProfilePictureUrl());
+        }
         fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
         if (fragment instanceof FeedFragment)

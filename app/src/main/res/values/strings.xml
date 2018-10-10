@@ -45,7 +45,7 @@
     <string name="enter_suggestions_if_any">Enter Suggestions (if any)</string>
     <string name="no_complaints">No complaints at the moment</string>
     <string name="initial_message_file_complaint">Please provide the complaint description before submitting</string>
-    <string name="getting_current_location">Getting current location. Please try after some time</string>
+    <string name="getting_current_location">Getting current location.</string>
     <string name="GPS_not_enables">GPS is not enabled!</string>
     <string name="no_permission">No permission!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>

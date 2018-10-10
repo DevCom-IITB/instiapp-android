@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,8 +13,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +24,6 @@ import java.util.List;
 
 import app.insti.R;
 import app.insti.Utils;
-import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Venter;
 import app.insti.utils.DateTimeUtil;
@@ -38,25 +36,27 @@ import retrofit2.Response;
  * Created by Shivam Sharma on 23-09-2018.
  */
 
-public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final String TAG = CommentRecyclerViewAdapter.class.getSimpleName();
+    private static final String TAG = CommentsAdapter.class.getSimpleName();
 
     private Context context;
     private LayoutInflater inflater;
     private String sessionId, userId;
     Activity activity;
-    private TextView textViewCommentLabel;
+    TextView textViewCommentLabel;
+    private Fragment fragment;
 
     private List<Venter.Comment> commentList = new ArrayList<>();
 
-    public CommentRecyclerViewAdapter(Activity activity, Context context, String sessionId, String userId, TextView textViewCommentLabel) {
+    public CommentsAdapter(Activity activity, Context context, String sessionId, String userId, TextView textViewCommentLabel, Fragment fragment) {
         this.context = context;
         this.sessionId = sessionId;
         this.userId = userId;
         inflater = LayoutInflater.from(context);
         this.activity = activity;
         this.textViewCommentLabel = textViewCommentLabel;
+        this.fragment =fragment;
     }
 
     public class CommentsViewHolder extends RecyclerView.ViewHolder {
@@ -66,7 +66,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         private TextView textViewName;
         private TextView textViewCommentTime;
         private TextView textViewComment;
-        final RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        private final RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
 
         public CommentsViewHolder(View itemView) {
             super(itemView);
@@ -83,10 +83,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             try {
                 String profileUrl = comment.getUser().getUserProfilePictureUrl();
                 Log.i(TAG, "PROFILE URL: " + profileUrl);
-                if (profileUrl != null)
-                    Picasso.get().load(profileUrl).into(circleImageView);
-                else
-                    Picasso.get().load(R.drawable.baseline_account_circle_black_36).into(circleImageView);
+                Picasso.get().load(profileUrl).placeholder(R.drawable.user_placeholder).into(circleImageView);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -124,7 +121,6 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                                         @Override
                                         public void onResponse(Call<String> call, Response<String> response) {
                                             if (response.isSuccessful()) {
-                                                Toast.makeText(context, "Comment Deleted", Toast.LENGTH_SHORT).show();
                                                 commentList.remove(position);
                                                 notifyDataSetChanged();
                                                 notifyItemRemoved(position);
@@ -156,7 +152,14 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.comments_card, parent, false);
 
-        CommentsViewHolder commentsViewHolder = new CommentsViewHolder(view);
+        final CommentsViewHolder commentsViewHolder = new CommentsViewHolder(view);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.openUserFragment(commentList.get(commentsViewHolder.getAdapterPosition()).getUser(), fragment.getActivity());
+            }
+        });
         return commentsViewHolder;
     }
 

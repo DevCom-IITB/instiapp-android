@@ -3,11 +3,11 @@ package app.insti;
 /**
  * Created by Shivam Sharma on 13-08-2018.
  */
-public class TagClass {
+public class ComplaintTag {
 
     private String name;
 
-    public TagClass(String name) {
+    public ComplaintTag(String name) {
         this.name = name;
     }
 

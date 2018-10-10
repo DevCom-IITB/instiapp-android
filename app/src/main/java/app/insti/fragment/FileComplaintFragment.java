@@ -72,7 +72,7 @@ import java.util.List;
 import app.insti.Constants;
 import app.insti.CustomAutoCompleteTextView;
 import app.insti.R;
-import app.insti.TagClass;
+import app.insti.ComplaintTag;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.ImageViewPagerAdapter;
@@ -111,10 +111,10 @@ public class FileComplaintFragment extends Fragment {
     private String Name;
     private String Address;
     private List<String> Tags;
-    private ArrayList<TagClass> tagList;
+    private ArrayList<ComplaintTag> tagList;
     private List<String> uploadedImagesUrl = new ArrayList<>();
     private int cursor = 1;
-    private List<TagClass> tagList2 = new ArrayList<>();
+    private List<ComplaintTag> tagList2 = new ArrayList<>();
 
     private String base64Image;
     private ImageViewPagerAdapter imageViewPagerAdapter;
@@ -126,10 +126,10 @@ public class FileComplaintFragment extends Fragment {
     View view;
     NestedScrollView nestedScrollView;
     private boolean GPSIsSetup = false;
-    FusedLocationProviderClient mFusedLocationClient;
-    ProgressDialog progressDialog;
-    CollapsingToolbarLayout collapsing_toolbar;
+    private ProgressDialog progressDialog;
+    private CollapsingToolbarLayout collapsing_toolbar;
     LinearLayout linearLayoutAnalyse;
+    private LinearLayout linearLayoutScrollTags;
 
     public FileComplaintFragment() {
         // Required empty public constructor
@@ -152,7 +152,6 @@ public class FileComplaintFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         mainactivity = this;
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         super.onCreate(savedInstanceState);
     }
 
@@ -170,8 +169,6 @@ public class FileComplaintFragment extends Fragment {
         Bundle bundle = getArguments();
         userId = bundle.getString(Constants.USER_ID);
 
-        Toast.makeText(getContext(), getString(R.string.initial_message_file_complaint), Toast.LENGTH_LONG).show();
-
         prepareTags();
 
         progressDialog = new ProgressDialog(getContext());
@@ -186,7 +183,7 @@ public class FileComplaintFragment extends Fragment {
         collapsing_toolbar.setVisibility(View.GONE);
 
         imageViewHolder.setLayoutParams(layoutParams);
-        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Add Complaint");
 
         nestedScrollView = view.findViewById(R.id.nested_scrollview);
@@ -202,6 +199,10 @@ public class FileComplaintFragment extends Fragment {
         buttonAnalysis = view.findViewById(R.id.button_analysis);
         buttonAnalysis.setVisibility(View.INVISIBLE);
         buttonAnalysis.setVisibility(View.GONE);
+
+        linearLayoutScrollTags = view.findViewById(R.id.linearLayoutScrollTags);
+        linearLayoutScrollTags.setVisibility(View.INVISIBLE);
+        linearLayoutScrollTags.setVisibility(View.GONE);
 
         tagsLayout = view.findViewById(R.id.tags_layout);
 
@@ -252,17 +253,18 @@ public class FileComplaintFragment extends Fragment {
         editTextTags.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                //Before Text Changed
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                linearLayoutScrollTags.setVisibility(View.VISIBLE);
                 setTags(s);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                //After Text Changed
             }
         });
 
@@ -274,6 +276,8 @@ public class FileComplaintFragment extends Fragment {
                 editTextTags.setText("");
                 tagViewPopulate.addTags(new ArrayList<Tag>());
                 MainActivity.hideKeyboard(getActivity());
+                linearLayoutScrollTags.setVisibility(View.INVISIBLE);
+                linearLayoutScrollTags.setVisibility(View.GONE);
             }
         });
 
@@ -283,6 +287,8 @@ public class FileComplaintFragment extends Fragment {
                 Tags = new ArrayList<>();
                 for (int i = 0; i < tagList2.size(); i++) {
                     Tags.add(tagList2.get(i).getName());
+                    linearLayoutScrollTags.setVisibility(View.INVISIBLE);
+                    linearLayoutScrollTags.setVisibility(View.GONE);
                 }
                 addComplaint();
             }
@@ -356,7 +362,13 @@ public class FileComplaintFragment extends Fragment {
             @Override
             public void onTagClick(Tag tag, int i) {
                 editTextTags.setText(tag.text);
-                editTextTags.setSelection(tag.text.length()); //to set cursor position
+                editTextTags.setSelection(tag.text.length());
+                populateTags(editTextTags.getText().toString());
+                editTextTags.setText("");
+                tagViewPopulate.addTags(new ArrayList<Tag>());
+                MainActivity.hideKeyboard(getActivity());
+                linearLayoutScrollTags.setVisibility(View.INVISIBLE);
+                linearLayoutScrollTags.setVisibility(View.GONE);//to set cursor position
             }
         });
 
@@ -410,6 +422,7 @@ public class FileComplaintFragment extends Fragment {
                             return false;
                         }
                     });
+                    FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
                     mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
@@ -444,6 +457,7 @@ public class FileComplaintFragment extends Fragment {
         } else {
             Log.i(TAG, "GPS enabled");
             try {
+                FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
                 mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
@@ -463,6 +477,7 @@ public class FileComplaintFragment extends Fragment {
                     @Override
                     public void onFailure(Exception e) {
                         e.printStackTrace();
+                        Toast.makeText(getContext(), "Something went wrong while getting your location \n"+ e, Toast.LENGTH_LONG).show();
                     }
                 });
                 GPSIsSetup = true;
@@ -532,6 +547,7 @@ public class FileComplaintFragment extends Fragment {
                     MY_PERMISSIONS_REQUEST_LOCATION);
         } else {
             try {
+                FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
                 mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
@@ -562,7 +578,7 @@ public class FileComplaintFragment extends Fragment {
 
     private void populateTags(String cs) {
         if (!(cs.isEmpty())) {
-            tagList2.add(new TagClass(cs));
+            tagList2.add(new ComplaintTag(cs));
             ArrayList<Tag> tags = new ArrayList<>();
             Tag tag;
             for (int i = 0; i < tagList2.size(); i++) {
@@ -573,26 +589,37 @@ public class FileComplaintFragment extends Fragment {
             }
             tagView.addTags(tags);
         } else {
+            linearLayoutScrollTags.setVisibility(View.INVISIBLE);
+            linearLayoutScrollTags.setVisibility(View.GONE);
             Toast.makeText(getContext(), "Please enter some tags", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void setTags(CharSequence cs) {
+        int counter = 0;
         if (!cs.toString().equals("")) {
             String text = cs.toString();
             ArrayList<Tag> tags = new ArrayList<>();
             Tag tag;
             for (int i = 0; i < tagList.size(); i++) {
                 if (tagList.get(i).getName().toLowerCase().contains(text.toLowerCase())) {
+                    linearLayoutScrollTags.setVisibility(View.VISIBLE);
                     tagsLayout.setVisibility(View.VISIBLE);
                     tag = new Tag(tagList.get(i).getName());
                     tag.radius = 10f;
                     tag.isDeletable = false;
                     tags.add(tag);
+                    counter++;
                 }
             }
-            tagViewPopulate.addTags(tags);
+            if (counter != 0) {
+                tagViewPopulate.addTags(tags);
+            } else {
+                linearLayoutScrollTags.setVisibility(View.GONE);
+            }
         } else {
+            linearLayoutScrollTags.setVisibility(View.INVISIBLE);
+            linearLayoutScrollTags.setVisibility(View.GONE);
             tagViewPopulate.addTags(new ArrayList<Tag>());
             return;
         }
@@ -606,12 +633,11 @@ public class FileComplaintFragment extends Fragment {
         });
     }
 
-
     private void prepareTags() {
         tagList = new ArrayList<>();
         try {
             for (int i = 0; i < TagCategories.CATEGORIES.length; i++) {
-                tagList.add(new TagClass(TagCategories.CATEGORIES[i]));
+                tagList.add(new ComplaintTag(TagCategories.CATEGORIES[i]));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -652,12 +678,12 @@ public class FileComplaintFragment extends Fragment {
                                     Toast.makeText(getContext(), "Complaint successfully posted", Toast.LENGTH_LONG).show();
                                     Bundle bundle = getArguments();
                                     bundle.putString(Constants.USER_ID, userId);
-                                    ComplaintFragment complaintFragment = new ComplaintFragment();
-                                    complaintFragment.setArguments(bundle);
+                                    ComplaintsFragment complaintsFragment = new ComplaintsFragment();
+                                    complaintsFragment.setArguments(bundle);
                                     FragmentManager manager = getFragmentManager();
                                     FragmentTransaction transaction = manager.beginTransaction();
-                                    transaction.replace(R.id.framelayout_for_fragment, complaintFragment, complaintFragment.getTag());
-                                    transaction.addToBackStack(complaintFragment.getTag());
+                                    transaction.replace(R.id.framelayout_for_fragment, complaintsFragment, complaintsFragment.getTag());
+                                    transaction.addToBackStack(complaintsFragment.getTag());
                                     manager.popBackStackImmediate("Complaint Fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                     transaction.commit();
                                 }
@@ -688,12 +714,12 @@ public class FileComplaintFragment extends Fragment {
                     Toast.makeText(getContext(), "Complaint successfully posted", Toast.LENGTH_LONG).show();
                     Bundle bundle = getArguments();
                     bundle.putString(Constants.USER_ID, userId);
-                    ComplaintFragment complaintFragment = new ComplaintFragment();
-                    complaintFragment.setArguments(bundle);
+                    ComplaintsFragment complaintsFragment = new ComplaintsFragment();
+                    complaintsFragment.setArguments(bundle);
                     FragmentManager manager = getFragmentManager();
                     FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.framelayout_for_fragment, complaintFragment, complaintFragment.getTag());
-                    transaction.addToBackStack(complaintFragment.getTag());
+                    transaction.replace(R.id.framelayout_for_fragment, complaintsFragment, complaintsFragment.getTag());
+                    transaction.addToBackStack(complaintsFragment.getTag());
                     manager.popBackStackImmediate("Complaint Fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     transaction.commit();
                 }

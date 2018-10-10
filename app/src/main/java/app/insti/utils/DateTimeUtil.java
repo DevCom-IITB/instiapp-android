@@ -20,11 +20,17 @@ public class DateTimeUtil {
             long hours = TimeUnit.MILLISECONDS.toHours(now.getTime() - date.getTime());
             if (seconds <= 0) {
                 return time_ago = "now";
-            } else if (seconds < 60 && seconds > 0) {
+            } else if (seconds == 1){
+                return time_ago = seconds + " second ago";
+            } else if (seconds < 60 && seconds > 1) {
                 return time_ago = seconds + " seconds ago";
-            } else if (minutes < 60 && minutes > 0) {
+            } else if (minutes == 1) {
+                return time_ago = minutes + " 1 minute ago";
+            } else if (minutes < 60 && minutes > 1) {
                 return time_ago = minutes + " minutes ago";
-            } else if (hours < 24 && hours > 0) {
+            } else if (hours == 1) {
+                return hours + " hour ago";
+            } else if (hours < 24 && hours > 1) {
                 return hours + " hours ago";
             } else {
                 long days = Math.round(diff / (24.0 * 60 * 60 * 1000));
@@ -32,14 +38,25 @@ public class DateTimeUtil {
                     return "today";
                 else if (days == 1)
                     return "yesterday";
+                else if (days == 1)
+                    return days + " day ago";
                 else if (days < 14)
                     return days + " days ago";
                 else if (days < 30)
-                    return ((int) (days / 7)) + " weeks ago";
+                    if ((int) (days / 7) == 1)
+                        return ((int) (days / 7)) + " week ago";
+                    else
+                        return ((int) (days / 7)) + " weeks ago";
                 else if (days < 365)
-                    return ((int) (days / 30)) + " months ago";
+                    if ((int) (days / 30) == 1)
+                        return ((int) (days / 30)) + " month ago";
+                    else
+                        return ((int) (days / 30)) + " months ago";
                 else
-                    return ((int) (days / 365)) + " years ago";
+                    if ((int) (days / 365) == 1)
+                        return ((int) (days / 365)) + " year ago";
+                    else
+                        return ((int) (days / 365)) + " years ago";
             }
         } catch (ParseException e) {
             e.printStackTrace();

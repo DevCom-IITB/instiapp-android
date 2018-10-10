@@ -1,197 +1,341 @@
 package app.insti.fragment;
 
-import android.content.res.TypedArray;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.Objects;
-
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
+import java.util.List;
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
-import app.insti.adapter.ComplaintDetailsPagerAdapter;
-import app.insti.adapter.ImageViewPagerAdapter;
+import app.insti.adapter.CommentsAdapter;
+import app.insti.adapter.UpVotesAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.User;
 import app.insti.api.model.Venter;
-import me.relex.circleindicator.CircleIndicator;
+import app.insti.api.request.CommentCreateRequest;
+import app.insti.utils.DateTimeUtil;
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ComplaintDetailsFragment extends Fragment {
 
-    private static final String TAG = ComplaintDetailsFragment.class.getSimpleName();
-    TabLayout slidingTabLayout;
-    ViewPager viewPager;
-    View mview;
-    private String complaintId, sessionID, userId;
-    private ComplaintDetailsPagerAdapter complaintDetailsPagerAdapter;
-    CircleIndicator circleIndicator;
-    private int voteCount = 0;
+    private final String TAG = ComplaintDetailsFragment.class.getSimpleName();
+    private Venter.Complaint detailedComplaint;
+    private MapView mMapView;
+    private GoogleMap googleMap;
+
+    private TextView textViewUserName;
+    private TextView textViewReportDate;
+    private TextView textViewLocation;
+    private TextView textViewDescription;
+    private TextView textViewCommentLabel;
+    private TextView textViewVoteUpLabel;
+    private TextView textViewStatus;
+    private LinearLayout tagsLayout;
+    private EditText editTextComment;
+    private ImageButton imageButtonSend;
+    private CircleImageView circleImageViewCommentUserImage;
+    private RecyclerView recyclerViewComments;
+    private RecyclerView recyclerViewUpVotes;
+    private Button buttonVoteUp;
+
+    private static String sId, cId, uId, uProfileUrl;
+    private CommentsAdapter commentListAdapter;
+    private UpVotesAdapter upVotesAdapter;
+    private List<Venter.Comment> commentList;
+    private List<User> upVotesList;
+    private LinearLayout linearLayoutTags;
+    TextView textViewUserUpVoteName;
+    List<String> tagsList;
+
+    public static ComplaintDetailsFragment getInstance(String sessionid, String complaintid, String userid, String userProfileUrl) {
+        sId = sessionid;
+        cId = complaintid;
+        uId = userid;
+        uProfileUrl = userProfileUrl;
+        return new ComplaintDetailsFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_complaint_details, container, false);
+        commentList = new ArrayList<>();
 
-        LinearLayout imageViewHolder = view.findViewById(R.id.image_holder_view);
-        CollapsingToolbarLayout.LayoutParams layoutParams = new CollapsingToolbarLayout.LayoutParams
-                (CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
-                        getResources().getDisplayMetrics().heightPixels / 2);
-        imageViewHolder.setLayoutParams(layoutParams);
+        initialiseViews(view);
+        upVotesList = new ArrayList<>();
+        tagsList = new ArrayList<>();
+        commentListAdapter = new CommentsAdapter(getActivity(), getContext(), sId, uId, textViewCommentLabel, this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        upVotesAdapter = new UpVotesAdapter(getActivity(), getContext(), sId, uId, textViewUserUpVoteName, this);
+        recyclerViewComments.setLayoutManager(linearLayoutManager);
+        recyclerViewUpVotes.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewComments.setHasFixedSize(true);
+        recyclerViewUpVotes.setHasFixedSize(true);
+        recyclerViewComments.setAdapter(commentListAdapter);
+        recyclerViewUpVotes.setAdapter(upVotesAdapter);
+        upVotesAdapter.setUpVoteList(upVotesList);
+        upVotesAdapter.notifyDataSetChanged();
 
-        slidingTabLayout = view.findViewById(R.id.sliding_tab_layout);
-        circleIndicator = view.findViewById(R.id.indicator);
-        this.mview = view;
+        mMapView = view.findViewById(R.id.google_map);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.onResume();
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        imageButtonSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!(editTextComment.getText().toString().trim().isEmpty())) {
+                    postComment();
+                } else {
+                    Toast.makeText(getContext(), "Please enter comment text", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        buttonVoteUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upVote(detailedComplaint);
+            }
+        });
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        Bundle bundle = getArguments();
-        complaintId = bundle.getString("id");
-        sessionID = bundle.getString("sessionId");
-        userId = bundle.getString("userId");
-
-        if (bundle != null) {
-            Log.i(TAG, "bundle != null");
-            callServerToGetDetailedComplaint();
-        }
+    private void initialiseViews(View view) {
+        textViewUserName = view.findViewById(R.id.textViewUserName);
+        textViewReportDate = view.findViewById(R.id.textViewReportDate);
+        textViewLocation = view.findViewById(R.id.textViewLocation);
+        textViewDescription = view.findViewById(R.id.textViewDescription);
+        textViewStatus = view.findViewById(R.id.textViewStatus);
+        textViewCommentLabel = view.findViewById(R.id.comment_label);
+        textViewVoteUpLabel = view.findViewById(R.id.up_vote_label);
+        tagsLayout = view.findViewById(R.id.tags_layout);
+        linearLayoutTags = view.findViewById(R.id.linearLayoutTags);
+        recyclerViewComments = view.findViewById(R.id.recyclerViewComments);
+        recyclerViewUpVotes = view.findViewById(R.id.recyclerViewUpVotes);
+        editTextComment = view.findViewById(R.id.edit_comment);
+        imageButtonSend = view.findViewById(R.id.send_comment);
+        circleImageViewCommentUserImage = view.findViewById(R.id.comment_user_image);
+        buttonVoteUp = view.findViewById(R.id.buttonVoteUp);
     }
 
-    private void callServerToGetDetailedComplaint() {
+    public void setDetailedComplaint(Venter.Complaint detailedComplaint) {
+        this.detailedComplaint = detailedComplaint;
+        populateViews();
+    }
 
-        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        retrofitInterface.getComplaint("sessionid=" + sessionID, complaintId).enqueue(new Callback<Venter.Complaint>() {
-            @Override
-            public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
-                if (response.body() != null) {
-                    Venter.Complaint complaint = response.body();
-                    for (User currentUser : complaint.getUsersUpVoted()) {
-                        if (currentUser.getUserID().equals(userId)) {
-                            voteCount = 1;
-                        }
-                    }
-                    initViewPagerForImages(complaint);
-                    initTabViews(complaint);
-                }
+    private void populateViews() {
+        try {
+            buttonVoteUp.setText("UpVote");
+            textViewUserName.setText(detailedComplaint.getComplaintCreatedBy().getUserName());
+            String time = DateTimeUtil.getDate(detailedComplaint.getComplaintReportDate().toString());
+            Log.i(TAG, " time: " + time);
+            textViewReportDate.setText(time);
+            textViewLocation.setText(detailedComplaint.getLocationDescription());
+            textViewDescription.setText(detailedComplaint.getDescription());
+            textViewStatus.setText(detailedComplaint.getStatus().toUpperCase());
+            if (detailedComplaint.getStatus().equalsIgnoreCase("Reported")) {
+                textViewStatus.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.colorRed)));
+                textViewStatus.setTextColor(getContext().getResources().getColor(R.color.primaryTextColor));
+            } else if (detailedComplaint.getStatus().equalsIgnoreCase("In Progress")) {
+                textViewStatus.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.colorSecondary)));
+                textViewStatus.setTextColor(getContext().getResources().getColor(R.color.secondaryTextColor));
+            } else if (detailedComplaint.getStatus().equalsIgnoreCase("Resolved")) {
+                textViewStatus.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.colorGreen)));
+                textViewStatus.setTextColor(getContext().getResources().getColor(R.color.secondaryTextColor));
             }
-
+            addTagsToView(detailedComplaint);
+            if (detailedComplaint.getTags().isEmpty())
+                linearLayoutTags.setVisibility(View.GONE);
+            textViewCommentLabel.setText("Comments (" + detailedComplaint.getComment().size() + ")");
+            textViewVoteUpLabel.setText("Up Votes (" + detailedComplaint.getUsersUpVoted().size() + ")");
+            Picasso.get().load(uProfileUrl).placeholder(R.drawable.user_placeholder).into(circleImageViewCommentUserImage);
+            addVotesToView(detailedComplaint);
+            addCommentsToView(detailedComplaint);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onFailure(Call<Venter.Complaint> call, Throwable t) {
-                if (t != null) {
-                    Log.i(TAG, "error and t = " + t.toString());
+            public void onMapReady(GoogleMap mGoogleMap) {
+                googleMap = mGoogleMap;
+
+                // For dropping a marker at a point on the Map
+                LatLng loc = new LatLng(detailedComplaint.getLatitude(), detailedComplaint.getLongitude());
+                if (loc != null) {
+                    googleMap.addMarker(new MarkerOptions().position(loc).title(detailedComplaint.getLatitude().toString() + " , " + detailedComplaint.getLongitude().toString()).snippet(detailedComplaint.getLocationDescription()));
+                    // For zooming automatically to the location of the marker
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(16).build();
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
             }
         });
     }
 
-    private void initViewPagerForImages(Venter.Complaint detailedComplaint) {
-
-        viewPager = mview.findViewById(R.id.complaint_image_view_pager);
-        if (viewPager != null) {
-            try {
-                ImageViewPagerAdapter imageFragmentPagerAdapter = new ImageViewPagerAdapter(getChildFragmentManager(), detailedComplaint);
-
-                viewPager.setAdapter(imageFragmentPagerAdapter);
-                circleIndicator.setViewPager(viewPager);
-                imageFragmentPagerAdapter.registerDataSetObserver(circleIndicator.getDataSetObserver());
-                viewPager.getAdapter().notifyDataSetChanged();
-                synchronized (viewPager) {
-                    viewPager.notifyAll();
+    private void postComment() {
+        final CommentCreateRequest commentCreateRequest = new CommentCreateRequest(editTextComment.getText().toString());
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.postComment("sessionid=" + sId, cId, commentCreateRequest).enqueue(new Callback<Venter.Comment>() {
+            @Override
+            public void onResponse(Call<Venter.Comment> call, Response<Venter.Comment> response) {
+                if (response.isSuccessful()) {
+                    Venter.Comment comment = response.body();
+                    addNewComment(comment);
+                    editTextComment.setText(null);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
+            @Override
+            public void onFailure(Call<Venter.Comment> call, Throwable t) {
+                Log.i(TAG, "failure in posting comments: " + t.toString());
+            }
+        });
+    }
+
+    private void addNewComment(Venter.Comment newComment) {
+        commentList.add(newComment);
+        commentListAdapter.setCommentList(commentList);
+        commentListAdapter.notifyItemInserted(commentList.indexOf(newComment));
+        commentListAdapter.notifyItemRangeChanged(0, commentListAdapter.getItemCount());
+        textViewCommentLabel.setText("Comments (" + commentList.size() + ")");
+        recyclerViewComments.post(new Runnable() {
+            @Override
+            public void run() {
+                MainActivity.hideKeyboard(getActivity());
+            }
+        });
+    }
+
+    private void addCommentsToView(Venter.Complaint detailedComplaint) {
+        for (Venter.Comment comment : detailedComplaint.getComment())
+            commentList.add(comment);
+        commentListAdapter.setCommentList(commentList);
+        commentListAdapter.notifyDataSetChanged();
+    }
+
+    private void upVote(final Venter.Complaint detailedComplaint) {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        if (detailedComplaint.getVoteCount() == 0) {
+            retrofitInterface.upVote("sessionid=" + sId, cId, 1).enqueue(new Callback<Venter.Complaint>() {
+                @Override
+                public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
+                    if (response.isSuccessful()) {
+                        Venter.Complaint complaint = response.body();
+                        detailedComplaint.setVoteCount(1);
+                        addVotesToView(complaint);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
+                    Log.i(TAG, "failure in up vote: " + t.toString());
+                }
+            });
+        } else if (detailedComplaint.getVoteCount() ==1){
+            retrofitInterface.upVote("sessionid=" + sId, cId, 0).enqueue(new Callback<Venter.Complaint>() {
+                @Override
+                public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
+                    if (response.isSuccessful()) {
+                        Venter.Complaint complaint = response.body();
+                        detailedComplaint.setVoteCount(0);
+                        addVotesToView(complaint);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
+                    Log.i(TAG, "failure in up vote: " + t.toString());
+                }
+            });
         }
     }
 
-    private void initTabViews(final Venter.Complaint detailedComplaint) {
-
-        try {
-            if (detailedComplaint != null) {
-                viewPager = mview.findViewById(R.id.tab_viewpager_details);
-                if (viewPager != null) {
-                    Log.i(TAG, "viewPager != null");
-                    complaintDetailsPagerAdapter = new ComplaintDetailsPagerAdapter(getChildFragmentManager(), detailedComplaint, getContext(), sessionID, complaintId, userId, voteCount);
-
-                    viewPager.setAdapter(complaintDetailsPagerAdapter);
-                    slidingTabLayout.setupWithViewPager(viewPager);
-
-                    slidingTabLayout.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            int tablLayoutWidth = slidingTabLayout.getWidth();
-
-                            DisplayMetrics metrics = new DisplayMetrics();
-                            Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                            int deviceWidth = metrics.widthPixels;
-
-                            if (tablLayoutWidth <= deviceWidth) {
-
-                                final TypedArray styledAttributes = Objects.requireNonNull(ComplaintDetailsFragment.this.getActivity()).getTheme().obtainStyledAttributes(
-                                        new int[]{android.R.attr.actionBarSize});
-                                int mActionBarSize = (int) styledAttributes.getDimension(0, 0);
-                                styledAttributes.recycle();
-
-//                                Replace second parameter to mActionBarSize after adding "Relevant Complaints"
-                                AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(AppBarLayout.LayoutParams.MATCH_PARENT,
-                                        0);
-                                slidingTabLayout.setLayoutParams(layoutParams);
-
-                                slidingTabLayout.setTabMode(TabLayout.MODE_FIXED);
-                                slidingTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-                            } else {
-                                slidingTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-                            }
-                        }
-                    });
-
-                    slidingTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                        @Override
-                        public void onTabSelected(TabLayout.Tab tab) {
-                            viewPager.setCurrentItem(tab.getPosition());
-                        }
-
-                        @Override
-                        public void onTabUnselected(TabLayout.Tab tab) {
-
-                        }
-
-                        @Override
-                        public void onTabReselected(TabLayout.Tab tab) {
-
-                        }
-                    });
-
-                    DetailedComplaintFragment detailedComplaintFragment = (DetailedComplaintFragment) getChildFragmentManager().findFragmentByTag(
-                            "android:switcher:" + R.id.tab_viewpager_details + ":0"
-                    );
-
-                    if (detailedComplaintFragment != null)
-                        detailedComplaintFragment.setDetailedComplaint(detailedComplaint);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void addVotesToView(Venter.Complaint detailedComplaint) {
+        upVotesList.clear();
+        for (User users : detailedComplaint.getUsersUpVoted()) {
+            upVotesList.add(users);
         }
+        upVotesAdapter.setUpVoteList(upVotesList);
+        upVotesAdapter.notifyDataSetChanged();
+        textViewVoteUpLabel.setText("Up Votes (" + detailedComplaint.getUsersUpVoted().size() + ")");
+    }
+
+    private void addTagsToView(Venter.Complaint detailedComplaint) {
+
+        for (Venter.TagUri tagUri : detailedComplaint.getTags()) {
+
+            TextView textViewTags = new TextView(getContext());
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(10,10,10,10);
+            textViewTags.setLayoutParams(layoutParams);
+            textViewTags.setText(tagUri.getTagUri());
+            textViewTags.setBackgroundResource(R.drawable.customborder);
+            textViewTags.setPadding(30,25,30,25);
+            int fontDp = 4;
+            float density = getContext().getResources().getDisplayMetrics().density;
+            int fontPixel = (int) (fontDp * density);
+            textViewTags.setTextSize(fontPixel);
+            textViewTags.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.colorTagGreen)));
+            textViewTags.setTextColor(getContext().getResources().getColor(R.color.primaryTextColor));
+            tagsLayout.setLayoutParams(layoutParams);
+
+            tagsLayout.addView(textViewTags);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
     }
 }

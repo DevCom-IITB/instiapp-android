@@ -6,8 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import app.insti.fragment.HomeFragment;
-import app.insti.fragment.MeFragment;
+import app.insti.fragment.ComplaintsHomeFragment;
+import app.insti.fragment.ComplaintsMeFragment;
 
 /**
  * Created by Shivam Sharma on 15-08-2018.
@@ -15,26 +15,26 @@ import app.insti.fragment.MeFragment;
 
 public class ComplaintFragmentViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private static final String TAG = ComplaintFragmentViewPagerAdapter.class.getSimpleName();
     Context context;
-    String userID, sessionID;
+    private String userID, sessionID, userProfileUrl;
 
-    public ComplaintFragmentViewPagerAdapter(FragmentManager fm, Context context, String userID, String sessionID) {
+    public ComplaintFragmentViewPagerAdapter(FragmentManager fm, Context context, String userID, String sessionID, String userProfileUrl) {
         super(fm);
         this.context = context;
         this.userID = userID;
         this.sessionID = sessionID;
+        this.userProfileUrl = userProfileUrl;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return HomeFragment.getInstance(sessionID, userID);
+                return ComplaintsHomeFragment.getInstance(sessionID, userID, userProfileUrl);
             case 1:
-                return MeFragment.getInstance(sessionID,userID);
+                return ComplaintsMeFragment.getInstance(sessionID,userID, userProfileUrl);
             default:
-                return HomeFragment.getInstance(sessionID, userID);
+                return ComplaintsHomeFragment.getInstance(sessionID, userID, userProfileUrl);
         }
     }
 

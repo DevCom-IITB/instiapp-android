@@ -12,6 +12,7 @@
     <color name="colorGray">#757575</color>
     <color name="colorWhite">#FFFFFF</color>
 
+    <color name="colorTagGreen">#AED581</color>
     <color name="colorRed">#FF0000</color>
     <color name="colorGreen">#00FF00</color>
     <!-- Map -->
