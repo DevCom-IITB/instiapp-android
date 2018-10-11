@@ -127,7 +127,10 @@ public class FileComplaintFragment extends Fragment {
     private CollapsingToolbarLayout collapsing_toolbar;
     private LinearLayout linearLayoutAnalyse;
     private LinearLayout linearLayoutScrollTags;
-    private boolean userAddedTag =  false;
+    private boolean userAddedTag = false;
+    private ImageButton imageButtonAddTags;
+    private Button buttonAnalysis;
+    private ImageButton imageActionButton;
 
     public static FileComplaintFragment getMainActivity() {
         return mainactivity;
@@ -150,8 +153,7 @@ public class FileComplaintFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
@@ -159,90 +161,12 @@ public class FileComplaintFragment extends Fragment {
                 parent.removeView(view);
         }
         view = inflater.inflate(R.layout.fragment_file_complaint, container, false);
-
-        Bundle bundle = getArguments();
-        userId = bundle.getString(Constants.USER_ID);
-
+        bundleCollection();
         prepareTags();
-
         progressDialog = new ProgressDialog(getContext());
-
-        LinearLayout imageViewHolder = view.findViewById(R.id.image_holder_view);
-        CollapsingToolbarLayout.LayoutParams layoutParams = new CollapsingToolbarLayout.LayoutParams(
-                CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
-                getResources().getDisplayMetrics().heightPixels / 2
-        );
-
-        collapsing_toolbar = view.findViewById(R.id.collapsing_toolbar);
-        collapsing_toolbar.setVisibility(View.GONE);
-
-        imageViewHolder.setLayoutParams(layoutParams);
         final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Add Complaint");
-
-        nestedScrollView = view.findViewById(R.id.nested_scrollview);
-
-        linearLayoutAnalyse = view.findViewById(R.id.layoutAnalyse);
-        layout_buttons = view.findViewById(R.id.layout_buttons);
-        layout_buttons.setVisibility(View.GONE);
-
-        buttonSubmit = view.findViewById(R.id.buttonSubmit);
-        buttonSubmit.setVisibility(View.INVISIBLE);
-        buttonSubmit.setVisibility(View.GONE);
-
-        Button buttonAnalysis = view.findViewById(R.id.button_analysis);
-        buttonAnalysis.setVisibility(View.INVISIBLE);
-        buttonAnalysis.setVisibility(View.GONE);
-
-        linearLayoutScrollTags = view.findViewById(R.id.linearLayoutScrollTags);
-        linearLayoutScrollTags.setVisibility(View.INVISIBLE);
-        linearLayoutScrollTags.setVisibility(View.GONE);
-
-        tagsLayout = view.findViewById(R.id.tags_layout);
-
-        viewPager = view.findViewById(R.id.complaint_image_view_pager);
-        indicator = view.findViewById(R.id.indicator);
-
-        ImageButton imageActionButton = view.findViewById(R.id.fabButton);
-        imageActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                giveOptionsToAddImage();
-            }
-        });
-
-        ImageButton imageButtonAddTags = (ImageButton) view.findViewById(R.id.imageButtonAddTags);
-
-        autoCompleteTextView = (CustomAutoCompleteTextView) view.findViewById(R.id.dynamicAutoCompleteTextView);
-        autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-
-                    if (!(autoCompleteTextView.getText().toString().trim().isEmpty())) {
-                        int paddingDp = 60;
-                        float density = getContext().getResources().getDisplayMetrics().density;
-                        int paddingPixel = (int) (paddingDp * density);
-                        linearLayoutAnalyse.setPadding(0, 0, 0, paddingPixel);
-                        layout_buttons.setVisibility(View.VISIBLE);
-                        buttonSubmit.setVisibility(View.VISIBLE);
-                    } else {
-                        Toast.makeText(getContext(), getString(R.string.initial_message_file_complaint), Toast.LENGTH_SHORT).show();
-                    }
-
-                } else {
-                    buttonSubmit.setVisibility(View.INVISIBLE);
-                    buttonSubmit.setVisibility(View.GONE);
-                    linearLayoutAnalyse.setPadding(0, 0, 0, 0);
-                }
-            }
-        });
-
-        editTextSuggestions = view.findViewById(R.id.editTextSuggestions);
-
-        editTextLocationDetails = view.findViewById(R.id.editTextLocationDetails);
-
-        editTextTags = view.findViewById(R.id.editTextTags);
+        initviews(view);
 
         editTextTags.addTextChangedListener(new TextWatcher() {
             @Override
@@ -262,31 +186,25 @@ public class FileComplaintFragment extends Fragment {
             }
         });
 
+        imageActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                giveOptionsToAddImage();
+            }
+        });
+
         imageButtonAddTags.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Add Tags
-                userAddedTag = true;
-                populateTags(editTextTags.getText().toString(),userAddedTag);
-                editTextTags.setText("");
-                userAddedTag = false;
-                tagViewPopulate.addTags(new ArrayList<Tag>());
-                MainActivity.hideKeyboard(getActivity());
-                linearLayoutScrollTags.setVisibility(View.INVISIBLE);
-                linearLayoutScrollTags.setVisibility(View.GONE);
+                addUserTags();
             }
         });
 
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Tags = new ArrayList<>();
-                for (int i = 0; i < tagList2.size(); i++) {
-                    Tags.add(tagList2.get(i).getName());
-                    linearLayoutScrollTags.setVisibility(View.INVISIBLE);
-                    linearLayoutScrollTags.setVisibility(View.GONE);
-                }
-                addComplaint();
+                submitComplaint();
             }
         });
 
@@ -297,95 +215,128 @@ public class FileComplaintFragment extends Fragment {
             }
         });
 
-        mMapView = view.findViewById(R.id.google_map);
+        autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                searchComplaint(hasFocus);
+            }
+        });
+
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
         getMapReady();
 
-        //        Autocomplete location bar
-
-        final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                .setCountry("IN")
-                .build();
-        autocompleteFragment.setFilter(typeFilter);
-        autocompleteFragment.setHint("Enter Location");
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-
-            @Override
-            public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
-                Location = place.getLatLng();
-                String Name = place.getName().toString();
-                Address = place.getAddress().toString();
-                updateMap(Location, Name, Address, cursor); //on selecting the place will automatically shows the Details on the map.
-                cursor++;
-            }
-
-            @Override
-            public void onError(Status status) {
-                Log.i(TAG, "An error occurred: " + status);
-
-            }
-        });
-        //        ends here
-
-
-        tagView = view.findViewById(R.id.tag_view);
+        //Autocomplete location bar
+        autoLocation();
+        //ends here
 
         tagView.setOnTagDeleteListener(new TagView.OnTagDeleteListener() {
             @Override
-            public void onTagDeleted(final TagView tagView, final Tag tag, final int i) {
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
-                builder.setMessage("\"" + tag.text + "\" will be deleted. Are you sure?");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        tagView.remove(i);
-                        tagList2.remove(i);
-                        Log.i(TAG, "tagList2: " + tagList2.toString());
-                        Toast.makeText(getContext(), "\"" + tag.text + "\" deleted", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                builder.setNegativeButton("No", null);
-                builder.show();
+            public void onTagDeleted(TagView tagView, Tag tag, int i) {
+                //Delete Tag
+                deleteTag(tagView, tag, i);
             }
         });
-
-        tagViewPopulate = view.findViewById(R.id.tag_populate);
-
         tagViewPopulate.setOnTagClickListener(new TagView.OnTagClickListener() {
             @Override
             public void onTagClick(Tag tag, int i) {
-                userAddedTag = false;
-                editTextTags.setText(tag.text);
-                editTextTags.setSelection(tag.text.length());
-                populateTags(editTextTags.getText().toString(), userAddedTag);
-                editTextTags.setText("");
-                tagViewPopulate.addTags(new ArrayList<Tag>());
-                MainActivity.hideKeyboard(getActivity());
-                linearLayoutScrollTags.setVisibility(View.INVISIBLE);
-                linearLayoutScrollTags.setVisibility(View.GONE);//to set cursor position
-            }
-        });
-
-        tagViewPopulate.setOnTagDeleteListener(new TagView.OnTagDeleteListener() {
-            @Override
-            public void onTagDeleted(final TagView tagView, final Tag tag, final int i) {
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
-                builder.setMessage("\"" + tag.text + "\" will be deleted. Are you sure?");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        tagView.remove(i);
-                        Toast.makeText(getContext(), "\"" + tag.text + "\" deleted", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                builder.setNegativeButton("No", null);
-                builder.show();
+                //Add Tags
+                addTags(tag);
             }
         });
         return view;
+    }
+
+    private void initviews(View view) {
+        LinearLayout imageViewHolder = view.findViewById(R.id.image_holder_view);
+        CollapsingToolbarLayout.LayoutParams layoutParams = new CollapsingToolbarLayout.LayoutParams(
+                CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
+                getResources().getDisplayMetrics().heightPixels / 2
+        );
+        imageViewHolder.setLayoutParams(layoutParams);
+
+        collapsing_toolbar = view.findViewById(R.id.collapsing_toolbar);
+        collapsing_toolbar.setVisibility(View.GONE);
+
+        nestedScrollView = view.findViewById(R.id.nested_scrollview);
+        linearLayoutAnalyse = view.findViewById(R.id.layoutAnalyse);
+
+        layout_buttons = view.findViewById(R.id.layout_buttons);
+        layout_buttons.setVisibility(View.GONE);
+
+        buttonSubmit = view.findViewById(R.id.buttonSubmit);
+        buttonSubmit.setVisibility(View.INVISIBLE);
+        buttonSubmit.setVisibility(View.GONE);
+
+        buttonAnalysis = view.findViewById(R.id.button_analysis);
+        buttonAnalysis.setVisibility(View.INVISIBLE);
+        buttonAnalysis.setVisibility(View.GONE);
+
+        linearLayoutScrollTags = view.findViewById(R.id.linearLayoutScrollTags);
+        linearLayoutScrollTags.setVisibility(View.INVISIBLE);
+        linearLayoutScrollTags.setVisibility(View.GONE);
+        tagsLayout = view.findViewById(R.id.tags_layout);
+
+        viewPager = view.findViewById(R.id.complaint_image_view_pager);
+        indicator = view.findViewById(R.id.indicator);
+        imageActionButton = view.findViewById(R.id.fabButton);
+        imageButtonAddTags = view.findViewById(R.id.imageButtonAddTags);
+        editTextSuggestions = view.findViewById(R.id.editTextSuggestions);
+        editTextLocationDetails = view.findViewById(R.id.editTextLocationDetails);
+        editTextTags = view.findViewById(R.id.editTextTags);
+        autoCompleteTextView = view.findViewById(R.id.dynamicAutoCompleteTextView);
+        mMapView = view.findViewById(R.id.google_map);
+        tagView = view.findViewById(R.id.tag_view);
+        tagViewPopulate = view.findViewById(R.id.tag_populate);
+    }
+
+    private void bundleCollection() {
+        Bundle bundle = getArguments();
+        userId = bundle.getString(Constants.USER_ID);
+    }
+
+    private void searchComplaint(boolean hasFocus) {
+        if (!hasFocus) {
+            if (!(autoCompleteTextView.getText().toString().trim().isEmpty())) {
+                int paddingDp = 60;
+                float density = getContext().getResources().getDisplayMetrics().density;
+                int paddingPixel = (int) (paddingDp * density);
+                linearLayoutAnalyse.setPadding(0, 0, 0, paddingPixel);
+                layout_buttons.setVisibility(View.VISIBLE);
+                buttonSubmit.setVisibility(View.VISIBLE);
+            } else {
+                Toast.makeText(getContext(), getString(R.string.initial_message_file_complaint), Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+            buttonSubmit.setVisibility(View.INVISIBLE);
+            buttonSubmit.setVisibility(View.GONE);
+            linearLayoutAnalyse.setPadding(0, 0, 0, 0);
+        }
+    }
+
+    private void addUserTags() {
+        userAddedTag = true;
+        populateTags(editTextTags.getText().toString(), userAddedTag);
+        editTextTags.setText("");
+        userAddedTag = false;
+        tagViewPopulate.addTags(new ArrayList<Tag>());
+        MainActivity.hideKeyboard(getActivity());
+        linearLayoutScrollTags.setVisibility(View.INVISIBLE);
+        linearLayoutScrollTags.setVisibility(View.GONE);
+    }
+
+    private void addTags(Tag tag) {
+        userAddedTag = false;
+        editTextTags.setText(tag.text);
+        editTextTags.setSelection(tag.text.length());
+        populateTags(editTextTags.getText().toString(), userAddedTag);
+        editTextTags.setText("");
+        tagViewPopulate.addTags(new ArrayList<Tag>());
+        MainActivity.hideKeyboard(getActivity());
+        linearLayoutScrollTags.setVisibility(View.INVISIBLE);
+        linearLayoutScrollTags.setVisibility(View.GONE);//to set cursor position
     }
 
     public void getMapReady() {
@@ -474,7 +425,7 @@ public class FileComplaintFragment extends Fragment {
                     @Override
                     public void onFailure(Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getContext(), "Something went wrong while getting your location \n"+ e, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Something went wrong while getting your location \n" + e, Toast.LENGTH_LONG).show();
                     }
                 });
                 GPSIsSetup = true;
@@ -576,6 +527,32 @@ public class FileComplaintFragment extends Fragment {
         }
     }
 
+    private void autoLocation() {
+        final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setCountry("IN")
+                .build();
+        autocompleteFragment.setFilter(typeFilter);
+        autocompleteFragment.setHint("Enter Location");
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+
+            @Override
+            public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
+                Location = place.getLatLng();
+                String Name = place.getName().toString();
+                Address = place.getAddress().toString();
+                updateMap(Location, Name, Address, cursor); //on selecting the place will automatically shows the Details on the map.
+                cursor++;
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.i(TAG, "An error occurred: " + status);
+
+            }
+        });
+    }
+
     private void populateTags(String cs, Boolean userAddedTag) {
         if (!(cs.isEmpty())) {
 
@@ -590,7 +567,7 @@ public class FileComplaintFragment extends Fragment {
             }
             tagView.addTags(tags);
 
-            for (int i = 0; i < tagList2.size(); i++){
+            for (int i = 0; i < tagList2.size(); i++) {
                 if (userAddedTag && tagList2.get(i).getName() == cs)
                     tagList2.get(i).setName(cs + " (U)");
             }
@@ -648,6 +625,32 @@ public class FileComplaintFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void deleteTag(final TagView tagView, final Tag tag, final int i) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+        builder.setMessage("\"" + tag.text + "\" will be deleted. Are you sure?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                tagView.remove(i);
+                tagList2.remove(i);
+                Log.i(TAG, "tagList2: " + tagList2.toString());
+                Toast.makeText(getContext(), "\"" + tag.text + "\" deleted", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("No", null);
+        builder.show();
+    }
+
+    private void submitComplaint() {
+        Tags = new ArrayList<>();
+        for (int i = 0; i < tagList2.size(); i++) {
+            Tags.add(tagList2.get(i).getName());
+            linearLayoutScrollTags.setVisibility(View.INVISIBLE);
+            linearLayoutScrollTags.setVisibility(View.GONE);
+        }
+        addComplaint();
     }
 
     private void addComplaint() {

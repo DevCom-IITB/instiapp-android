@@ -27,8 +27,11 @@ public class ComplaintDetailsPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return ComplaintDetailsFragment.getInstance(sessionid, complaintid, userid, userProfileUrl);
-           /* case 1:
-                return RelevantComplaintsFragment.getInstance(sessionid, userid);*/
+           /*
+            For version 2:
+            case 1:
+               return RelevantComplaintsFragment.getInstance(sessionid, userid);
+           */
             default:
                 return ComplaintDetailsFragment.getInstance(sessionid, complaintid, userid, userProfileUrl);
         }
@@ -46,6 +49,6 @@ public class ComplaintDetailsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 1;
     }
 }

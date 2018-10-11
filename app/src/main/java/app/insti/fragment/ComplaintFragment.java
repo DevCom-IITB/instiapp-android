@@ -107,7 +107,6 @@ public class ComplaintFragment extends Fragment {
         if (viewPager != null) {
             try {
                 ImageViewPagerAdapter imageFragmentPagerAdapter = new ImageViewPagerAdapter(getChildFragmentManager(), detailedComplaint);
-
                 viewPager.setAdapter(imageFragmentPagerAdapter);
                 circleIndicator.setViewPager(viewPager);
                 imageFragmentPagerAdapter.registerDataSetObserver(circleIndicator.getDataSetObserver());
@@ -122,7 +121,6 @@ public class ComplaintFragment extends Fragment {
     }
 
     private void initTabViews(final Venter.Complaint detailedComplaint) {
-
         try {
             if (detailedComplaint != null) {
                 viewPager = mview.findViewById(R.id.tab_viewpager_details);

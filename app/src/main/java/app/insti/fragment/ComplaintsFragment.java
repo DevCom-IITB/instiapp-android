@@ -36,9 +36,9 @@ public class ComplaintsFragment extends BaseFragment {
         userProfileUrl = bundle.getString(Constants.CURRENT_USER_PROFILE_PICTURE);
         CollapsingToolbarLayout collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.tab_viewpager);
+        ViewPager viewPager = view.findViewById(R.id.tab_viewpager);
 
-        slidingTabLayout = (TabLayout) view.findViewById(R.id.sliding_tab_layout);
+        slidingTabLayout = view.findViewById(R.id.sliding_tab_layout);
 
         Button buttonVentIssues = view.findViewById(R.id.buttonVentIssues);
 

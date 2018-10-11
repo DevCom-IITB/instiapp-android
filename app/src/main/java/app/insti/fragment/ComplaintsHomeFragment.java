@@ -54,9 +54,9 @@ public class ComplaintsHomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_complaints_home, container, false);
-        RecyclerView recyclerViewHome = (RecyclerView) view.findViewById(R.id.recyclerViewHome);
+        RecyclerView recyclerViewHome = view.findViewById(R.id.recyclerViewHome);
         homeListAdapter = new ComplaintsAdapter(getActivity(), sID, uID, uProfileUrl);
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        swipeContainer = view.findViewById(R.id.swipeContainer);
         error_message_home = view.findViewById(R.id.error_message_home);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());

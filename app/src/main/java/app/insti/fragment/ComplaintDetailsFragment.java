@@ -3,6 +3,7 @@ package app.insti.fragment;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,8 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -24,8 +27,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
@@ -37,6 +42,7 @@ import app.insti.api.model.Venter;
 import app.insti.api.request.CommentCreateRequest;
 import app.insti.utils.DateTimeUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,6 +73,8 @@ public class ComplaintDetailsFragment extends Fragment {
     private List<Venter.Comment> commentList;
     private List<User> upVotesList;
     private LinearLayout linearLayoutTags;
+    private ScrollView layoutUpVotes;
+    private NestedScrollView nestedScrollView;
 
     public static ComplaintDetailsFragment getInstance(String sessionid, String complaintid, String userid, String userProfileUrl) {
         sId = sessionid;
@@ -124,10 +132,12 @@ public class ComplaintDetailsFragment extends Fragment {
                 upVote(detailedComplaint);
             }
         });
+
         return view;
     }
 
     private void initialiseViews(View view) {
+        nestedScrollView = view.findViewById(R.id.nestedScrollViewComplaintDetail);
         textViewUserName = view.findViewById(R.id.textViewUserName);
         textViewReportDate = view.findViewById(R.id.textViewReportDate);
         textViewLocation = view.findViewById(R.id.textViewLocation);
@@ -137,6 +147,7 @@ public class ComplaintDetailsFragment extends Fragment {
         textViewVoteUpLabel = view.findViewById(R.id.up_vote_label);
         tagsLayout = view.findViewById(R.id.tags_layout);
         linearLayoutTags = view.findViewById(R.id.linearLayoutTags);
+        layoutUpVotes = view.findViewById(R.id.layoutUpVotes);
         recyclerViewComments = view.findViewById(R.id.recyclerViewComments);
         recyclerViewUpVotes = view.findViewById(R.id.recyclerViewUpVotes);
         editTextComment = view.findViewById(R.id.edit_comment);
@@ -220,7 +231,7 @@ public class ComplaintDetailsFragment extends Fragment {
 
     private void addNewComment(Venter.Comment newComment) {
         commentList.add(newComment);
-        commentListAdapter.setCommentList(commentList);
+        commentListAdapter.setCommentList(commentList, textViewCommentLabel);
         commentListAdapter.notifyItemInserted(commentList.indexOf(newComment));
         commentListAdapter.notifyItemRangeChanged(0, commentListAdapter.getItemCount());
         textViewCommentLabel.setText("Comments (" + commentList.size() + ")");
@@ -235,7 +246,7 @@ public class ComplaintDetailsFragment extends Fragment {
     private void addCommentsToView(Venter.Complaint detailedComplaint) {
         for (Venter.Comment comment : detailedComplaint.getComment())
             commentList.add(comment);
-        commentListAdapter.setCommentList(commentList);
+        commentListAdapter.setCommentList(commentList, textViewCommentLabel);
         commentListAdapter.notifyDataSetChanged();
     }
 
@@ -249,6 +260,7 @@ public class ComplaintDetailsFragment extends Fragment {
                         Venter.Complaint complaint = response.body();
                         detailedComplaint.setVoteCount(1);
                         addVotesToView(complaint);
+                        onUpvote();
                     }
                 }
 
@@ -286,6 +298,15 @@ public class ComplaintDetailsFragment extends Fragment {
         textViewVoteUpLabel.setText("Up Votes (" + detailedComplaint.getUsersUpVoted().size() + ")");
     }
 
+    private void onUpvote(){
+        layoutUpVotes.post(new Runnable() {
+            @Override
+            public void run() {
+                nestedScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
+    }
+
     private void addTagsToView(Venter.Complaint detailedComplaint) {
 
         for (Venter.TagUri tagUri : detailedComplaint.getTags()) {
@@ -305,7 +326,6 @@ public class ComplaintDetailsFragment extends Fragment {
             textViewTags.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.colorTagGreen)));
             textViewTags.setTextColor(getContext().getResources().getColor(R.color.primaryTextColor));
             tagsLayout.setLayoutParams(layoutParams);
-
             tagsLayout.addView(textViewTags);
         }
     }

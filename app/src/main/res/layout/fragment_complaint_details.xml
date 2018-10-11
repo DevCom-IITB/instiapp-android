@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:id="@+id/nestedScrollViewComplaintDetail">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -107,19 +108,11 @@
 
             </LinearLayout>
 
-            <!--<com.cunoraz.tagview.TagView-->
-                <!--android:id="@+id/tag_group"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_margin="10dp"-->
-                <!--android:clickable="false"-->
-                <!--android:longClickable="false"/>-->
-
             <LinearLayout
                 android:id="@+id/tags_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"></LinearLayout>
+                android:orientation="vertical"/>
 
 
         </LinearLayout>
@@ -222,51 +215,29 @@
 
             </LinearLayout>
 
-            <android.support.design.widget.CoordinatorLayout
+            <ScrollView
                 android:id="@+id/layoutUpVotes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:layout_marginLeft="6dp"
+                android:background="@android:color/white">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerViewUpVotes"
+                <android.support.design.widget.CoordinatorLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
-            </android.support.design.widget.CoordinatorLayout>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerViewUpVotes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </android.support.design.widget.CoordinatorLayout>
+
+            </ScrollView>
 
         </LinearLayout>
-
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp">
-
-                <TextView
-                    android:id="@+id/up_vote_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutVotes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-            </LinearLayout>
-
-        </LinearLayout>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -286,7 +257,6 @@
                 android:textColor="@color/secondaryTextColor" />
 
         </LinearLayout>
-
 
     </LinearLayout>
 

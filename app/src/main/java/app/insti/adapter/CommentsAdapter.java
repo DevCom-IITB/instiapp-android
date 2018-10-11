@@ -43,6 +43,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private LayoutInflater inflater;
     private String sessionId, userId;
     private Fragment fragment;
+    private TextView textViewCommentLabel;
 
     private List<Venter.Comment> commentList = new ArrayList<>();
 
@@ -122,6 +123,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                 notifyDataSetChanged();
                                                 notifyItemRemoved(position);
                                                 notifyItemRangeChanged(position, commentList.size() - position);
+                                                textViewCommentLabel.setText("Comments (" + commentList.size() + ")");
                                             } else {
                                                 Toast.makeText(context, "You can't delete this comment", Toast.LENGTH_SHORT).show();
                                             }
@@ -181,7 +183,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return commentList.size();
     }
 
-    public void setCommentList(List<Venter.Comment> commentList) {
+    public void setCommentList(List<Venter.Comment> commentList, TextView textViewCommentLabel) {
         this.commentList = commentList;
+        this.textViewCommentLabel = textViewCommentLabel;
     }
 }

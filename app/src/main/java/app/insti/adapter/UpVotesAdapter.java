@@ -23,9 +23,7 @@ public class UpVotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final String TAG = CommentsAdapter.class.getSimpleName();
     private LayoutInflater inflater;
     private Fragment fragment;
-
     private List<User> userList = new ArrayList<>();
-
 
     public UpVotesAdapter(Fragment fragment, Context context) {
         inflater = LayoutInflater.from(context);
