@@ -1,6 +1,5 @@
 package app.insti.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -25,8 +24,6 @@ import retrofit2.Response;
 public class ComplaintsMeFragment extends Fragment {
 
     private static String uID, sID, uProfileUrl;
-    private Activity activity;
-    private RecyclerView recyclerViewMe;
     private ComplaintsAdapter meListAdapter;
     private TextView error_message_me;
     private SwipeRefreshLayout swipeContainer;
@@ -57,12 +54,12 @@ public class ComplaintsMeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_complaints_me, container, false);
-        recyclerViewMe = view.findViewById(R.id.recyclerViewMe);
+        RecyclerView recyclerViewMe = view.findViewById(R.id.recyclerViewMe);
         meListAdapter = new ComplaintsAdapter(getActivity(), sID, uID, uProfileUrl);
         swipeContainer = view.findViewById(R.id.swipeContainer);
         error_message_me = view.findViewById(R.id.error_message_me);
 
-        LinearLayoutManager llm = new LinearLayoutManager(activity);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerViewMe.setLayoutManager(llm);
         recyclerViewMe.setHasFixedSize(true);
         recyclerViewMe.setAdapter(meListAdapter);

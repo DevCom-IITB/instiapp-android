@@ -1,11 +1,9 @@
 package app.insti.adapter;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import app.insti.api.model.Venter;
 import app.insti.fragment.ComplaintDetailsFragment;
 
 /**
@@ -14,14 +12,10 @@ import app.insti.fragment.ComplaintDetailsFragment;
 
 public class ComplaintDetailsPagerAdapter extends FragmentPagerAdapter {
 
-    private Venter.Complaint detailedComplaint;
-    private Context context;
     private String sessionid, complaintid, userid, userProfileUrl;
 
-    public ComplaintDetailsPagerAdapter(FragmentManager fm, Venter.Complaint detailedComplaint, Context context, String sessionid, String complaintid, String userid, String userProfileUrl) {
+    public ComplaintDetailsPagerAdapter(FragmentManager fm, String sessionid, String complaintid, String userid, String userProfileUrl) {
         super(fm);
-        this.context = context;
-        this.detailedComplaint = detailedComplaint;
         this.sessionid = sessionid;
         this.complaintid = complaintid;
         this.userid = userid;

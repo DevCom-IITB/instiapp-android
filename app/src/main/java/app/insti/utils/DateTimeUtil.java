@@ -7,8 +7,6 @@ import java.util.concurrent.TimeUnit;
 
 public class DateTimeUtil {
 
-    private static String time_ago = "";
-
     public static String getDate(String dtStart) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+05:30'");
         try {
@@ -18,6 +16,7 @@ public class DateTimeUtil {
             long seconds = TimeUnit.MILLISECONDS.toSeconds(now.getTime() - date.getTime());
             long minutes = TimeUnit.MILLISECONDS.toMinutes(now.getTime() - date.getTime());
             long hours = TimeUnit.MILLISECONDS.toHours(now.getTime() - date.getTime());
+            String time_ago = "";
             if (seconds <= 0) {
                 return time_ago = "now";
             } else if (seconds == 1){

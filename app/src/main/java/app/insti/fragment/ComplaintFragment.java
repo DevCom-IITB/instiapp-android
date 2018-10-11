@@ -15,7 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import java.util.Objects;
+
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.adapter.ComplaintDetailsPagerAdapter;
@@ -35,11 +37,10 @@ public class ComplaintFragment extends Fragment {
     private ViewPager viewPager;
     private View mview;
     private String complaintId, sessionID, userId, userProfileUrl;
-    private ComplaintDetailsPagerAdapter complaintDetailsPagerAdapter;
     private CircleIndicator circleIndicator;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_complaint, container, false);
 
@@ -60,13 +61,11 @@ public class ComplaintFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Bundle bundle = getArguments();
-        complaintId = bundle.getString("id");
-        sessionID = bundle.getString("sessionId");
-        userId = bundle.getString("userId");
-        userProfileUrl = bundle.getString("userProfileUrl");
-
         if (bundle != null) {
-            Log.i(TAG, "bundle != null");
+            complaintId = bundle.getString("id");
+            sessionID = bundle.getString("sessionId");
+            userId = bundle.getString("userId");
+            userProfileUrl = bundle.getString("userProfileUrl");
             callServerToGetDetailedComplaint();
         }
     }
@@ -79,11 +78,13 @@ public class ComplaintFragment extends Fragment {
             public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                 if (response.body() != null) {
                     Venter.Complaint complaint = response.body();
-                    for (User currentUser : complaint.getUsersUpVoted()) {
-                        if (currentUser.getUserID().equals(userId)) {
-                            complaint.setVoteCount(1);
-                        } else {
-                            complaint.setVoteCount(0);
+                    if (complaint != null) {
+                        for (User currentUser : complaint.getUsersUpVoted()) {
+                            if (currentUser.getUserID().equals(userId)) {
+                                complaint.setVoteCount(1);
+                            } else {
+                                complaint.setVoteCount(0);
+                            }
                         }
                     }
                     initViewPagerForImages(complaint);
@@ -110,7 +111,7 @@ public class ComplaintFragment extends Fragment {
                 viewPager.setAdapter(imageFragmentPagerAdapter);
                 circleIndicator.setViewPager(viewPager);
                 imageFragmentPagerAdapter.registerDataSetObserver(circleIndicator.getDataSetObserver());
-                viewPager.getAdapter().notifyDataSetChanged();
+                Objects.requireNonNull(viewPager.getAdapter()).notifyDataSetChanged();
                 synchronized (viewPager) {
                     viewPager.notifyAll();
                 }
@@ -127,7 +128,7 @@ public class ComplaintFragment extends Fragment {
                 viewPager = mview.findViewById(R.id.tab_viewpager_details);
                 if (viewPager != null) {
                     Log.i(TAG, "viewPager != null");
-                    complaintDetailsPagerAdapter = new ComplaintDetailsPagerAdapter(getChildFragmentManager(), detailedComplaint, getContext(), sessionID, complaintId, userId, userProfileUrl);
+                    ComplaintDetailsPagerAdapter complaintDetailsPagerAdapter = new ComplaintDetailsPagerAdapter(getChildFragmentManager(), sessionID, complaintId, userId, userProfileUrl);
 
                     viewPager.setAdapter(complaintDetailsPagerAdapter);
                     slidingTabLayout.setupWithViewPager(viewPager);
@@ -145,7 +146,7 @@ public class ComplaintFragment extends Fragment {
 
                                 final TypedArray styledAttributes = Objects.requireNonNull(ComplaintFragment.this.getActivity()).getTheme().obtainStyledAttributes(
                                         new int[]{android.R.attr.actionBarSize});
-                                int mActionBarSize = (int) styledAttributes.getDimension(0, 0);
+//                                int mActionBarSize = (int) styledAttributes.getDimension(0, 0); For future Uae
                                 styledAttributes.recycle();
 
 //                                Replace second parameter to mActionBarSize after adding "Relevant Complaints"
@@ -170,12 +171,12 @@ public class ComplaintFragment extends Fragment {
 
                         @Override
                         public void onTabUnselected(TabLayout.Tab tab) {
-
+                            //on Tab Unselected
                         }
 
                         @Override
                         public void onTabReselected(TabLayout.Tab tab) {
-
+                            //on Tab Reselected
                         }
                     });
 

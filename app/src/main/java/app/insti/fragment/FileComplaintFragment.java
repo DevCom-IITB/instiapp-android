@@ -524,6 +524,7 @@ public class FileComplaintFragment extends Fragment {
                             break;
                         default:
                             Toast.makeText(getContext(), getString(R.string.GPS_not_enables), Toast.LENGTH_LONG).show();
+                            break;
                     }
                 }
             }
@@ -753,7 +754,7 @@ public class FileComplaintFragment extends Fragment {
                     }
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                        startActivityForResult(intent, Constants.REQUEST_CAMERA_INT_ID);
+                        startActivityForResult(intent, REQUEST_CAMERA_INT_ID);
                     }
                 } else if (items[item].equals(getString(R.string.choose_from_library))) {
                     if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {

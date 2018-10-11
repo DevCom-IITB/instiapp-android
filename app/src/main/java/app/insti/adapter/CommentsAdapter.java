@@ -1,6 +1,5 @@
 package app.insti.adapter;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -43,19 +42,15 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
     private LayoutInflater inflater;
     private String sessionId, userId;
-    private Activity activity;
-    private TextView textViewCommentLabel;
     private Fragment fragment;
 
     private List<Venter.Comment> commentList = new ArrayList<>();
 
-    public CommentsAdapter(Activity activity, Context context, String sessionId, String userId, TextView textViewCommentLabel, Fragment fragment) {
+    public CommentsAdapter(Context context, String sessionId, String userId, Fragment fragment) {
         this.context = context;
         this.sessionId = sessionId;
         this.userId = userId;
         inflater = LayoutInflater.from(context);
-        this.activity = activity;
-        this.textViewCommentLabel = textViewCommentLabel;
         this.fragment =fragment;
     }
 
@@ -68,7 +63,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView textViewComment;
         private final RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
 
-        public CommentsViewHolder(View itemView) {
+        CommentsViewHolder(View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.cardViewComment);
             textViewName = itemView.findViewById(R.id.textViewUserComment);
@@ -77,7 +72,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             circleImageView = itemView.findViewById(R.id.circleImageViewUserImage);
         }
 
-        public void bindHolder(final int position) {
+        void bindHolder(final int position) {
 
             final Venter.Comment comment = commentList.get(position);
             try {
@@ -89,7 +84,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             try {
                 textViewName.setText(comment.getUser().getUserName());
-                String time = DateTimeUtil.getDate(comment.getTime().toString());
+                String time = DateTimeUtil.getDate(comment.getTime());
                 Log.i(TAG, "time: " + time);
                 textViewCommentTime.setText(time);
                 textViewComment.setText(comment.getText());
@@ -111,9 +106,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.copy_comment_option:
-                                    ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
+                                    ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                                     ClipData clipData = ClipData.newPlainText("Text Copied", textViewComment.getText().toString());
-                                    clipboardManager.setPrimaryClip(clipData);
+                                    if (clipboardManager != null) {
+                                        clipboardManager.setPrimaryClip(clipData);
+                                    }
                                     Toast.makeText(context, "Comment Copied", Toast.LENGTH_SHORT).show();
                                     break;
                                 case R.id.delete_comment_option:
@@ -138,10 +135,13 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     break;
 
                                 default:
-                                    clipboardManager = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
+                                    clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                                     clipData = ClipData.newPlainText("Text Copied", textViewComment.getText().toString());
-                                    clipboardManager.setPrimaryClip(clipData);
+                                    if (clipboardManager != null) {
+                                        clipboardManager.setPrimaryClip(clipData);
+                                    }
                                     Toast.makeText(context, "Comment Copied", Toast.LENGTH_SHORT).show();
+                                    break;
                             }
                             return true;
                         }

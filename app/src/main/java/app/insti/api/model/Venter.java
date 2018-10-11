@@ -37,21 +37,6 @@ public class Venter {
         private List<Comment> comment;
         private int voteCount;
 
-        public Complaint(@NonNull String complaintID, User complaintCreatedBy, String description, String complaintReportDate, String status, Float latitude, Float longitude, String locationDescription, List<TagUri> tags, List<User> usersUpVoted, List<String> images, List<Comment> comment) {
-            this.complaintID = complaintID;
-            this.complaintCreatedBy = complaintCreatedBy;
-            this.description = description;
-            this.complaintReportDate = complaintReportDate;
-            this.status = status;
-            this.latitude = latitude;
-            this.longitude = longitude;
-            this.locationDescription = locationDescription;
-            this.tags = tags;
-            this.usersUpVoted = usersUpVoted;
-            this.images = images;
-            this.comment = comment;
-        }
-
         @NonNull
         public String getComplaintID() {
             return complaintID;

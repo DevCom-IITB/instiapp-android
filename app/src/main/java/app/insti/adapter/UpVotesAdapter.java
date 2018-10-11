@@ -1,6 +1,5 @@
 package app.insti.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -23,25 +21,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UpVotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = CommentsAdapter.class.getSimpleName();
-
-    private Context context;
     private LayoutInflater inflater;
-    private String sessionId, userId;
-    private Activity activity;
-    private TextView textViewUserUpVoteName;
     private Fragment fragment;
-    private LinearLayout layoutUpVote;
 
     private List<User> userList = new ArrayList<>();
 
 
-    public UpVotesAdapter(Activity activity, Context context, String sessionId, String userId, TextView textViewUserUpVoteName, Fragment fragment) {
-        this.context = context;
-        this.sessionId = sessionId;
-        this.userId = userId;
+    public UpVotesAdapter(Fragment fragment, Context context) {
         inflater = LayoutInflater.from(context);
-        this.activity = activity;
-        this.textViewUserUpVoteName = textViewUserUpVoteName;
         this.fragment = fragment;
     }
 
@@ -51,7 +38,7 @@ public class UpVotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private CircleImageView circleImageView;
         private TextView textViewName;
 
-        public UpVotesViewHolder(View itemView) {
+        UpVotesViewHolder(View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.cardViewUpVote);
             textViewName = itemView.findViewById(R.id.textViewUserUpVoteName);
@@ -64,7 +51,7 @@ public class UpVotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             });
         }
 
-        public void bindHolder(final int position) {
+        void bindHolder(final int position) {
 
             final User user = userList.get(position);
             try {
@@ -82,9 +69,7 @@ public class UpVotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = inflater.inflate(R.layout.vote_up_card, viewGroup, false);
-        final UpVotesViewHolder upVotesViewHolder = new UpVotesViewHolder(view);
-        layoutUpVote = view.findViewById(R.id.layoutUpVote);
-        return upVotesViewHolder;
+        return new UpVotesViewHolder(view);
     }
 
     @Override

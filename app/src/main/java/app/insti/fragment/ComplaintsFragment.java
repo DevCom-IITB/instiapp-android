@@ -1,6 +1,5 @@
 package app.insti.fragment;
 
-import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -22,11 +21,7 @@ import app.insti.adapter.ComplaintFragmentViewPagerAdapter;
 public class ComplaintsFragment extends BaseFragment {
 
     private String userID, userProfileUrl;
-    private Context context;
-    private Button buttonVentIssues;
-    private ViewPager viewPager;
     private TabLayout slidingTabLayout;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,15 +34,13 @@ public class ComplaintsFragment extends BaseFragment {
         Bundle bundle = getArguments();
         userID = bundle.getString(Constants.USER_ID);
         userProfileUrl = bundle.getString(Constants.CURRENT_USER_PROFILE_PICTURE);
-        collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
+        CollapsingToolbarLayout collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
-        viewPager = (ViewPager) view.findViewById(R.id.tab_viewpager);
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.tab_viewpager);
 
         slidingTabLayout = (TabLayout) view.findViewById(R.id.sliding_tab_layout);
 
-        context = getContext();
-
-        buttonVentIssues = view.findViewById(R.id.buttonVentIssues);
+        Button buttonVentIssues = view.findViewById(R.id.buttonVentIssues);
 
         buttonVentIssues.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,8 +53,6 @@ public class ComplaintsFragment extends BaseFragment {
             }
         });
 
-        viewPager = view.findViewById(R.id.tab_viewpager);
-
         slidingTabLayout = view.findViewById(R.id.sliding_tab_layout);
 
         if (viewPager != null) {
@@ -73,7 +64,7 @@ public class ComplaintsFragment extends BaseFragment {
 
     private void setupViewPager(final ViewPager viewPager) {
 
-        viewPager.setAdapter(new ComplaintFragmentViewPagerAdapter(getChildFragmentManager(), getContext(), userID, getArguments().getString(Constants.SESSION_ID), userProfileUrl));
+        viewPager.setAdapter(new ComplaintFragmentViewPagerAdapter(getChildFragmentManager(), userID, getArguments().getString(Constants.SESSION_ID), userProfileUrl));
         slidingTabLayout.setupWithViewPager(viewPager);
         slidingTabLayout.post(new Runnable() {
             @Override

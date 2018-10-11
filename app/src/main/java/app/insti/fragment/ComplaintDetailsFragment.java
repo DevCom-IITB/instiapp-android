@@ -67,8 +67,6 @@ public class ComplaintDetailsFragment extends Fragment {
     private List<Venter.Comment> commentList;
     private List<User> upVotesList;
     private LinearLayout linearLayoutTags;
-    private TextView textViewUserUpVoteName;
-    private List<String> tagsList;
 
     public static ComplaintDetailsFragment getInstance(String sessionid, String complaintid, String userid, String userProfileUrl) {
         sId = sessionid;
@@ -87,10 +85,9 @@ public class ComplaintDetailsFragment extends Fragment {
 
         initialiseViews(view);
         upVotesList = new ArrayList<>();
-        tagsList = new ArrayList<>();
-        commentListAdapter = new CommentsAdapter(getActivity(), getContext(), sId, uId, textViewCommentLabel, this);
+        commentListAdapter = new CommentsAdapter(getContext(), sId, uId, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        upVotesAdapter = new UpVotesAdapter(getActivity(), getContext(), sId, uId, textViewUserUpVoteName, this);
+        upVotesAdapter = new UpVotesAdapter(this, getContext());
         recyclerViewComments.setLayoutManager(linearLayoutManager);
         recyclerViewUpVotes.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewComments.setHasFixedSize(true);

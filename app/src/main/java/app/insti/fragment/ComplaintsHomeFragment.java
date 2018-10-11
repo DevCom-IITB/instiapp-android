@@ -1,6 +1,5 @@
 package app.insti.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -24,9 +23,7 @@ import retrofit2.Response;
 
 public class ComplaintsHomeFragment extends Fragment {
 
-    private Activity activity;
     private ComplaintsAdapter homeListAdapter;
-    private RecyclerView recyclerViewHome;
     private SwipeRefreshLayout swipeContainer;
 
     private static String TAG = ComplaintsHomeFragment.class.getSimpleName();
@@ -57,12 +54,12 @@ public class ComplaintsHomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_complaints_home, container, false);
-        recyclerViewHome = (RecyclerView) view.findViewById(R.id.recyclerViewHome);
+        RecyclerView recyclerViewHome = (RecyclerView) view.findViewById(R.id.recyclerViewHome);
         homeListAdapter = new ComplaintsAdapter(getActivity(), sID, uID, uProfileUrl);
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         error_message_home = view.findViewById(R.id.error_message_home);
 
-        LinearLayoutManager llm = new LinearLayoutManager(activity);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerViewHome.setLayoutManager(llm);
         recyclerViewHome.setHasFixedSize(true);
 

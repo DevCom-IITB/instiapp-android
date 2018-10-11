@@ -1,6 +1,5 @@
 package app.insti.adapter;
 
-import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,12 +14,10 @@ import app.insti.fragment.ComplaintsMeFragment;
 
 public class ComplaintFragmentViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private Context context;
     private String userID, sessionID, userProfileUrl;
 
-    public ComplaintFragmentViewPagerAdapter(FragmentManager fm, Context context, String userID, String sessionID, String userProfileUrl) {
+    public ComplaintFragmentViewPagerAdapter(FragmentManager fm,String userID, String sessionID, String userProfileUrl) {
         super(fm);
-        this.context = context;
         this.userID = userID;
         this.sessionID = sessionID;
         this.userProfileUrl = userProfileUrl;
