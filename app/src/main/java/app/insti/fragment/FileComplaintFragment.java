@@ -591,10 +591,8 @@ public class FileComplaintFragment extends Fragment {
             tagView.addTags(tags);
 
             for (int i = 0; i < tagList2.size(); i++){
-                if (userAddedTag == true){
-                    if (tagList2.get(i).getName() == cs)
-                        tagList2.get(i).setName(cs + " (U)");
-                }
+                if (userAddedTag && tagList2.get(i).getName() == cs)
+                    tagList2.get(i).setName(cs + " (U)");
             }
         } else {
             linearLayoutScrollTags.setVisibility(View.INVISIBLE);
