@@ -251,25 +251,34 @@
 
                     </LinearLayout>
 
-                    <ScrollView
-                        android:id="@+id/tags_layout"
+                    <LinearLayout
+                        android:id="@+id/linearLayoutScrollTags"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="6dp"
-                        android:background="@android:color/white"
-                        android:visibility="invisible">
+                        android:orientation="vertical">
 
-                        <com.cunoraz.tagview.TagView
-                            android:id="@+id/tag_populate"
+                        <ScrollView
+                            android:id="@+id/tags_layout"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="10dp" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="6dp"
+                            android:background="@android:color/white"
+                            android:visibility="invisible">
 
-                    </ScrollView>
+                            <com.cunoraz.tagview.TagView
+                                android:id="@+id/tag_populate"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="10dp" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="17dp" />
+                        </ScrollView>
+
+                        <View
+                            android:id="@+id/viewTagsLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="17dp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

@@ -1,6 +1,5 @@
 package app.insti.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -12,34 +11,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import java.util.List;
-
 import app.insti.R;
 import app.insti.Utils;
-import app.insti.activity.MainActivity;
-import app.insti.adapter.ComplaintsRecyclerViewAdapter;
+import app.insti.adapter.ComplaintsAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Venter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MeFragment extends Fragment {
+public class ComplaintsMeFragment extends Fragment {
 
-    static String uID, sID;
-    Activity activity;
-    RecyclerView recyclerViewMe;
-    ComplaintsRecyclerViewAdapter meListAdapter;
-    TextView error_message_me;
-    SwipeRefreshLayout swipeContainer;
-    private static String TAG = MeFragment.class.getSimpleName();
+    private static String uID, sID, uProfileUrl;
+    private ComplaintsAdapter meListAdapter;
+    private TextView error_message_me;
+    private SwipeRefreshLayout swipeContainer;
+    private static String TAG = ComplaintsMeFragment.class.getSimpleName();
     private boolean isCalled = false;
 
-    public static MeFragment getInstance(String sessionID, String userID) {
+    public static ComplaintsMeFragment getInstance(String sessionID, String userID, String userProfileUrl) {
         sID = sessionID;
         uID = userID;
-        return new MeFragment();
+        uProfileUrl = userProfileUrl;
+        return new ComplaintsMeFragment();
     }
 
     @Override
@@ -58,13 +53,13 @@ public class MeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_me, container, false);
-        recyclerViewMe = view.findViewById(R.id.recyclerViewMe);
-        meListAdapter = new ComplaintsRecyclerViewAdapter(getActivity(), sID, uID);
+        View view = inflater.inflate(R.layout.fragment_complaints_me, container, false);
+        RecyclerView recyclerViewMe = view.findViewById(R.id.recyclerViewMe);
+        meListAdapter = new ComplaintsAdapter(getActivity(), sID, uID, uProfileUrl);
         swipeContainer = view.findViewById(R.id.swipeContainer);
         error_message_me = view.findViewById(R.id.error_message_me);
 
-        LinearLayoutManager llm = new LinearLayoutManager(activity);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerViewMe.setLayoutManager(llm);
         recyclerViewMe.setHasFixedSize(true);
         recyclerViewMe.setAdapter(meListAdapter);

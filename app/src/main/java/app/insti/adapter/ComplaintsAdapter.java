@@ -2,36 +2,26 @@ package app.insti.adapter;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
-
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.api.RetrofitInterface;
+import app.insti.api.model.User;
 import app.insti.api.model.Venter;
-import app.insti.fragment.ComplaintDetailsFragment;
+import app.insti.fragment.ComplaintFragment;
 import app.insti.utils.DateTimeUtil;
-import app.insti.utils.GsonProvider;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,14 +30,15 @@ import retrofit2.Response;
  * Created by Shivam Sharma on 15-08-2018.
  */
 
-public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private LayoutInflater inflater;
     private Activity context;
     private String sessionID;
     private String userID;
-    private static final String TAG = ComplaintsRecyclerViewAdapter.class.getSimpleName();
-    List<Venter.Complaint> complaintList = new ArrayList<>();
+    private String userProfileUrl;
+    private static final String TAG = ComplaintsAdapter.class.getSimpleName();
+    private List<Venter.Complaint> complaintList = new ArrayList<>();
 
     public class ComplaintsViewHolder extends RecyclerView.ViewHolder {
 
@@ -61,9 +52,7 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         private TextView textViewUserName;
         private TextView textViewReportDate;
         private TextView textViewStatus;
-
         private int pos;
-        private int voteCount = 0;
 
         public ComplaintsViewHolder(View currentView) {
             super(currentView);
@@ -81,7 +70,6 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
         public void bindHolder(final int position) {
             this.pos = position;
-            Log.i(TAG, "json = " + GsonProvider.getGsonOutput().toJson(complaintList.get(pos)));
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -89,10 +77,11 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                     bundle.putString("id", complaintList.get(pos).getComplaintID());
                     bundle.putString("sessionId", sessionID);
                     bundle.putString("userId", userID);
-                    ComplaintDetailsFragment complaintDetailsFragment = new ComplaintDetailsFragment();
-                    complaintDetailsFragment.setArguments(bundle);
+                    bundle.putString("userProfileUrl", userProfileUrl);
+                    ComplaintFragment complaintFragment = new ComplaintFragment();
+                    complaintFragment.setArguments(bundle);
                     AppCompatActivity activity = (AppCompatActivity) context;
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_for_fragment, complaintDetailsFragment).addToBackStack(TAG).commit();
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_for_fragment, complaintFragment).addToBackStack(TAG).commit();
                 }
             });
 
@@ -124,18 +113,19 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                         bundle.putString("id", complaintList.get(pos).getComplaintID());
                         bundle.putString("sessionId", sessionID);
                         bundle.putString("userId", userID);
-                        ComplaintDetailsFragment complaintDetailsFragment = new ComplaintDetailsFragment();
-                        complaintDetailsFragment.setArguments(bundle);
+                        bundle.putString("userProfileUrl", userProfileUrl);
+                        ComplaintFragment complaintFragment = new ComplaintFragment();
+                        complaintFragment.setArguments(bundle);
                         AppCompatActivity activity = (AppCompatActivity) context;
-                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_for_fragment, complaintDetailsFragment).addToBackStack(TAG).commit();
+                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_for_fragment, complaintFragment).addToBackStack(TAG).commit();
                     }
                 });
                 buttonVotes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (voteCount == 0) {
+                        if (complaintList.get(position).getVoteCount() == 0) {
                             RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-                            retrofitInterface.upVote("sessionid=" + sessionID, complaintList.get(pos).getComplaintID()).enqueue(new Callback<Venter.Complaint>() {
+                            retrofitInterface.upVote("sessionid=" + sessionID, complaintList.get(pos).getComplaintID(), 1).enqueue(new Callback<Venter.Complaint>() {
                                 @Override
                                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                                     if (response.isSuccessful()) {
@@ -143,8 +133,7 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                                         if (complaint != null) {
                                             textViewVotes.setText(String.valueOf(complaint.getUsersUpVoted().size()));
                                         }
-                                        Toast.makeText(context, "You have Up Voted this complaint", Toast.LENGTH_SHORT).show();
-                                        voteCount++;
+                                        complaintList.get(position).setVoteCount(1);
                                     }
                                 }
 
@@ -153,8 +142,25 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                                     Log.i(TAG, "failure in up vote: " + t.toString());
                                 }
                             });
-                        } else {
-                            Toast.makeText(context, "You have already UpVoted this complaint", Toast.LENGTH_SHORT).show();
+                        } else if (complaintList.get(position).getVoteCount() == 1) {
+                            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+                            retrofitInterface.upVote("sessionid=" + sessionID, complaintList.get(pos).getComplaintID(), 0).enqueue(new Callback<Venter.Complaint>() {
+                                @Override
+                                public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
+                                    if (response.isSuccessful()) {
+                                        Venter.Complaint complaint = response.body();
+                                        if (complaint != null) {
+                                            textViewVotes.setText(String.valueOf(complaint.getUsersUpVoted().size()));
+                                        }
+                                        complaintList.get(position).setVoteCount(0);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
+                                    Log.i(TAG, "failure in up vote: " + t.toString());
+                                }
+                            });
                         }
                     }
                 });
@@ -164,10 +170,11 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         }
     }
 
-    public ComplaintsRecyclerViewAdapter(Activity ctx, String sessionID, String userID) {
+    public ComplaintsAdapter(Activity ctx, String sessionID, String userID, String userProfileUrl) {
         this.context = ctx;
         this.sessionID = sessionID;
         this.userID = userID;
+        this.userProfileUrl = userProfileUrl;
         inflater = LayoutInflater.from(ctx);
     }
 
@@ -181,6 +188,13 @@ public class ComplaintsRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+        List<User> userList = complaintList.get(position).getUsersUpVoted();
+        for (User user : userList) {
+            if (user.getUserID().equals(userID))
+               complaintList.get(position).setVoteCount(1);
+            else
+                complaintList.get(position).setVoteCount(0);
+        }
         if (viewHolder instanceof ComplaintsViewHolder) {
             ((ComplaintsViewHolder) viewHolder).bindHolder(position);
         }

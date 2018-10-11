@@ -20,7 +20,6 @@ public class ImageViewPagerAdapter extends FragmentPagerAdapter {
 
     private static final String TAG = ImageViewPagerAdapter.class.getSimpleName();
     private List<String> images = new ArrayList<>();
-    Venter.Complaint detailedComplaint;
 
     public ImageViewPagerAdapter(FragmentManager fragmentManager, List<String> images) {
         super(fragmentManager);
@@ -29,11 +28,7 @@ public class ImageViewPagerAdapter extends FragmentPagerAdapter {
 
     public ImageViewPagerAdapter(FragmentManager fragmentManager, Venter.Complaint detailedComplaint){
         super(fragmentManager);
-        this.detailedComplaint = detailedComplaint;
-
-        for (String image: detailedComplaint.getImages()){
-            images.add(image);
-        }
+        images.addAll(detailedComplaint.getImages());
     }
 
     @Override
@@ -54,7 +49,7 @@ public class ImageViewPagerAdapter extends FragmentPagerAdapter {
             return new AddImageFragment();
         }else {
             Log.i(TAG,"calling 2");
-            return ImageFragment.newInstance(images.get(position),position);
+            return ImageFragment.newInstance(images.get(position));
         }
     }
 }

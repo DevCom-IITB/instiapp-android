@@ -1,9 +1,6 @@
 package app.insti.api;
 
-import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -21,8 +18,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class LocationAPIUtils {
 
     private static final String TAG = LocationAPIUtils.class.getSimpleName();
-    GoogleMap googleMap;
-    MapView mMapView;
+    private GoogleMap googleMap;
+    private MapView mMapView;
 
     public LocationAPIUtils(GoogleMap googleMap, MapView mMapView) {
         this.googleMap = googleMap;

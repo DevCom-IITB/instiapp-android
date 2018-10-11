@@ -1,6 +1,5 @@
 package app.insti.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -12,35 +11,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import java.util.List;
-
 import app.insti.R;
 import app.insti.Utils;
-import app.insti.activity.MainActivity;
-import app.insti.adapter.ComplaintsRecyclerViewAdapter;
+import app.insti.adapter.ComplaintsAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Venter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFragment extends Fragment {
+public class ComplaintsHomeFragment extends Fragment {
 
-    Activity activity;
-    ComplaintsRecyclerViewAdapter homeListAdapter;
-    RecyclerView recyclerViewHome;
+    private ComplaintsAdapter homeListAdapter;
     private SwipeRefreshLayout swipeContainer;
 
-    private static String TAG = HomeFragment.class.getSimpleName();
+    private static String TAG = ComplaintsHomeFragment.class.getSimpleName();
     private boolean isCalled = false;
     private TextView error_message_home;
-    static String sID, uID;
+    private static String sID, uID, uProfileUrl;
 
-    public static HomeFragment getInstance(String sessionID, String userID) {
+    public static ComplaintsHomeFragment getInstance(String sessionID, String userID, String userProfileUrl) {
         sID = sessionID;
         uID = userID;
-        return new HomeFragment();
+        uProfileUrl = userProfileUrl;
+        return new ComplaintsHomeFragment();
     }
 
     @Override
@@ -58,13 +53,13 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        recyclerViewHome = (RecyclerView) view.findViewById(R.id.recyclerViewHome);
-        homeListAdapter = new ComplaintsRecyclerViewAdapter(getActivity(), sID, uID);
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        View view = inflater.inflate(R.layout.fragment_complaints_home, container, false);
+        RecyclerView recyclerViewHome = view.findViewById(R.id.recyclerViewHome);
+        homeListAdapter = new ComplaintsAdapter(getActivity(), sID, uID, uProfileUrl);
+        swipeContainer = view.findViewById(R.id.swipeContainer);
         error_message_home = view.findViewById(R.id.error_message_home);
 
-        LinearLayoutManager llm = new LinearLayoutManager(activity);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerViewHome.setLayoutManager(llm);
         recyclerViewHome.setHasFixedSize(true);
 
@@ -130,3 +125,4 @@ public class HomeFragment extends Fragment {
         homeListAdapter.notifyDataSetChanged();
     }
 }
+

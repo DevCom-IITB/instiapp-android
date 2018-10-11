@@ -4,59 +4,38 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
-import app.insti.api.model.User;
-
 /**
  * Created by Shivam Sharma on 04-09-2018.
  */
 
 public class Venter {
 
-    public Venter(){
-
-    }
-
-    public static class Complaint {
-        @NonNull
+    public static class Complaint{
         @SerializedName("id")
-        String complaintID;
+        private String complaintID;
         @SerializedName("created_by")
-        User complaintCreatedBy;
+        private User complaintCreatedBy;
         @SerializedName("description")
-        String description;
+        private String description;
         @SerializedName("report_date")
-        String complaintReportDate;
+        private String complaintReportDate;
         @SerializedName("status")
-        String status;
+        private String status;
         @SerializedName("latitude")
-        Float latitude;
+        private Float latitude;
         @SerializedName("longitude")
-        Float longitude;
+        private Float longitude;
         @SerializedName("location_description")
-        String locationDescription;
+        private String locationDescription;
         @SerializedName("tags")
-        List<TagUri> tags;
+        private List<TagUri> tags;
         @SerializedName("users_up_voted")
-        List<User> usersUpVoted;
+        private List<User> usersUpVoted;
         @SerializedName("images")
-        List<String> images;
+        private List<String> images;
         @SerializedName("comments")
-        List<Comment> comment;
-
-        public Complaint(@NonNull String complaintID, User complaintCreatedBy, String description, String complaintReportDate, String status, Float latitude, Float longitude, String locationDescription, List<TagUri> tags, List<User> usersUpVoted, List<String> images, List<Comment> comment) {
-            this.complaintID = complaintID;
-            this.complaintCreatedBy = complaintCreatedBy;
-            this.description = description;
-            this.complaintReportDate = complaintReportDate;
-            this.status = status;
-            this.latitude = latitude;
-            this.longitude = longitude;
-            this.locationDescription = locationDescription;
-            this.tags = tags;
-            this.usersUpVoted = usersUpVoted;
-            this.images = images;
-            this.comment = comment;
-        }
+        private List<Comment> comment;
+        private int voteCount;
 
         @NonNull
         public String getComplaintID() {
@@ -154,14 +133,21 @@ public class Venter {
         public void setComment(List<Comment> comment) {
             this.comment = comment;
         }
+
+        public int getVoteCount() {
+            return voteCount;
+        }
+
+        public void setVoteCount(int voteCount) {
+            this.voteCount = voteCount;
+        }
     }
 
     public static class TagUri {
-        @NonNull
         @SerializedName("id")
-        String id;
+        private String id;
         @SerializedName("tag_uri")
-        String tagUri;
+        private String tagUri;
 
         @NonNull
         public String getId() {
@@ -183,15 +169,14 @@ public class Venter {
 
     public static class Comment {
 
-        @NonNull
         @SerializedName("id")
-        String id;
+        private String id;
         @SerializedName("time")
-        String time;
+        private String time;
         @SerializedName("text")
-        String text;
+        private String text;
         @SerializedName("commented_by")
-        User commented_by;
+        private User commented_by;
 
         @NonNull
         public String getId() {
