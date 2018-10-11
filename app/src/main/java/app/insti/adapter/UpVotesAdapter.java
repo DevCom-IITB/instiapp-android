@@ -51,7 +51,7 @@ public class UpVotesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             });
         }
 
-        void bindHolder(final int position) {
+        private void bindHolder(final int position) {
 
             final User user = userList.get(position);
             try {

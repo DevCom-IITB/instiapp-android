@@ -72,7 +72,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             circleImageView = itemView.findViewById(R.id.circleImageViewUserImage);
         }
 
-        void bindHolder(final int position) {
+        private void bindHolder(final int position) {
 
             final Venter.Comment comment = commentList.get(position);
             try {

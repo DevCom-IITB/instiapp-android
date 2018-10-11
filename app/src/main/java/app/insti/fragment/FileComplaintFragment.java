@@ -127,6 +127,7 @@ public class FileComplaintFragment extends Fragment {
     private CollapsingToolbarLayout collapsing_toolbar;
     private LinearLayout linearLayoutAnalyse;
     private LinearLayout linearLayoutScrollTags;
+    private boolean userAddedTag =  false;
 
     public static FileComplaintFragment getMainActivity() {
         return mainactivity;
@@ -265,8 +266,10 @@ public class FileComplaintFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //Add Tags
-                populateTags(editTextTags.getText().toString());
+                userAddedTag = true;
+                populateTags(editTextTags.getText().toString(),userAddedTag);
                 editTextTags.setText("");
+                userAddedTag = false;
                 tagViewPopulate.addTags(new ArrayList<Tag>());
                 MainActivity.hideKeyboard(getActivity());
                 linearLayoutScrollTags.setVisibility(View.INVISIBLE);
@@ -354,9 +357,10 @@ public class FileComplaintFragment extends Fragment {
         tagViewPopulate.setOnTagClickListener(new TagView.OnTagClickListener() {
             @Override
             public void onTagClick(Tag tag, int i) {
+                userAddedTag = false;
                 editTextTags.setText(tag.text);
                 editTextTags.setSelection(tag.text.length());
-                populateTags(editTextTags.getText().toString());
+                populateTags(editTextTags.getText().toString(), userAddedTag);
                 editTextTags.setText("");
                 tagViewPopulate.addTags(new ArrayList<Tag>());
                 MainActivity.hideKeyboard(getActivity());
@@ -572,8 +576,9 @@ public class FileComplaintFragment extends Fragment {
         }
     }
 
-    private void populateTags(String cs) {
+    private void populateTags(String cs, Boolean userAddedTag) {
         if (!(cs.isEmpty())) {
+
             tagList2.add(new ComplaintTag(cs));
             ArrayList<Tag> tags = new ArrayList<>();
             Tag tag;
@@ -584,6 +589,13 @@ public class FileComplaintFragment extends Fragment {
                 tags.add(tag);
             }
             tagView.addTags(tags);
+
+            for (int i = 0; i < tagList2.size(); i++){
+                if (userAddedTag == true){
+                    if (tagList2.get(i).getName() == cs)
+                        tagList2.get(i).setName(cs + " (U)");
+                }
+            }
         } else {
             linearLayoutScrollTags.setVisibility(View.INVISIBLE);
             linearLayoutScrollTags.setVisibility(View.GONE);

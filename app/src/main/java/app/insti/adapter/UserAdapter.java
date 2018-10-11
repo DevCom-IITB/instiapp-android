@@ -73,8 +73,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView userName;
-        TextView role;
+        private TextView userName;
+        private TextView role;
         public ImageView image;
 
         public ViewHolder(View itemView) {

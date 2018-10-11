@@ -16,17 +16,16 @@ public class DateTimeUtil {
             long seconds = TimeUnit.MILLISECONDS.toSeconds(now.getTime() - date.getTime());
             long minutes = TimeUnit.MILLISECONDS.toMinutes(now.getTime() - date.getTime());
             long hours = TimeUnit.MILLISECONDS.toHours(now.getTime() - date.getTime());
-            String time_ago = "";
             if (seconds <= 0) {
-                return time_ago = "now";
+                return "now";
             } else if (seconds == 1){
-                return time_ago = seconds + " second ago";
+                return seconds + " second ago";
             } else if (seconds < 60 && seconds > 1) {
-                return time_ago = seconds + " seconds ago";
+                return seconds + " seconds ago";
             } else if (minutes == 1) {
-                return time_ago = minutes + " 1 minute ago";
+                return minutes + " 1 minute ago";
             } else if (minutes < 60 && minutes > 1) {
-                return time_ago = minutes + " minutes ago";
+                return minutes + " minutes ago";
             } else if (hours == 1) {
                 return hours + " hour ago";
             } else if (hours < 24 && hours > 1) {

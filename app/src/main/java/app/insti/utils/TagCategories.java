@@ -28,6 +28,13 @@ public class TagCategories {
             "Fencing issues",
             "Security issues",
             "Infrastructural defaults in the academic area",
-            "Cycle pooling issues"};
+            "Cycle pooling issues",
+            "Water coolers & Aqua Guards",
+            "Mess menu complaints",
+            "PHO cleaning complaints",
+            "PHO cleaning complaints",
+            "Hostel common room complaints",
+            "Hostel Stationary shop complaints"
+    };
 }
 

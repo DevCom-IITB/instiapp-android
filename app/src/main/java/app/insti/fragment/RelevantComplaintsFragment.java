@@ -14,7 +14,6 @@ import app.insti.adapter.ComplaintsAdapter;
 
 public class RelevantComplaintsFragment extends Fragment {
 
-    private ComplaintsAdapter relevantComplaintsAdapter;
     private SwipeRefreshLayout swipeContainer;
     private boolean isCalled = false;
     private static String sID, uID;
@@ -48,7 +47,7 @@ public class RelevantComplaintsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_relevant_complaints, container, false);
         RecyclerView recyclerViewRelevantComplaints = (RecyclerView) view.findViewById(R.id.recyclerViewRelevantComplaints);
-        relevantComplaintsAdapter = new ComplaintsAdapter(getActivity(), sID, uID, ""); //Change userProfileUrl to the current user Profile Pic
+        ComplaintsAdapter relevantComplaintsAdapter = new ComplaintsAdapter(getActivity(), sID, uID, ""); //Change userProfileUrl to the current user Profile Pic
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
