@@ -129,6 +129,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVie
                                                 notifyDataSetChanged();
                                                 notifyItemRemoved(position);
                                                 notifyItemRangeChanged(position, commentList.size() - position);
+                                                textViewCommentLabel.setText("Comments (" + commentList.size() + ")");
                                             } else {
                                                 Toast.makeText(context, "You can't delete this comment", Toast.LENGTH_SHORT).show();
                                             }

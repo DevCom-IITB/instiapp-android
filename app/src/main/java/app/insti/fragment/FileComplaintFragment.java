@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -125,7 +126,6 @@ public class FileComplaintFragment extends Fragment {
     String userId;
     View view;
     NestedScrollView nestedScrollView;
-    LinearLayout linearLayoutAddImage;
     private boolean GPSIsSetup = false;
     FusedLocationProviderClient mFusedLocationClient;
     ProgressDialog progressDialog;
@@ -209,10 +209,11 @@ public class FileComplaintFragment extends Fragment {
         viewPager = view.findViewById(R.id.complaint_image_view_pager);
         indicator = view.findViewById(R.id.indicator);
 
-        imageActionButton = view.findViewById(R.id.fabButton);
+        imageActionButton = view.findViewById(R.id.add_image);
         imageActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG, "@@@@@@@@ imageActionButton onClick");
                 giveOptionsToAddImage();
             }
         });
@@ -818,7 +819,7 @@ public class FileComplaintFragment extends Fragment {
         if (viewPager != null) {
             try {
                 imageViewPagerAdapter = new ImageViewPagerAdapter(getFragmentManager(), uploadedImagesUrl);
-                linearLayoutAddImage.setVisibility(View.GONE);
+                collapsing_toolbar.setVisibility(View.VISIBLE);
                 viewPager.setAdapter(imageViewPagerAdapter);
                 indicator.setViewPager(viewPager);
                 imageViewPagerAdapter.registerDataSetObserver(indicator.getDataSetObserver());
