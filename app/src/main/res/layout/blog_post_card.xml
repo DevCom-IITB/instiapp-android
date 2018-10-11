@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
         android:textColor="#000000"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/post_published"
@@ -23,7 +22,7 @@
         android:id="@+id/post_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="4dp"
         android:textColor="#000000"
         android:textColorLink="@color/colorPrimary" />
 </LinearLayout>
