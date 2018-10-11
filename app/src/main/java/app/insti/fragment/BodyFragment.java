@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -184,6 +185,7 @@ public class BodyFragment extends BackHandledFragment {
         if (!body.equals(min_body)) bodyDisplayed = true;
 
         TextView bodyName = (TextView) getView().findViewById(R.id.body_name);
+        TextView bodySubtitle = getView().findViewById(R.id.body_subtitle);
         TextView bodyDescription = (TextView) getView().findViewById(R.id.body_description);
         bodyPicture = (ImageView) getActivity().findViewById(R.id.body_picture);
         ImageButton webBodyButton = getActivity().findViewById(R.id.web_body_button);
@@ -198,6 +200,7 @@ public class BodyFragment extends BackHandledFragment {
 
         /* Set body information */
         bodyName.setText(body.getBodyName());
+        bodySubtitle.setText(body.getBodyShortDescription());
         Utils.loadImageWithPlaceholder(bodyPicture, body.getBodyImageURL());
 
         bodyPicture.setOnClickListener(new View.OnClickListener() {
