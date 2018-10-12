@@ -45,7 +45,7 @@
 
         <item
             android:id="@+id/nav_complaint"
-            android:icon="@drawable/baseline_description_black_48"
+            android:icon="@drawable/baseline_feedback_black_48"
             android:title="Complaints/Suggestions" />
 
         <item
