@@ -19,7 +19,6 @@ import java.util.Objects;
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.adapter.ComplaintDetailsPagerAdapter;
-import app.insti.adapter.ImageViewPagerAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.User;
 import app.insti.api.model.Venter;
