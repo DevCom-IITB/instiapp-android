@@ -41,12 +41,6 @@ public class ImageFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_image, container, false);
         ImageView imageView = view.findViewById(R.id.imageView);
         Picasso.get().load(image).into(imageView);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         return view;
     }
 }
