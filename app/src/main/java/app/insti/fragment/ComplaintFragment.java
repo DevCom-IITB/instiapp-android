@@ -38,12 +38,14 @@ public class ComplaintFragment extends Fragment {
     private View mview;
     private String complaintId, sessionID, userId, userProfileUrl;
     private CircleIndicator circleIndicator;
+    private AppBarLayout appBarLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_complaint, container, false);
 
+        appBarLayout = view.findViewById(R.id.appBar);
         LinearLayout imageViewHolder = view.findViewById(R.id.image_holder_view);
         CollapsingToolbarLayout.LayoutParams layoutParams = new CollapsingToolbarLayout.LayoutParams
                 (CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
@@ -89,6 +91,7 @@ public class ComplaintFragment extends Fragment {
                     }
                     initViewPagerForImages(complaint);
                     initTabViews(complaint);
+                    getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 }
             }
 
@@ -144,10 +147,8 @@ public class ComplaintFragment extends Fragment {
 
                                 final TypedArray styledAttributes = Objects.requireNonNull(ComplaintFragment.this.getActivity()).getTheme().obtainStyledAttributes(
                                         new int[]{android.R.attr.actionBarSize});
-//                                int mActionBarSize = (int) styledAttributes.getDimension(0, 0); For future Uae
                                 styledAttributes.recycle();
-
-//                                Replace second parameter to mActionBarSize after adding "Relevant Complaints"
+                                //Replace second parameter to mActionBarSize = (int) styledAttributes.getDimension(0, 0) after adding "Relevant Complaints"
                                 AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(AppBarLayout.LayoutParams.MATCH_PARENT,
                                         0);
                                 slidingTabLayout.setLayoutParams(layoutParams);
@@ -189,5 +190,11 @@ public class ComplaintFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        appBarLayout.setExpanded(true);
     }
 }

@@ -20,8 +20,8 @@
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:contentScrim="@android:color/white"
                 android:background="@color/colorWhite"
+                app:contentScrim="@android:color/white"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <LinearLayout
@@ -30,6 +30,7 @@
                     android:layout_height="2dp"
                     android:orientation="vertical"
                     app:layout_collapseMode="parallax">
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
@@ -37,7 +38,7 @@
                         <android.support.v4.view.ViewPager
                             android:id="@+id/complaint_image_view_pager"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                            android:layout_height="match_parent" />
 
                         <me.relex.circleindicator.CircleIndicator
                             android:id="@+id/indicator"
@@ -57,11 +58,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="bottom"
-                app:tabIndicatorColor="@color/colorPrimary"
                 android:background="@color/colorWhite"
-                app:tabTextColor="@color/colorGray"
+                app:tabIndicatorColor="@color/colorPrimary"
+                app:tabSelectedTextColor="#4a4a4a"
                 app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
-                app:tabSelectedTextColor="#4a4a4a"/>
+                app:tabTextColor="@color/colorGray" />
 
         </android.support.design.widget.AppBarLayout>
 
@@ -69,8 +70,21 @@
             android:id="@+id/tab_viewpager_details"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </android.support.design.widget.CoordinatorLayout>
+
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:theme="@style/BlueAccent" />
+    </RelativeLayout>
 
 </LinearLayout>
