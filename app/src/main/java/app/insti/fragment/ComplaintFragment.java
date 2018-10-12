@@ -106,7 +106,7 @@ public class ComplaintFragment extends Fragment {
         viewPager = mview.findViewById(R.id.complaint_image_view_pager);
         if (viewPager != null) {
             try {
-                ImageViewPagerAdapter imageFragmentPagerAdapter = new ImageViewPagerAdapter(getChildFragmentManager(), detailedComplaint);
+                ImageViewPagerAdapter imageFragmentPagerAdapter = new ImageViewPagerAdapter(getActivity(), detailedComplaint);
                 viewPager.setAdapter(imageFragmentPagerAdapter);
                 circleIndicator.setViewPager(viewPager);
                 imageFragmentPagerAdapter.registerDataSetObserver(circleIndicator.getDataSetObserver());

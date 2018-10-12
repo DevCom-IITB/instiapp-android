@@ -851,7 +851,7 @@ public class FileComplaintFragment extends Fragment {
 
         if (viewPager != null) {
             try {
-                imageViewPagerAdapter = new ImageViewPagerAdapter(getFragmentManager(), uploadedImagesUrl);
+                imageViewPagerAdapter = new ImageViewPagerAdapter(getActivity(), uploadedImagesUrl);
                 collapsing_toolbar.setVisibility(View.VISIBLE);
                 viewPager.setAdapter(imageViewPagerAdapter);
                 indicator.setViewPager(viewPager);
