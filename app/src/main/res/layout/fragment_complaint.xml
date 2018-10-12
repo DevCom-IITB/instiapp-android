@@ -80,6 +80,7 @@
         android:layout_height="match_parent"
         android:gravity="center">
 
+        <!--Progress Bar will show unless the data is being loaded-->
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

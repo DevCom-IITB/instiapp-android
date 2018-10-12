@@ -91,6 +91,7 @@ public class ComplaintFragment extends Fragment {
                     }
                     initViewPagerForImages(complaint);
                     initTabViews(complaint);
+                    //Make progress circle gone After loading
                     getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 }
             }
