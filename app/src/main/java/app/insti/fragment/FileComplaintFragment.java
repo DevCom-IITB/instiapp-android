@@ -280,7 +280,7 @@ public class FileComplaintFragment extends Fragment {
 
         viewPager = view.findViewById(R.id.complaint_image_view_pager);
         indicator = view.findViewById(R.id.indicator);
-        imageActionButton = view.findViewById(R.id.fabButton);
+        imageActionButton = view.findViewById(R.id.add_image);
         imageButtonAddTags = view.findViewById(R.id.imageButtonAddTags);
         editTextSuggestions = view.findViewById(R.id.editTextSuggestions);
         editTextLocationDetails = view.findViewById(R.id.editTextLocationDetails);

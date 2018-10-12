@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -14,18 +13,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import java.util.Objects;
 
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.adapter.ComplaintDetailsPagerAdapter;
-import app.insti.adapter.ImageViewPagerAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.User;
 import app.insti.api.model.Venter;
-import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,21 +33,13 @@ public class ComplaintFragment extends Fragment {
     private ViewPager viewPager;
     private View mview;
     private String complaintId, sessionID, userId, userProfileUrl;
-    private CircleIndicator circleIndicator;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_complaint, container, false);
 
-        LinearLayout imageViewHolder = view.findViewById(R.id.image_holder_view);
-        CollapsingToolbarLayout.LayoutParams layoutParams = new CollapsingToolbarLayout.LayoutParams
-                (CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
-                        getResources().getDisplayMetrics().heightPixels / 2);
-        imageViewHolder.setLayoutParams(layoutParams);
-
         slidingTabLayout = view.findViewById(R.id.sliding_tab_layout);
-        circleIndicator = view.findViewById(R.id.indicator);
         this.mview = view;
         return view;
     }
@@ -87,8 +75,9 @@ public class ComplaintFragment extends Fragment {
                             }
                         }
                     }
-                    initViewPagerForImages(complaint);
                     initTabViews(complaint);
+                    //Make progress circle gone After loading
+                    getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 }
             }
 
@@ -99,25 +88,6 @@ public class ComplaintFragment extends Fragment {
                 }
             }
         });
-    }
-
-    private void initViewPagerForImages(Venter.Complaint detailedComplaint) {
-
-        viewPager = mview.findViewById(R.id.complaint_image_view_pager);
-        if (viewPager != null) {
-            try {
-                ImageViewPagerAdapter imageFragmentPagerAdapter = new ImageViewPagerAdapter(getActivity(), detailedComplaint);
-                viewPager.setAdapter(imageFragmentPagerAdapter);
-                circleIndicator.setViewPager(viewPager);
-                imageFragmentPagerAdapter.registerDataSetObserver(circleIndicator.getDataSetObserver());
-                Objects.requireNonNull(viewPager.getAdapter()).notifyDataSetChanged();
-                synchronized (viewPager) {
-                    viewPager.notifyAll();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void initTabViews(final Venter.Complaint detailedComplaint) {
@@ -144,10 +114,8 @@ public class ComplaintFragment extends Fragment {
 
                                 final TypedArray styledAttributes = Objects.requireNonNull(ComplaintFragment.this.getActivity()).getTheme().obtainStyledAttributes(
                                         new int[]{android.R.attr.actionBarSize});
-//                                int mActionBarSize = (int) styledAttributes.getDimension(0, 0); For future Uae
                                 styledAttributes.recycle();
-
-//                                Replace second parameter to mActionBarSize after adding "Relevant Complaints"
+                                //Replace second parameter to mActionBarSize = (int) styledAttributes.getDimension(0, 0) after adding "Relevant Complaints"
                                 AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(AppBarLayout.LayoutParams.MATCH_PARENT,
                                         0);
                                 slidingTabLayout.setLayoutParams(layoutParams);

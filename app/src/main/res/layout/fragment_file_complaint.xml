@@ -113,7 +113,7 @@
                             android:visibility="gone" />
 
                         <android.support.v7.widget.AppCompatImageButton
-                            android:id="@+id/fabButton"
+                            android:id="@+id/add_image"
                             android:layout_width="40dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical|right"

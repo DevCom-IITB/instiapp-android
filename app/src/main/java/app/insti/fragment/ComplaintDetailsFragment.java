@@ -3,6 +3,7 @@ package app.insti.fragment;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,11 +31,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.CommentsAdapter;
+import app.insti.adapter.ImageViewPagerAdapter;
 import app.insti.adapter.UpVotesAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.User;
@@ -43,6 +46,7 @@ import app.insti.api.request.CommentCreateRequest;
 import app.insti.utils.DateTimeUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,6 +70,7 @@ public class ComplaintDetailsFragment extends Fragment {
     private RecyclerView recyclerViewComments;
     private RecyclerView recyclerViewUpVotes;
     private Button buttonVoteUp;
+    private View mView;
 
     private static String sId, cId, uId, uProfileUrl;
     private CommentsAdapter commentListAdapter;
@@ -75,6 +80,7 @@ public class ComplaintDetailsFragment extends Fragment {
     private LinearLayout linearLayoutTags;
     private ScrollView layoutUpVotes;
     private NestedScrollView nestedScrollView;
+    private CircleIndicator circleIndicator;
 
     public static ComplaintDetailsFragment getInstance(String sessionid, String complaintid, String userid, String userProfileUrl) {
         sId = sessionid;
@@ -133,6 +139,8 @@ public class ComplaintDetailsFragment extends Fragment {
             }
         });
 
+        mView = view;
+
         return view;
     }
 
@@ -154,6 +162,12 @@ public class ComplaintDetailsFragment extends Fragment {
         imageButtonSend = view.findViewById(R.id.send_comment);
         circleImageViewCommentUserImage = view.findViewById(R.id.comment_user_image);
         buttonVoteUp = view.findViewById(R.id.buttonVoteUp);
+        circleIndicator  = view.findViewById(R.id.indicator);
+        LinearLayout imageViewHolder = view.findViewById(R.id.image_holder_view);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.MATCH_PARENT,
+                        getResources().getDisplayMetrics().heightPixels / 2);
+        imageViewHolder.setLayoutParams(layoutParams);
     }
 
     public void setDetailedComplaint(Venter.Complaint detailedComplaint) {
@@ -189,6 +203,8 @@ public class ComplaintDetailsFragment extends Fragment {
             Picasso.get().load(uProfileUrl).placeholder(R.drawable.user_placeholder).into(circleImageViewCommentUserImage);
             addVotesToView(detailedComplaint);
             addCommentsToView(detailedComplaint);
+
+            initViewPagerForImages(detailedComplaint);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -267,7 +283,7 @@ public class ComplaintDetailsFragment extends Fragment {
                 @Override
                 public void onFailure(Call<Venter.Complaint> call, Throwable t) {
                     Log.i(TAG, "failure in up vote: " + t.toString());
-                }
+               }
             });
         } else if (detailedComplaint.getVoteCount() ==1){
             retrofitInterface.upVote("sessionid=" + sId, cId, 0).enqueue(new Callback<Venter.Complaint>() {
@@ -327,6 +343,25 @@ public class ComplaintDetailsFragment extends Fragment {
             textViewTags.setTextColor(getContext().getResources().getColor(R.color.primaryTextColor));
             tagsLayout.setLayoutParams(layoutParams);
             tagsLayout.addView(textViewTags);
+        }
+    }
+
+    private void initViewPagerForImages(Venter.Complaint detailedComplaint) {
+
+        ViewPager viewPager = mView.findViewById(R.id.complaint_image_view_pager);
+        if (viewPager != null) {
+            try {
+                ImageViewPagerAdapter imageFragmentPagerAdapter = new ImageViewPagerAdapter(getActivity(), detailedComplaint);
+                viewPager.setAdapter(imageFragmentPagerAdapter);
+                circleIndicator.setViewPager(viewPager);
+                imageFragmentPagerAdapter.registerDataSetObserver(circleIndicator.getDataSetObserver());
+                Objects.requireNonNull(viewPager.getAdapter()).notifyDataSetChanged();
+                synchronized (viewPager) {
+                    viewPager.notifyAll();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
