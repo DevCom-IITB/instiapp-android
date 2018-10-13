@@ -98,7 +98,7 @@ public class FileComplaintFragment extends Fragment {
     private static final String TAG = FileComplaintFragment.class.getSimpleName();
     private static FileComplaintFragment mainactivity;
     private Button buttonSubmit;
-    private CustomAutoCompleteTextView autoCompleteTextView;
+    private CustomAutoCompleteTextView descriptionAutoCompleteTextview;
     private EditText editTextSuggestions;
     private EditText editTextTags;
     private EditText editTextLocationDetails;
@@ -215,7 +215,7 @@ public class FileComplaintFragment extends Fragment {
             }
         });
 
-        autoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        descriptionAutoCompleteTextview.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 searchComplaint(hasFocus);
@@ -285,7 +285,7 @@ public class FileComplaintFragment extends Fragment {
         editTextSuggestions = view.findViewById(R.id.editTextSuggestions);
         editTextLocationDetails = view.findViewById(R.id.editTextLocationDetails);
         editTextTags = view.findViewById(R.id.editTextTags);
-        autoCompleteTextView = view.findViewById(R.id.dynamicAutoCompleteTextView);
+        descriptionAutoCompleteTextview = view.findViewById(R.id.dynamicAutoCompleteTextView);
         mMapView = view.findViewById(R.id.google_map);
         tagView = view.findViewById(R.id.tag_view);
         tagViewPopulate = view.findViewById(R.id.tag_populate);
@@ -298,7 +298,7 @@ public class FileComplaintFragment extends Fragment {
 
     private void searchComplaint(boolean hasFocus) {
         if (!hasFocus) {
-            if (!(autoCompleteTextView.getText().toString().trim().isEmpty())) {
+            if (!(descriptionAutoCompleteTextview.getText().toString().trim().isEmpty())) {
                 int paddingDp = 60;
                 float density = getContext().getResources().getDisplayMetrics().density;
                 int paddingPixel = (int) (paddingDp * density);
@@ -654,7 +654,7 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void addComplaint() {
-        final String complaint = "Complaint: " + autoCompleteTextView.getText().toString();
+        final String complaint = "Complaint: " + descriptionAutoCompleteTextview.getText().toString();
         final String suggestion;
         final String locationDetails;
         Log.i(TAG, "Suggestion: " + editTextSuggestions.getText().toString());
@@ -861,7 +861,6 @@ public class FileComplaintFragment extends Fragment {
                     viewPager.notifyAll();
                 }
                 imageViewPagerAdapter.notifyDataSetChanged();
-                Toast.makeText(getContext(), "Picture Taken", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             } catch (Exception e) {
                 e.printStackTrace();
