@@ -89,7 +89,7 @@
                             android:layout_weight="8"
                             app:hintTextAppearance="@style/edit_text_hint_apperarance">
 
-                            <app.insti.CustomAutoCompleteTextView
+                            <app.insti.ComplaintDescriptionAutoCompleteTextView
                                 android:id="@+id/dynamicAutoCompleteTextView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

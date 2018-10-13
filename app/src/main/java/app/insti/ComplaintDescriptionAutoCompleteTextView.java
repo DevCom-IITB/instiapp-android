@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
  * Created by Shivam Sharma on 13-08-2018.
  */
 
-public class CustomAutoCompleteTextView extends android.support.v7.widget.AppCompatAutoCompleteTextView {
+public class ComplaintDescriptionAutoCompleteTextView extends android.support.v7.widget.AppCompatAutoCompleteTextView {
 
     private static final int MESSAGE_TEXT_CHANGED = 100;
     private static final int DEFAULT_AUTOCOMPLETE_DELAY = 750;
@@ -22,11 +22,11 @@ public class CustomAutoCompleteTextView extends android.support.v7.widget.AppCom
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            CustomAutoCompleteTextView.super.performFiltering((CharSequence) msg.obj, msg.arg1);
+            ComplaintDescriptionAutoCompleteTextView.super.performFiltering((CharSequence) msg.obj, msg.arg1);
         }
     };
 
-    public CustomAutoCompleteTextView(Context context, AttributeSet attrs) {
+    public ComplaintDescriptionAutoCompleteTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

@@ -70,7 +70,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.Constants;
-import app.insti.CustomAutoCompleteTextView;
+import app.insti.ComplaintDescriptionAutoCompleteTextView;
 import app.insti.R;
 import app.insti.ComplaintTag;
 import app.insti.Utils;
@@ -98,7 +98,7 @@ public class FileComplaintFragment extends Fragment {
     private static final String TAG = FileComplaintFragment.class.getSimpleName();
     private static FileComplaintFragment mainactivity;
     private Button buttonSubmit;
-    private CustomAutoCompleteTextView descriptionAutoCompleteTextview;
+    private ComplaintDescriptionAutoCompleteTextView descriptionAutoCompleteTextview;
     private EditText editTextSuggestions;
     private EditText editTextTags;
     private EditText editTextLocationDetails;
