@@ -40,6 +40,7 @@ public final class Utils {
 
                     @Override
                     public void onError(Exception ex) {
+                        // Do nothing
                     }
                 });
     }
