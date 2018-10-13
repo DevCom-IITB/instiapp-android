@@ -22,24 +22,26 @@ import app.insti.fragment.EventFragment;
 import app.insti.fragment.UserFragment;
 
 public final class Utils {
+    public static UpdatableList<Event> eventCache = new UpdatableList<>();
     private static String sessionId;
     private static RetrofitInterface retrofitInterface;
-    public static UpdatableList<Event> eventCache = new UpdatableList<>();
 
     public static final void loadImageWithPlaceholder(final ImageView imageView, final String url) {
         Picasso.get()
-            .load(resizeImageUrl(url))
-            .into(imageView, new Callback() {
-                @Override
-                public void onSuccess() {
-                    Picasso.get()
-                            .load(url)
-                            .placeholder(imageView.getDrawable())
-                            .into(imageView);
-                }
-                @Override
-                public void onError(Exception ex) {}
-            });
+                .load(resizeImageUrl(url))
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Picasso.get()
+                                .load(url)
+                                .placeholder(imageView.getDrawable())
+                                .into(imageView);
+                    }
+
+                    @Override
+                    public void onError(Exception ex) {
+                    }
+                });
     }
 
     public static final String resizeImageUrl(String url) {
@@ -47,11 +49,15 @@ public final class Utils {
     }
 
     public static final String resizeImageUrl(String url, Integer dim) {
-        if (url == null) { return url; }
+        if (url == null) {
+            return url;
+        }
         return url.replace("api.insti.app/static/", "img.insti.app/static/" + dim.toString() + "/");
     }
 
-    /** Update the open fragment */
+    /**
+     * Update the open fragment
+     */
     public static final void updateFragment(Fragment fragment, FragmentActivity fragmentActivity) {
         FragmentTransaction ft = fragmentActivity.getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
@@ -102,7 +108,9 @@ public final class Utils {
     }
 
     public static void openWebURL(Context context, String URL) {
-        Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
-        context.startActivity(browse);
+        if (URL != null && !URL.isEmpty()) {
+            Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
+            context.startActivity(browse);
+        }
     }
 }

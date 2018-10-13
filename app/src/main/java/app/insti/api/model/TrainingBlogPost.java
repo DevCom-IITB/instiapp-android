@@ -82,9 +82,7 @@ public class TrainingBlogPost implements Clickable {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (link != null && !link.isEmpty()) {
-                    openWebURL(context, link);
-                }
+                openWebURL(context, link);
             }
         };
     }
