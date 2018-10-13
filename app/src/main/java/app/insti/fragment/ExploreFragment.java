@@ -92,8 +92,7 @@ public class ExploreFragment extends Fragment {
                 }
             });
         } else {
-
-            updateAdapters(bodies, events, users);
+            updateAdapters(allBodies, new ArrayList<Event>(), new ArrayList<User>());
             getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         }
 
