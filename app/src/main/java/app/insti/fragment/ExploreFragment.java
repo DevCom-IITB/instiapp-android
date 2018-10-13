@@ -37,12 +37,11 @@ import retrofit2.Response;
  */
 public class ExploreFragment extends Fragment {
 
-    private String sessionId;
     private static List<Body> allBodies = new ArrayList<>();
     private static List<Body> bodies = new ArrayList<>();
     private static List<Event> events = new ArrayList<>();
     private static List<User> users = new ArrayList<>();
-
+    private String sessionId;
     private BodyAdapter bodyAdapter;
     private FeedAdapter eventsAdapter;
     private UserAdapter userAdapter;
@@ -93,6 +92,7 @@ public class ExploreFragment extends Fragment {
                 }
             });
         } else {
+
             updateAdapters(bodies, events, users);
             getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         }
@@ -101,16 +101,19 @@ public class ExploreFragment extends Fragment {
         final EditText searchEditText = getView().findViewById(R.id.explore_search);
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (searchEditText.getText().length() >= 3) {
+                currentQuery = s.toString();
+                if (currentQuery.length() >= 3) {
                     doSearch(searchEditText.getText().toString());
-                } else if (searchEditText.getText().length() == 0) {
+                } else if (currentQuery.length() == 0) {
                     updateAdapters(allBodies, new ArrayList<Event>(), new ArrayList<User>());
                 }
             }
