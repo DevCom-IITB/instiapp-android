@@ -22,7 +22,7 @@ import app.insti.R;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
-import app.insti.interfaces.Browsable;
+import app.insti.interfaces.Clickable;
 import app.insti.interfaces.ItemClickListener;
 import app.insti.interfaces.Readable;
 import app.insti.interfaces.Writable;
@@ -32,7 +32,7 @@ import retrofit2.Response;
 
 import static android.view.View.GONE;
 
-public abstract class RecyclerViewFragment<T extends Browsable, S extends RecyclerView.Adapter<RecyclerView.ViewHolder> & Readable<T> & Writable<T>> extends BaseFragment {
+public abstract class RecyclerViewFragment<T extends Clickable, S extends RecyclerView.Adapter<RecyclerView.ViewHolder> & Readable<T> & Writable<T>> extends BaseFragment {
     public static boolean showLoader = true;
     protected RecyclerView recyclerView;
     protected Class<T> postType;
@@ -103,9 +103,7 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
             adapter = adapterType.getDeclaredConstructor(List.class, ItemClickListener.class).newInstance(result, new ItemClickListener() {
                 @Override
                 public void onItemClick(View v, int position) {
-                    String link = result.get(position).getLink();
-                    if (link != null && !link.isEmpty())
-                        openWebURL(link);
+                    result.get(position).getOnClickListener(getContext()).onClick(v);
                 }
             });
             initRecyclerView();
@@ -165,11 +163,6 @@ public abstract class RecyclerViewFragment<T extends Browsable, S extends Recycl
     protected int getPostCount() {
         if (adapter == null) { return 0; }
         return adapter.getPosts().size();
-    }
-
-    private void openWebURL(String URL) {
-        Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
-        startActivity(browse);
     }
 
     @Override
