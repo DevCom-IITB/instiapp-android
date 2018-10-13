@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -352,7 +351,7 @@ public class ComplaintDetailsFragment extends Fragment {
         ViewPager viewPager = mView.findViewById(R.id.complaint_image_view_pager);
         if (viewPager != null) {
             try {
-                ImageViewPagerAdapter imageFragmentPagerAdapter = new ImageViewPagerAdapter(getChildFragmentManager(), detailedComplaint);
+                ImageViewPagerAdapter imageFragmentPagerAdapter = new ImageViewPagerAdapter(getActivity(), detailedComplaint);
                 viewPager.setAdapter(imageFragmentPagerAdapter);
                 circleIndicator.setViewPager(viewPager);
                 imageFragmentPagerAdapter.registerDataSetObserver(circleIndicator.getDataSetObserver());
