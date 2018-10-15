@@ -393,14 +393,20 @@
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="50dp" />
+                    android:layout_marginEnd="55dp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/safwanimg"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
+                    android:layout_gravity="center" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/shivamimg"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
                     android:layout_gravity="center"
-                    android:layout_marginStart="50dp" />
+                    android:layout_marginStart="55dp" />
 
             </LinearLayout>
 
@@ -415,8 +421,7 @@
                     android:id="@+id/maitreya"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="35dp"
+                    android:layout_marginEnd="20dp"
                     android:gravity="center"
                     android:text="Maitreya Verma"
                     android:textSize="13sp"
@@ -426,9 +431,19 @@
                     android:id="@+id/safwan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="35dp"
+                    android:layout_marginStart="10dp"
                     android:gravity="center"
                     android:text="Mohd Safwan"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/shivam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:gravity="center"
+                    android:text="Shivam Sharma"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
