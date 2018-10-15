@@ -55,11 +55,11 @@ import app.insti.api.model.Role;
 import app.insti.api.model.User;
 import app.insti.api.request.UserFCMPatchRequest;
 import app.insti.fragment.BackHandledFragment;
-import app.insti.fragment.BodyFragment;
 import app.insti.fragment.CalendarFragment;
-import app.insti.fragment.EventFragment;
+import app.insti.fragment.ComplaintsFragment;
 import app.insti.fragment.ExploreFragment;
 import app.insti.fragment.FeedFragment;
+import app.insti.fragment.FileComplaintFragment;
 import app.insti.fragment.MapFragment;
 import app.insti.fragment.MessMenuFragment;
 import app.insti.fragment.NewsFragment;
@@ -79,6 +79,7 @@ import static app.insti.Constants.DATA_TYPE_PT;
 import static app.insti.Constants.DATA_TYPE_USER;
 import static app.insti.Constants.FCM_BUNDLE_NOTIFICATION_ID;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
+import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
 
@@ -525,6 +526,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 updateFragment(mapFragment);
                 break;
 
+            case R.id.nav_complaint:
+                if (session.isLoggedIn()) {
+                    ComplaintsFragment complaintsFragment = new ComplaintsFragment();
+                    updateFragment(complaintsFragment);
+                } else {
+                    Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
+                }
+                break;
+
             case R.id.nav_settings:
                 SettingsFragment settingsFragment = new SettingsFragment();
                 updateFragment(settingsFragment);
@@ -567,6 +577,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString(Constants.USER_HOSTEL, session.isLoggedIn() && currentUser.getHostel() != null ? currentUser.getHostel() : "1");
         if (fragment instanceof SettingsFragment && session.isLoggedIn())
             bundle.putString(Constants.USER_ID, currentUser.getUserID());
+        if (fragment instanceof ComplaintsFragment && session.isLoggedIn()){
+            bundle.putString(Constants.USER_ID, currentUser.getUserID());
+            bundle.putString(Constants.CURRENT_USER_PROFILE_PICTURE, currentUser.getUserProfilePictureUrl());
+        }
         fragment.setArguments(bundle);
         FragmentManager manager = getSupportFragmentManager();
         if (fragment instanceof FeedFragment)
@@ -596,6 +610,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     MapFragment.getMainActivity().setupGPS();
                 } else {
+                    Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                break;
+            case MY_PERMISSIONS_REQUEST_LOCATION:
+                Log.i(TAG, "Permission request captured");
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "Permission Granted");
+                    FileComplaintFragment.getMainActivity().getMapReady();
+                } else {
+                    Log.i(TAG, "Permission Cancelled");
                     Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
                     toast.show();
                 }
