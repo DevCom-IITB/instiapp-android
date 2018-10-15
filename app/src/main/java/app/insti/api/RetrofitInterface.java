@@ -11,10 +11,14 @@ import app.insti.api.model.Notification;
 import app.insti.api.model.PlacementBlogPost;
 import app.insti.api.model.TrainingBlogPost;
 import app.insti.api.model.User;
+import app.insti.api.model.Venter;
 import app.insti.api.model.Venue;
+import app.insti.api.request.CommentCreateRequest;
+import app.insti.api.request.ComplaintCreateRequest;
 import app.insti.api.request.EventCreateRequest;
 import app.insti.api.request.ImageUploadRequest;
 import app.insti.api.request.UserFCMPatchRequest;
+import app.insti.api.response.ComplaintCreateResponse;
 import app.insti.api.response.EventCreateResponse;
 import app.insti.api.response.ExploreResponse;
 import app.insti.api.response.ImageUploadResponse;
@@ -22,10 +26,12 @@ import app.insti.api.response.LoginResponse;
 import app.insti.api.response.NewsFeedResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -107,4 +113,29 @@ public interface RetrofitInterface {
 
     @GET("search")
     Call<ExploreResponse> search(@Header("Cookie") String sessionID, @Query("query") String query);
+
+    @GET("venter/complaints")
+    Call<List<Venter.Complaint>> getAllComplaints(@Header("Cookie") String sessionId);
+
+    @GET("venter/complaints?filter=me")
+    Call<List<Venter.Complaint>> getUserComplaints(@Header("Cookie") String sessionId);
+
+    @GET("venter/complaints/{complaintId}")
+    Call<Venter.Complaint> getComplaint(@Header("Cookie") String sessionId, @Path("complaintId") String complaintId);
+
+    @GET("venter/complaints/{complaintId}/upvote")
+    Call<Venter.Complaint> upVote(@Header("Cookie") String sessionId, @Path("complaintId") String complaintId, @Query("action") int count);
+
+    @POST("venter/complaints")
+    Call<ComplaintCreateResponse> postComplaint(@Header("Cookie") String sessionId, @Body ComplaintCreateRequest complaintCreateRequest);
+
+    @POST("venter/complaints/{complaintId}/comments")
+    Call<Venter.Comment> postComment(@Header("Cookie") String sessionId, @Path("complaintId") String commentId, @Body CommentCreateRequest commentCreateRequest);
+
+    @PUT("venter/comments/{commentId}")
+    Call<Venter.Comment> updateComment(@Header("Cookie") String sessionId, @Path("commentId") String commentId, @Body CommentCreateRequest commentCreateRequest);
+
+    @DELETE("venter/comments/{commentId}")
+    Call<String> deleteComment(@Header("Cookie") String sessionId, @Path("commentId") String commentId);
+
 }
