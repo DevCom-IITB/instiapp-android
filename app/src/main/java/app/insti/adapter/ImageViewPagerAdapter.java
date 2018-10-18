@@ -71,7 +71,7 @@ public class ImageViewPagerAdapter extends PagerAdapter {
         if (images.size() != 0)
             Picasso.get().load(images.get(position)).into(imageView);
         else
-            Picasso.get().load(R.drawable.baseline_photo_size_select_actual_black_48).into(imageView);
+            Picasso.get().load(R.drawable.baseline_photo_black_48).resize(500,500).into(imageView);
 
         view.addView(imageLayout, 0);
         return imageLayout;

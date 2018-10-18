@@ -40,8 +40,8 @@
 
                         <android.support.v4.view.ViewPager
                             android:id="@+id/complaint_image_view_pager"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
 
                         <me.relex.circleindicator.CircleIndicator
                             android:id="@+id/indicator"
@@ -77,7 +77,6 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/linearLayoutDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="5dp"
