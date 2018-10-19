@@ -654,17 +654,17 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void addComplaint() {
-        final String complaint = "Complaint: " + descriptionAutoCompleteTextview.getText().toString();
+        final String complaint = "Complaint: \n" + descriptionAutoCompleteTextview.getText().toString();
         final String suggestion;
         final String locationDetails;
-        Log.i(TAG, "Suggestion: " + editTextSuggestions.getText().toString());
+        Log.i(TAG, "\nSuggestion: " + editTextSuggestions.getText().toString());
         if (!(editTextSuggestions.getText().toString().isEmpty())) {
-            suggestion = "\nSuggestion: " + editTextSuggestions.getText().toString();
+            suggestion = "\n\nSuggestion: \n" + editTextSuggestions.getText().toString();
         } else {
             suggestion = "";
         }
         if (!(editTextLocationDetails.getText().toString().isEmpty())) {
-            locationDetails = "\nLocation Details: " + editTextLocationDetails.getText().toString();
+            locationDetails = "\n\nLocation Details: \n" + editTextLocationDetails.getText().toString();
         } else {
             locationDetails = "";
         }

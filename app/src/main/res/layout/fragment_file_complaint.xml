@@ -28,8 +28,8 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <LinearLayout
-                    android:id="@+id/image_holder_view"
                     android:layout_width="match_parent"
+                    android:id="@+id/image_holder_view"
                     android:layout_height="2dp"
                     android:orientation="vertical"
                     app:layout_collapseMode="parallax">

@@ -324,7 +324,6 @@ public class ComplaintDetailsFragment extends Fragment {
     }
 
     private void addTagsToView(Venter.Complaint detailedComplaint) {
-
         for (Venter.TagUri tagUri : detailedComplaint.getTags()) {
 
             TextView textViewTags = new TextView(getContext());
@@ -332,7 +331,12 @@ public class ComplaintDetailsFragment extends Fragment {
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(10,10,10,10);
             textViewTags.setLayoutParams(layoutParams);
-            textViewTags.setText(tagUri.getTagUri());
+            if(tagUri.getTagUri().contains("(U)")) {
+                String tag =  tagUri.getTagUri().replace("(U)", "");
+                textViewTags.setText(tag);
+            }else {
+                textViewTags.setText(tagUri.getTagUri());
+            }
             textViewTags.setBackgroundResource(R.drawable.customborder);
             textViewTags.setPadding(30,25,30,25);
             int fontDp = 4;
@@ -347,7 +351,6 @@ public class ComplaintDetailsFragment extends Fragment {
     }
 
     private void initViewPagerForImages(Venter.Complaint detailedComplaint) {
-
         ViewPager viewPager = mView.findViewById(R.id.complaint_image_view_pager);
         if (viewPager != null) {
             try {
