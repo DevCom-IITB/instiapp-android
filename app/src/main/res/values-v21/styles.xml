@@ -6,11 +6,4 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="CalendarTheme" parent="@style/AppTheme.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorSecondary</item>
-        <item name="android:textColorPrimaryInverse">@color/secondaryTextColor</item>
-        <item name="android:windowBackground">?android:attr/colorButtonNormal</item>
-    </style>
-
 </resources>

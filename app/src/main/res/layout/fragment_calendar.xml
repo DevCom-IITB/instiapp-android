@@ -10,9 +10,7 @@
             android:id="@+id/calendar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#fafafa"
-            android:orientation="vertical"
-            android:theme="@style/CalendarTheme">
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="wrap_content"

@@ -6,9 +6,24 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="themeColor">#FFFFFF</item>
+        <item name="themeColorInverse">#000000</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppThemeDark" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="themeColor">#000000</item>
+        <item name="themeColorInverse">#FFFFFF</item>
+    </style>
+
+    <style name="AppThemeDark.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -26,7 +41,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">?attr/themeColorInverse</item>
         <item name="android:textSize">36sp</item>
     </style>
 
@@ -35,7 +50,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingBottom">4dp</item>
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">?attr/themeColorInverse</item>
         <item name="android:textSize">18sp</item>
     </style>
 
