@@ -162,9 +162,9 @@ public class ExploreFragment extends Fragment {
         getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
         // Set adapters data
-        bodyAdapter.setBodyList(bodies);
-        eventsAdapter.setEvents(events);
-        userAdapter.setUserList(users);
+        bodyAdapter.setList(bodies);
+        eventsAdapter.setList(events);
+        userAdapter.setList(users);
 
         // Notify all adapters
         bodyAdapter.notifyDataSetChanged();

@@ -1,15 +1,7 @@
 package app.insti.adapter;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
+import android.support.v4.app.FragmentActivity;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -17,28 +9,33 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import app.insti.R;
 import app.insti.Utils;
 import app.insti.api.model.Event;
 import app.insti.api.model.Venue;
 
-public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
+public class FeedAdapter extends CardAdapter<Event> {
 
-    private List<Event> events;
-    private Context context;
-    private Fragment mFragment;
-
-    public FeedAdapter(List<Event> events, Fragment fragment) {
-        this.events = events;
-        mFragment = fragment;
+    public FeedAdapter(List<Event> eventList, Fragment fragment) {
+        super(eventList, fragment);
     }
 
-    public void getSubtitle(ViewHolder viewHolder, Event currentEvent)
+    @Override
+    public void onClick(Event event, FragmentActivity fragmentActivity) {
+        Utils.openEventFragment(event, fragmentActivity);
+    }
+
+    @Override
+    public String getTitle(Event event) {
+        return event.getEventName();
+    }
+
+    @Override
+    public String getSubtitle(Event event)
     {
         String subtitle = "";
 
-        Date startTime = currentEvent.getEventStartTime();
-        Date endTime = currentEvent.getEventEndTime();
+        Date startTime = event.getEventStartTime();
+        Date endTime = event.getEventEndTime();
         Date timeNow = Calendar.getInstance().getTime();
         boolean eventStarted = timeNow.compareTo(startTime) > 0;
         boolean eventEnded = timeNow.compareTo(endTime) > 0;
@@ -63,7 +60,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             subtitle += "Ends in " + timeDiff + " | " ;
         }
 
-        Timestamp timestamp = currentEvent.getEventStartTime();
+        Timestamp timestamp = event.getEventStartTime();
         if (timestamp != null) {
             Date Date = new Date(timestamp.getTime());
             SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
@@ -72,79 +69,25 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             subtitle += simpleDateFormatDate.format(Date) + " | " + simpleDateFormatTime.format(Date);
         }
         StringBuilder eventVenueName = new StringBuilder();
-        for (Venue venue : currentEvent.getEventVenues()) {
+        for (Venue venue : event.getEventVenues()) {
             eventVenueName.append(", ").append(venue.getVenueShortName());
         }
         if (!eventVenueName.toString().equals(""))
             subtitle += " | " + eventVenueName.toString().substring(2);
 
-        viewHolder.eventSubtitle.setText(subtitle);
-        return ;
+        return subtitle;
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if (position == 0) return 1;
-        else return 2;
+    public String getAvatarUrl(Event event) {
+        return event.getEventImageURL();
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
-        context = viewGroup.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View postView = inflater.inflate(R.layout.feed_card, viewGroup, false);
-
-        final ViewHolder postViewHolder = new ViewHolder(postView);
-        postView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Utils.openEventFragment(events.get(postViewHolder.getAdapterPosition()), mFragment.getActivity());
-            }
-        });
-
-        return postViewHolder;
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        Event currentEvent = events.get(i);
-        viewHolder.eventTitle.setText(currentEvent.getEventName());
-
-        getSubtitle(viewHolder, currentEvent);
-
-        if (currentEvent.isEventBigImage()) {
-            viewHolder.eventBigPicture.setVisibility(View.VISIBLE);
-            viewHolder.eventPicture.setVisibility(View.GONE);
-            Utils.loadImageWithPlaceholder(viewHolder.eventBigPicture, currentEvent.getEventImageURL());
-        } else {
-            Picasso.get().load(
-                    Utils.resizeImageUrl(currentEvent.getEventImageURL())
-            ).into(viewHolder.eventPicture);
+    public String getBigImageUrl(Event event) {
+        if (event.isEventBigImage()) {
+            return event.getEventImageURL();
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return events.size();
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView eventPicture;
-        private TextView eventTitle;
-        private TextView eventSubtitle;
-        private ImageView eventBigPicture;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            eventPicture = (ImageView) itemView.findViewById(R.id.object_picture);
-            eventTitle = (TextView) itemView.findViewById(R.id.object_title);
-            eventSubtitle = (TextView) itemView.findViewById(R.id.object_subtitle);
-            eventBigPicture = (ImageView) itemView.findViewById(R.id.big_object_picture);
-        }
+        return null;
     }
 }

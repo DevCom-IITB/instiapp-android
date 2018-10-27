@@ -167,7 +167,7 @@ public class CalendarFragment extends BaseFragment {
         if (feedAdapter == null) {
             feedAdapter = new FeedAdapter(filteredEvents, this);
         } else {
-            feedAdapter.setEvents(filteredEvents);
+            feedAdapter.setList(filteredEvents);
             feedAdapter.notifyDataSetChanged();
         }
 

@@ -159,7 +159,7 @@ public class FeedFragment extends BaseFragment {
         if (feedAdapter == null) {
             feedAdapter = new FeedAdapter(events, this);
         } else {
-            feedAdapter.setEvents(events);
+            feedAdapter.setList(events);
             feedAdapter.notifyDataSetChanged();
         }
 
