@@ -61,7 +61,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="10"
                                     android:text="Event Title"
-                                    android:textColor="?attr/themeColor"
+                                    android:textColor="@color/colorWhite"
                                     android:textSize="21sp"
                                     android:textStyle="bold" />
 
@@ -73,7 +73,7 @@
                                     android:layout_marginStart="8dp"
                                     android:background="?attr/selectableItemBackgroundBorderless"
                                     android:contentDescription="Event Website"
-                                    android:tint="?attr/themeColor"
+                                    android:tint="@color/colorWhite"
                                     android:visibility="invisible"
                                     app:srcCompat="@drawable/ic_language_black_24dp" />
 
@@ -85,7 +85,7 @@
                                     android:layout_marginStart="8dp"
                                     android:background="?attr/selectableItemBackgroundBorderless"
                                     android:contentDescription="Navigate"
-                                    android:tint="?attr/themeColor"
+                                    android:tint="@color/colorWhite"
                                     app:srcCompat="@drawable/baseline_navigation_24" />
 
                                 <ImageButton
@@ -97,7 +97,7 @@
                                     android:background="?attr/selectableItemBackgroundBorderless"
                                     android:contentDescription="Share Event"
                                     android:src="@drawable/ic_menu_share"
-                                    android:tint="?attr/themeColor" />
+                                    android:tint="@color/colorWhite" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -110,14 +110,14 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="No Date Specified"
-                                    android:textColor="?attr/themeColor"
+                                    android:textColor="@color/colorWhite"
                                     android:textSize="16sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text=" | "
-                                    android:textColor="?attr/themeColor"
+                                    android:textColor="@color/colorWhite"
                                     android:textSize="20sp" />
 
                                 <TextView
@@ -125,14 +125,14 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="No Time Specified"
-                                    android:textColor="?attr/themeColor"
+                                    android:textColor="@color/colorWhite"
                                     android:textSize="16sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text=" | "
-                                    android:textColor="?attr/themeColor"
+                                    android:textColor="@color/colorWhite"
                                     android:textSize="20sp" />
 
                                 <TextView
@@ -140,8 +140,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:ellipsize="end"
-                                    android:text="No Venue Specified"
-                                    android:textColor="?attr/themeColor"
+                                    android:text="Venue"
+                                    android:textColor="@color/colorWhite"
                                     android:textSize="16sp" />
                             </LinearLayout>
 
@@ -190,6 +190,12 @@
 
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#aaa">
+                    </View>
+
                     <TextView
                         android:id="@+id/event_page_description"
                         android:layout_width="match_parent"
@@ -199,7 +205,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="12dp"
                         android:textColor="?attr/themeColorInverse"
-                        android:textColorLink="@color/colorPrimary"
+                        android:textColorLink="?attr/urlColor"
                         android:textSize="16sp" />
 
                     <android.support.v7.widget.RecyclerView

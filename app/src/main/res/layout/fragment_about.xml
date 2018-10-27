@@ -638,7 +638,7 @@
                 android:gravity="center"
                 android:linksClickable="true"
                 android:text="@string/django_api"
-                android:textColorLink="@color/colorPrimaryDark"
+                android:textColorLink="?attr/urlColor"
                 android:textStyle="bold" />
 
             <TextView
@@ -652,7 +652,7 @@
                 android:gravity="center"
                 android:linksClickable="true"
                 android:text="@string/android_app"
-                android:textColorLink="@color/colorPrimaryDark"
+                android:textColorLink="?attr/urlColor"
                 android:textStyle="bold" />
 
             <TextView
@@ -666,7 +666,7 @@
                 android:gravity="center"
                 android:linksClickable="true"
                 android:text="@string/angular_pwa"
-                android:textColorLink="@color/colorPrimaryDark"
+                android:textColorLink="?attr/urlColor"
                 android:textStyle="bold" />
 
 
