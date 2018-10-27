@@ -84,6 +84,8 @@ public class ExploreFragment extends Fragment {
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Explore");
 
+        final EditText searchEditText = getView().findViewById(R.id.explore_search);
+
         // Get all bodies
         if (allBodies.size() == 0) {
             RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
@@ -96,12 +98,14 @@ public class ExploreFragment extends Fragment {
                 }
             });
         } else {
-            updateAdapter(allBodies, new ArrayList<Event>(), new ArrayList<User>());
+            // Check if search box is not empty
+            if (searchEditText.getText() != null && !searchEditText.getText().toString().equals("")) {
+                updateAdapter(bodies, events, users);
+            } else {
+                updateAdapter(allBodies, new ArrayList<Event>(), new ArrayList<User>());
+            }
             getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         }
-
-        // Search on text change in search
-        final EditText searchEditText = getView().findViewById(R.id.explore_search);
 
         // Close keyboard on search click
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -115,6 +119,7 @@ public class ExploreFragment extends Fragment {
             }
         });
 
+        // Search on text change in search
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
