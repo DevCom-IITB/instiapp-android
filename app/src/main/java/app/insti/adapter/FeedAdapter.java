@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentActivity;
 
 import java.util.List;
 
+import app.insti.R;
 import app.insti.Utils;
 import app.insti.api.model.Event;
 
@@ -25,5 +26,10 @@ public class FeedAdapter extends CardAdapter<Event> {
             return event.getEventImageURL();
         }
         return null;
+    }
+
+    @Override
+    public int getAvatarPlaceholder(Event event) {
+        return R.drawable.lotus_sq;
     }
 }
