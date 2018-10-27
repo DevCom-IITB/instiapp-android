@@ -8,16 +8,20 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.R;
 import app.insti.Utils;
+import app.insti.activity.MainActivity;
 import app.insti.adapter.GenericAdapter;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
@@ -98,6 +102,19 @@ public class ExploreFragment extends Fragment {
 
         // Search on text change in search
         final EditText searchEditText = getView().findViewById(R.id.explore_search);
+
+        // Close keyboard on search click
+        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    MainActivity.hideKeyboard(getActivity());
+                    return true;
+                }
+                return false;
+            }
+        });
+
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -176,7 +193,7 @@ public class ExploreFragment extends Fragment {
     public void initRecyclerView() {
         if (getActivity() == null || getView() == null) return;
 
-        RecyclerView bodiesRecyclerView = getView().findViewById(R.id.explore_body_recycler_view);
+        RecyclerView bodiesRecyclerView = getView().findViewById(R.id.explore_recycler_view);
         genericAdapter = new GenericAdapter(cards, this);
         bodiesRecyclerView.setAdapter(genericAdapter);
         bodiesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
