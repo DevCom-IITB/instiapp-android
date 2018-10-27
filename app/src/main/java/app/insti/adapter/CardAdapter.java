@@ -31,7 +31,7 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
         return null;
     }
 
-    public int getAvatarPlaceholder() {
+    public int getAvatarPlaceholder(T t) {
         return 0;
     }
 
@@ -76,15 +76,15 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
             RequestCreator requestCreator;
             if (t.getAvatarUrl() != null)
                 requestCreator = Picasso.get().load(Utils.resizeImageUrl(t.getAvatarUrl()));
-            else if (getAvatarPlaceholder() != 0) {
-                requestCreator = Picasso.get().load(getAvatarPlaceholder());
+            else if (getAvatarPlaceholder(t) != 0) {
+                requestCreator = Picasso.get().load(getAvatarPlaceholder(t));
             } else {
                 return;
             }
 
             // Check if we have a placeholder
-            if (getAvatarPlaceholder() != 0) {
-                requestCreator.placeholder(getAvatarPlaceholder());
+            if (getAvatarPlaceholder(t) != 0) {
+                requestCreator.placeholder(getAvatarPlaceholder(t));
             }
 
             // Load the image

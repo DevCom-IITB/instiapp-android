@@ -50,7 +50,7 @@ public class NotificationsAdapter extends CardAdapter<Notification> {
     }
 
     @Override
-    public int getAvatarPlaceholder() {
+    public int getAvatarPlaceholder(Notification notification) {
         return R.drawable.lotus_sq;
     }
 }

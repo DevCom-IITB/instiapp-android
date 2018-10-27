@@ -21,7 +21,7 @@ public class UserAdapter extends CardAdapter<User> {
     }
 
     @Override
-    public int getAvatarPlaceholder() {
+    public int getAvatarPlaceholder(User user) {
         return R.drawable.user_placeholder;
     }
 }
