@@ -11,7 +11,6 @@ import app.insti.api.model.Role;
 
 public class RoleAdapter extends CardAdapter<Role> {
 
-
     public RoleAdapter(List<Role> roleList, Fragment mFragment) {
         super(roleList, mFragment);
     }
@@ -19,20 +18,5 @@ public class RoleAdapter extends CardAdapter<Role> {
     @Override
     public void onClick(Role role, FragmentActivity fragmentActivity) {
         Utils.openBodyFragment(role.getRoleBodyDetails(), fragmentActivity);
-    }
-
-    @Override
-    public String getTitle(Role role) {
-        return role.getRoleBodyDetails().getBodyName();
-    }
-
-    @Override
-    public String getSubtitle(Role role) {
-        return role.getRoleName();
-    }
-
-    @Override
-    public String getAvatarUrl(Role role) {
-        return role.getRoleBodyDetails().getBodyImageURL();
     }
 }

@@ -18,19 +18,4 @@ public class BodyAdapter extends CardAdapter<Body> {
     public void onClick(Body body, FragmentActivity fragmentActivity) {
         Utils.openBodyFragment(body, fragmentActivity);
     }
-
-    @Override
-    public String getTitle(Body body) {
-        return body.getBodyName();
-    }
-
-    @Override
-    public String getSubtitle(Body body) {
-        return body.getBodyShortDescription();
-    }
-
-    @Override
-    public String getAvatarUrl(Body body) {
-        return body.getBodyImageURL();
-    }
 }

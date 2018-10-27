@@ -25,6 +25,7 @@ public final class Utils {
     public static UpdatableList<Event> eventCache = new UpdatableList<>();
     private static String sessionId;
     private static RetrofitInterface retrofitInterface;
+    public static Gson gson;
 
     public static final void loadImageWithPlaceholder(final ImageView imageView, final String url) {
         Picasso.get()
@@ -113,5 +114,9 @@ public final class Utils {
             Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
             context.startActivity(browse);
         }
+    }
+
+    public static void makeGson() {
+        Utils.gson = new Gson();
     }
 }

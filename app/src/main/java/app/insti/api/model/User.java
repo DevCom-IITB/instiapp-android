@@ -7,7 +7,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class User {
+import app.insti.interfaces.CardInterface;
+
+public class User implements CardInterface {
     @NonNull()
     @SerializedName("id")
     private String userID;
@@ -234,5 +236,21 @@ public class User {
     @Override
     public String toString() {
         return new Gson().toJson(this);
+    }
+
+    public String getTitle() {
+        return getUserName();
+    }
+
+    public String getSubtitle() {
+        if (getCurrentRole() == null || getCurrentRole().equals("")) {
+            return getUserLDAPId();
+        } else {
+            return getCurrentRole();
+        }
+    }
+
+    public String getAvatarUrl() {
+        return getUserProfilePictureUrl();
     }
 }

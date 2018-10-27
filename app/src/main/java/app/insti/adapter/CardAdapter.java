@@ -18,17 +18,14 @@ import java.util.List;
 
 import app.insti.R;
 import app.insti.Utils;
+import app.insti.interfaces.CardInterface;
 
-public abstract class CardAdapter<T> extends RecyclerView.Adapter<CardAdapter<T>.ViewHolder> {
+public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.Adapter<CardAdapter<T>.ViewHolder> {
 
     private List<T> tList;
     private Fragment mFragment;
 
     public abstract void onClick(T t, FragmentActivity fragmentActivity);
-
-    public abstract String getAvatarUrl(T t);
-    public abstract String getTitle(T t);
-    public abstract String getSubtitle(T t);
 
     public String getBigImageUrl(T t) {
         return null;
@@ -64,8 +61,8 @@ public abstract class CardAdapter<T> extends RecyclerView.Adapter<CardAdapter<T>
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         T t = tList.get(i);
-        viewHolder.title.setText(getTitle(t));
-        viewHolder.subtitle.setText(getSubtitle(t));
+        viewHolder.title.setText(t.getTitle());
+        viewHolder.subtitle.setText(t.getSubtitle());
 
         if (getBigImageUrl(t) != null) {
             // Show big image, hide avatar
@@ -77,8 +74,8 @@ public abstract class CardAdapter<T> extends RecyclerView.Adapter<CardAdapter<T>
         } else {
             // Build basic request
             RequestCreator requestCreator;
-            if (getAvatarUrl(t) != null)
-                requestCreator = Picasso.get().load(Utils.resizeImageUrl(getAvatarUrl(t)));
+            if (t.getAvatarUrl() != null)
+                requestCreator = Picasso.get().load(Utils.resizeImageUrl(t.getAvatarUrl()));
             else if (getAvatarPlaceholder() != 0) {
                 requestCreator = Picasso.get().load(getAvatarPlaceholder());
             } else {

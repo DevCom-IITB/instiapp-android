@@ -116,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
         Utils.setRetrofitInterface(serviceGenerator.getRetrofitInterface());
 
+        Utils.makeGson();
+
         /* Make notification channel on oreo */
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             createNotificationChannel();
