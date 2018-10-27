@@ -8,8 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="themeColor">#FFFFFF</item>
         <item name="themeColorInverse">#000000</item>
-        <item name="newsColor">#F2F2F2</item>
-        <item name="urlColor">@color/colorPrimary</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -23,8 +22,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="themeColor">#000000</item>
         <item name="themeColorInverse">#FFFFFF</item>
-        <item name="newsColor">#00000000</item>
-        <item name="urlColor">@color/colorAccent</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
     <style name="AppThemeDark.NoActionBar">
@@ -33,7 +31,7 @@
     </style>
 
     <style name="BlueAccent">
-        <item name="colorAccent">?attr/urlColor</item>
+        <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -71,5 +69,10 @@
     <style name="edit_text_hint_apperarance" parent="@android:style/TextAppearance">
         <item name="android:textColor">#999</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="WindowAnimationTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 </resources>

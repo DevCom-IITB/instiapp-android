@@ -8,11 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
@@ -25,6 +27,7 @@ public final class Utils {
     public static UpdatableList<Event> eventCache = new UpdatableList<>();
     private static String sessionId;
     private static RetrofitInterface retrofitInterface;
+    public static boolean darkTheme = false;
 
     public static final void loadImageWithPlaceholder(final ImageView imageView, final String url) {
         Picasso.get()
@@ -113,5 +116,18 @@ public final class Utils {
             Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse(URL));
             context.startActivity(browse);
         }
+    }
+
+    public static void changeTheme(FragmentActivity context) {
+        if (darkTheme) {
+            context.setTheme(R.style.AppTheme);
+        } else {
+            Toast.makeText(context, "You have unlocked super max pro mode", Toast.LENGTH_SHORT).show();
+            context.setTheme(R.style.AppThemeDark);
+        }
+        darkTheme = !darkTheme;
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+        context.finish();
     }
 }
