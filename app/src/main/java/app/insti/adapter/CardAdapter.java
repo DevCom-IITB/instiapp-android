@@ -76,7 +76,14 @@ public abstract class CardAdapter<T> extends RecyclerView.Adapter<CardAdapter<T>
             Utils.loadImageWithPlaceholder(viewHolder.bigPicture, getBigImageUrl(t));
         } else {
             // Build basic request
-            RequestCreator requestCreator = Picasso.get().load(Utils.resizeImageUrl(getAvatarUrl(t)));
+            RequestCreator requestCreator;
+            if (getAvatarUrl(t) != null)
+                requestCreator = Picasso.get().load(Utils.resizeImageUrl(getAvatarUrl(t)));
+            else if (getAvatarPlaceholder() != 0) {
+                requestCreator = Picasso.get().load(getAvatarPlaceholder());
+            } else {
+                return;
+            }
 
             // Check if we have a placeholder
             if (getAvatarPlaceholder() != 0) {
