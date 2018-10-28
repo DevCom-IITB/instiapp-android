@@ -8,6 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="themeColor">#FFFFFF</item>
         <item name="themeColorInverse">#000000</item>
+        <item name="newsColor">#F2F2F2</item>
+        <item name="urlColor">@color/colorPrimary</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
@@ -22,6 +24,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="themeColor">#000000</item>
         <item name="themeColorInverse">#FFFFFF</item>
+        <item name="newsColor">#00000000</item>
+        <item name="urlColor">@color/colorAccent</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
@@ -31,7 +35,7 @@
     </style>
 
     <style name="BlueAccent">
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorAccent">?attr/urlColor</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
