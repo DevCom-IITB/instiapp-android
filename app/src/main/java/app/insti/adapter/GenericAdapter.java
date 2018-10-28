@@ -34,6 +34,6 @@ public class GenericAdapter extends CardAdapter<CardInterface> {
         if (cardInterface instanceof User) {
             return R.drawable.user_placeholder;
         }
-        return R.drawable.lotus_sq;
+        return R.drawable.lotus_placeholder;
     }
 }

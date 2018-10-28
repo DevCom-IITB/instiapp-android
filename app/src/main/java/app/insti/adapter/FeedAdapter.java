@@ -30,6 +30,6 @@ public class FeedAdapter extends CardAdapter<Event> {
 
     @Override
     public int getAvatarPlaceholder(Event event) {
-        return R.drawable.lotus_sq;
+        return R.drawable.lotus_placeholder;
     }
 }
