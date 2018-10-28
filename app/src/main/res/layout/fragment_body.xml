@@ -65,7 +65,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="10"
                                     android:text="Org Title"
-                                    android:textColor="#fff"
+                                    android:textColor="@color/colorWhite"
                                     android:textSize="21sp"
                                     android:textStyle="bold" />
 
@@ -137,8 +137,8 @@
                         android:layout_marginEnd="10dp"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="12dp"
-                        android:textColor="#333"
-                        android:textColorLink="@color/colorPrimary"
+                        android:textColor="?attr/themeColorInverse"
+                        android:textColorLink="?attr/urlColor"
                         android:textSize="16sp" />
 
                     <TextView
