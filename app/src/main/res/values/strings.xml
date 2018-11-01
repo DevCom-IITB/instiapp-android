@@ -50,4 +50,6 @@
     <string name="no_permission">No permission!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enter_location_details">Enter Location Details</string>
+    <string name="enter_reason">Enter Reason</string>
+    <string name="enter_machine_details">Enter Machine Used (if any)</string>
 </resources>

@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:scrollbars="vertical"
+    tools:context="app.insti.fragment.TlLoginFragment">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="87dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/editTextSuggestions4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:hint="@string/enter_reason"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:textColor="@android:color/black"
+                android:textColorHint="#4a4a4a"
+                android:textSize="14sp" />
+
+        </android.support.design.widget.TextInputLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="83dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/editTextSuggestions5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:hint="@string/enter_machine_details"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:textColor="@android:color/black"
+                android:textColorHint="#4a4a4a"
+                android:textSize="14sp" />
+
+        </android.support.design.widget.TextInputLayout>
+    </FrameLayout>
+</LinearLayout>
