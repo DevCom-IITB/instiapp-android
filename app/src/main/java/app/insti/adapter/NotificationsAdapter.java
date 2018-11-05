@@ -1,92 +1,56 @@
 package app.insti.adapter;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import app.insti.R;
 import app.insti.Utils;
+import app.insti.api.EmptyCallback;
+import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Event;
-import app.insti.api.model.NewsArticle;
 import app.insti.api.model.Notification;
 import app.insti.api.model.PlacementBlogPost;
-import app.insti.interfaces.ItemClickListener;
+import app.insti.fragment.NewsFragment;
+import app.insti.fragment.PlacementBlogFragment;
+import app.insti.fragment.TrainingBlogFragment;
 
-public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.Viewholder> {
-    private List<Notification> notifications;
-    private Context context;
-    private ItemClickListener itemClickListener;
-
-    public NotificationsAdapter(List<Notification> notifications, ItemClickListener itemClickListener) {
-        this.notifications = notifications;
-        this.itemClickListener = itemClickListener;
+public class NotificationsAdapter extends CardAdapter<Notification> {
+    public NotificationsAdapter(List<Notification> notifications, Fragment fragment) {
+        super(notifications, fragment);
     }
 
     @Override
-    public Viewholder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        context = viewGroup.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View notificationView = inflater.inflate(R.layout.feed_card, viewGroup, false);
+    public void onClick(Notification notification, FragmentActivity fragmentActivity) {
+        /* Mark notification read */
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        String sessId = Utils.getSessionIDHeader();
+        retrofitInterface.markNotificationRead(sessId, notification.getNotificationId().toString()).enqueue(new EmptyCallback<Void>());
 
-        final Viewholder notificationsViewHolder = new Viewholder(notificationView);
-        notificationView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                itemClickListener.onItemClick(v, notificationsViewHolder.getAdapterPosition());
+        /* Open event */
+        if (notification.isEvent()) {
+            Gson gson = new Gson();
+            Event event = gson.fromJson(gson.toJson(notification.getNotificationActor()), Event.class) ;
+            Utils.openEventFragment(event, fragmentActivity);
+        } else if (notification.isNews()) {
+            NewsFragment newsFragment = new NewsFragment();
+            Utils.updateFragment(newsFragment, fragmentActivity);
+        } else if (notification.isBlogPost()) {
+            Gson gson = new Gson();
+            PlacementBlogPost post = gson.fromJson(gson.toJson(notification.getNotificationActor()), PlacementBlogPost.class);
+            if (post.getLink().contains("training")) {
+                Utils.updateFragment(new TrainingBlogFragment(), fragmentActivity);
+            } else {
+                Utils.updateFragment(new PlacementBlogFragment(), fragmentActivity);
             }
-        });
-        return notificationsViewHolder;
-    }
-
-    @Override
-    public void onBindViewHolder(Viewholder viewholder, int i) {
-        Gson gson = new Gson();
-        Notification appNotification = notifications.get(i);
-        viewholder.notificationVerb.setText(appNotification.getNotificationVerb());
-        if (appNotification.getNotificationActorType().contains("event")) {
-            Event event = gson.fromJson(gson.toJson(appNotification.getNotificationActor()), Event.class);
-            Picasso.get().load(
-                    Utils.resizeImageUrl(event.getEventImageURL())
-            ).into(viewholder.notificationPicture);
-            viewholder.notificationTitle.setText(event.getEventName());
-        } else if (appNotification.getNotificationActorType().contains("newsentry")) {
-            NewsArticle article = gson.fromJson(gson.toJson(appNotification.getNotificationActor()), NewsArticle.class);
-            Picasso.get().load(
-                    Utils.resizeImageUrl(article.getBody().getBodyImageURL())
-            ).into(viewholder.notificationPicture);
-            viewholder.notificationTitle.setText(article.getTitle());
-        } else if (appNotification.getNotificationActorType().contains("blogentry")) {
-            PlacementBlogPost post = gson.fromJson(gson.toJson(appNotification.getNotificationActor()), PlacementBlogPost.class);
-            Picasso.get().load(R.drawable.lotus_sq).into(viewholder.notificationPicture);
-            viewholder.notificationTitle.setText(post.getTitle());
         }
     }
 
     @Override
-    public int getItemCount() {
-        return notifications.size();
-    }
-
-    public class Viewholder extends RecyclerView.ViewHolder {
-        private TextView notificationTitle;
-        private ImageView notificationPicture;
-        private TextView notificationVerb;
-
-        public Viewholder(View itemView) {
-            super(itemView);
-
-            notificationPicture = (ImageView) itemView.findViewById(R.id.object_picture);
-            notificationTitle = (TextView) itemView.findViewById(R.id.object_title);
-            notificationVerb = (TextView) itemView.findViewById(R.id.object_subtitle);
-        }
+    public int getAvatarPlaceholder(Notification notification) {
+        return R.drawable.lotus_sq;
     }
 }

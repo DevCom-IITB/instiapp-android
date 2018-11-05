@@ -8,25 +8,28 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.R;
 import app.insti.Utils;
-import app.insti.adapter.BodyAdapter;
-import app.insti.adapter.FeedAdapter;
-import app.insti.adapter.UserAdapter;
+import app.insti.activity.MainActivity;
+import app.insti.adapter.GenericAdapter;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.User;
 import app.insti.api.response.ExploreResponse;
+import app.insti.interfaces.CardInterface;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -41,10 +44,11 @@ public class ExploreFragment extends Fragment {
     private static List<Body> bodies = new ArrayList<>();
     private static List<Event> events = new ArrayList<>();
     private static List<User> users = new ArrayList<>();
+
+    private static List<CardInterface> cards = new ArrayList<>();
+
     private String sessionId;
-    private BodyAdapter bodyAdapter;
-    private FeedAdapter eventsAdapter;
-    private UserAdapter userAdapter;
+    private GenericAdapter genericAdapter;
 
     private String currentQuery = null;
 
@@ -75,10 +79,12 @@ public class ExploreFragment extends Fragment {
 
         // Initialize
         sessionId = Utils.getSessionIDHeader();
-        initRecyclerViews();
+        initRecyclerView();
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Explore");
+
+        final EditText searchEditText = getView().findViewById(R.id.explore_search);
 
         // Get all bodies
         if (allBodies.size() == 0) {
@@ -88,16 +94,32 @@ public class ExploreFragment extends Fragment {
                 public void onResponse(Call<List<Body>> call, Response<List<Body>> response) {
                     allBodies = response.body();
                     bodies = allBodies;
-                    updateAdapters(allBodies, new ArrayList<Event>(), new ArrayList<User>());
+                    updateAdapter(allBodies, new ArrayList<Event>(), new ArrayList<User>());
                 }
             });
         } else {
-            updateAdapters(allBodies, new ArrayList<Event>(), new ArrayList<User>());
+            // Check if search box is not empty
+            if (searchEditText.getText() != null && !searchEditText.getText().toString().equals("")) {
+                updateAdapter(bodies, events, users);
+            } else {
+                updateAdapter(allBodies, new ArrayList<Event>(), new ArrayList<User>());
+            }
             getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         }
 
+        // Close keyboard on search click
+        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    MainActivity.hideKeyboard(getActivity());
+                    return true;
+                }
+                return false;
+            }
+        });
+
         // Search on text change in search
-        final EditText searchEditText = getView().findViewById(R.id.explore_search);
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -115,7 +137,7 @@ public class ExploreFragment extends Fragment {
                 if (currentQuery.length() >= 3) {
                     doSearch(searchEditText.getText().toString());
                 } else if (currentQuery.length() == 0) {
-                    updateAdapters(allBodies, new ArrayList<Event>(), new ArrayList<User>());
+                    updateAdapter(allBodies, new ArrayList<Event>(), new ArrayList<User>());
                 }
             }
         });
@@ -151,45 +173,34 @@ public class ExploreFragment extends Fragment {
                 bodies = response.body().getBodies();
                 events = response.body().getEvents();
                 users = response.body().getUsers();
-                updateAdapters(bodies, events, users);
+                updateAdapter(bodies, events, users);
             }
         });
     }
 
-    private void updateAdapters(List<Body> bodies, List<Event> events, List<User> users) {
+    private void updateAdapter(List<Body> bodies, List<Event> events, List<User> users) {
         if (getActivity() == null || getView() == null) return;
+
         // Make spinner gone
         getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
-        // Set adapters data
-        bodyAdapter.setBodyList(bodies);
-        eventsAdapter.setEvents(events);
-        userAdapter.setUserList(users);
+        // Build cards
+        cards.clear();
+        cards.addAll(bodies);
+        cards.addAll(events);
+        cards.addAll(users);
+        genericAdapter.setList(cards);
 
-        // Notify all adapters
-        bodyAdapter.notifyDataSetChanged();
-        eventsAdapter.notifyDataSetChanged();
-        userAdapter.notifyDataSetChanged();
+        // Notify adapter
+        genericAdapter.notifyDataSetChanged();
     }
 
-    public void initRecyclerViews() {
+    public void initRecyclerView() {
         if (getActivity() == null || getView() == null) return;
-        // Bodies
-        RecyclerView bodiesRecyclerView = getView().findViewById(R.id.explore_body_recycler_view);
-        bodyAdapter = new BodyAdapter(bodies, this);
-        bodiesRecyclerView.setAdapter(bodyAdapter);
+
+        RecyclerView bodiesRecyclerView = getView().findViewById(R.id.explore_recycler_view);
+        genericAdapter = new GenericAdapter(cards, this);
+        bodiesRecyclerView.setAdapter(genericAdapter);
         bodiesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // Events
-        RecyclerView eventsRecyclerView = getView().findViewById(R.id.explore_event_recycler_view);
-        eventsAdapter = new FeedAdapter(events, this);
-        eventsRecyclerView.setAdapter(eventsAdapter);
-        eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // Users
-        RecyclerView usersRecyclerView = getView().findViewById(R.id.explore_user_recycler_view);
-        userAdapter = new UserAdapter(users, this);
-        usersRecyclerView.setAdapter(userAdapter);
-        usersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 }

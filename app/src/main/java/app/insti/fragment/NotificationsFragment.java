@@ -10,19 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
-
 import java.util.List;
 
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.adapter.NotificationsAdapter;
-import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.model.Event;
 import app.insti.api.model.Notification;
-import app.insti.api.model.PlacementBlogPost;
-import app.insti.interfaces.ItemClickListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -78,36 +72,7 @@ public class NotificationsFragment extends BaseFragment {
         /* Hide loader */
         getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
-        NotificationsAdapter notificationsAdapter = new NotificationsAdapter(notifications, new ItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                /* Get the notification */
-                Notification notification = notifications.get(position);
-
-                /* Mark notification read */
-                RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-                String sessId = Utils.getSessionIDHeader();
-                retrofitInterface.markNotificationRead(sessId, notification.getNotificationId().toString()).enqueue(new EmptyCallback<Void>());
-
-                /* Open event */
-                if (notification.getNotificationActorType().contains("event")) {
-                    Gson gson = new Gson();
-                    Event event = gson.fromJson(gson.toJson(notification.getNotificationActor()), Event.class) ;
-                    Utils.openEventFragment(event, getActivity());
-                } else if (notification.getNotificationActorType().contains("newsentry")) {
-                    NewsFragment newsFragment = new NewsFragment();
-                    Utils.updateFragment(newsFragment, getActivity());
-                } else if (notification.getNotificationActorType().contains("blogentry")) {
-                    Gson gson = new Gson();
-                    PlacementBlogPost post = gson.fromJson(gson.toJson(notification.getNotificationActor()), PlacementBlogPost.class);
-                    if (post.getLink().contains("training")) {
-                        Utils.updateFragment(new TrainingBlogFragment(), getActivity());
-                    } else {
-                        Utils.updateFragment(new PlacementBlogFragment(), getActivity());
-                    }
-                }
-            }
-        });
+        NotificationsAdapter notificationsAdapter = new NotificationsAdapter(notifications, this);
         notificationsRecyclerView = (RecyclerView) getActivity().findViewById(R.id.notifications_recycler_view);
         notificationsRecyclerView.setAdapter(notificationsAdapter);
         notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

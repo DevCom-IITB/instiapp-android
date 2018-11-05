@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Role {
+import app.insti.interfaces.CardInterface;
+
+public class Role implements CardInterface {
     @NonNull()
     @SerializedName("id")
     private String roleID;
@@ -117,5 +119,17 @@ public class Role {
 
     public void setRoleUsersDetail(List<User> roleUsersDetail) {
         this.roleUsersDetail = roleUsersDetail;
+    }
+
+    public String getTitle() {
+        return getRoleBodyDetails().getBodyName();
+    }
+
+    public String getSubtitle() {
+        return getRoleName();
+    }
+
+    public String getAvatarUrl() {
+        return getRoleBodyDetails().getBodyImageURL();
     }
 }

@@ -2,11 +2,19 @@ package app.insti.api.model;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
-public class Notification {
-    @NonNull()
+import app.insti.Utils;
+import app.insti.interfaces.CardInterface;
 
+public class Notification implements CardInterface {
+
+    private final String TYPE_EVENT = "event";
+    private final String TYPE_NEWSENTRY = "newsentry";
+    private final String TYPE_BLOG = "blogentry";
+
+    @NonNull()
     @SerializedName("id")
     private Integer notificationId;
 
@@ -69,5 +77,56 @@ public class Notification {
 
     public void setNotificationActor(Object notificationActor) {
         this.notificationActor = notificationActor;
+    }
+
+    public String getTitle() {
+        if (isEvent()) {
+            return getEvent().getEventName();
+        } else if (isNews()) {
+            return getNews().getTitle();
+        } else if (isBlogPost()) {
+            return getBlogPost().getTitle();
+        }
+        return "Notification";
+    }
+
+    public String getSubtitle() {
+        return getNotificationVerb();
+    }
+
+    public String getAvatarUrl() {
+        if (isEvent()) {
+            return getEvent().getEventImageURL();
+        } else if (isNews()) {
+            return getNews().getBody().getBodyImageURL();
+        }
+        return null;
+    }
+
+    public boolean isEvent() {
+        return getNotificationActorType().contains(TYPE_EVENT);
+    }
+
+    public boolean isNews() {
+        return getNotificationActorType().contains(TYPE_NEWSENTRY);
+    }
+
+    public boolean isBlogPost() {
+        return getNotificationActorType().contains(TYPE_BLOG);
+    }
+
+    public Event getEvent() {
+        Gson gson = Utils.gson;
+        return gson.fromJson(gson.toJson(getNotificationActor()), Event.class);
+    }
+
+    public NewsArticle getNews() {
+        Gson gson = Utils.gson;
+        return gson.fromJson(gson.toJson(getNotificationActor()), NewsArticle.class);
+    }
+
+    public PlacementBlogPost getBlogPost() {
+        Gson gson = Utils.gson;
+        return gson.fromJson(gson.toJson(getNotificationActor()), PlacementBlogPost.class);
     }
 }
