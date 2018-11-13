@@ -258,7 +258,7 @@ public class Event implements CardInterface {
         boolean eventEnded = timeNow.compareTo(endTime) > 0;
 
         if (eventEnded)
-            subtitle += "Event ended | ";
+            subtitle += "Ended | ";
         else if(eventStarted)
         {
             long difference = endTime.getTime() - timeNow.getTime();
