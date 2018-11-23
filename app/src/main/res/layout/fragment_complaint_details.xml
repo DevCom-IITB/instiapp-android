@@ -9,6 +9,7 @@
     android:id="@+id/nestedScrollViewComplaintDetail">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/linearLayoutComplaintDetails"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:orientation="vertical"
@@ -49,17 +50,38 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="4">
 
                 <TextView
                     android:id="@+id/textViewUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="Username"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/buttonnotificationsoff"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="10dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/baseline_notifications_black_24"
+                    android:visibility="visible"
+                    android:paddingRight="10dp"
+                    android:layout_weight="1"/>
+
+                <ImageButton
+                    android:id="@+id/buttonnotificationson"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="10dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/baseline_notifications_active_black_24"
+                    android:visibility="gone"
+                    android:paddingRight="10dp"
+                    android:layout_weight="1"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"

@@ -33,6 +33,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -78,6 +80,7 @@ import app.insti.activity.MainActivity;
 import app.insti.adapter.ImageViewPagerAdapter;
 import app.insti.api.LocationAPIUtils;
 import app.insti.api.RetrofitInterface;
+import app.insti.api.model.Venter;
 import app.insti.api.request.ComplaintCreateRequest;
 import app.insti.api.request.ImageUploadRequest;
 import app.insti.api.response.ComplaintCreateResponse;
@@ -92,6 +95,8 @@ import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.REQUEST_CAMERA_INT_ID;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
+import static app.insti.Constants.SESSION_ID;
+import static app.insti.fragment.RelevantComplaintsFragment.sID;
 
 public class FileComplaintFragment extends Fragment {
 
@@ -120,6 +125,9 @@ public class FileComplaintFragment extends Fragment {
     private CircleIndicator indicator;
     private RelativeLayout layout_buttons;
     private String userId;
+    private String userProfileUrl;
+    private String sessionId;
+    private String complaintId;
     private View view;
     private NestedScrollView nestedScrollView;
     private boolean GPSIsSetup = false;
@@ -131,6 +139,8 @@ public class FileComplaintFragment extends Fragment {
     private ImageButton imageButtonAddTags;
     private Button buttonAnalysis;
     private ImageButton imageActionButton;
+    List<Venter.Complaint> complaints;
+    private Venter.Complaint detailedComplaint;
 
     public static FileComplaintFragment getMainActivity() {
         return mainactivity;
@@ -162,6 +172,7 @@ public class FileComplaintFragment extends Fragment {
         }
         view = inflater.inflate(R.layout.fragment_file_complaint, container, false);
         bundleCollection();
+
         prepareTags();
         progressDialog = new ProgressDialog(getContext());
         final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
@@ -215,12 +226,27 @@ public class FileComplaintFragment extends Fragment {
             }
         });
 
+        final String[] descriptions = getResources().getStringArray(R.array.comlaint_description);
+        callServerToGetDescriptions();
+
         descriptionAutoCompleteTextview.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                ArrayAdapter<String> adapter =
+                        new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, descriptions );
+                descriptionAutoCompleteTextview.setAdapter(adapter);
+                descriptionAutoCompleteTextview.setDropDownWidth(getResources().getDisplayMetrics().widthPixels);
                 searchComplaint(hasFocus);
             }
         });
+
+        descriptionAutoCompleteTextview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getComplaint(parent, position);
+            }
+        });
+
 
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
@@ -246,6 +272,96 @@ public class FileComplaintFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    public void getComplaint(AdapterView<?> adapterView, int pos) {
+        Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@@ Inside getcomplaint");
+        complaintId = "";
+        for (int i = 0; i < complaints.size(); i++) {
+            Venter.Complaint complaint = complaints.get(i);
+            String description = (String) adapterView.getAdapter().getItem(pos);
+            if (complaint.getDescription().contains(description)) {
+                complaintId = complaint.getComplaintID();
+                detailedComplaint = complaint;
+                break;
+            }
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString("sessionId", sessionId);
+        bundle.putString("userId", userId);
+        bundle.putString("userProfileUrl", userProfileUrl);
+        bundle.putString("id", complaintId);
+        ComplaintFragment complaintFragment = new ComplaintFragment();
+        complaintFragment.setArguments(bundle);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.framelayout_for_fragment, complaintFragment);
+        fragmentTransaction.addToBackStack("Complaint Fragment").commit();
+
+
+//        return ComplaintDetailsFragment.getInstance(sessionId, complaintId, userId, userProfileUrl);
+    }
+
+    private void callServerToGetDescriptions() {
+        /*try {
+            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+            retrofitInterface.getAllComplaints("sessionid=" + sID).enqueue(new Callback<List<Venter.Complaint>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<Venter.Complaint>> call, @NonNull Response<List<Venter.Complaint>> response) {
+                    if (response.body() != null && !(response.body().isEmpty())) {
+                        Log.i(TAG, "response.body != null");
+                        *//*Log.i(TAG, "response: " + response.body());*//*
+                        List<Venter.Complaint> complaints =response.body();
+
+                        for (int i= 0; i<complaints.size(); i++){
+                            detailedComplaint = complaints.get(i);
+                            *//*Log.i(TAG, "@@@@@@@@@@@@Inside detailed complaint:"+ detailedComplaint);*//*
+                            description = detailedComplaint.getDescription();
+                            description = description.replace("Complaint: ", "");
+                            *//*Log.i(TAG, "@@@@@@@@@@@@Inside regex:"+ description + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");*//*
+                            String[] des = description.split("\n\n");
+                            Log.i(TAG, "@@@@@@@@@@@@Inside for:"+ des[0] + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                            descriptions.add(des[0]);
+                        }
+                    } else {
+                        Log.i(TAG, "response.body is empty");
+                    }
+                    for (int i=0; i<descriptions.size();i++){
+                        Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                        Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@"+ descriptions.get(i));
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<List<Venter.Complaint>> call, @NonNull Throwable t) {
+                    Log.i(TAG, "failure" + t.toString());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+        try {
+            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+            retrofitInterface.getAllComplaints("sessionid=" + sID).enqueue(new Callback<List<Venter.Complaint>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<Venter.Complaint>> call, @NonNull Response<List<Venter.Complaint>> response) {
+                    if (response.body() != null && !(response.body().isEmpty())) {
+                        complaints = response.body();
+                        Log.i(TAG, "response.body != null");
+                        Log.i(TAG, "response: " + response.body());
+                    } else {
+                        Log.i(TAG, "response.body is empty");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<List<Venter.Complaint>> call, @NonNull Throwable t) {
+                    Log.i(TAG, "failure" + t.toString());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initviews(View view) {
@@ -286,6 +402,7 @@ public class FileComplaintFragment extends Fragment {
         editTextLocationDetails = view.findViewById(R.id.editTextLocationDetails);
         editTextTags = view.findViewById(R.id.editTextTags);
         descriptionAutoCompleteTextview = view.findViewById(R.id.dynamicAutoCompleteTextView);
+        String[] countries = getResources().getStringArray(R.array.comlaint_description);
         mMapView = view.findViewById(R.id.google_map);
         tagView = view.findViewById(R.id.tag_view);
         tagViewPopulate = view.findViewById(R.id.tag_populate);
@@ -294,6 +411,8 @@ public class FileComplaintFragment extends Fragment {
     private void bundleCollection() {
         Bundle bundle = getArguments();
         userId = bundle.getString(Constants.USER_ID);
+        userProfileUrl = bundle.getString(Constants.CURRENT_USER_PROFILE_PICTURE);
+        sessionId = bundle.getString(Constants.SESSION_ID,"");
     }
 
     private void searchComplaint(boolean hasFocus) {
@@ -305,6 +424,8 @@ public class FileComplaintFragment extends Fragment {
                 linearLayoutAnalyse.setPadding(0, 0, 0, paddingPixel);
                 layout_buttons.setVisibility(View.VISIBLE);
                 buttonSubmit.setVisibility(View.VISIBLE);
+                descriptionAutoCompleteTextview.showDropDown();
+
             } else {
                 Toast.makeText(getContext(), getString(R.string.initial_message_file_complaint), Toast.LENGTH_SHORT).show();
             }

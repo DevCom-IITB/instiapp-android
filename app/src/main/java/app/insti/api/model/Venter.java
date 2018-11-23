@@ -31,11 +31,13 @@ public class Venter {
         private List<TagUri> tags;
         @SerializedName("users_up_voted")
         private List<User> usersUpVoted;
+        private List<User> userssubscribed;
         @SerializedName("images")
         private List<String> images;
         @SerializedName("comments")
         private List<Comment> comment;
         private int voteCount;
+        private boolean complaintsubscribed;
 
         @NonNull
         public String getComplaintID() {
@@ -140,6 +142,22 @@ public class Venter {
 
         public void setVoteCount(int voteCount) {
             this.voteCount = voteCount;
+        }
+
+        public List<User> getUserssubscribed() {
+            return userssubscribed;
+        }
+
+        public void setUserssubscribed(List<User> userssubscribed) {
+            this.userssubscribed = userssubscribed;
+        }
+
+        public boolean isComplaintsubscribed() {
+            return complaintsubscribed;
+        }
+
+        public void setComplaintsubscribed(boolean complaintsubscribed) {
+            this.complaintsubscribed = complaintsubscribed;
         }
     }
 

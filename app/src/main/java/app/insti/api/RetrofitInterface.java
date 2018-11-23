@@ -120,6 +120,9 @@ public interface RetrofitInterface {
     @GET("venter/complaints?filter=me")
     Call<List<Venter.Complaint>> getUserComplaints(@Header("Cookie") String sessionId);
 
+    @GET("venter/relevant?filter")
+    Call<List<Venter.Complaint>> getRelevantComplaints(@Header("Cookie") String sessionId, @Query("query") String query);
+
     @GET("venter/complaints/{complaintId}")
     Call<Venter.Complaint> getComplaint(@Header("Cookie") String sessionId, @Path("complaintId") String complaintId);
 

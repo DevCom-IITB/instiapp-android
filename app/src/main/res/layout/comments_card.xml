@@ -13,6 +13,7 @@
     app:cardCornerRadius="0dp">
 
     <LinearLayout
+        android:id="@+id/linearLayoutCommentCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -69,6 +70,28 @@
             android:paddingRight="5dp"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editTextComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:scrollHorizontally="true"
+            android:text="Comment"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+
+        <ImageButton
+            android:id="@+id/send_comment"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:src="@drawable/baseline_send_black_18"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

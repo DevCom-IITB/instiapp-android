@@ -20,7 +20,7 @@ import app.insti.adapter.ComplaintFragmentViewPagerAdapter;
 
 public class ComplaintsFragment extends BaseFragment {
 
-    private String userID, userProfileUrl;
+    private String userID, userProfileUrl, sessionId;
     private TabLayout slidingTabLayout;
 
     @Override
@@ -34,6 +34,7 @@ public class ComplaintsFragment extends BaseFragment {
         Bundle bundle = getArguments();
         userID = bundle.getString(Constants.USER_ID);
         userProfileUrl = bundle.getString(Constants.CURRENT_USER_PROFILE_PICTURE);
+        sessionId = bundle.getString(Constants.SESSION_ID,"");
         CollapsingToolbarLayout collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
         ViewPager viewPager = view.findViewById(R.id.tab_viewpager);

@@ -95,6 +95,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="top"
                                 android:hint="Enter Description"
+                                android:completionThreshold="1"
                                 android:imeOptions="flagNoExtractUi|actionSearch"
                                 android:inputType="textMultiLine"
                                 android:minLines="3"
@@ -104,6 +105,20 @@
 
                         </android.support.design.widget.TextInputLayout>
 
+                        <!--<android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5sp"
+                            android:paddingHorizontal="5dp">
+
+                            <fragment
+                                android:id="@+id/description_autocomplete_fragment"
+                                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+
+                        </android.support.v7.widget.CardView>
+-->
                         <ProgressBar
                             android:id="@+id/pb_loading_indicator"
                             style="?android:attr/progressBarStyleSmall"

@@ -38,7 +38,7 @@ public class ComplaintFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_complaint, container, false);
-
+        Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintfragment: oncreateview ");
         slidingTabLayout = view.findViewById(R.id.sliding_tab_layout);
         this.mview = view;
         return view;
@@ -47,7 +47,7 @@ public class ComplaintFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintfragment: onviewcreated ");
         Bundle bundle = getArguments();
         if (bundle != null) {
             complaintId = bundle.getString("id");
@@ -59,7 +59,7 @@ public class ComplaintFragment extends Fragment {
     }
 
     private void callServerToGetDetailedComplaint() {
-
+        Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintfragment: callservertogetcomplaints ");
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.getComplaint("sessionid=" + sessionID, complaintId).enqueue(new Callback<Venter.Complaint>() {
             @Override
@@ -74,6 +74,13 @@ public class ComplaintFragment extends Fragment {
                                 complaint.setVoteCount(0);
                             }
                         }
+                        /*for (User currentUser : complaint.getUserssubscribed()){
+                            if (currentUser.getUserID().equals(userId)){
+                                complaint.setComplaintsubscribed(true);
+                            } else {
+                                complaint.setComplaintsubscribed(false);
+                            }
+                        }*/
                     }
                     initTabViews(complaint);
                     //Make progress circle gone After loading
@@ -92,15 +99,16 @@ public class ComplaintFragment extends Fragment {
 
     private void initTabViews(final Venter.Complaint detailedComplaint) {
         try {
+            Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintfragment: inittabviews ");
             if (detailedComplaint != null) {
+                Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintfragment: inittabviews, detailedcomplaint != null ");
                 viewPager = mview.findViewById(R.id.tab_viewpager_details);
                 if (viewPager != null) {
                     Log.i(TAG, "viewPager != null");
-                    ComplaintDetailsPagerAdapter complaintDetailsPagerAdapter = new ComplaintDetailsPagerAdapter(getChildFragmentManager(), sessionID, complaintId, userId, userProfileUrl);
-
+                    Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintfragment: inittabviews, viewpager != null ");
+                    ComplaintDetailsPagerAdapter complaintDetailsPagerAdapter = new ComplaintDetailsPagerAdapter(getChildFragmentManager(), detailedComplaint, getContext(), sessionID, complaintId, userId, userProfileUrl);
                     viewPager.setAdapter(complaintDetailsPagerAdapter);
                     slidingTabLayout.setupWithViewPager(viewPager);
-
                     slidingTabLayout.post(new Runnable() {
                         @Override
                         public void run() {
@@ -114,10 +122,11 @@ public class ComplaintFragment extends Fragment {
 
                                 final TypedArray styledAttributes = Objects.requireNonNull(ComplaintFragment.this.getActivity()).getTheme().obtainStyledAttributes(
                                         new int[]{android.R.attr.actionBarSize});
+                                int mActionBarSize = (int) styledAttributes.getDimension(0, 0);
                                 styledAttributes.recycle();
                                 //Replace second parameter to mActionBarSize = (int) styledAttributes.getDimension(0, 0) after adding "Relevant Complaints"
                                 AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(AppBarLayout.LayoutParams.MATCH_PARENT,
-                                        0);
+                                        mActionBarSize);
                                 slidingTabLayout.setLayoutParams(layoutParams);
 
                                 slidingTabLayout.setTabMode(TabLayout.MODE_FIXED);
@@ -151,6 +160,7 @@ public class ComplaintFragment extends Fragment {
                     );
 
                     if (complaintDetailsFragment != null)
+                        Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintfragment: inittabviews, complaintdetailsfragment !=null ");
                         complaintDetailsFragment.setDetailedComplaint(detailedComplaint);
                 }
             }

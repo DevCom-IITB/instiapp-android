@@ -46,6 +46,8 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private TextView textViewDescription;
         private ImageButton buttonComments;
         private ImageButton buttonVotes;
+        private ImageButton notificationson;
+        private ImageButton notificationsoff;
         private TextView textViewComments;
         private TextView textViewVotes;
         private TextView textViewLocation;
@@ -64,6 +66,8 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             textViewDescription = currentView.findViewById(R.id.textViewDescription);
             buttonComments = currentView.findViewById(R.id.buttonComments);
             buttonVotes = currentView.findViewById(R.id.buttonVotes);
+            notificationsoff = currentView.findViewById(R.id.buttonnotificationsoff);
+            notificationson = currentView.findViewById(R.id.buttonnotificationson);
             textViewComments = currentView.findViewById(R.id.text_comments);
             textViewVotes = currentView.findViewById(R.id.text_votes);
         }
@@ -100,6 +104,13 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else if (complaint.getStatus().equalsIgnoreCase("Resolved")) {
                     textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorGreen)));
                     textViewStatus.setTextColor(context.getResources().getColor(R.color.secondaryTextColor));
+                }
+                if (complaintList.get(pos).isComplaintsubscribed()){
+                    notificationson.setVisibility(View.VISIBLE);
+                    notificationsoff.setVisibility(View.GONE);
+                }else if (!complaintList.get(pos).isComplaintsubscribed()){
+                    notificationson.setVisibility(View.GONE);
+                    notificationsoff.setVisibility(View.VISIBLE);
                 }
                 String time = DateTimeUtil.getDate(complaint.getComplaintReportDate());
                 Log.i(TAG, "time: " + time);
@@ -164,6 +175,90 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     }
                 });
+                notificationsoff.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+                        if (complaintList.get(position).isComplaintsubscribed()) {
+                            retrofitInterface.upVote("sessionid=" + sessionID, complaintList.get(pos).getComplaintID(), 1).enqueue(new Callback<Venter.Complaint>() {
+                                @Override
+                                public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
+                                    if (response.isSuccessful()) {
+                                        Venter.Complaint complaint = response.body();
+                                        complaintList.get(position).setComplaintsubscribed(false);
+                                        notificationson.setVisibility(View.GONE);
+                                        notificationsoff.setVisibility(View.VISIBLE);
+
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
+                                    Log.i(TAG, "failure in : " + t.toString());
+                                }
+                            });
+                        } else if (!complaintList.get(position).isComplaintsubscribed()){
+                            retrofitInterface.upVote("sessionid=" + sessionID, complaintList.get(pos).getComplaintID(), 0).enqueue(new Callback<Venter.Complaint>() {
+                                @Override
+                                public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
+                                    if (response.isSuccessful()) {
+                                        Venter.Complaint complaint = response.body();
+                                        complaintList.get(position).setComplaintsubscribed(true);
+                                        notificationsoff.setVisibility(View.GONE);
+                                        notificationson.setVisibility(View.VISIBLE);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
+                                    Log.i(TAG, "failure in up vote: " + t.toString());
+                                }
+                            });
+                        }
+                    }
+                });
+                notificationson.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+                        if (complaintList.get(position).isComplaintsubscribed()) {
+                            retrofitInterface.upVote("sessionid=" + sessionID, complaintList.get(pos).getComplaintID(), 1).enqueue(new Callback<Venter.Complaint>() {
+                                @Override
+                                public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
+                                    if (response.isSuccessful()) {
+                                        Venter.Complaint complaint = response.body();
+                                        complaintList.get(position).setComplaintsubscribed(false);
+                                        notificationson.setVisibility(View.GONE);
+                                        notificationsoff.setVisibility(View.VISIBLE);
+
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
+                                    Log.i(TAG, "failure in : " + t.toString());
+                                }
+                            });
+                        } else if (!complaintList.get(position).isComplaintsubscribed()){
+                            retrofitInterface.upVote("sessionid=" + sessionID, complaintList.get(pos).getComplaintID(), 0).enqueue(new Callback<Venter.Complaint>() {
+                                @Override
+                                public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
+                                    if (response.isSuccessful()) {
+                                        Venter.Complaint complaint = response.body();
+                                        complaintList.get(position).setComplaintsubscribed(true);
+                                        notificationsoff.setVisibility(View.GONE);
+                                        notificationson.setVisibility(View.VISIBLE);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
+                                    Log.i(TAG, "failure in up vote: " + t.toString());
+                                }
+                            });
+                        }
+                    }
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -208,4 +303,5 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void setcomplaintList(List<Venter.Complaint> list) {
         this.complaintList = list;
     }
+
 }

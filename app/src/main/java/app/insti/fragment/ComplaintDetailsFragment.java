@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import app.insti.Constants;
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
@@ -66,12 +67,14 @@ public class ComplaintDetailsFragment extends Fragment {
     private LinearLayout tagsLayout;
     private EditText editTextComment;
     private ImageButton imageButtonSend;
+    private ImageButton notificationsoff;
+    private ImageButton notificationson;
     private CircleImageView circleImageViewCommentUserImage;
     private RecyclerView recyclerViewComments;
     private RecyclerView recyclerViewUpVotes;
     private Button buttonVoteUp;
     private View mView;
-
+    private List<User> usersSubscribedList;
     private static String sId, cId, uId, uProfileUrl;
     private CommentsAdapter commentListAdapter;
     private UpVotesAdapter upVotesAdapter;
@@ -81,6 +84,7 @@ public class ComplaintDetailsFragment extends Fragment {
     private ScrollView layoutUpVotes;
     private NestedScrollView nestedScrollView;
     private CircleIndicator circleIndicator;
+    private LinearLayout linearLayoutComplaintDetails;
 
     public static ComplaintDetailsFragment getInstance(String sessionid, String complaintid, String userid, String userProfileUrl) {
         sId = sessionid;
@@ -94,11 +98,32 @@ public class ComplaintDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        /*Bundle bundle = getArguments();
+        uId = bundle.getString(Constants.USER_ID);
+        uProfileUrl = bundle.getString(Constants.CURRENT_USER_PROFILE_PICTURE);
+        sId = bundle.getString(Constants.SESSION_ID,"");
+        cId = bundle.getString("compid");
+        Log.i("TAG", "@@@@@@@@@@@@@@@@@@@@@@@@"+ sId);
+        Log.i("TAG", "@@@@@@@@@@@@@@@@@@@@@@@@"+ cId);
+        Log.i("TAG", "@@@@@@@@@@@@@@@@@@@@@@@@"+ uId);
+        Log.i("TAG", "@@@@@@@@@@@@@@@@@@@@@@@@"+ uProfileUrl);*/
+        /*if (bundle != null && cId !=null){
+            uId = bundle.getString(Constants.USER_ID);
+            uProfileUrl = bundle.getString(Constants.CURRENT_USER_PROFILE_PICTURE);
+            sId = bundle.getString(Constants.SESSION_ID,"");
+            cId = bundle.getString("compid");
+            Log.i("TAG", "@@@@@@@@@@@@@@@@@@@@@@@@"+ sId);
+            Log.i("TAG", "@@@@@@@@@@@@@@@@@@@@@@@@"+ cId);
+            Log.i("TAG", "@@@@@@@@@@@@@@@@@@@@@@@@"+ uId);
+            Log.i("TAG", "@@@@@@@@@@@@@@@@@@@@@@@@"+ uProfileUrl);
+        }*/
+        Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintdetailsfragment: oncreateview ");
         View view = inflater.inflate(R.layout.fragment_complaint_details, container, false);
         commentList = new ArrayList<>();
-
         initialiseViews(view);
         upVotesList = new ArrayList<>();
+        usersSubscribedList = new ArrayList<>();
         commentListAdapter = new CommentsAdapter(getContext(), sId, uId, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         upVotesAdapter = new UpVotesAdapter(this, getContext());
@@ -120,6 +145,28 @@ public class ComplaintDetailsFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        notificationsoff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscribeToComplaint(detailedComplaint);
+            }
+        });
+
+        notificationson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscribeToComplaint(detailedComplaint);
+
+            }
+        });
+
+        linearLayoutComplaintDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linearLayoutComplaintDetails.requestFocus();
+            }
+        });
 
         imageButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +192,7 @@ public class ComplaintDetailsFragment extends Fragment {
     }
 
     private void initialiseViews(View view) {
+        linearLayoutComplaintDetails = view.findViewById(R.id.linearLayoutComplaintDetails);
         nestedScrollView = view.findViewById(R.id.nestedScrollViewComplaintDetail);
         textViewUserName = view.findViewById(R.id.textViewUserName);
         textViewReportDate = view.findViewById(R.id.textViewReportDate);
@@ -160,8 +208,11 @@ public class ComplaintDetailsFragment extends Fragment {
         recyclerViewUpVotes = view.findViewById(R.id.recyclerViewUpVotes);
         editTextComment = view.findViewById(R.id.edit_comment);
         imageButtonSend = view.findViewById(R.id.send_comment);
+        notificationsoff = view.findViewById(R.id.buttonnotificationsoff);
+        notificationson = view.findViewById(R.id.buttonnotificationson);
         circleImageViewCommentUserImage = view.findViewById(R.id.comment_user_image);
         buttonVoteUp = view.findViewById(R.id.buttonVoteUp);
+
         circleIndicator  = view.findViewById(R.id.indicator);
         LinearLayout imageViewHolder = view.findViewById(R.id.image_holder_view);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
@@ -171,12 +222,14 @@ public class ComplaintDetailsFragment extends Fragment {
     }
 
     public void setDetailedComplaint(Venter.Complaint detailedComplaint) {
+        Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintdetailsfragment: setdetailedcomplaint ");
         this.detailedComplaint = detailedComplaint;
         populateViews();
     }
 
     private void populateViews() {
         try {
+            Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintdetailsfragment: populateviews ");
             buttonVoteUp.setText("UpVote");
             textViewUserName.setText(detailedComplaint.getComplaintCreatedBy().getUserName());
             String time = DateTimeUtil.getDate(detailedComplaint.getComplaintReportDate().toString());
@@ -195,16 +248,27 @@ public class ComplaintDetailsFragment extends Fragment {
                 textViewStatus.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.colorGreen)));
                 textViewStatus.setTextColor(getContext().getResources().getColor(R.color.secondaryTextColor));
             }
+            addVotesToView(detailedComplaint);
+            Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintdetailsfragment: populateviews, upvotelist: "+upVotesList);
+            addCommentsToView(detailedComplaint);
+            Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintdetailsfragment: populateviews, commentlist "+commentList);
+            if (detailedComplaint.isComplaintsubscribed()){
+                notificationson.setVisibility(View.VISIBLE);
+                notificationsoff.setVisibility(View.GONE);
+            } else if (!detailedComplaint.isComplaintsubscribed()){
+                notificationson.setVisibility(View.GONE);
+                notificationsoff.setVisibility(View.INVISIBLE);
+            }
+
+            initViewPagerForImages(detailedComplaint);
+            Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintdetailsfragment: popuatateviews,initviewpagerforimages ");
             addTagsToView(detailedComplaint);
             if (detailedComplaint.getTags().isEmpty())
                 linearLayoutTags.setVisibility(View.GONE);
             textViewCommentLabel.setText("Comments (" + detailedComplaint.getComment().size() + ")");
             textViewVoteUpLabel.setText("Up Votes (" + detailedComplaint.getUsersUpVoted().size() + ")");
             Picasso.get().load(uProfileUrl).placeholder(R.drawable.user_placeholder).into(circleImageViewCommentUserImage);
-            addVotesToView(detailedComplaint);
-            addCommentsToView(detailedComplaint);
 
-            initViewPagerForImages(detailedComplaint);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -245,6 +309,41 @@ public class ComplaintDetailsFragment extends Fragment {
         });
     }
 
+    public void postEditedComment(String comment, final int position, final List<Venter.Comment> list) {
+        final CommentCreateRequest commentCreateRequest = new CommentCreateRequest(comment);
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.postComment("sessionid=" + sId, cId, commentCreateRequest).enqueue(new Callback<Venter.Comment>() {
+            @Override
+            public void onResponse(Call<Venter.Comment> call, Response<Venter.Comment> response) {
+                if (response.isSuccessful()) {
+                    Venter.Comment comment1 = response.body();
+                    Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@"+comment1);
+                    list.add(comment1);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Venter.Comment> call, Throwable t) {
+                Log.i(TAG, "failure in posting comments: " + t.toString());
+            }
+        });
+    }
+
+    /*private void addEditedComment(Venter.Comment newComment, int positon) {
+        int pos = positon;
+        commentList.add(pos, newComment);
+        commentListAdapter.setCommentList(commentList, textViewCommentLabel);
+        commentListAdapter.notifyItemInserted(commentList.indexOf(newComment));
+        commentListAdapter.notifyItemRangeChanged(0, commentListAdapter.getItemCount());
+        textViewCommentLabel.setText("Comments (" + commentList.size() + ")");
+        recyclerViewComments.post(new Runnable() {
+            @Override
+            public void run() {
+                MainActivity.hideKeyboard(getActivity());
+            }
+        });
+    }*/
+
     private void addNewComment(Venter.Comment newComment) {
         commentList.add(newComment);
         commentListAdapter.setCommentList(commentList, textViewCommentLabel);
@@ -260,6 +359,7 @@ public class ComplaintDetailsFragment extends Fragment {
     }
 
     private void addCommentsToView(Venter.Complaint detailedComplaint) {
+        Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintdetailsfragment: addcommentstoview ");
         for (Venter.Comment comment : detailedComplaint.getComment())
             commentList.add(comment);
         commentListAdapter.setCommentList(commentList, textViewCommentLabel);
@@ -285,7 +385,7 @@ public class ComplaintDetailsFragment extends Fragment {
                     Log.i(TAG, "failure in up vote: " + t.toString());
                }
             });
-        } else if (detailedComplaint.getVoteCount() ==1){
+        } else if (detailedComplaint.getVoteCount() == 1){
             retrofitInterface.upVote("sessionid=" + sId, cId, 0).enqueue(new Callback<Venter.Complaint>() {
                 @Override
                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
@@ -304,7 +404,48 @@ public class ComplaintDetailsFragment extends Fragment {
         }
     }
 
+    private void subscribeToComplaint(final Venter.Complaint detailedComplaint){
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        if (detailedComplaint.isComplaintsubscribed()) {
+            retrofitInterface.upVote("sessionid=" + sId, cId, 1).enqueue(new Callback<Venter.Complaint>() {
+                @Override
+                public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
+                    if (response.isSuccessful()) {
+                        Venter.Complaint complaint = response.body();
+                        detailedComplaint.setComplaintsubscribed(false);
+                        notificationson.setVisibility(View.GONE);
+                        notificationsoff.setVisibility(View.VISIBLE);
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
+                    Log.i(TAG, "failure in up vote: " + t.toString());
+                }
+            });
+        } else if (!detailedComplaint.isComplaintsubscribed()){
+            retrofitInterface.upVote("sessionid=" + sId, cId, 0).enqueue(new Callback<Venter.Complaint>() {
+                @Override
+                public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
+                    if (response.isSuccessful()) {
+                        Venter.Complaint complaint = response.body();
+                        detailedComplaint.setComplaintsubscribed(true);
+                        notificationsoff.setVisibility(View.GONE);
+                        notificationson.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
+                    Log.i(TAG, "failure in up vote: " + t.toString());
+                }
+            });
+        }
+    }
+
     public void addVotesToView(Venter.Complaint detailedComplaint) {
+        Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintdetailsfragment: addvotestoview ");
         upVotesList.clear();
         for (User users : detailedComplaint.getUsersUpVoted()) {
             upVotesList.add(users);
@@ -324,6 +465,7 @@ public class ComplaintDetailsFragment extends Fragment {
     }
 
     private void addTagsToView(Venter.Complaint detailedComplaint) {
+        Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintdetailsfragment: addtagstoview ");
         for (Venter.TagUri tagUri : detailedComplaint.getTags()) {
 
             TextView textViewTags = new TextView(getContext());
@@ -351,9 +493,11 @@ public class ComplaintDetailsFragment extends Fragment {
     }
 
     private void initViewPagerForImages(Venter.Complaint detailedComplaint) {
+        Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintdetailsfragment: initviewpagerforimages ");
         ViewPager viewPager = mView.findViewById(R.id.complaint_image_view_pager);
         if (viewPager != null) {
             try {
+                Log.i(TAG, "@@@@@@@@@@@@@@@@@ Inside complaintdetailsfragment: initviewpagerforimages, viewpager != null ");
                 ImageViewPagerAdapter imageFragmentPagerAdapter = new ImageViewPagerAdapter(getActivity(), detailedComplaint);
                 viewPager.setAdapter(imageFragmentPagerAdapter);
                 circleIndicator.setViewPager(viewPager);

@@ -12,6 +12,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,8 +26,11 @@ import java.util.List;
 
 import app.insti.R;
 import app.insti.Utils;
+import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Venter;
+import app.insti.api.request.CommentCreateRequest;
+import app.insti.fragment.ComplaintDetailsFragment;
 import app.insti.utils.DateTimeUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -44,6 +50,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private String sessionId, userId;
     private Fragment fragment;
     private TextView textViewCommentLabel;
+    private View mView;
+    private LinearLayout commentCardLayout;
+    private LinearLayout comlaintDetailsLayout;
+    private boolean flag = false;
 
     private List<Venter.Comment> commentList = new ArrayList<>();
 
@@ -62,15 +72,21 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView textViewName;
         private TextView textViewCommentTime;
         private TextView textViewComment;
+        private EditText editTextComment;
+        private ImageButton send_comment;
         private final RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
 
         CommentsViewHolder(View itemView) {
             super(itemView);
+            commentCardLayout = itemView.findViewById(R.id.linearLayoutCommentCard);
+            comlaintDetailsLayout = itemView.findViewById(R.id.linearLayoutComplaintDetails);
             cardView = itemView.findViewById(R.id.cardViewComment);
             textViewName = itemView.findViewById(R.id.textViewUserComment);
             textViewComment = itemView.findViewById(R.id.textViewComment);
+            editTextComment = itemView.findViewById(R.id.editTextComment);
             textViewCommentTime = itemView.findViewById(R.id.textViewTime);
             circleImageView = itemView.findViewById(R.id.circleImageViewUserImage);
+            send_comment = itemView.findViewById(R.id.send_comment);
         }
 
         private void bindHolder(final int position) {
@@ -106,6 +122,68 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
+                                case R.id.edit_comment_option:
+                                    final String temp = textViewComment.getText().toString();
+                                    commentCardLayout.setClickable(false);
+                                    commentCardLayout.setLongClickable(false);
+                                    cardView.setLongClickable(false);
+                                    textViewComment.setVisibility(View.GONE);
+                                    editTextComment.setVisibility(View.VISIBLE);
+                                    editTextComment.setText(textViewComment.getText().toString());
+                                    send_comment.setVisibility(View.VISIBLE);
+                                    editTextComment.requestFocus();
+                                    commentCardLayout.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            commentCardLayout.setClickable(true);
+                                            commentCardLayout.setLongClickable(true);
+                                            editTextComment.clearFocus();
+                                            textViewComment.setText(temp);
+                                            commentCardLayout.requestFocus();
+                                            textViewComment.setVisibility(View.VISIBLE);
+                                            send_comment.setVisibility(View.GONE);
+                                            editTextComment.setVisibility(View.GONE);
+                                        }
+                                    });
+                                    send_comment.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            commentCardLayout.setClickable(true);
+                                            commentCardLayout.setLongClickable(true);
+                                            cardView.setLongClickable(true);
+                                            CommentCreateRequest commentCreateRequest = new CommentCreateRequest(editTextComment.getText().toString());
+                                            retrofitInterface.updateComment("sessionid=" + sessionId, comment.getId(), commentCreateRequest).enqueue(new Callback<Venter.Comment>() {
+                                                @Override
+                                                public void onResponse(Call<Venter.Comment> call, Response<Venter.Comment> response) {
+                                                    if (response.isSuccessful()){
+                                                        commentCardLayout.setClickable(true);
+                                                        commentCardLayout.setLongClickable(true);
+                                                        cardView.setLongClickable(true);
+                                                        Venter.Comment comment = response.body();
+                                                        /*commentList.add(position, comment);*/
+                                                        notifyDataSetChanged();
+                                                        notifyItemChanged(position);
+//                                                        CommentsAdapter.this.notify();
+//                                                        CommentsViewHolder.this.notify();
+                                                        editTextComment.setText(null);
+                                                        setCommentList(commentList, textViewCommentLabel);
+//                                                        textViewComment.setText(editTextComment.getText().toString());
+                                                        editTextComment.setVisibility(View.GONE);
+                                                        send_comment.setVisibility(View.GONE);
+                                                        textViewComment.setVisibility(View.VISIBLE);
+                                                    } else {
+                                                        Toast.makeText(context, "Comment not edited", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<Venter.Comment> call, Throwable t) {
+                                                    Log.i(TAG, " failure in editing: " + t.toString());
+                                                }
+                                            });
+                                        }
+                                    });
+                                    break;
                                 case R.id.copy_comment_option:
                                     ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                                     ClipData clipData = ClipData.newPlainText("Text Copied", textViewComment.getText().toString());
@@ -168,6 +246,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Utils.openUserFragment(commentList.get(commentsViewHolder.getAdapterPosition()).getUser(), fragment.getActivity());
             }
         });
+        mView = view;
         return commentsViewHolder;
     }
 
