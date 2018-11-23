@@ -165,8 +165,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //                                                        CommentsViewHolder.this.notify();
                                                         editTextComment.setText(null);
                                                         setCommentList(commentList, textViewCommentLabel);
-                                                        notifyDataSetChanged();
-                                                        notifyItemChanged(position);
 //                                                        textViewComment.setText(editTextComment.getText().toString());
                                                         editTextComment.setVisibility(View.GONE);
                                                         send_comment.setVisibility(View.GONE);
