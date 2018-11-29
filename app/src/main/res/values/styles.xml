@@ -10,7 +10,6 @@
         <item name="themeColorInverse">#000000</item>
         <item name="newsColor">#F2F2F2</item>
         <item name="urlColor">@color/colorPrimary</item>
-        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -26,7 +25,6 @@
         <item name="themeColorInverse">#FFFFFF</item>
         <item name="newsColor">#00000000</item>
         <item name="urlColor">@color/colorAccent</item>
-        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
     <style name="AppThemeDark.NoActionBar">
