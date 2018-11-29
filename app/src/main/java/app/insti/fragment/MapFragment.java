@@ -145,7 +145,6 @@ public class MapFragment extends Fragment implements TextWatcher,
     private boolean editTextFocused = false;
     private Toast toast;
     private String message = "Sorry, no such place in our data.";
-    private boolean locationsShown = false;
     private boolean GPSIsSetup = false;
     private boolean followingUser = false;
     private Marker user = new Marker("You", "", 0, 0, -10, "");
@@ -233,10 +232,7 @@ public class MapFragment extends Fragment implements TextWatcher,
             @Override
             public void onResponse(Call<List<Venue>> call, Response<List<Venue>> response) {
                 if (response.isSuccessful()) {
-                    if (!locationsShown) {
-                        setupWithData(response.body());
-                        locationsShown = true;
-                    }
+                    setupWithData(response.body());
                 }
             }
 
