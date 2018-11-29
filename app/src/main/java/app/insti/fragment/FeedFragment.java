@@ -52,6 +52,8 @@ public class FeedFragment extends BaseFragment {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Feed");
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_feed);
+
         feedRecyclerView = view.findViewById(R.id.feed_recycler_view);
         mLayoutManager = new LinearLayoutManager(getContext());
         feedRecyclerView.setLayoutManager(mLayoutManager);

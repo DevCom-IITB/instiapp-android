@@ -61,6 +61,7 @@ public class CalendarFragment extends BaseFragment {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Calendar");
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_calendar);
 
         final CalendarView simpleCalendarView = (CalendarView) view.findViewById(R.id.simpleCalendarView); // get the reference of CalendarView
         simpleCalendarView.setFirstDayOfWeek(1); // set Sunday as the first day of the week

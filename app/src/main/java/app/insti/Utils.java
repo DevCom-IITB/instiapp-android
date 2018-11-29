@@ -1,9 +1,11 @@
 package app.insti;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -134,5 +136,14 @@ public final class Utils {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
         context.finish();
+    }
+
+    public static void setSelectedMenuItem(Activity activity, int id) {
+        if (activity != null) {
+            NavigationView navigationView = activity.findViewById(R.id.nav_view);
+            if (navigationView != null) {
+                navigationView.setCheckedItem(id);
+            }
+        }
     }
 }

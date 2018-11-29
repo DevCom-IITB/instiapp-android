@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import app.insti.R;
+import app.insti.Utils;
 
 public class QuickLinksFragment extends BaseFragment {
 
@@ -22,6 +23,7 @@ public class QuickLinksFragment extends BaseFragment {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Quick Links");
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_qlinks);
 
         TextView CMS = getActivity().findViewById(R.id.button_CMS);
         TextView CMSMaint = getActivity().findViewById(R.id.button_CMSMaint);
