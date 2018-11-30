@@ -2,6 +2,7 @@ package app.insti.fragment;
 
 
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,7 +25,7 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NotificationsFragment extends BaseFragment {
+public class NotificationsFragment extends BottomSheetDialogFragment {
 
     RecyclerView notificationsRecyclerView;
 
@@ -67,13 +68,13 @@ public class NotificationsFragment extends BaseFragment {
 
     private void showNotifications(final List<Notification> notifications) {
         /* Check if activity is done with */
-        if (getActivity() == null) return;
+        if (getActivity() == null || getView() == null) return;
 
         /* Hide loader */
-        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+        getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
         NotificationsAdapter notificationsAdapter = new NotificationsAdapter(notifications, this);
-        notificationsRecyclerView = (RecyclerView) getActivity().findViewById(R.id.notifications_recycler_view);
+        notificationsRecyclerView = (RecyclerView) getView().findViewById(R.id.notifications_recycler_view);
         notificationsRecyclerView.setAdapter(notificationsAdapter);
         notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }

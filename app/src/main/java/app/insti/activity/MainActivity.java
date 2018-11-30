@@ -531,7 +531,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.action_notifications) {
             NotificationsFragment notificationsFragment = new NotificationsFragment();
-            updateFragment(notificationsFragment);
+            notificationsFragment.show(getSupportFragmentManager(), TAG);
             return true;
         }
         return super.onOptionsItemSelected(item);
