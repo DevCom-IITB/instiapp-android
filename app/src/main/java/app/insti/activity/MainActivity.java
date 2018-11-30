@@ -165,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             private GestureDetector gestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
-                    Toast.makeText(MainActivity.this, "You have unlocked super max pro mode", Toast.LENGTH_SHORT).show();
                     Utils.changeTheme(MainActivity.this);
                     return super.onDoubleTap(e);
                 }

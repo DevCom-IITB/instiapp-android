@@ -133,6 +133,7 @@ public final class Utils {
         darkTheme = !darkTheme;
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
+        context.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         context.finish();
     }
 }
