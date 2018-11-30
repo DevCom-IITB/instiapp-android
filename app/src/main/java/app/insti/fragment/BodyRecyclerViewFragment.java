@@ -26,7 +26,7 @@ import app.insti.api.model.Body;
  * Use the {@link BodyRecyclerViewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BodyRecyclerViewFragment extends Fragment implements TransitionTargetFragment{
+public class BodyRecyclerViewFragment extends Fragment implements TransitionTargetFragment, TransitionTargetChild {
     private static final String TAG = "BodyRecyclerViewFragment";
     public Fragment parentFragment = null;
 
@@ -44,6 +44,11 @@ public class BodyRecyclerViewFragment extends Fragment implements TransitionTarg
         if (parentFragment instanceof TransitionTargetFragment) {
             ((TransitionTargetFragment) parentFragment).transitionEnd();
         }
+    }
+
+    @Override
+    public Fragment getParent() {
+        return parentFragment;
     }
 
     // TODO: Rename and change types and number of parameters

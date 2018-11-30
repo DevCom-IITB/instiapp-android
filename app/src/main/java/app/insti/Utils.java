@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.transition.Fade;
 import android.support.transition.Slide;
 import android.support.transition.Transition;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import app.insti.api.model.Event;
 import app.insti.api.model.User;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.EventFragment;
+import app.insti.fragment.TransitionTargetChild;
 import app.insti.fragment.TransitionTargetFragment;
 import app.insti.fragment.UserFragment;
 
@@ -91,6 +93,11 @@ public final class Utils {
         fragment.setEnterTransition(new Slide());
         currentFragment.setExitTransition(new Fade());
         fragment.setSharedElementReturnTransition(transition);
+
+        /* Set transition for parent in case it is a child */
+        if (currentFragment instanceof TransitionTargetChild) {
+            ((TransitionTargetChild) currentFragment).getParent().setExitTransition(new Fade());
+        }
 
         transition.addListener(new Transition.TransitionListener() {
             @Override
