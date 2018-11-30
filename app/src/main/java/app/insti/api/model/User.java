@@ -238,6 +238,10 @@ public class User implements CardInterface {
         return new Gson().toJson(this);
     }
 
+    public long getId() {
+        return getUserID().hashCode();
+    }
+
     public String getTitle() {
         return getUserName();
     }

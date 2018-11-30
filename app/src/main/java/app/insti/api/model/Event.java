@@ -243,6 +243,10 @@ public class Event implements CardInterface {
         return Objects.hash(eventID);
     }
 
+    public long getId() {
+        return hashCode();
+    }
+
     public String getTitle() {
         return getEventName();
     }

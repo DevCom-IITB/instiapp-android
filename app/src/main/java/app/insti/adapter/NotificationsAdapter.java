@@ -15,12 +15,16 @@ import app.insti.api.model.Event;
 import app.insti.api.model.Notification;
 import app.insti.api.model.PlacementBlogPost;
 import app.insti.fragment.NewsFragment;
+import app.insti.fragment.NotificationsFragment;
 import app.insti.fragment.PlacementBlogFragment;
 import app.insti.fragment.TrainingBlogFragment;
 
 public class NotificationsAdapter extends CardAdapter<Notification> {
+    private NotificationsFragment notificationsFragment;
+
     public NotificationsAdapter(List<Notification> notifications, Fragment fragment) {
         super(notifications, fragment);
+        notificationsFragment = (NotificationsFragment) fragment;
     }
 
     @Override
@@ -29,6 +33,9 @@ public class NotificationsAdapter extends CardAdapter<Notification> {
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         String sessId = Utils.getSessionIDHeader();
         retrofitInterface.markNotificationRead(sessId, notification.getNotificationId().toString()).enqueue(new EmptyCallback<Void>());
+
+        /* Close the bottom sheet */
+        notificationsFragment.dismiss();
 
         /* Open event */
         if (notification.isEvent()) {

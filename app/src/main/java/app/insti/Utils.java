@@ -20,6 +20,7 @@ import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
+import app.insti.api.model.Notification;
 import app.insti.api.model.User;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.EventFragment;
@@ -27,6 +28,8 @@ import app.insti.fragment.UserFragment;
 
 public final class Utils {
     public static UpdatableList<Event> eventCache = new UpdatableList<>();
+    public static UpdatableList<Notification> notificationCache = null;
+
     private static String sessionId;
     private static RetrofitInterface retrofitInterface;
     public static Gson gson;

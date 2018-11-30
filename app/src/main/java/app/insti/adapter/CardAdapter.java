@@ -38,6 +38,7 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
     public CardAdapter(List<T> tList, Fragment fragment) {
         this.tList = tList;
         mFragment = fragment;
+        this.setHasStableIds(true);
     }
 
     @Override
@@ -112,6 +113,11 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
     public int getItemViewType(int position) {
         if (position == 0) return 1;
         else return 2;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return tList.get(position).getId();
     }
 
     @Override

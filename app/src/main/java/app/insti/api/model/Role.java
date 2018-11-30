@@ -121,6 +121,10 @@ public class Role implements CardInterface {
         this.roleUsersDetail = roleUsersDetail;
     }
 
+    public long getId() {
+        return getRoleID().hashCode();
+    }
+
     public String getTitle() {
         return getRoleBodyDetails().getBodyName();
     }

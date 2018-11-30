@@ -35,6 +35,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public NewsAdapter(List<NewsArticle> newsArticles, ItemClickListener itemClickListener) {
         this.newsArticles = newsArticles;
         this.itemClickListener = itemClickListener;
+        this.setHasStableIds(true);
     }
 
     @Override
@@ -106,6 +107,11 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     @Override
     public int getItemViewType(int position) {
         return newsArticles.size() > position ? VIEW_ITEM : VIEW_PROG;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return newsArticles.get(position).getArticleID().hashCode();
     }
 
     @Override

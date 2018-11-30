@@ -19,6 +19,7 @@ public class MessMenuAdapter extends RecyclerView.Adapter<MessMenuAdapter.ViewHo
 
     public MessMenuAdapter(List<MessMenu> messMenus) {
         this.messMenus = messMenus;
+        this.setHasStableIds(true);
     }
 
     @NonNull
@@ -43,8 +44,17 @@ public class MessMenuAdapter extends RecyclerView.Adapter<MessMenuAdapter.ViewHo
     }
 
     @Override
+    public long getItemId(int position) {
+        return messMenus.get(position).getMealID().hashCode();
+    }
+
+    @Override
     public int getItemCount() {
         return messMenus.size();
+    }
+
+    public void setMenu(List<MessMenu> menus) {
+        messMenus = menus;
     }
 
     private String generateDayString(int day) {

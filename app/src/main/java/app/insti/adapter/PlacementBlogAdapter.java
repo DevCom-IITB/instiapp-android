@@ -32,6 +32,7 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
     public PlacementBlogAdapter(List<PlacementBlogPost> posts, ItemClickListener itemClickListener) {
         this.posts = posts;
         this.itemClickListener = itemClickListener;
+        this.setHasStableIds(true);
     }
 
     public List<PlacementBlogPost> getPosts() {
@@ -98,6 +99,11 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
         } else {
             ((ProgressViewHolder) recyclerHolder).progressBar.setIndeterminate(true);
         }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return posts.get(position).getPostID().hashCode();
     }
 
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {

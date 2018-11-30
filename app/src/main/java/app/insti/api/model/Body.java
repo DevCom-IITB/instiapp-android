@@ -184,6 +184,10 @@ public class Body implements CardInterface {
         this.bodyRoles = bodyRoles;
     }
 
+    public long getId() {
+        return getBodyID().hashCode();
+    }
+
     public String getTitle() {
         return getBodyName();
     }
