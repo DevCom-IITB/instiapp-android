@@ -184,6 +184,11 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
             RoleRecyclerViewFragment frag1 = RoleRecyclerViewFragment.newInstance(roleList);
             BodyRecyclerViewFragment frag2 = BodyRecyclerViewFragment.newInstance(bodyList);
             EventRecyclerViewFragment frag3 = EventRecyclerViewFragment.newInstance(eventList);
+
+            frag1.parentFragment = this;
+            frag2.parentFragment = this;
+            frag3.parentFragment = this;
+
             TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
             tabAdapter.addFragment(frag1, "Associations");
             tabAdapter.addFragment(frag2, "Following");
