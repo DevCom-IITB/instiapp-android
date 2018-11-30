@@ -14,8 +14,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,14 +31,12 @@ import app.insti.Constants;
 import app.insti.R;
 import app.insti.ShareURLMaker;
 import app.insti.Utils;
-import app.insti.adapter.RoleAdapter;
 import app.insti.adapter.TabAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.Role;
 import app.insti.api.model.User;
-import app.insti.interfaces.ItemClickListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,7 +46,7 @@ import static android.view.View.VISIBLE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserFragment extends BackHandledFragment {
+public class UserFragment extends BackHandledFragment implements TransitionTargetFragment {
     private User user;
 
     // Hold a reference to the current animator,
@@ -85,6 +81,9 @@ public class UserFragment extends BackHandledFragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_user, container, false);
     }
+
+    @Override
+    public void transitionEnd() {}
 
     @Override
     public boolean onBackPressed() {

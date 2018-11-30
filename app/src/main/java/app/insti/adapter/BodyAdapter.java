@@ -1,10 +1,11 @@
 package app.insti.adapter;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
 import java.util.List;
 
+import app.insti.R;
 import app.insti.Utils;
 import app.insti.api.model.Body;
 
@@ -15,7 +16,7 @@ public class BodyAdapter extends CardAdapter<Body> {
         super(bodyList, mFragment);
     }
 
-    public void onClick(Body body, FragmentActivity fragmentActivity) {
-        Utils.openBodyFragment(body, fragmentActivity);
+    public void onClick(Body body, Fragment fragment, View view) {
+        Utils.openBodyFragment(body, fragment, view.findViewById(R.id.object_picture));
     }
 }

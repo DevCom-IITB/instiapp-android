@@ -1,10 +1,11 @@
 package app.insti.adapter;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
 import java.util.List;
 
+import app.insti.R;
 import app.insti.Utils;
 import app.insti.api.model.Role;
 
@@ -16,7 +17,7 @@ public class RoleAdapter extends CardAdapter<Role> {
     }
 
     @Override
-    public void onClick(Role role, FragmentActivity fragmentActivity) {
-        Utils.openBodyFragment(role.getRoleBodyDetails(), fragmentActivity);
+    public void onClick(Role role, Fragment fragment, View view) {
+        Utils.openBodyFragment(role.getRoleBodyDetails(), fragment, view.findViewById(R.id.object_picture));
     }
 }

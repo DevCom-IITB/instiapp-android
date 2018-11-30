@@ -18,7 +18,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="20dp"
-                android:layout_marginRight="15dp" />
+                android:layout_marginRight="15dp"
+                android:transitionName="sharedAvatar" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

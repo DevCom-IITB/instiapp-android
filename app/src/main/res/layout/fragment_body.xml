@@ -35,7 +35,8 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:adjustViewBounds="true"
-                        android:scaleType="fitCenter" />
+                        android:scaleType="fitCenter"
+                        android:transitionName="sharedAvatar" />
 
                     <android.support.v7.widget.CardView
                         android:layout_width="match_parent"
