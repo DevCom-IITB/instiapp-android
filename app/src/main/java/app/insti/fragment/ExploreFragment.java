@@ -40,12 +40,18 @@ import retrofit2.Response;
  */
 public class ExploreFragment extends Fragment {
 
+    private RecyclerView recyclerView;
+    LinearLayoutManager mLayoutManager;
+
     private static List<Body> allBodies = new ArrayList<>();
     private static List<Body> bodies = new ArrayList<>();
     private static List<Event> events = new ArrayList<>();
     private static List<User> users = new ArrayList<>();
 
     private static List<CardInterface> cards = new ArrayList<>();
+
+    private static int index;
+    private static int top;
 
     private String sessionId;
     private GenericAdapter genericAdapter;
@@ -69,8 +75,21 @@ public class ExploreFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onPause()
+    {
+        super.onPause();
+        index = mLayoutManager.findFirstVisibleItemPosition();
+        View v = recyclerView.getChildAt(0);
+        top = (v == null) ? 0 : (v.getTop() - recyclerView.getPaddingTop());
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if(index != -1) {
+            mLayoutManager.scrollToPositionWithOffset( index, top);
+        }
     }
 
     @Override
@@ -199,9 +218,10 @@ public class ExploreFragment extends Fragment {
     public void initRecyclerView() {
         if (getActivity() == null || getView() == null) return;
 
-        RecyclerView bodiesRecyclerView = getView().findViewById(R.id.explore_recycler_view);
+        recyclerView = getView().findViewById(R.id.explore_recycler_view);
+        mLayoutManager = new LinearLayoutManager(getContext());
         genericAdapter = new GenericAdapter(cards, this);
-        bodiesRecyclerView.setAdapter(genericAdapter);
-        bodiesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(genericAdapter);
+        recyclerView.setLayoutManager(mLayoutManager);
     }
 }

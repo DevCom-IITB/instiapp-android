@@ -1,7 +1,7 @@
 package app.insti.adapter;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
 import java.util.List;
 
@@ -13,19 +13,18 @@ import app.insti.api.model.User;
 import app.insti.interfaces.CardInterface;
 
 public class GenericAdapter extends CardAdapter<CardInterface> {
-
     public GenericAdapter(List<CardInterface> cardInterfaceList, Fragment fragment){
         super(cardInterfaceList, fragment);
     }
 
     @Override
-    public void onClick(CardInterface cardInterface, FragmentActivity fragmentActivity) {
+    public void onClick(CardInterface cardInterface, Fragment fragment, View view) {
         if (cardInterface instanceof Event) {
-            Utils.openEventFragment((Event) cardInterface, fragmentActivity);
+            Utils.openEventFragment((Event) cardInterface, fragment, view.findViewById(R.id.object_picture));
         } else if (cardInterface instanceof Body) {
-            Utils.openBodyFragment((Body) cardInterface, fragmentActivity);
+            Utils.openBodyFragment((Body) cardInterface, fragment, view.findViewById(R.id.object_picture));
         } else if (cardInterface instanceof User) {
-            Utils.openUserFragment((User) cardInterface, fragmentActivity);
+            Utils.openUserFragment((User) cardInterface, fragment, view.findViewById(R.id.object_picture));
         }
     }
 

@@ -1,7 +1,7 @@
 package app.insti.adapter;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
 import java.util.List;
 
@@ -16,8 +16,8 @@ public class UserAdapter extends CardAdapter<User> {
     }
 
     @Override
-    public void onClick(User user, FragmentActivity fragmentActivity) {
-        Utils.openUserFragment(user, fragmentActivity);
+    public void onClick(User user, Fragment fragment, View view) {
+        Utils.openUserFragment(user, fragment, view.findViewById(R.id.object_picture));
     }
 
     @Override

@@ -29,8 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +57,7 @@ import ru.noties.markwon.Markwon;
  * Use the {@link BodyFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BodyFragment extends BackHandledFragment {
+public class BodyFragment extends BackHandledFragment implements TransitionTargetFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
@@ -83,6 +83,7 @@ public class BodyFragment extends BackHandledFragment {
     private ImageView bodyPicture;
     private Body body;
     private boolean bodyDisplayed = false;
+    private boolean transitionEnded = false;
 
     public BodyFragment() {
         // Required empty public constructor
@@ -120,6 +121,14 @@ public class BodyFragment extends BackHandledFragment {
         if (getArguments() != null) {
             min_body = new Gson().fromJson(getArguments().getString(Constants.BODY_JSON), Body.class);
         }
+    }
+
+    @Override
+    public void transitionEnd() {
+        if (getActivity() == null || getView() == null) return;
+        bodyPicture = (ImageView) getView().findViewById(R.id.body_picture);
+        Utils.loadImageWithPlaceholder(bodyPicture, body.getBodyImageURL());
+        transitionEnded = true;
     }
 
     @Override
@@ -201,7 +210,14 @@ public class BodyFragment extends BackHandledFragment {
         /* Set body information */
         bodyName.setText(body.getBodyName());
         bodySubtitle.setText(body.getBodyShortDescription());
-        Utils.loadImageWithPlaceholder(bodyPicture, body.getBodyImageURL());
+
+        /* Load only low res image if transition is not completed */
+        if (transitionEnded) {
+            Utils.loadImageWithPlaceholder(bodyPicture, body.getBodyImageURL());
+        } else {
+            Picasso.get().load(Utils.resizeImageUrl(body.getBodyImageURL())).into(bodyPicture);
+        }
+
 
         bodyPicture.setOnClickListener(new View.OnClickListener() {
             @Override

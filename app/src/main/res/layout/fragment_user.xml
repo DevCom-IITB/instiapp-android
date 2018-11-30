@@ -7,7 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="app.insti.fragment.UserFragment">
+        tools:context="app.insti.fragment.UserFragment"
+        android:background="?attr/themeColor">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -18,7 +19,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="20dp"
-                android:layout_marginRight="15dp" />
+                android:layout_marginRight="15dp"
+                android:transitionName="sharedAvatar" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
