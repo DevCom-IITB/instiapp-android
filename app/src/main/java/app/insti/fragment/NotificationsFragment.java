@@ -47,9 +47,6 @@ public class NotificationsFragment extends BottomSheetDialogFragment {
     public void onStart() {
         super.onStart();
 
-        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Notifications");
-
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.getNotifications(Utils.getSessionIDHeader()).enqueue(new Callback<List<Notification>>() {
             @Override
