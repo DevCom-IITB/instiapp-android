@@ -79,6 +79,10 @@ public class Notification implements CardInterface {
         this.notificationActor = notificationActor;
     }
 
+    public long getId() {
+        return getNotificationId().hashCode();
+    }
+
     public String getTitle() {
         if (isEvent()) {
             return getEvent().getEventName();
