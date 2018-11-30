@@ -6,7 +6,6 @@ import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +19,7 @@ import app.insti.adapter.NotificationsAdapter;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Notification;
-import okhttp3.internal.Util;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -30,8 +27,8 @@ import retrofit2.Response;
  */
 public class NotificationsFragment extends BottomSheetDialogFragment {
 
-    RecyclerView notificationsRecyclerView;
-    NotificationsAdapter notificationsAdapter = null;
+    private RecyclerView notificationsRecyclerView;
+    private NotificationsAdapter notificationsAdapter = null;
 
     public NotificationsFragment() {
         // Required empty public constructor

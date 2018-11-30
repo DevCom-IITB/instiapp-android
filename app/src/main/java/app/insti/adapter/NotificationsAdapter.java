@@ -20,7 +20,7 @@ import app.insti.fragment.PlacementBlogFragment;
 import app.insti.fragment.TrainingBlogFragment;
 
 public class NotificationsAdapter extends CardAdapter<Notification> {
-    NotificationsFragment notificationsFragment;
+    private NotificationsFragment notificationsFragment;
 
     public NotificationsAdapter(List<Notification> notifications, Fragment fragment) {
         super(notifications, fragment);

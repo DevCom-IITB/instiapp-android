@@ -73,7 +73,6 @@ import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.fragment.UserFragment;
-import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Response;
 
