@@ -17,6 +17,7 @@ import java.util.List;
 
 import app.insti.ActivityBuffer;
 import app.insti.R;
+import app.insti.UpdatableList;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.FeedAdapter;
@@ -72,10 +73,10 @@ public class FeedFragment extends BaseFragment {
         fab = getView().findViewById(R.id.fab);
 
         // Initialize the feed
-        if (Utils.eventCache.getCache() == null || Utils.eventCache.getCache().size() == 0) {
+        if (Utils.eventCache == null || Utils.eventCache.isEmpty()) {
             updateFeed();
         } else {
-            displayEvents(Utils.eventCache.getCache());
+            displayEvents(Utils.eventCache);
         }
     }
 
@@ -105,8 +106,8 @@ public class FeedFragment extends BaseFragment {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
-                    Utils.eventCache.setCache(response.body().getEvents());
-                    displayEvents(Utils.eventCache.getCache());
+                    Utils.eventCache.setList(response.body().getEvents());
+                    displayEvents(Utils.eventCache);
                 }
                 //Server Error
                 feedSwipeRefreshLayout.setRefreshing(false);

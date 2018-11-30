@@ -14,10 +14,13 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import app.insti.R;
+import app.insti.UpdatableList;
 import app.insti.Utils;
 import app.insti.adapter.NotificationsAdapter;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Notification;
+import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,8 +31,7 @@ import retrofit2.Response;
 public class NotificationsFragment extends BottomSheetDialogFragment {
 
     RecyclerView notificationsRecyclerView;
-
-    List<Notification> notifications;
+    NotificationsAdapter notificationsAdapter = null;
 
     public NotificationsFragment() {
         // Required empty public constructor
@@ -47,18 +49,22 @@ public class NotificationsFragment extends BottomSheetDialogFragment {
     public void onStart() {
         super.onStart();
 
+        /* Show cached notifications */
+        if (Utils.notificationCache != null) {
+            showNotifications(Utils.notificationCache);
+        } else {
+            Utils.notificationCache = new UpdatableList<>();
+        }
+
+        /* Update notifications */
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        retrofitInterface.getNotifications(Utils.getSessionIDHeader()).enqueue(new Callback<List<Notification>>() {
+        retrofitInterface.getNotifications(Utils.getSessionIDHeader()).enqueue(new EmptyCallback<List<Notification>>() {
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
                 if (response.isSuccessful()) {
-                    notifications = response.body();
-                    showNotifications(notifications);
+                    Utils.notificationCache.setList(response.body());
+                    showNotifications(Utils.notificationCache);
                 }
-            }
-
-            @Override
-            public void onFailure(Call<List<Notification>> call, Throwable t) {
             }
         });
     }
@@ -70,9 +76,15 @@ public class NotificationsFragment extends BottomSheetDialogFragment {
         /* Hide loader */
         getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
-        NotificationsAdapter notificationsAdapter = new NotificationsAdapter(notifications, this);
-        notificationsRecyclerView = (RecyclerView) getView().findViewById(R.id.notifications_recycler_view);
-        notificationsRecyclerView.setAdapter(notificationsAdapter);
-        notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        /* Initialize */
+        if (notificationsAdapter == null) {
+            notificationsAdapter = new NotificationsAdapter(notifications, this);
+            notificationsRecyclerView = (RecyclerView) getView().findViewById(R.id.notifications_recycler_view);
+            notificationsRecyclerView.setAdapter(notificationsAdapter);
+            notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        } else {
+            notificationsAdapter.setList(notifications);
+            notificationsAdapter.notifyDataSetChanged();
+        }
     }
 }

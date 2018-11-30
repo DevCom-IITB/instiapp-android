@@ -47,6 +47,7 @@ import java.util.List;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.SessionManager;
+import app.insti.UpdatableList;
 import app.insti.Utils;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
@@ -72,6 +73,7 @@ import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.fragment.UserFragment;
+import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -95,8 +97,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private User currentUser;
     private BackHandledFragment selectedFragment;
     private Menu menu;
-    private RetrofitInterface retrofitInterface;
-    private List<Notification> notifications = null;
 
     /**
      * which menu item should be checked on activity start
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private void fetchNotifications() {
         // Try memory cache
-        if (notifications != null) {
+        if (Utils.notificationCache != null) {
             showNotifications();
             return;
         }
@@ -197,7 +197,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
                 if (response.isSuccessful()) {
-                    notifications = response.body();
+                    Utils.notificationCache = new UpdatableList<>();
+                    Utils.notificationCache.setList(response.body());
                     showNotifications();
                 }
             }
@@ -208,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Show the right notification icon
      */
     private void showNotifications() {
-        if (notifications != null && !notifications.isEmpty()) {
+        if (Utils.notificationCache != null && !Utils.notificationCache.isEmpty()) {
             menu.findItem(R.id.action_notifications).setIcon(R.drawable.baseline_notifications_active_white_24);
         } else {
             menu.findItem(R.id.action_notifications).setIcon(R.drawable.ic_notifications_white_24dp);
