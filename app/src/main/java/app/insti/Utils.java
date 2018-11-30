@@ -156,24 +156,25 @@ public final class Utils {
         );
     }
 
-    public static EventFragment getEventFragment(Event event) {
+    public static EventFragment getEventFragment(Event event, boolean sharedElements) {
         String eventJson = new Gson().toJson(event);
         Bundle bundle = new Bundle();
         bundle.putString(Constants.EVENT_JSON, eventJson);
+        bundle.putBoolean(Constants.NO_SHARED_ELEM, !sharedElements);
         EventFragment eventFragment = new EventFragment();
         eventFragment.setArguments(bundle);
         return eventFragment;
     }
 
     public static void openEventFragment(Event event, FragmentActivity fragmentActivity) {
-        updateFragment(getEventFragment(event), fragmentActivity);
+        updateFragment(getEventFragment(event, false), fragmentActivity);
     }
 
     public static void openEventFragment(Event event, Fragment currentFragment, View sharedAvatar) {
         Map<View, String> sharedElements = new HashMap<>();
         sharedElements.put(sharedAvatar, "sharedAvatar");
         updateSharedElementFragment(
-                getEventFragment(event), currentFragment, sharedElements
+                getEventFragment(event, true), currentFragment, sharedElements
         );
     }
 

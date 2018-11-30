@@ -144,6 +144,10 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(event.getEventName());
+
+        if (bundle.getBoolean(Constants.NO_SHARED_ELEM, true)) {
+            this.transitionEnd();
+        }
     }
 
     private void inflateViews(final Event event) {
