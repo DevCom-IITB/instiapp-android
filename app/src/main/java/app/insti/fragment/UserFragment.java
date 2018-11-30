@@ -93,6 +93,7 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
 
     @Override
     public void transitionEnd() {
+        if (getActivity() == null || getView() == null) return;
         if (showingMin) {
             showingMin = false;
             loadUser(user.getUserID());

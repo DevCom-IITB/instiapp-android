@@ -125,7 +125,8 @@ public class BodyFragment extends BackHandledFragment implements TransitionTarge
 
     @Override
     public void transitionEnd() {
-        bodyPicture = (ImageView) getActivity().findViewById(R.id.body_picture);
+        if (getActivity() == null || getView() == null) return;
+        bodyPicture = (ImageView) getView().findViewById(R.id.body_picture);
         Utils.loadImageWithPlaceholder(bodyPicture, body.getBodyImageURL());
         transitionEnded = true;
     }

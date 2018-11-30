@@ -89,6 +89,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
 
     @Override
     public void transitionEnd() {
+        if (getActivity() == null || getView() == null) return;
         Utils.loadImageWithPlaceholder(eventPicture, event.getEventImageURL());
     }
 

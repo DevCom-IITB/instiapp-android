@@ -79,8 +79,7 @@ public final class Utils {
         ft.commit();
     }
 
-    public static void updateSharedElementFragment(final TransitionTargetFragment ttFragment, Fragment currentFragment, Map<View, String> sharedElements) {
-        Fragment fragment = (Fragment) ttFragment;
+    public static void updateSharedElementFragment(final Fragment fragment, final Fragment currentFragment, Map<View, String> sharedElements) {
         FragmentTransaction ft = currentFragment.getActivity().getSupportFragmentManager().beginTransaction();
 
         Transition transition = new DetailsTransition();
@@ -89,7 +88,7 @@ public final class Utils {
         fragment.setSharedElementEnterTransition(transition);
         fragment.setEnterTransition(new Slide());
         currentFragment.setExitTransition(new Fade());
-        fragment.setSharedElementReturnTransition(new DetailsTransition());
+        fragment.setSharedElementReturnTransition(transition);
 
         transition.addListener(new Transition.TransitionListener() {
             @Override
@@ -98,7 +97,13 @@ public final class Utils {
 
             @Override
             public void onTransitionEnd(Transition transition) {
-                ttFragment.transitionEnd();
+                if (fragment instanceof TransitionTargetFragment) {
+                    ((TransitionTargetFragment) fragment).transitionEnd();
+                }
+
+                if (currentFragment instanceof TransitionTargetFragment) {
+                    ((TransitionTargetFragment) currentFragment).transitionEnd();
+                }
             }
 
             @Override
