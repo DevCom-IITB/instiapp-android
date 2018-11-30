@@ -98,11 +98,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private RetrofitInterface retrofitInterface;
     private List<Notification> notifications = null;
 
-    /**
-     * which menu item should be checked on activity start
-     */
-    private int initMenuChecked = R.id.nav_feed;
-
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
@@ -342,7 +337,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 openEventFragment(id);
                 return;
             case DATA_TYPE_NEWS:
-                initMenuChecked = R.id.nav_news;
                 updateFragment(new NewsFragment());
                 return;
         }
@@ -359,10 +353,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             switch (type) {
                 case DATA_TYPE_PT:
                     if (extra.contains("/trainingblog")) {
-                        initMenuChecked = R.id.nav_training_blog;
                         openTrainingBlog();
                     } else {
-                        initMenuChecked = R.id.nav_placement_blog;
                         openPlacementBlog();
                     }
                     return;
@@ -466,7 +458,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(initMenuChecked);
     }
 
     private void updateNavigationView() {

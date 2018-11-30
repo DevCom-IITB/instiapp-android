@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import app.insti.R;
+import app.insti.Utils;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -43,6 +44,7 @@ public class AboutFragment extends BaseFragment {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("About");
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_settings);
 
         /* Map CircleImageView ids to image URLs */
         final Map<Integer, String> team = new HashMap<Integer, String>() {{

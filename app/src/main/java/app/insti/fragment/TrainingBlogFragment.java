@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.adapter.TrainingBlogAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.TrainingBlogPost;
@@ -40,6 +41,8 @@ public class TrainingBlogFragment extends RecyclerViewFragment<TrainingBlogPost,
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Internship Blog");
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_training_blog);
+
         setHasOptionsMenu(true);
         updateData();
 

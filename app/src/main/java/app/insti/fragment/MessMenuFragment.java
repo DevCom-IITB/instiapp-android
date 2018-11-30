@@ -60,6 +60,7 @@ public class MessMenuFragment extends BaseFragment {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Mess Menu");
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_mess_menu);
 
         hostel = (String) getArguments().get(Constants.USER_HOSTEL);
         displayMenu(hostel);

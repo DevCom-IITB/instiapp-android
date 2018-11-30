@@ -219,6 +219,9 @@ public class MapFragment extends Fragment implements TextWatcher,
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("InstiMap");
 
+        /* Set selected menu item */
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_map);
+
         /* Initialize */
         editText = (EditText) getView().findViewById(R.id.search);
         setFonts();
