@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.adapter.NewsAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.NewsArticle;
@@ -39,6 +40,8 @@ public class NewsFragment extends RecyclerViewFragment<NewsArticle, NewsAdapter>
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("News");
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_news);
+
         setHasOptionsMenu(true);
         updateData();
 

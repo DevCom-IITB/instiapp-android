@@ -102,6 +102,7 @@ public class ExploreFragment extends Fragment {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Explore");
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_explore);
 
         final EditText searchEditText = getView().findViewById(R.id.explore_search);
 
