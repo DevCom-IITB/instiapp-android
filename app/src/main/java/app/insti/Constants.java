@@ -13,6 +13,7 @@ public class Constants {
     public static final String EVENT_JSON = "event_json";
     public static final String EVENT_LIST_JSON = "event_list_json";
     public static final String USER_ID = "user_id";
+    public static final String USER_JSON = "user_json";
     public static final String USER_HOSTEL = "user_hostel";
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
     public static final String REGISTRATION_COMPLETE = "registrationComplete";

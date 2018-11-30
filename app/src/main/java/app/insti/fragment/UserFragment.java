@@ -32,13 +32,13 @@ import app.insti.R;
 import app.insti.ShareURLMaker;
 import app.insti.Utils;
 import app.insti.adapter.TabAdapter;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.Role;
 import app.insti.api.model.User;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.VISIBLE;
@@ -62,6 +62,7 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
     private Rect startBounds;
     private float startScaleFinal;
     private ImageView userProfilePictureImageView;
+    private boolean showingMin = false;
 
     public UserFragment() {
         // Required empty public constructor
@@ -75,6 +76,14 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
         return fragment;
     }
 
+    public static UserFragment newInstance(User minUser) {
+        UserFragment fragment = new UserFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.USER_JSON, Utils.gson.toJson(minUser));
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,7 +92,12 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
     }
 
     @Override
-    public void transitionEnd() {}
+    public void transitionEnd() {
+        if (showingMin) {
+            showingMin = false;
+            loadUser(user.getUserID());
+        }
+    }
 
     @Override
     public boolean onBackPressed() {
@@ -95,6 +109,20 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
         return false;
     }
 
+    public void loadUser(String userID) {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.getUser(Utils.getSessionIDHeader(), userID).enqueue(new EmptyCallback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    user = response.body();
+                    populateViews();
+                    getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -103,23 +131,16 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
         toolbar.setTitle("Profile");
 
         Bundle bundle = getArguments();
+
         String userID = bundle.getString(Constants.USER_ID);
-
-        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        retrofitInterface.getUser(Utils.getSessionIDHeader(), userID).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
-                    user = response.body();
-                    populateViews();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-
-            }
-        });
+        String userJson = bundle.getString(Constants.USER_JSON);
+        if (userID != null) {
+            loadUser(userID);
+        } else if (userJson != null) {
+            user = Utils.gson.fromJson(userJson, User.class);
+            showingMin = true;
+            populateViews();
+        }
     }
 
     private void populateViews() {
@@ -130,12 +151,8 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
         TextView userContactNumberTextView = getActivity().findViewById(R.id.user_contact_no_profile);
         ImageButton userShareImageButton = getActivity().findViewById(R.id.share_user_button);
 
-        /* Show tabs */
-        getActivity().findViewById(R.id.tab_layout).setVisibility(VISIBLE);
-
         Picasso.get()
                 .load(user.getUserProfilePictureUrl())
-                .resize(500, 0)
                 .placeholder(R.drawable.user_placeholder)
                 .into(userProfilePictureImageView);
 
@@ -147,40 +164,47 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
         });
         mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        final List<Role> roleList = user.getUserRoles();
-        final List<Body> bodyList = user.getUserFollowedBodies();
-        final List<Event> eventList = user.getUserGoingEvents();
-        List<Role> formerRoleList = user.getUserFormerRoles();
-        for (Role role : formerRoleList) {
-            role.setRoleName("Former " + role.getRoleName());
+        if (!showingMin) {
+            /* Show tabs */
+            getActivity().findViewById(R.id.tab_layout).setVisibility(VISIBLE);
+
+            /* Load lists */
+            final List<Role> roleList = user.getUserRoles();
+            final List<Body> bodyList = user.getUserFollowedBodies();
+            final List<Event> eventList = user.getUserGoingEvents();
+            List<Role> formerRoleList = user.getUserFormerRoles();
+            for (Role role : formerRoleList) {
+                role.setRoleName("Former " + role.getRoleName());
+            }
+            roleList.addAll(formerRoleList);
+            List<Event> eventInterestedList = user.getUserInterestedEvents();
+            eventList.removeAll(eventInterestedList);
+            eventList.addAll(eventInterestedList);
+            RoleRecyclerViewFragment frag1 = RoleRecyclerViewFragment.newInstance(roleList);
+            BodyRecyclerViewFragment frag2 = BodyRecyclerViewFragment.newInstance(bodyList);
+            EventRecyclerViewFragment frag3 = EventRecyclerViewFragment.newInstance(eventList);
+            TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
+            tabAdapter.addFragment(frag1, "Associations");
+            tabAdapter.addFragment(frag2, "Following");
+            tabAdapter.addFragment(frag3, "Events");
+
+            // Set up the ViewPager with the sections adapter.
+            ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.viewPager);
+            viewPager.setAdapter(tabAdapter);
+            viewPager.setOffscreenPageLimit(2);
+
+            TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
+            tabLayout.setupWithViewPager(viewPager);
         }
-        roleList.addAll(formerRoleList);
-        List<Event> eventInterestedList = user.getUserInterestedEvents();
-        eventList.removeAll(eventInterestedList);
-        eventList.addAll(eventInterestedList);
-        RoleRecyclerViewFragment frag1 = RoleRecyclerViewFragment.newInstance(roleList);
-        BodyRecyclerViewFragment frag2 = BodyRecyclerViewFragment.newInstance(bodyList);
-        EventRecyclerViewFragment frag3 = EventRecyclerViewFragment.newInstance(eventList);
-        TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
-        tabAdapter.addFragment(frag1, "Associations");
-        tabAdapter.addFragment(frag2, "Following");
-        tabAdapter.addFragment(frag3, "Events");
-        // Set up the ViewPager with the sections adapter.
-        ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.viewPager);
-        viewPager.setAdapter(tabAdapter);
-        viewPager.setOffscreenPageLimit(2);
 
-
-        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
         userNameTextView.setText(user.getUserName());
         userRollNumberTextView.setText(user.getUserRollNumber());
-        if (!user.getUserEmail().equals("N/A")) {
+        if (user.getUserEmail() != null && !user.getUserEmail().equals("N/A")) {
             userEmailIDTextView.setText(user.getUserEmail());
         } else {
-            userEmailIDTextView.setText(user.getUserRollNumber() + "@iitb.ac.in");
+            if (user.getUserRollNumber() != null)
+                userEmailIDTextView.setText(user.getUserRollNumber() + "@iitb.ac.in");
         }
-        userContactNumberTextView.setText(user.getUserContactNumber());
 
         userEmailIDTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,6 +214,7 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
         });
 
         if (user.getUserContactNumber() != null) {
+            userContactNumberTextView.setText(user.getUserContactNumber());
             userContactNumberTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -211,8 +236,6 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
             }
         });
         userShareImageButton.setVisibility(VISIBLE);
-
-        getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
     private void call(String contactNumber) {

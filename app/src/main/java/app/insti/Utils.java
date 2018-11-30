@@ -163,23 +163,15 @@ public final class Utils {
         );
     }
 
-    public static UserFragment getUserFragment(User user) {
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.USER_ID, user.getUserID());
-        UserFragment userFragment = new UserFragment();
-        userFragment.setArguments(bundle);
-        return userFragment;
-    }
-
     public static void openUserFragment(User user, FragmentActivity fragmentActivity) {
-        updateFragment(getUserFragment(user), fragmentActivity);
+        updateFragment(UserFragment.newInstance(user.getUserID()), fragmentActivity);
     }
 
     public static void openUserFragment(User user, Fragment currentFragment, View sharedAvatar) {
         Map<View, String> sharedElements = new HashMap<>();
         sharedElements.put(sharedAvatar, "sharedAvatar");
         updateSharedElementFragment(
-                getUserFragment(user), currentFragment, sharedElements
+                UserFragment.newInstance(user), currentFragment, sharedElements
         );
     }
 
