@@ -67,11 +67,13 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
         viewHolder.subtitle.setText(t.getSubtitle());
 
         // Set transition names
+        // FIXME: Replace getTitle() with getId() once that is merged
         viewHolder.avatar.setTransitionName(Integer.toString(t.getTitle().hashCode()) + "_sharedAvatar");
 
         if (getBigImageUrl(t) != null) {
             // Show big image, hide avatar
             viewHolder.bigPicture.setVisibility(View.VISIBLE);
+            // FIXME: Replace getTitle() with getId() once that is merged
             viewHolder.bigPicture.setTransitionName(Integer.toString(t.getTitle().hashCode()) + "_sharedBigPicture");
             viewHolder.avatar.setVisibility(View.GONE);
 
