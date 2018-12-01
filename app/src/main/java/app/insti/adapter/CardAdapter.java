@@ -24,6 +24,7 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
 
     private List<T> tList;
     private Fragment mFragment;
+    public String uid = "";
 
     public void onClick(T t, FragmentActivity fragmentActivity) {};
     public void onClick(T t, Fragment fragment, View view) {}
@@ -68,12 +69,12 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
         viewHolder.subtitle.setText(t.getSubtitle());
 
         // Set transition names
-        viewHolder.avatar.setTransitionName(Integer.toString((int) t.getId()) + "_sharedAvatar");
+        viewHolder.avatar.setTransitionName(uid + Integer.toString((int) t.getId()) + "_sharedAvatar");
 
         if (getBigImageUrl(t) != null) {
             // Show big image, hide avatar
             viewHolder.bigPicture.setVisibility(View.VISIBLE);
-            viewHolder.bigPicture.setTransitionName(Integer.toString((int) t.getId()) + "_sharedBigPicture");
+            viewHolder.bigPicture.setTransitionName(uid + Integer.toString((int) t.getId()) + "_sharedBigPicture");
             viewHolder.avatar.setVisibility(View.GONE);
 
             // Load big image with low resolution as avatar

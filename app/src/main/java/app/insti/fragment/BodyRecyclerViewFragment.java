@@ -76,6 +76,7 @@ public class BodyRecyclerViewFragment extends Fragment implements TransitionTarg
 
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.body_recycler_view);
         bodyAdapter = new BodyAdapter(bodyList, this);
+        bodyAdapter.uid = "BRVFrag";
         recyclerView.setAdapter(bodyAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

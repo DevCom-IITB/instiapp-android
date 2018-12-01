@@ -72,6 +72,7 @@ public class RoleRecyclerViewFragment extends Fragment implements TransitionTarg
 
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.role_recycler_view);
         roleAdapter = new RoleAdapter(roleList, this);
+        roleAdapter.uid = "RRVFrag";
         recyclerView.setAdapter(roleAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
