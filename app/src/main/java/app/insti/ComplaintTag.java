@@ -1,6 +1,6 @@
 package app.insti;
 
-/**
+import app.insti.api.model.Venter; /**
  * Created by Shivam Sharma on 13-08-2018.
  */
 public class ComplaintTag {

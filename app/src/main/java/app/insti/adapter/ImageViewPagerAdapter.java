@@ -22,6 +22,7 @@ import app.insti.api.model.Venter;
 
 public class ImageViewPagerAdapter extends PagerAdapter {
 
+    private static final String TAG = ImageViewPagerAdapter.class.getSimpleName();
     private List<String> images = new ArrayList<>();
     public Context context;
     public LayoutInflater inflater;
@@ -37,10 +38,7 @@ public class ImageViewPagerAdapter extends PagerAdapter {
     {
         this.context = context;
         inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        for (String image: detailedComplaint.getImages()){
-            images.add(image);
-        }
+        images.addAll(detailedComplaint.getImages());
     }
 
     @Override
