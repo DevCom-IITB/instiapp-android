@@ -61,7 +61,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="10"
                                     android:text="Event Title"
-                                    android:textColor="#fff"
+                                    android:textColor="@color/colorWhite"
                                     android:textSize="21sp"
                                     android:textStyle="bold" />
 
@@ -110,14 +110,14 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="No Date Specified"
-                                    android:textColor="#fff"
+                                    android:textColor="@color/colorWhite"
                                     android:textSize="16sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text=" | "
-                                    android:textColor="#fff"
+                                    android:textColor="@color/colorWhite"
                                     android:textSize="20sp" />
 
                                 <TextView
@@ -125,14 +125,14 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="No Time Specified"
-                                    android:textColor="#fff"
+                                    android:textColor="@color/colorWhite"
                                     android:textSize="16sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text=" | "
-                                    android:textColor="#fff"
+                                    android:textColor="@color/colorWhite"
                                     android:textSize="20sp" />
 
                                 <TextView
@@ -140,8 +140,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:ellipsize="end"
-                                    android:text="No Venue Specified"
-                                    android:textColor="#fff"
+                                    android:text="Venue"
+                                    android:textColor="@color/colorWhite"
                                     android:textSize="16sp" />
                             </LinearLayout>
 
@@ -194,7 +194,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="#aaa">
-
                     </View>
 
                     <TextView
@@ -205,8 +204,8 @@
                         android:layout_marginEnd="10dp"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="12dp"
-                        android:textColor="#333"
-                        android:textColorLink="@color/colorPrimary"
+                        android:textColor="?attr/themeColorInverse"
+                        android:textColorLink="?attr/urlColor"
                         android:textSize="16sp" />
 
                     <android.support.v7.widget.RecyclerView

@@ -1,8 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/container_profile"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorWhite">
+    android:layout_height="match_parent">
 
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -34,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
                     android:fontFamily="sans-serif-light"
-                    android:textColor="@color/secondaryTextColor"
+                    android:textColor="?attr/themeColorInverse"
                     android:textSize="20sp" />
 
                 <TextView
@@ -66,12 +65,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:visibility="gone"
                 android:layout_gravity="center_vertical"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Share User"
                 android:padding="16dp"
-                android:src="@drawable/ic_menu_share" />
+                android:src="@drawable/ic_menu_share"
+                android:tint="?attr/themeColorInverse"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -79,7 +79,6 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@color/colorWhite"
             android:visibility="invisible">
 
             <android.support.design.widget.TabItem

@@ -6,6 +6,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="themeColor">#FFFFFF</item>
+        <item name="themeColorInverse">#000000</item>
+        <item name="newsColor">#F2F2F2</item>
+        <item name="urlColor">@color/colorPrimary</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -13,8 +18,24 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppThemeDark" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="themeColor">#000000</item>
+        <item name="themeColorInverse">#FFFFFF</item>
+        <item name="newsColor">#00000000</item>
+        <item name="urlColor">@color/colorAccent</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+    </style>
+
+    <style name="AppThemeDark.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="BlueAccent">
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorAccent">?attr/urlColor</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -26,7 +47,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">?attr/themeColorInverse</item>
         <item name="android:textSize">36sp</item>
     </style>
 
@@ -35,7 +56,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingBottom">4dp</item>
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">?attr/themeColorInverse</item>
         <item name="android:textSize">18sp</item>
     </style>
 
@@ -52,5 +73,10 @@
     <style name="edit_text_hint_apperarance" parent="@android:style/TextAppearance">
         <item name="android:textColor">#999</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="WindowAnimationTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 </resources>

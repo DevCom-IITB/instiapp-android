@@ -6,10 +6,15 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class Event {
+import app.insti.interfaces.CardInterface;
+
+public class Event implements CardInterface {
     @NonNull()
     @SerializedName("id")
     private String eventID;
@@ -236,5 +241,61 @@ public class Event {
     @Override
     public int hashCode() {
         return Objects.hash(eventID);
+    }
+
+    public String getTitle() {
+        return getEventName();
+    }
+
+    public String getSubtitle()
+    {
+        String subtitle = "";
+
+        Date startTime = getEventStartTime();
+        Date endTime = getEventEndTime();
+        Date timeNow = Calendar.getInstance().getTime();
+        boolean eventStarted = timeNow.compareTo(startTime) > 0;
+        boolean eventEnded = timeNow.compareTo(endTime) > 0;
+
+        if (eventEnded)
+            subtitle += "Ended | ";
+        else if(eventStarted)
+        {
+            long difference = endTime.getTime() - timeNow.getTime();
+            long minutes = difference / (60 * 1000 ) % 60;
+            long hours = difference / (60 * 60 * 1000) % 24;
+            long days = difference / (24 * 60 * 60 * 1000);
+            String timeDiff = "";
+            if (days > 0)
+                timeDiff += Long.toString(days) + "D ";
+            if (hours > 0)
+                timeDiff += Long.toString(hours) + "H ";
+
+
+            timeDiff += Long.toString(minutes) + "M";
+
+            subtitle += "Ends in " + timeDiff + " | " ;
+        }
+
+        Timestamp timestamp = getEventStartTime();
+        if (timestamp != null) {
+            Date Date = new Date(timestamp.getTime());
+            SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
+            SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm");
+
+            subtitle += simpleDateFormatDate.format(Date) + " | " + simpleDateFormatTime.format(Date);
+        }
+        StringBuilder eventVenueName = new StringBuilder();
+        for (Venue venue : getEventVenues()) {
+            eventVenueName.append(", ").append(venue.getVenueShortName());
+        }
+        if (!eventVenueName.toString().equals(""))
+            subtitle += " | " + eventVenueName.toString().substring(2);
+
+        return subtitle;
+    }
+
+    public String getAvatarUrl() {
+        return getEventImageURL();
     }
 }

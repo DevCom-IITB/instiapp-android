@@ -1,5 +1,6 @@
 package app.insti.adapter;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -7,11 +8,15 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -46,6 +51,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final String TAG = CommentsAdapter.class.getSimpleName();
 
     private Context context;
+    private Activity activity;
     private LayoutInflater inflater;
     private String sessionId, userId;
     private Fragment fragment;
@@ -57,12 +63,13 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private List<Venter.Comment> commentList = new ArrayList<>();
 
-    public CommentsAdapter(Context context, String sessionId, String userId, Fragment fragment) {
+    public CommentsAdapter(Activity activity, Context context, String sessionId, String userId, Fragment fragment) {
         this.context = context;
         this.sessionId = sessionId;
         this.userId = userId;
         inflater = LayoutInflater.from(context);
         this.fragment =fragment;
+        this.activity = activity;
     }
 
     public class CommentsViewHolder extends RecyclerView.ViewHolder {
@@ -74,6 +81,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView textViewComment;
         private EditText editTextComment;
         private ImageButton send_comment;
+        private ImageButton back_button;
         private final RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
 
         CommentsViewHolder(View itemView) {
@@ -87,6 +95,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             textViewCommentTime = itemView.findViewById(R.id.textViewTime);
             circleImageView = itemView.findViewById(R.id.circleImageViewUserImage);
             send_comment = itemView.findViewById(R.id.send_comment);
+            back_button = itemView.findViewById(R.id.back_button);
         }
 
         private void bindHolder(final int position) {
@@ -124,53 +133,57 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             switch (item.getItemId()) {
                                 case R.id.edit_comment_option:
                                     final String temp = textViewComment.getText().toString();
-                                    commentCardLayout.setClickable(false);
-                                    commentCardLayout.setLongClickable(false);
+                                    cardView.setClickable(false);
                                     cardView.setLongClickable(false);
                                     textViewComment.setVisibility(View.GONE);
                                     editTextComment.setVisibility(View.VISIBLE);
                                     editTextComment.setText(textViewComment.getText().toString());
                                     send_comment.setVisibility(View.VISIBLE);
+                                    back_button.setVisibility(View.VISIBLE);
                                     editTextComment.requestFocus();
-                                    commentCardLayout.setOnClickListener(new View.OnClickListener() {
+                                    back_button.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            commentCardLayout.setClickable(true);
-                                            commentCardLayout.setLongClickable(true);
                                             editTextComment.clearFocus();
                                             textViewComment.setText(temp);
                                             commentCardLayout.requestFocus();
                                             textViewComment.setVisibility(View.VISIBLE);
                                             send_comment.setVisibility(View.GONE);
+                                            back_button.setVisibility(View.GONE);
                                             editTextComment.setVisibility(View.GONE);
+                                            cardView.setClickable(true);
+                                            cardView.setLongClickable(true);
+                                            MainActivity.hideKeyboard(activity);
                                         }
                                     });
                                     send_comment.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            commentCardLayout.setClickable(true);
-                                            commentCardLayout.setLongClickable(true);
-                                            cardView.setLongClickable(true);
                                             CommentCreateRequest commentCreateRequest = new CommentCreateRequest(editTextComment.getText().toString());
                                             retrofitInterface.updateComment("sessionid=" + sessionId, comment.getId(), commentCreateRequest).enqueue(new Callback<Venter.Comment>() {
                                                 @Override
                                                 public void onResponse(Call<Venter.Comment> call, Response<Venter.Comment> response) {
                                                     if (response.isSuccessful()){
-                                                        commentCardLayout.setClickable(true);
-                                                        commentCardLayout.setLongClickable(true);
-                                                        cardView.setLongClickable(true);
-                                                        Venter.Comment comment = response.body();
-                                                        /*commentList.add(position, comment);*/
-//                                                        CommentsAdapter.this.notify();
-//                                                        CommentsViewHolder.this.notify();
+                                                        textViewComment.setText(editTextComment.getText().toString());
                                                         editTextComment.setText(null);
-                                                        setCommentList(commentList, textViewCommentLabel);
-//                                                        textViewComment.setText(editTextComment.getText().toString());
                                                         editTextComment.setVisibility(View.GONE);
                                                         send_comment.setVisibility(View.GONE);
+                                                        back_button.setVisibility(View.GONE);
                                                         textViewComment.setVisibility(View.VISIBLE);
+                                                        MainActivity.hideKeyboard(activity);
+                                                        cardView.setClickable(true);
+                                                        cardView.setLongClickable(true);
+
                                                     } else {
                                                         Toast.makeText(context, "Comment not edited", Toast.LENGTH_SHORT).show();
+                                                        textViewComment.setText(temp);
+                                                        editTextComment.setVisibility(View.GONE);
+                                                        send_comment.setVisibility(View.GONE);
+                                                        back_button.setVisibility(View.GONE);
+                                                        textViewComment.setVisibility(View.VISIBLE);
+                                                        cardView.setClickable(true);
+                                                        cardView.setLongClickable(true);
+                                                        MainActivity.hideKeyboard(activity);
                                                     }
                                                 }
 
@@ -228,6 +241,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     return true;
                 }
             });
+
         }
     }
 
@@ -244,6 +258,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Utils.openUserFragment(commentList.get(commentsViewHolder.getAdapterPosition()).getUser(), fragment.getActivity());
             }
         });
+
         mView = view;
         return commentsViewHolder;
     }
@@ -264,4 +279,5 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.commentList = commentList;
         this.textViewCommentLabel = textViewCommentLabel;
     }
+
 }

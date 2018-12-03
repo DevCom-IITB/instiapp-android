@@ -17,7 +17,7 @@ public class DateTimeUtil {
             long minutes = TimeUnit.MILLISECONDS.toMinutes(now.getTime() - date.getTime());
             long hours = TimeUnit.MILLISECONDS.toHours(now.getTime() - date.getTime());
             if (seconds <= 0) {
-                return "now";
+                return "Now";
             } else if (seconds < 60 && seconds > 1) {
                 return seconds + " seconds ago";
             } else if (minutes == 1) {
@@ -25,22 +25,20 @@ public class DateTimeUtil {
             } else if (minutes < 60 && minutes > 1) {
                 return minutes + " minutes ago";
             } else if (hours == 1) {
-                return "an hour ago";
+                return "An hour ago";
             } else if (hours < 24 && hours > 1) {
                 return hours + " hours ago";
             } else {
                 long days = Math.round(diff / (24.0 * 60 * 60 * 1000));
                 if (days == 0)
-                    return "today";
+                    return "Today";
                 else if (days == 1)
-                    return "yesterday";
-                else if (days == 1)
-                    return "a day ago";
+                    return "Yesterday";
                 else if (days < 14)
                     return days + " days ago";
                 else if (days < 30)
                     if ((int) (days / 7) == 1)
-                        return "a week ago";
+                        return "A week ago";
                     else
                         return ((int) (days / 7)) + " weeks ago";
                 else if (days < 365)
@@ -50,7 +48,7 @@ public class DateTimeUtil {
                         return ((int) (days / 30)) + " months ago";
                 else
                     if ((int) (days / 365) == 1)
-                        return "a year ago";
+                        return "A year ago";
                     else
                         return ((int) (days / 365)) + " years ago";
             }

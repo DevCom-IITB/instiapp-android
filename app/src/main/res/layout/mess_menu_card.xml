@@ -20,7 +20,7 @@
             android:id="@+id/day_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
+            android:textColor="?attr/themeColorInverse"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -29,55 +29,55 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Breakfast"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="?attr/urlColor"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/breakfast_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000000" />
+            android:textColor="?attr/themeColorInverse" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Lunch"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="?attr/urlColor"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/lunch_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000000" />
+            android:textColor="?attr/themeColorInverse" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Tiffin"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="?attr/urlColor"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/snacks_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000000" />
+            android:textColor="?attr/themeColorInverse" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Dinner"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="?attr/urlColor"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/dinner_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000000" />
+            android:textColor="?attr/themeColorInverse" />
     </LinearLayout>
 </android.support.v7.widget.CardView>

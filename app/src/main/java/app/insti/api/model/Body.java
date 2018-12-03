@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Body {
+import app.insti.interfaces.CardInterface;
+
+public class Body implements CardInterface {
     @SerializedName("id")
     private String bodyID;
 
@@ -180,5 +182,17 @@ public class Body {
 
     public void setBodyRoles(List<Role> bodyRoles) {
         this.bodyRoles = bodyRoles;
+    }
+
+    public String getTitle() {
+        return getBodyName();
+    }
+
+    public String getSubtitle() {
+        return getBodyShortDescription();
+    }
+
+    public String getAvatarUrl() {
+        return getBodyImageURL();
     }
 }

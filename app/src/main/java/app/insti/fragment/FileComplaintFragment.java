@@ -41,6 +41,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.cunoraz.tagview.Tag;
@@ -140,6 +141,7 @@ public class FileComplaintFragment extends Fragment {
     private Button buttonAnalysis;
     private ImageButton imageActionButton;
     List<Venter.Complaint> complaints;
+    private Spinner sectionsSpinner;
     private Venter.Complaint detailedComplaint;
 
     public static FileComplaintFragment getMainActivity() {
@@ -257,6 +259,13 @@ public class FileComplaintFragment extends Fragment {
         autoLocation();
         //ends here
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.section, android.R.layout.simple_spinner_item);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        sectionsSpinner.setAdapter(adapter);
+
         tagView.setOnTagDeleteListener(new TagView.OnTagDeleteListener() {
             @Override
             public void onTagDeleted(TagView tagView, Tag tag, int i) {
@@ -271,6 +280,7 @@ public class FileComplaintFragment extends Fragment {
                 addTags(tag);
             }
         });
+
         return view;
     }
 
@@ -298,48 +308,9 @@ public class FileComplaintFragment extends Fragment {
         fragmentTransaction.add(R.id.framelayout_for_fragment, complaintFragment);
         fragmentTransaction.addToBackStack("Complaint Fragment").commit();
 
-
-//        return ComplaintDetailsFragment.getInstance(sessionId, complaintId, userId, userProfileUrl);
     }
 
     private void callServerToGetDescriptions() {
-        /*try {
-            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-            retrofitInterface.getAllComplaints("sessionid=" + sID).enqueue(new Callback<List<Venter.Complaint>>() {
-                @Override
-                public void onResponse(@NonNull Call<List<Venter.Complaint>> call, @NonNull Response<List<Venter.Complaint>> response) {
-                    if (response.body() != null && !(response.body().isEmpty())) {
-                        Log.i(TAG, "response.body != null");
-                        *//*Log.i(TAG, "response: " + response.body());*//*
-                        List<Venter.Complaint> complaints =response.body();
-
-                        for (int i= 0; i<complaints.size(); i++){
-                            detailedComplaint = complaints.get(i);
-                            *//*Log.i(TAG, "@@@@@@@@@@@@Inside detailed complaint:"+ detailedComplaint);*//*
-                            description = detailedComplaint.getDescription();
-                            description = description.replace("Complaint: ", "");
-                            *//*Log.i(TAG, "@@@@@@@@@@@@Inside regex:"+ description + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");*//*
-                            String[] des = description.split("\n\n");
-                            Log.i(TAG, "@@@@@@@@@@@@Inside for:"+ des[0] + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                            descriptions.add(des[0]);
-                        }
-                    } else {
-                        Log.i(TAG, "response.body is empty");
-                    }
-                    for (int i=0; i<descriptions.size();i++){
-                        Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                        Log.i(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@"+ descriptions.get(i));
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<List<Venter.Complaint>> call, @NonNull Throwable t) {
-                    Log.i(TAG, "failure" + t.toString());
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
         try {
             RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
             retrofitInterface.getAllComplaints("sessionid=" + sID).enqueue(new Callback<List<Venter.Complaint>>() {
@@ -393,6 +364,7 @@ public class FileComplaintFragment extends Fragment {
         linearLayoutScrollTags.setVisibility(View.INVISIBLE);
         linearLayoutScrollTags.setVisibility(View.GONE);
         tagsLayout = view.findViewById(R.id.tags_layout);
+        sectionsSpinner =  view.findViewById(R.id.sectionsSpinner);
 
         viewPager = view.findViewById(R.id.complaint_image_view_pager);
         indicator = view.findViewById(R.id.indicator);

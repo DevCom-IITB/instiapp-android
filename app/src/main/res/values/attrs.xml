@@ -37,4 +37,9 @@ limitations under the License.
         </attr>
     </declare-styleable>
 
+    <attr name="themeColor" format="reference|color" />
+    <attr name="themeColorInverse" format="reference|color" />
+    <attr name="newsColor" format="reference|color" />
+    <attr name="urlColor" format="reference|color" />
+
 </resources>
