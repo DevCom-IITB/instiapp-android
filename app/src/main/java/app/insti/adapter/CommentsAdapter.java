@@ -122,26 +122,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             switch (item.getItemId()) {
                                 case R.id.edit_comment_option:
                                     final String temp = textViewComment.getText().toString();
-                                    cardView.setClickable(false);
-                                    cardView.setLongClickable(false);
-                                    textViewComment.setVisibility(View.GONE);
-                                    editTextComment.setVisibility(View.VISIBLE);
-                                    editTextComment.setText(textViewComment.getText().toString());
-                                    send_comment.setVisibility(View.VISIBLE);
-                                    back_button.setVisibility(View.VISIBLE);
-                                    editTextComment.requestFocus();
+                                    preEditComments(cardView, textViewComment, editTextComment,send_comment, back_button, activity);
                                     back_button.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            editTextComment.clearFocus();
                                             textViewComment.setText(temp);
-                                            textViewComment.setVisibility(View.VISIBLE);
-                                            send_comment.setVisibility(View.GONE);
-                                            back_button.setVisibility(View.GONE);
-                                            editTextComment.setVisibility(View.GONE);
-                                            cardView.setClickable(true);
-                                            cardView.setLongClickable(true);
-                                            MainActivity.hideKeyboard(activity);
+                                            postEditComments(cardView, textViewComment, editTextComment,send_comment, back_button, activity);
                                         }
                                     });
                                     send_comment.setOnClickListener(new View.OnClickListener() {
@@ -153,25 +139,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                 public void onResponse(Call<Venter.Comment> call, Response<Venter.Comment> response) {
                                                     if (response.isSuccessful()){
                                                         textViewComment.setText(editTextComment.getText().toString());
-                                                        editTextComment.setText(null);
-                                                        editTextComment.setVisibility(View.GONE);
-                                                        send_comment.setVisibility(View.GONE);
-                                                        back_button.setVisibility(View.GONE);
-                                                        textViewComment.setVisibility(View.VISIBLE);
-                                                        MainActivity.hideKeyboard(activity);
-                                                        cardView.setClickable(true);
-                                                        cardView.setLongClickable(true);
-
+                                                        postEditComments(cardView, textViewComment, editTextComment,send_comment, back_button, activity);
                                                     } else {
                                                         Toast.makeText(context, "Comment not edited", Toast.LENGTH_SHORT).show();
                                                         textViewComment.setText(temp);
-                                                        editTextComment.setVisibility(View.GONE);
-                                                        send_comment.setVisibility(View.GONE);
-                                                        back_button.setVisibility(View.GONE);
-                                                        textViewComment.setVisibility(View.VISIBLE);
-                                                        cardView.setClickable(true);
-                                                        cardView.setLongClickable(true);
-                                                        MainActivity.hideKeyboard(activity);
+                                                        postEditComments(cardView, textViewComment, editTextComment,send_comment, back_button, activity);
                                                     }
                                                 }
 
@@ -229,7 +201,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     return true;
                 }
             });
-
         }
     }
 
@@ -264,5 +235,27 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void setCommentList(List<Venter.Comment> commentList, TextView textViewCommentLabel) {
         this.commentList = commentList;
         this.textViewCommentLabel = textViewCommentLabel;
+    }
+
+    private void preEditComments(CardView cardView, TextView textViewComment, EditText editTextComment, ImageButton send_comment, ImageButton back_button, Activity activity) {
+        cardView.setClickable(false);
+        cardView.setLongClickable(false);
+        textViewComment.setVisibility(View.GONE);
+        editTextComment.setVisibility(View.VISIBLE);
+        editTextComment.setText(textViewComment.getText().toString());
+        send_comment.setVisibility(View.VISIBLE);
+        back_button.setVisibility(View.VISIBLE);
+        editTextComment.requestFocus();
+    }
+
+    private void postEditComments(CardView cardView, TextView textViewComment, EditText editTextComment, ImageButton send_comment, ImageButton back_button, Activity activity) {
+        editTextComment.clearFocus();
+        textViewComment.setVisibility(View.VISIBLE);
+        send_comment.setVisibility(View.GONE);
+        back_button.setVisibility(View.GONE);
+        editTextComment.setVisibility(View.GONE);
+        cardView.setClickable(true);
+        cardView.setLongClickable(true);
+        MainActivity.hideKeyboard(activity);
     }
 }
