@@ -24,8 +24,10 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
 
     private List<T> tList;
     private Fragment mFragment;
+    public String uid = "";
 
-    public abstract void onClick(T t, FragmentActivity fragmentActivity);
+    public void onClick(T t, FragmentActivity fragmentActivity) {};
+    public void onClick(T t, Fragment fragment, View view) {}
 
     public String getBigImageUrl(T t) {
         return null;
@@ -38,6 +40,7 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
     public CardAdapter(List<T> tList, Fragment fragment) {
         this.tList = tList;
         mFragment = fragment;
+        this.setHasStableIds(true);
     }
 
     @Override
@@ -52,6 +55,7 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
             @Override
             public void onClick(View view) {
                 CardAdapter.this.onClick(tList.get(postViewHolder.getAdapterPosition()), mFragment.getActivity());
+                CardAdapter.this.onClick(tList.get(postViewHolder.getAdapterPosition()), mFragment, view);
             }
         });
 
@@ -64,9 +68,13 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
         viewHolder.title.setText(t.getTitle());
         viewHolder.subtitle.setText(t.getSubtitle());
 
+        // Set transition names
+        viewHolder.avatar.setTransitionName(uid + Integer.toString((int) t.getId()) + "_sharedAvatar");
+
         if (getBigImageUrl(t) != null) {
             // Show big image, hide avatar
             viewHolder.bigPicture.setVisibility(View.VISIBLE);
+            viewHolder.bigPicture.setTransitionName(uid + Integer.toString((int) t.getId()) + "_sharedBigPicture");
             viewHolder.avatar.setVisibility(View.GONE);
 
             // Load big image with low resolution as avatar
@@ -112,6 +120,11 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
     public int getItemViewType(int position) {
         if (position == 0) return 1;
         else return 2;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return tList.get(position).getId();
     }
 
     @Override

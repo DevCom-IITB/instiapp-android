@@ -23,9 +23,9 @@ import app.insti.api.model.Role;
  * Use the {@link RoleRecyclerViewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RoleRecyclerViewFragment extends Fragment {
+public class RoleRecyclerViewFragment extends Fragment implements TransitionTargetFragment, TransitionTargetChild {
     private static final String TAG = "RoleRecyclerViewFragment";
-
+    public Fragment parentFragment = null;
 
     private RecyclerView recyclerView;
     private RoleAdapter roleAdapter;
@@ -34,6 +34,18 @@ public class RoleRecyclerViewFragment extends Fragment {
 
     public RoleRecyclerViewFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void transitionEnd() {
+        if (parentFragment instanceof TransitionTargetFragment) {
+            ((TransitionTargetFragment) parentFragment).transitionEnd();
+        }
+    }
+
+    @Override
+    public Fragment getParent() {
+        return parentFragment;
     }
 
     // TODO: Rename and change types and number of parameters
@@ -60,6 +72,7 @@ public class RoleRecyclerViewFragment extends Fragment {
 
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.role_recycler_view);
         roleAdapter = new RoleAdapter(roleList, this);
+        roleAdapter.uid = "RRVFrag";
         recyclerView.setAdapter(roleAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

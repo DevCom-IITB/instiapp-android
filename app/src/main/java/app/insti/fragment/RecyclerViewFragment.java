@@ -87,7 +87,7 @@ public abstract class RecyclerViewFragment<T extends Clickable, S extends Recycl
         /* Skip if we're already destroyed */
         if (getActivity() == null || getView() == null) return;
 
-        if (adapter == null) {
+        if (adapter == null || recyclerView.getAdapter() != adapter) {
             initAdapter(result);
         } else {
             adapter.setPosts(result);

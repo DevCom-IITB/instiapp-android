@@ -47,6 +47,7 @@ import java.util.List;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.SessionManager;
+import app.insti.UpdatableList;
 import app.insti.Utils;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
@@ -95,13 +96,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private User currentUser;
     private BackHandledFragment selectedFragment;
     private Menu menu;
-    private RetrofitInterface retrofitInterface;
-    private List<Notification> notifications = null;
-
-    /**
-     * which menu item should be checked on activity start
-     */
-    private int initMenuChecked = R.id.nav_feed;
 
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -165,7 +159,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             private GestureDetector gestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
-                    Toast.makeText(MainActivity.this, "You have unlocked super max pro mode", Toast.LENGTH_SHORT).show();
                     Utils.changeTheme(MainActivity.this);
                     return super.onDoubleTap(e);
                 }
@@ -186,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private void fetchNotifications() {
         // Try memory cache
-        if (notifications != null) {
+        if (Utils.notificationCache != null) {
             showNotifications();
             return;
         }
@@ -197,7 +190,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
                 if (response.isSuccessful()) {
-                    notifications = response.body();
+                    Utils.notificationCache = new UpdatableList<>();
+                    Utils.notificationCache.setList(response.body());
                     showNotifications();
                 }
             }
@@ -208,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Show the right notification icon
      */
     private void showNotifications() {
-        if (notifications != null && !notifications.isEmpty()) {
+        if (Utils.notificationCache != null && !Utils.notificationCache.isEmpty()) {
             menu.findItem(R.id.action_notifications).setIcon(R.drawable.baseline_notifications_active_white_24);
         } else {
             menu.findItem(R.id.action_notifications).setIcon(R.drawable.ic_notifications_white_24dp);
@@ -343,7 +337,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 openEventFragment(id);
                 return;
             case DATA_TYPE_NEWS:
-                initMenuChecked = R.id.nav_news;
                 updateFragment(new NewsFragment());
                 return;
         }
@@ -360,10 +353,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             switch (type) {
                 case DATA_TYPE_PT:
                     if (extra.contains("/trainingblog")) {
-                        initMenuChecked = R.id.nav_training_blog;
                         openTrainingBlog();
                     } else {
-                        initMenuChecked = R.id.nav_placement_blog;
                         openPlacementBlog();
                     }
                     return;
@@ -467,7 +458,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(initMenuChecked);
     }
 
     private void updateNavigationView() {
@@ -531,7 +521,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.action_notifications) {
             NotificationsFragment notificationsFragment = new NotificationsFragment();
-            updateFragment(notificationsFragment);
+            notificationsFragment.show(getSupportFragmentManager(), TAG);
             return true;
         }
         return super.onOptionsItemSelected(item);

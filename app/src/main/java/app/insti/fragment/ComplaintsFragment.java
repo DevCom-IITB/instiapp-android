@@ -16,6 +16,7 @@ import android.widget.Button;
 
 import app.insti.Constants;
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.adapter.ComplaintFragmentViewPagerAdapter;
 
 public class ComplaintsFragment extends BaseFragment {
@@ -28,8 +29,10 @@ public class ComplaintsFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_complaints, container, false);
+
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Complaints/Suggestions");
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_complaint);
 
         Bundle bundle = getArguments();
         userID = bundle.getString(Constants.USER_ID);

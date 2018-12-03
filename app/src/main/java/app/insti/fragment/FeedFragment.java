@@ -52,6 +52,8 @@ public class FeedFragment extends BaseFragment {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Feed");
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_feed);
+
         feedRecyclerView = view.findViewById(R.id.feed_recycler_view);
         mLayoutManager = new LinearLayoutManager(getContext());
         feedRecyclerView.setLayoutManager(mLayoutManager);
@@ -72,10 +74,10 @@ public class FeedFragment extends BaseFragment {
         fab = getView().findViewById(R.id.fab);
 
         // Initialize the feed
-        if (Utils.eventCache.getCache() == null || Utils.eventCache.getCache().size() == 0) {
+        if (Utils.eventCache == null || Utils.eventCache.isEmpty()) {
             updateFeed();
         } else {
-            displayEvents(Utils.eventCache.getCache());
+            displayEvents(Utils.eventCache);
         }
     }
 
@@ -105,8 +107,8 @@ public class FeedFragment extends BaseFragment {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
-                    Utils.eventCache.setCache(response.body().getEvents());
-                    displayEvents(Utils.eventCache.getCache());
+                    Utils.eventCache.setList(response.body().getEvents());
+                    displayEvents(Utils.eventCache);
                 }
                 //Server Error
                 feedSwipeRefreshLayout.setRefreshing(false);

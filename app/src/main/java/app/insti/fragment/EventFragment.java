@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -57,7 +58,7 @@ import ru.noties.markwon.Markwon;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EventFragment extends BackHandledFragment {
+public class EventFragment extends BackHandledFragment implements TransitionTargetFragment {
     Event event;
     Button goingButton;
     Button interestedButton;
@@ -84,6 +85,12 @@ public class EventFragment extends BackHandledFragment {
 
     public EventFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void transitionEnd() {
+        if (getActivity() == null || getView() == null) return;
+        Utils.loadImageWithPlaceholder(eventPicture, event.getEventImageURL());
     }
 
     /**
@@ -137,6 +144,10 @@ public class EventFragment extends BackHandledFragment {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(event.getEventName());
+
+        if (bundle.getBoolean(Constants.NO_SHARED_ELEM, true)) {
+            this.transitionEnd();
+        }
     }
 
     private void inflateViews(final Event event) {
@@ -152,7 +163,11 @@ public class EventFragment extends BackHandledFragment {
         webEventButton = getActivity().findViewById(R.id.web_event_button);
         shareEventButton = getActivity().findViewById(R.id.share_event_button);
 
-        Utils.loadImageWithPlaceholder(eventPicture, event.getEventImageURL());
+        if (event.isEventBigImage()) {
+            Picasso.get().load(event.getEventImageURL()).into(eventPicture);
+        } else {
+            Picasso.get().load(Utils.resizeImageUrl(event.getEventImageURL())).into(eventPicture);
+        }
 
         eventTitle.setText(event.getEventName());
         Markwon.setMarkdown(eventDescription, event.getEventDescription());

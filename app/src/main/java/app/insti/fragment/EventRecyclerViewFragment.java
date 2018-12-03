@@ -25,9 +25,9 @@ import app.insti.api.model.Event;
  * Use the {@link EventRecyclerViewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EventRecyclerViewFragment extends Fragment {
+public class EventRecyclerViewFragment extends Fragment implements TransitionTargetFragment, TransitionTargetChild {
     private static final String TAG = "EventRecyclerViewFragment";
-
+    public Fragment parentFragment = null;
 
     private RecyclerView recyclerView;
     private FeedAdapter feedAdapter;
@@ -36,6 +36,18 @@ public class EventRecyclerViewFragment extends Fragment {
 
     public EventRecyclerViewFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void transitionEnd() {
+        if (parentFragment instanceof TransitionTargetFragment) {
+            ((TransitionTargetFragment) parentFragment).transitionEnd();
+        }
+    }
+
+    @Override
+    public Fragment getParent() {
+        return parentFragment;
     }
 
     // TODO: Rename and change types and number of parameters

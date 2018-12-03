@@ -2,6 +2,7 @@ package app.insti.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
 import java.util.List;
 
@@ -10,14 +11,20 @@ import app.insti.Utils;
 import app.insti.api.model.Event;
 
 public class FeedAdapter extends CardAdapter<Event> {
-
     public FeedAdapter(List<Event> eventList, Fragment fragment) {
         super(eventList, fragment);
     }
 
     @Override
-    public void onClick(Event event, FragmentActivity fragmentActivity) {
-        Utils.openEventFragment(event, fragmentActivity);
+    public void onClick(Event event, FragmentActivity fragmentActivity) {}
+
+    @Override
+    public void onClick(Event event, final Fragment fragment, View view) {
+        int picId = R.id.object_picture;
+        if (event.isEventBigImage()) {
+            picId = R.id.big_object_picture;
+        }
+        Utils.openEventFragment(event, fragment, view.findViewById(picId));
     }
 
     @Override

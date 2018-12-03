@@ -26,9 +26,9 @@ import app.insti.api.model.Body;
  * Use the {@link BodyRecyclerViewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BodyRecyclerViewFragment extends Fragment {
+public class BodyRecyclerViewFragment extends Fragment implements TransitionTargetFragment, TransitionTargetChild {
     private static final String TAG = "BodyRecyclerViewFragment";
-
+    public Fragment parentFragment = null;
 
     private RecyclerView recyclerView;
     private BodyAdapter bodyAdapter;
@@ -37,6 +37,18 @@ public class BodyRecyclerViewFragment extends Fragment {
 
     public BodyRecyclerViewFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void transitionEnd() {
+        if (parentFragment instanceof TransitionTargetFragment) {
+            ((TransitionTargetFragment) parentFragment).transitionEnd();
+        }
+    }
+
+    @Override
+    public Fragment getParent() {
+        return parentFragment;
     }
 
     // TODO: Rename and change types and number of parameters
@@ -64,6 +76,7 @@ public class BodyRecyclerViewFragment extends Fragment {
 
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.body_recycler_view);
         bodyAdapter = new BodyAdapter(bodyList, this);
+        bodyAdapter.uid = "BRVFrag";
         recyclerView.setAdapter(bodyAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

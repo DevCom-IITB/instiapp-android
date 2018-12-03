@@ -34,6 +34,7 @@ public class TrainingBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public TrainingBlogAdapter(List<TrainingBlogPost> posts, ItemClickListener itemClickListener) {
         this.posts = posts;
         this.itemClickListener = itemClickListener;
+        this.setHasStableIds(true);
     }
 
     public List<TrainingBlogPost> getPosts() {
@@ -94,6 +95,11 @@ public class TrainingBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public int getItemViewType(int position) {
         return posts.size() > position ? VIEW_ITEM : VIEW_PROG;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return posts.get(position).getPostID().hashCode();
     }
 
     @Override

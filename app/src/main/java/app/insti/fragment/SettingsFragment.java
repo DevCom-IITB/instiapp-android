@@ -49,6 +49,7 @@ public class SettingsFragment extends Fragment {
         super.onStart();
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Settings");
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_settings);
 
         Bundle bundle = getArguments();
 

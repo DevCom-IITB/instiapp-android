@@ -37,6 +37,7 @@ import retrofit2.Response;
  */
 public class MessMenuFragment extends BaseFragment {
 
+    private MessMenuAdapter messMenuAdapter;
     private RecyclerView messMenuRecyclerView;
     private SwipeRefreshLayout messMenuSwipeRefreshLayout;
     private Spinner hostelSpinner;
@@ -60,6 +61,7 @@ public class MessMenuFragment extends BaseFragment {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Mess Menu");
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_mess_menu);
 
         hostel = (String) getArguments().get(Constants.USER_HOSTEL);
         displayMenu(hostel);
@@ -163,14 +165,19 @@ public class MessMenuFragment extends BaseFragment {
             }
         }
 
-        final MessMenuAdapter messMenuAdapter = new MessMenuAdapter(sortedMenus);
         getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
             @Override
             public void run(Activity pActivity) {
                 try {
-                    messMenuRecyclerView = getActivity().findViewById(R.id.mess_menu_recycler_view);
-                    messMenuRecyclerView.setAdapter(messMenuAdapter);
-                    messMenuRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    if (messMenuAdapter == null) {
+                        messMenuAdapter = new MessMenuAdapter(sortedMenus);
+                        messMenuRecyclerView = getActivity().findViewById(R.id.mess_menu_recycler_view);
+                        messMenuRecyclerView.setAdapter(messMenuAdapter);
+                        messMenuRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    } else {
+                        messMenuAdapter.setMenu(sortedMenus);
+                        messMenuAdapter.notifyDataSetChanged();
+                    }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }

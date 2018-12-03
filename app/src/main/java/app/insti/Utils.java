@@ -1,12 +1,18 @@
 package app.insti;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.transition.Fade;
+import android.support.transition.Slide;
+import android.support.transition.Transition;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -14,17 +20,26 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
 import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
+import app.insti.api.model.Notification;
 import app.insti.api.model.User;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.EventFragment;
+import app.insti.fragment.TransitionTargetChild;
+import app.insti.fragment.TransitionTargetFragment;
 import app.insti.fragment.UserFragment;
 
 public final class Utils {
     public static UpdatableList<Event> eventCache = new UpdatableList<>();
+    public static UpdatableList<Notification> notificationCache = null;
+
     private static String sessionId;
     private static RetrofitInterface retrofitInterface;
     public static Gson gson;
@@ -71,29 +86,111 @@ public final class Utils {
         ft.commit();
     }
 
-    public static void openBodyFragment(Body body, FragmentActivity fragmentActivity) {
+    public static void updateSharedElementFragment(final Fragment fragment, final Fragment currentFragment, Map<View, String> sharedElements) {
+        FragmentTransaction ft = currentFragment.getActivity().getSupportFragmentManager().beginTransaction();
+
+        Transition transition = new DetailsTransition();
+
+        /* Set up transitions */
+        fragment.setSharedElementEnterTransition(transition);
+        fragment.setEnterTransition(new Slide());
+        currentFragment.setExitTransition(new Fade());
+        fragment.setSharedElementReturnTransition(transition);
+
+        /* Set transition for parent in case it is a child */
+        if (currentFragment instanceof TransitionTargetChild) {
+            ((TransitionTargetChild) currentFragment).getParent().setExitTransition(new Fade());
+        }
+
+        transition.addListener(new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                if (fragment instanceof TransitionTargetFragment) {
+                    ((TransitionTargetFragment) fragment).transitionEnd();
+                }
+
+                if (currentFragment instanceof TransitionTargetFragment) {
+                    ((TransitionTargetFragment) currentFragment).transitionEnd();
+                }
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {}
+
+            @Override
+            public void onTransitionPause(Transition transition) {}
+
+            @Override
+            public void onTransitionResume(Transition transition) {}
+        });
+
+        /* Add all shared elements */
+        for (Map.Entry<View, String> entry : sharedElements.entrySet()) {
+            ft.addSharedElement(entry.getKey(), entry.getValue());
+        }
+
+        /* Update the fragment */
+        ft.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag())
+                .addToBackStack(fragment.getTag())
+                .commit();
+    }
+
+    public static BodyFragment getBodyFragment(Body body) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BODY_JSON, new Gson().toJson(body));
         BodyFragment bodyFragment = new BodyFragment();
         bodyFragment.setArguments(bundle);
-        updateFragment(bodyFragment, fragmentActivity);
+        return bodyFragment;
     }
 
-    public static void openEventFragment(Event event, FragmentActivity fragmentActivity) {
+    public static void openBodyFragment(Body body, FragmentActivity fragmentActivity) {
+        updateFragment(getBodyFragment(body), fragmentActivity);
+    }
+
+    public static void openBodyFragment(Body body, Fragment currentFragment, View sharedAvatar) {
+        Map<View, String> sharedElements = new HashMap<>();
+        sharedElements.put(sharedAvatar, "sharedAvatar");
+        updateSharedElementFragment(
+                getBodyFragment(body), currentFragment, sharedElements
+        );
+    }
+
+    public static EventFragment getEventFragment(Event event, boolean sharedElements) {
         String eventJson = new Gson().toJson(event);
         Bundle bundle = new Bundle();
         bundle.putString(Constants.EVENT_JSON, eventJson);
+        bundle.putBoolean(Constants.NO_SHARED_ELEM, !sharedElements);
         EventFragment eventFragment = new EventFragment();
         eventFragment.setArguments(bundle);
-        updateFragment(eventFragment, fragmentActivity);
+        return eventFragment;
+    }
+
+    public static void openEventFragment(Event event, FragmentActivity fragmentActivity) {
+        updateFragment(getEventFragment(event, false), fragmentActivity);
+    }
+
+    public static void openEventFragment(Event event, Fragment currentFragment, View sharedAvatar) {
+        Map<View, String> sharedElements = new HashMap<>();
+        sharedElements.put(sharedAvatar, "sharedAvatar");
+        updateSharedElementFragment(
+                getEventFragment(event, true), currentFragment, sharedElements
+        );
     }
 
     public static void openUserFragment(User user, FragmentActivity fragmentActivity) {
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.USER_ID, user.getUserID());
-        UserFragment userFragment = new UserFragment();
-        userFragment.setArguments(bundle);
-        updateFragment(userFragment, fragmentActivity);
+        updateFragment(UserFragment.newInstance(user.getUserID()), fragmentActivity);
+    }
+
+    public static void openUserFragment(User user, Fragment currentFragment, View sharedAvatar) {
+        Map<View, String> sharedElements = new HashMap<>();
+        sharedElements.put(sharedAvatar, "sharedAvatar");
+        updateSharedElementFragment(
+                UserFragment.newInstance(user), currentFragment, sharedElements
+        );
     }
 
     public static void setSessionId(String sessionId1) {
@@ -133,6 +230,16 @@ public final class Utils {
         darkTheme = !darkTheme;
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
+        context.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         context.finish();
+    }
+
+    public static void setSelectedMenuItem(Activity activity, int id) {
+        if (activity != null) {
+            NavigationView navigationView = activity.findViewById(R.id.nav_view);
+            if (navigationView != null) {
+                navigationView.setCheckedItem(id);
+            }
+        }
     }
 }

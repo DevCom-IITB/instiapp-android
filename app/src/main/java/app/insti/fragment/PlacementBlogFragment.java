@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.adapter.PlacementBlogAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.PlacementBlogPost;
@@ -40,6 +41,8 @@ public class PlacementBlogFragment extends RecyclerViewFragment<PlacementBlogPos
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Placement Blog");
+        Utils.setSelectedMenuItem(getActivity(), R.id.nav_placement_blog);
+
         setHasOptionsMenu(true);
         updateData();
 
