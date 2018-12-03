@@ -1,14 +1,10 @@
 package app.insti.adapter;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
-import app.insti.api.model.Venter;
 import app.insti.fragment.ComplaintDetailsFragment;
-import app.insti.fragment.RelevantComplaintsFragment;
 
 /**
  * Created by Shivam Sharma on 19-09-2018.
@@ -16,14 +12,10 @@ import app.insti.fragment.RelevantComplaintsFragment;
 
 public class ComplaintDetailsPagerAdapter extends FragmentPagerAdapter {
 
-    Venter.Complaint detailedComplaint;
-    Context context;
-    String sessionid, complaintid, userid, userProfileUrl;
+    private String sessionid, complaintid, userid, userProfileUrl;
 
-    public ComplaintDetailsPagerAdapter(FragmentManager fm, Venter.Complaint detailedComplaint, Context context, String sessionid, String complaintid, String userid, String userProfileUrl) {
+    public ComplaintDetailsPagerAdapter(FragmentManager fm, String sessionid, String complaintid, String userid, String userProfileUrl) {
         super(fm);
-        this.context = context;
-        this.detailedComplaint = detailedComplaint;
         this.sessionid = sessionid;
         this.complaintid = complaintid;
         this.userid = userid;
@@ -35,8 +27,11 @@ public class ComplaintDetailsPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return ComplaintDetailsFragment.getInstance(sessionid, complaintid, userid, userProfileUrl);
+           /*
+            For version 2:
             case 1:
-                return RelevantComplaintsFragment.getInstance(sessionid, userid);
+               return RelevantComplaintsFragment.getInstance(sessionid, userid);
+           */
             default:
                 return ComplaintDetailsFragment.getInstance(sessionid, complaintid, userid, userProfileUrl);
         }
@@ -54,6 +49,6 @@ public class ComplaintDetailsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 1;
     }
 }

@@ -8,15 +8,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -35,7 +31,6 @@ import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Venter;
 import app.insti.api.request.CommentCreateRequest;
-import app.insti.fragment.ComplaintDetailsFragment;
 import app.insti.utils.DateTimeUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -56,10 +51,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private String sessionId, userId;
     private Fragment fragment;
     private TextView textViewCommentLabel;
-    private View mView;
-    private LinearLayout commentCardLayout;
-    private LinearLayout comlaintDetailsLayout;
-    private boolean flag = false;
 
     private List<Venter.Comment> commentList = new ArrayList<>();
 
@@ -86,8 +77,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         CommentsViewHolder(View itemView) {
             super(itemView);
-            commentCardLayout = itemView.findViewById(R.id.linearLayoutCommentCard);
-            comlaintDetailsLayout = itemView.findViewById(R.id.linearLayoutComplaintDetails);
             cardView = itemView.findViewById(R.id.cardViewComment);
             textViewName = itemView.findViewById(R.id.textViewUserComment);
             textViewComment = itemView.findViewById(R.id.textViewComment);
@@ -146,7 +135,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                         public void onClick(View v) {
                                             editTextComment.clearFocus();
                                             textViewComment.setText(temp);
-                                            commentCardLayout.requestFocus();
                                             textViewComment.setVisibility(View.VISIBLE);
                                             send_comment.setVisibility(View.GONE);
                                             back_button.setVisibility(View.GONE);
@@ -258,8 +246,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 Utils.openUserFragment(commentList.get(commentsViewHolder.getAdapterPosition()).getUser(), fragment.getActivity());
             }
         });
-
-        mView = view;
         return commentsViewHolder;
     }
 
@@ -279,5 +265,4 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.commentList = commentList;
         this.textViewCommentLabel = textViewCommentLabel;
     }
-
 }

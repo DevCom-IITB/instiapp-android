@@ -13,7 +13,6 @@
     app:cardCornerRadius="0dp">
 
     <LinearLayout
-        android:id="@+id/linearLayoutCommentCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -33,7 +32,6 @@
                 android:scaleType="centerCrop" />
 
             <LinearLayout
-                android:id="@+id/linearLayoutUser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

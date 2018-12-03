@@ -50,22 +50,4 @@
     <string name="no_permission">No permission!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enter_location_details">Enter Location Details</string>
-    <string name="complaintSection">Section:</string>
-
-    <string-array name="comlaint_description">
-        <item>in calendar events listed on asc(like holidays and stuff too should be present)</item>
-        <item>The links inside a table in placement blog posts of InstiApp aren\'t clickable.</item>
-        <item>Event not updated in Insti app</item>
-        <item>Hostel 10 Mess Menu not updated in this App</item>
-        <item>Hostel 1 Mess Menu not updated in InstiApp</item>
-        <item>Not able to update the details of a page I currently am an admin of (CSE). Not able to change its image icon and also not able to add the website for it.</item>
-    </string-array>
-
-    <string-array name="section">
-        <item>Hostel</item>
-        <item>Academic</item>
-        <item>Instiapp</item>
-        <item>Other</item>
-    </string-array>
-
 </resources>
