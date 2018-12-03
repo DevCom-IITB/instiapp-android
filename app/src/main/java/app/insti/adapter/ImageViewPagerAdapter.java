@@ -37,10 +37,7 @@ public class ImageViewPagerAdapter extends PagerAdapter {
     {
         this.context = context;
         inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        for (String image: detailedComplaint.getImages()){
-            images.add(image);
-        }
+        images.addAll(detailedComplaint.getImages());
     }
 
     @Override

@@ -78,11 +78,11 @@ import app.insti.activity.MainActivity;
 import app.insti.adapter.ImageViewPagerAdapter;
 import app.insti.api.LocationAPIUtils;
 import app.insti.api.RetrofitInterface;
+import app.insti.api.model.Venter;
 import app.insti.api.request.ComplaintCreateRequest;
 import app.insti.api.request.ImageUploadRequest;
 import app.insti.api.response.ComplaintCreateResponse;
 import app.insti.api.response.ImageUploadResponse;
-import app.insti.utils.TagCategories;
 import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -131,6 +131,7 @@ public class FileComplaintFragment extends Fragment {
     private ImageButton imageButtonAddTags;
     private Button buttonAnalysis;
     private ImageButton imageActionButton;
+    protected List<Venter.TagUri> t = new ArrayList<>();
 
     public static FileComplaintFragment getMainActivity() {
         return mainactivity;
@@ -177,6 +178,7 @@ public class FileComplaintFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 linearLayoutScrollTags.setVisibility(View.VISIBLE);
+
                 setTags(s);
             }
 
@@ -616,15 +618,32 @@ public class FileComplaintFragment extends Fragment {
         });
     }
 
-    private void prepareTags() {
-        tagList = new ArrayList<>();
-        try {
-            for (int i = 0; i < TagCategories.CATEGORIES.length; i++) {
-                tagList.add(new ComplaintTag(TagCategories.CATEGORIES[i]));
+    private void prepareTags()
+    {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.getTags("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<List<Venter.TagUri>>() {
+            @Override
+            public void onResponse(Call<List<Venter.TagUri>> call, Response<List<Venter.TagUri>> response)
+            {
+                if (response != null && response.isSuccessful())
+                {
+                    t = response.body();
+                    tagList = new ArrayList<>();
+
+                    for (int i = 0; i < response.body().size(); i++) {
+                        Venter.TagUri tagUri = response.body().get(i);
+                        ComplaintTag complaintTag = new ComplaintTag(tagUri.getTagUri());
+                        tagList.add(complaintTag);
+                    }
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onFailure(Call<List<Venter.TagUri>> call, Throwable t)
+            {
+                Log.i(TAG, "failure in getting Tags: " + t.toString());
+            }
+        });
+
     }
 
     private void deleteTag(final TagView tagView, final Tag tag, final int i) {
