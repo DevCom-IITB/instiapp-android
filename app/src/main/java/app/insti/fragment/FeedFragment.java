@@ -153,7 +153,7 @@ public class FeedFragment extends BaseFragment {
         initFab();
 
         /* Make first event image big */
-        if (events.size() > 1) {
+        if (events.size() >= 1) {
             events.get(0).setEventBigImage(true);
         }
 
