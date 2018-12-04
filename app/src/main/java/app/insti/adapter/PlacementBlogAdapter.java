@@ -103,7 +103,10 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public long getItemId(int position) {
-        return posts.get(position).getPostID().hashCode();
+        if (position < posts.size()) {
+            return posts.get(position).getPostID().hashCode();
+        }
+        return -1;
     }
 
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
