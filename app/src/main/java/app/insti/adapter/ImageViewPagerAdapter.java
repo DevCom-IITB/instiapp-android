@@ -22,6 +22,7 @@ import app.insti.api.model.Venter;
 
 public class ImageViewPagerAdapter extends PagerAdapter {
 
+    private static final String TAG = ImageViewPagerAdapter.class.getSimpleName();
     private List<String> images = new ArrayList<>();
     public Context context;
     public LayoutInflater inflater;

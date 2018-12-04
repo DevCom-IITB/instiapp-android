@@ -178,7 +178,6 @@ public class FileComplaintFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 linearLayoutScrollTags.setVisibility(View.VISIBLE);
-
                 setTags(s);
             }
 
@@ -618,32 +617,15 @@ public class FileComplaintFragment extends Fragment {
         });
     }
 
-    private void prepareTags()
-    {
-        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        retrofitInterface.getTags("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<List<Venter.TagUri>>() {
-            @Override
-            public void onResponse(Call<List<Venter.TagUri>> call, Response<List<Venter.TagUri>> response)
-            {
-                if (response != null && response.isSuccessful())
-                {
-                    t = response.body();
-                    tagList = new ArrayList<>();
-
-                    for (int i = 0; i < response.body().size(); i++) {
-                        Venter.TagUri tagUri = response.body().get(i);
-                        ComplaintTag complaintTag = new ComplaintTag(tagUri.getTagUri());
-                        tagList.add(complaintTag);
-                    }
-                }
+    private void prepareTags() {
+        tagList = new ArrayList<>();
+        try {
+            for (int i = 0; i < TagCategories.CATEGORIES.length; i++) {
+                tagList.add(new ComplaintTag(TagCategories.CATEGORIES[i]));
             }
-            @Override
-            public void onFailure(Call<List<Venter.TagUri>> call, Throwable t)
-            {
-                Log.i(TAG, "failure in getting Tags: " + t.toString());
-            }
-        });
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void deleteTag(final TagView tagView, final Tag tag, final int i) {
