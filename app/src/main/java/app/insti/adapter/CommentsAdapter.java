@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -122,7 +121,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             switch (item.getItemId()) {
                                 case R.id.edit_comment_option:
                                     final String temp = textViewComment.getText().toString();
-                                    preEditComments(cardView, textViewComment, editTextComment,send_comment, back_button, activity);
+                                    preEditComments(cardView, textViewComment, editTextComment,send_comment, back_button);
                                     back_button.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -237,7 +236,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.textViewCommentLabel = textViewCommentLabel;
     }
 
-    private void preEditComments(CardView cardView, TextView textViewComment, EditText editTextComment, ImageButton send_comment, ImageButton back_button, Activity activity) {
+    private void preEditComments(CardView cardView, TextView textViewComment, EditText editTextComment, ImageButton send_comment, ImageButton back_button) {
         cardView.setClickable(false);
         cardView.setLongClickable(false);
         textViewComment.setVisibility(View.GONE);
