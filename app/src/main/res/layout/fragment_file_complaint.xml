@@ -297,15 +297,6 @@
             android:layout_gravity="bottom">
 
             <Button
-                android:id="@+id/button_analysis"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:text="ANALYSIS"
-                android:textColor="@color/colorWhite" />
-
-            <Button
                 android:id="@+id/buttonSubmit"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
