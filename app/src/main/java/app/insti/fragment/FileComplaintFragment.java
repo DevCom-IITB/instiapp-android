@@ -131,7 +131,7 @@ public class FileComplaintFragment extends Fragment {
     private ImageButton imageButtonAddTags;
     private Button buttonAnalysis;
     private ImageButton imageActionButton;
-    protected List<Venter.TagUri> t = new ArrayList<>();
+    protected List<Venter.TagUri> tagsApiList = new ArrayList<>();
 
     public static FileComplaintFragment getMainActivity() {
         return mainactivity;
@@ -626,7 +626,7 @@ public class FileComplaintFragment extends Fragment {
             {
                 if (response != null && response.isSuccessful())
                 {
-                    t = response.body();
+                    tagsApiList = response.body();
                     tagList = new ArrayList<>();
 
                     for (int i = 0; i < response.body().size(); i++) {
