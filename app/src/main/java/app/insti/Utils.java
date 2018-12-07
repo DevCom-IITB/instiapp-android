@@ -193,6 +193,10 @@ public final class Utils {
         );
     }
 
+    public static void openUserFragment(String userId, FragmentActivity fragmentActivity) {
+        updateFragment(UserFragment.newInstance(userId), fragmentActivity);
+    }
+
     public static void setSessionId(String sessionId1) {
         sessionId = sessionId1;
     }
