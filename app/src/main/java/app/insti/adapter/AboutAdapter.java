@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import app.insti.api.model.AboutCategory;
-import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
 public class AboutAdapter extends SectionedRecyclerViewAdapter {
