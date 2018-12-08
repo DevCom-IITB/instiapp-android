@@ -182,7 +182,7 @@ public final class Utils {
     }
 
     public static void openUserFragment(User user, FragmentActivity fragmentActivity) {
-        updateFragment(UserFragment.newInstance(user.getUserID()), fragmentActivity);
+        openUserFragment(user.getUserID(), fragmentActivity);
     }
 
     public static void openUserFragment(User user, Fragment currentFragment, View sharedAvatar) {
