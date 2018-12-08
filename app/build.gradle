@@ -32,6 +32,8 @@ ext {
     tagViewVersion = '1.3'
     circleIndicatorVersion = '1.2.2@aar'
     firebaseVersion = '17.3.4'
+    flexboxVersion = '1.0.0'
+    sectionedRecyclerViewVersion = '1.2.0'
 }
 
 dependencies {
@@ -53,5 +55,7 @@ dependencies {
     implementation "ru.noties:markwon:${markwonVersion}"
     implementation "com.github.Cutta:TagView:${tagViewVersion}"
     implementation "me.relex:circleindicator:${circleIndicatorVersion}"
+    implementation "com.google.android:flexbox:${flexboxVersion}"
+    implementation "io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:${sectionedRecyclerViewVersion}"
 }
 apply plugin: 'com.google.gms.google-services'

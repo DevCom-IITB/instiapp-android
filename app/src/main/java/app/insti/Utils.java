@@ -182,7 +182,7 @@ public final class Utils {
     }
 
     public static void openUserFragment(User user, FragmentActivity fragmentActivity) {
-        updateFragment(UserFragment.newInstance(user.getUserID()), fragmentActivity);
+        openUserFragment(user.getUserID(), fragmentActivity);
     }
 
     public static void openUserFragment(User user, Fragment currentFragment, View sharedAvatar) {
@@ -191,6 +191,10 @@ public final class Utils {
         updateSharedElementFragment(
                 UserFragment.newInstance(user), currentFragment, sharedElements
         );
+    }
+
+    public static void openUserFragment(String userId, FragmentActivity fragmentActivity) {
+        updateFragment(UserFragment.newInstance(userId), fragmentActivity);
     }
 
     public static void setSessionId(String sessionId1) {

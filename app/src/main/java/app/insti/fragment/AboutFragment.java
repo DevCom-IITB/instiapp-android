@@ -1,23 +1,27 @@
 package app.insti.fragment;
 
 
-import android.content.Intent;
-import android.net.Uri;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.squareup.picasso.Picasso;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 import app.insti.R;
-import app.insti.Utils;
-import de.hdodenhof.circleimageview.CircleImageView;
+import app.insti.adapter.AboutAdapter;
+import app.insti.api.model.AboutCategory;
+import app.insti.api.model.AboutIndividual;
+
+import static app.insti.api.model.AboutIndividual.TYPE_LINK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,57 +48,53 @@ public class AboutFragment extends BaseFragment {
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("About");
-        Utils.setSelectedMenuItem(getActivity(), R.id.nav_settings);
 
-        /* Map CircleImageView ids to image URLs */
-        final Map<Integer, String> team = new HashMap<Integer, String>() {{
-            put(R.id.varunimg, "varun.jpg");
-            put(R.id.sajalimg, "sajal.jpg");
-            put(R.id.nihalimg, "nihal.jpg");
-            put(R.id.ydidwaniaimg, "ydidwania.jpg");
-            put(R.id.cheekuimg, "cheeku.jpg");
-            put(R.id.sarthakimg, "sarthak.jpg");
-            put(R.id.sohamimg, "soham.jpg");
-            put(R.id.maitreyaimg, "maitreya.jpg");
-            put(R.id.mrunmayiimg, "mrunmayi.jpg");
-            put(R.id.owaisimg, "owais.jpg");
-            put(R.id.hrushikeshimg, "hrushikesh.jpg");
-            put(R.id.yashkhemimg, "yashkhem.jpg");
-            put(R.id.bavishimg, "bavish.jpg");
-            put(R.id.mayuimg, "mayu.jpg");
-            put(R.id.tomarimg, "tomar.jpg");
-            put(R.id.bijoyimg, "bijoy.jpg");
-            put(R.id.dheerendraimg, "dheerendra.jpg");
-            put(R.id.ranveerimg, "ranveer.jpg");
-            put(R.id.amangourimg, "amangour.jpg");
-            put(R.id.wnccimg, "wncc.jpg");
-            put(R.id.safwanimg, "safwan.jpg");
-            put(R.id.shivamimg, "sshivam95.jpg");
-        }};
+        final Context context = getContext();
 
-        /* Show team pics */
-        for (final Map.Entry<Integer, String> entry : team.entrySet()) {
-            CircleImageView circleImageView = getActivity().findViewById(entry.getKey());
-            Picasso.get().load("https://insti.app/team-pics/" + entry.getValue()).resize(0, 300).into(circleImageView);
-        }
+        AboutAdapter aboutAdapter = new AboutAdapter(new ArrayList<AboutCategory>() {{
+            add(new AboutCategory("Core Developers", new ArrayList<AboutIndividual>() {{
+                add(new AboutIndividual("varunpatil", "Varun Patil", "varun.jpg"));
+                add(new AboutIndividual("sajalnarang", "Sajal Narang", "sajal.jpg"));
+            }}, context));
+            add(new AboutCategory("Developers", new ArrayList<AboutIndividual>() {{
+                add(new AboutIndividual("160020012", "Mrunmayi Munkegar", "mrunmayi.jpg"));
+                add(new AboutIndividual("160110009", "Owais Chunawala", "owais.jpg"));
+                add(new AboutIndividual("hrushikeshbodas", "Hrushikesh Bodas", "hrushikesh.jpg"));
+                add(new AboutIndividual("yashkhem", "Yash Khemchandani", "yashkhem.jpg"));
+                add(new AboutIndividual("bavish.kulur", "Bavish Kulur", "bavish.jpg"));
+                add(new AboutIndividual("mayubhattu", "Mayuresh Bhattu", "mayu.jpg"));
+                add(new AboutIndividual("maitreya", "Maitreya Verma", "maitreya.jpg"));
+                add(new AboutIndividual("safwankdb", "Mohd Safwan", "safwan.jpg"));
+                add(new AboutIndividual(null, "Shivam Sharma", "sshivam95.jpg"));
+            }}, context));
+            add(new AboutCategory("Design", new ArrayList<AboutIndividual>() {{
+                add(new AboutIndividual("150040007", "Soham Khadtare", "soham.jpg"));
+            }}, context));
+            add(new AboutCategory("Ideation", new ArrayList<AboutIndividual>() {{
+                add(new AboutIndividual("nihal111", "Nihal Singh", "nihal.jpg"));
+                add(new AboutIndividual("ydidwania", "Yashwarshan Didwania", "ydidwania.jpg"));
+                add(new AboutIndividual("kumar.ayush", "Kumar Ayush", "cheeku.jpg"));
+                add(new AboutIndividual("16D110006", "Sarthak Khandelwal", "sarthak.jpg"));
+            }}, context));
+            add(new AboutCategory("Alumni", new ArrayList<AboutIndividual>() {{
+                add(new AboutIndividual("abhijit.tomar", "Abhijit Tomar", "tomar.jpg"));
+                add(new AboutIndividual(null, "Bijoy Singh Kochar", "bijoy.jpg"));
+                add(new AboutIndividual(null, "Dheerendra Rathor", "dheerendra.jpg"));
+                add(new AboutIndividual(null, "Ranveer Aggarwal", "ranveer.jpg"));
+                add(new AboutIndividual(null, "Aman Gour", "amangour.jpg"));
+            }}, context));
+            add(new AboutCategory("Contribute", new ArrayList<AboutIndividual>() {{
+                add(new AboutIndividual("https://github.com/wncc/IITBapp", "Django API", "python.png", TYPE_LINK));
+                add(new AboutIndividual("https://github.com/wncc/InstiApp", "Android App", "android.png", TYPE_LINK));
+                add(new AboutIndividual("https://github.com/pulsejet/iitb-app-angular", "Angular PWA", "angular.png", TYPE_LINK));
+            }}, context));
+        }});
 
-        /* Map TextView ids to links */
-        final Map<Integer, String> joinUs = new HashMap<Integer, String>() {{
-            ;
-            put(R.id.django, "https://github.com/wncc/IITBapp");
-            put(R.id.android, "https://github.com/wncc/InstiApp");
-            put(R.id.angular, "https://github.com/pulsejet/iitb-app-angular");
-        }};
+        RecyclerView aboutRecyclerView = getActivity().findViewById(R.id.about_recycler_view);
+        aboutRecyclerView.setAdapter(aboutAdapter);
 
-        for (final Map.Entry<Integer, String> entry : joinUs.entrySet()) {
-            getActivity().findViewById(entry.getKey()).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Uri uriUrl = Uri.parse(entry.getValue());
-                    Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-                    startActivity(launchBrowser);
-                }
-            });
-        }
+        FlexboxLayoutManager manager = new FlexboxLayoutManager(context, FlexDirection.ROW);
+        manager.setJustifyContent(JustifyContent.CENTER);
+        aboutRecyclerView.setLayoutManager(manager);
     }
 }
