@@ -142,21 +142,21 @@ public final class Utils {
     public static BodyFragment getBodyFragment(Body body, boolean sharedElements) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BODY_JSON, new Gson().toJson(body));
-        bundle.putBoolean(Constants.NO_SHARED_ELEM, sharedElements);
+        bundle.putBoolean(Constants.NO_SHARED_ELEM, !sharedElements);
         BodyFragment bodyFragment = new BodyFragment();
         bodyFragment.setArguments(bundle);
         return bodyFragment;
     }
 
     public static void openBodyFragment(Body body, FragmentActivity fragmentActivity) {
-        updateFragment(getBodyFragment(body, true), fragmentActivity);
+        updateFragment(getBodyFragment(body, false), fragmentActivity);
     }
 
     public static void openBodyFragment(Body body, Fragment currentFragment, View sharedAvatar) {
         Map<View, String> sharedElements = new HashMap<>();
         sharedElements.put(sharedAvatar, "sharedAvatar");
         updateSharedElementFragment(
-                getBodyFragment(body, false), currentFragment, sharedElements
+                getBodyFragment(body, true), currentFragment, sharedElements
         );
     }
 
