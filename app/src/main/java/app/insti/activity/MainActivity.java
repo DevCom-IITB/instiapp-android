@@ -42,6 +42,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import app.insti.Constants;
@@ -378,27 +380,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private String getID(String appLinkData) {
-        if (appLinkData.charAt(appLinkData.length() - 1) == '/')
-            appLinkData = appLinkData.substring(0, appLinkData.length() - 1);
-        switch (getType(appLinkData)) {
-            case DATA_TYPE_BODY:
-                return appLinkData.substring(appLinkData.indexOf("org") + 4);
-            case DATA_TYPE_USER:
-                return appLinkData.substring(appLinkData.indexOf("user") + 5);
-            case DATA_TYPE_EVENT:
-                return appLinkData.substring(appLinkData.indexOf("event") + 6);
-        }
+        try {
+            /* Parse URL and get second part */
+            String[] parts = new URL(appLinkData).getPath().split("/");
+            if (parts.length >= 3) {
+                return parts[2];
+            }
+        } catch (MalformedURLException ignored) {}
         return null;
     }
 
     private String getType(String appLinkData) {
-        if (appLinkData.contains("://insti.app/org/")) {
-            return DATA_TYPE_BODY;
-        } else if (appLinkData.contains("://insti.app/user/")) {
-            return DATA_TYPE_USER;
-        } else if (appLinkData.contains("://insti.app/event/")) {
-            return DATA_TYPE_EVENT;
-        }
+        try {
+            /* Parse URL and check length */
+            String[] parts = new URL(appLinkData).getPath().split("/");
+            if (parts.length < 2) return null;
+
+            /* Map to proper data type */
+            switch (parts[1].toLowerCase()) {
+                case "org":
+                    return DATA_TYPE_BODY;
+                case "event":
+                    return DATA_TYPE_EVENT;
+                case "user":
+                    return DATA_TYPE_USER;
+            }
+        } catch (MalformedURLException ignored) {}
         return null;
     }
 
