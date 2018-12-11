@@ -328,10 +328,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         switch (type) {
             case DATA_TYPE_BODY:
-                openBodyFragment(id);
+                Utils.openBodyFragment(new Body(id), this);
                 return;
             case DATA_TYPE_USER:
-                openUserFragment(id);
+                Utils.openUserFragment(id, this);
                 return;
             case DATA_TYPE_EVENT:
                 openEventFragment(id);
@@ -361,21 +361,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             chooseIntent(type, id);
         }
-    }
-
-    /**
-     * Open user fragment from given id
-     */
-    private void openUserFragment(String id) {
-        UserFragment userFragment = UserFragment.newInstance(id);
-        updateFragment(userFragment);
-    }
-
-    /**
-     * Open the body fragment from given id
-     */
-    private void openBodyFragment(String id) {
-        Utils.openBodyFragment(new Body(id), this);
     }
 
     /**
@@ -466,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openUserFragment(currentUser.getUserID());
+                Utils.openUserFragment(currentUser.getUserID(), MainActivity.this);
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
             }

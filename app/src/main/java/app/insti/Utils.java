@@ -139,23 +139,24 @@ public final class Utils {
                 .commit();
     }
 
-    public static BodyFragment getBodyFragment(Body body) {
+    public static BodyFragment getBodyFragment(Body body, boolean sharedElements) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BODY_JSON, new Gson().toJson(body));
+        bundle.putBoolean(Constants.NO_SHARED_ELEM, sharedElements);
         BodyFragment bodyFragment = new BodyFragment();
         bodyFragment.setArguments(bundle);
         return bodyFragment;
     }
 
     public static void openBodyFragment(Body body, FragmentActivity fragmentActivity) {
-        updateFragment(getBodyFragment(body), fragmentActivity);
+        updateFragment(getBodyFragment(body, true), fragmentActivity);
     }
 
     public static void openBodyFragment(Body body, Fragment currentFragment, View sharedAvatar) {
         Map<View, String> sharedElements = new HashMap<>();
         sharedElements.put(sharedAvatar, "sharedAvatar");
         updateSharedElementFragment(
-                getBodyFragment(body), currentFragment, sharedElements
+                getBodyFragment(body, false), currentFragment, sharedElements
         );
     }
 

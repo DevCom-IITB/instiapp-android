@@ -153,6 +153,11 @@ public class BodyFragment extends BackHandledFragment implements TransitionTarge
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(min_body.getBodyName());
+
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.getBoolean(Constants.NO_SHARED_ELEM, true)) {
+            this.transitionEnd();
+        }
     }
 
     private void updateBody() {
