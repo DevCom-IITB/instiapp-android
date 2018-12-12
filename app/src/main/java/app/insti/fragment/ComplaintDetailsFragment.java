@@ -285,7 +285,7 @@ public class ComplaintDetailsFragment extends Fragment {
                     Log.i(TAG, "failure in up vote: " + t.toString());
                }
             });
-        } else if (detailedComplaint.getVoteCount() == 1){
+        } else if (detailedComplaint.getVoteCount() ==1){
             retrofitInterface.upVote("sessionid=" + sId, cId, 0).enqueue(new Callback<Venter.Complaint>() {
                 @Override
                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
