@@ -627,7 +627,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             bundle.putString(Constants.USER_ID, currentUser.getUserID());
         if (fragment instanceof ComplaintsFragment && session.isLoggedIn()) {
             bundle.putString(Constants.USER_ID, currentUser.getUserID());
-            /*bundle.putString(Constants.SESSION_ID, );*/
             bundle.putString(Constants.CURRENT_USER_PROFILE_PICTURE, currentUser.getUserProfilePictureUrl());
         }
         fragment.setArguments(bundle);

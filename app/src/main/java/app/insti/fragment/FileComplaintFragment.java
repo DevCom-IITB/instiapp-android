@@ -129,6 +129,7 @@ public class FileComplaintFragment extends Fragment {
     private LinearLayout linearLayoutScrollTags;
     private boolean userAddedTag = false;
     private ImageButton imageButtonAddTags;
+    private Button buttonAnalysis;
     private ImageButton imageActionButton;
 
     public static FileComplaintFragment getMainActivity() {
@@ -207,6 +208,13 @@ public class FileComplaintFragment extends Fragment {
             }
         });
 
+        buttonAnalysis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAnalysis();
+            }
+        });
+
         descriptionAutoCompleteTextview.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -260,6 +268,10 @@ public class FileComplaintFragment extends Fragment {
         buttonSubmit = view.findViewById(R.id.buttonSubmit);
         buttonSubmit.setVisibility(View.INVISIBLE);
         buttonSubmit.setVisibility(View.GONE);
+
+        buttonAnalysis = view.findViewById(R.id.button_analysis);
+        buttonAnalysis.setVisibility(View.INVISIBLE);
+        buttonAnalysis.setVisibility(View.GONE);
 
         linearLayoutScrollTags = view.findViewById(R.id.linearLayoutScrollTags);
         linearLayoutScrollTags.setVisibility(View.INVISIBLE);
@@ -734,6 +746,11 @@ public class FileComplaintFragment extends Fragment {
         Log.i(TAG, "In updateMap");
         LocationAPIUtils locationAPIUtils = new LocationAPIUtils(googleMap, mMapView);
         locationAPIUtils.callGoogleToShowLocationOnMap(Location, Name, Address, cursor);
+        showAnalysis();
+    }
+
+    private void showAnalysis() {
+        /* Machine Learning Part */
     }
 
     private void giveOptionsToAddImage() {

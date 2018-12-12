@@ -39,6 +39,7 @@ public class ComplaintDetailsPagerAdapter extends FragmentPagerAdapter {
         } else {
             return "Relevant Complaints";
         }
+
     }
 
     @Override
