@@ -184,36 +184,12 @@ public class BodyFragmentNew extends BackHandledFragment implements TransitionTa
         });
     }
 
-    private void setVisibleIfHasElements(int[] viewIds, List list) {
-        if (list != null && list.size() > 0) {
-            for (int viewId : viewIds) {
-                getActivity().findViewById(viewId).setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
     private void displayBody() {
         /* Skip if we're already destroyed */
         if (getActivity() == null || getView() == null) return;
         if (!body.equals(min_body)) bodyDisplayed = true;
 
-        //TextView bodyName = (TextView) getView().findViewById(R.id.body_name);
-        //TextView bodySubtitle = getView().findViewById(R.id.body_subtitle);
-        //TextView bodyDescription = (TextView) getView().findViewById(R.id.body_description);
         bodyPicture = (ImageView) getActivity().findViewById(R.id.body_picture);
-        //ImageButton webBodyButton = getActivity().findViewById(R.id.web_body_button);
-        //ImageButton shareBodyButton = getActivity().findViewById(R.id.share_body_button);
-        //final Button followButton = getActivity().findViewById(R.id.follow_button);
-
-        /* Show relevant card titles */
-        //setVisibleIfHasElements(new int[]{R.id.body_events_title, R.id.event_card_recycler_view}, body.getBodyEvents());
-        //setVisibleIfHasElements(new int[]{R.id.body_orgs_title, R.id.org_card_recycler_view}, body.getBodyChildren());
-        //setVisibleIfHasElements(new int[]{R.id.body_parents_title, R.id.parentorg_card_recycler_view}, body.getBodyParents());
-        //setVisibleIfHasElements(new int[]{R.id.body_people_title, R.id.people_card_recycler_view}, body.getBodyRoles());
-
-        /* Set body information */
-        //bodyName.setText(body.getBodyName());
-        //bodySubtitle.setText(body.getBodyShortDescription());
 
         /* Load only low res image if transition is not completed */
         if (transitionEnded) {
@@ -222,68 +198,10 @@ public class BodyFragmentNew extends BackHandledFragment implements TransitionTa
             Picasso.get().load(Utils.resizeImageUrl(body.getBodyImageURL())).into(bodyPicture);
         }
 
-        /* Return if it's a min body */
-        if (body.getBodyDescription() == null) {
+        /* Skip for min body */
+        if (body.equals(min_body)) {
             return;
         }
-
-        //Markwon.setMarkdown(bodyDescription, body.getBodyDescription());
-
-        /* Check if user is already following
-         * Initialize follow button */
-        //followButton.setBackgroundColor(getResources().getColor(body.getBodyUserFollows() ? R.color.colorAccent : R.color.colorWhite));
-        //followButton.setText(EventFragment.getCountBadgeSpannable("FOLLOW", body.getBodyFollowersCount()));
-
-        /**followButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-                retrofitInterface.updateBodyFollowing(Utils.getSessionIDHeader(), body.getBodyID(), body.getBodyUserFollows() ? 0 : 1).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.isSuccessful()) {
-                            body.setBodyUserFollows(!body.getBodyUserFollows());
-                            body.setBodyFollowersCount(body.getBodyUserFollows()? body.getBodyFollowersCount()+1:body.getBodyFollowersCount()-1);
-                            followButton.setBackgroundColor(getResources().getColor(body.getBodyUserFollows() ? R.color.colorAccent : R.color.colorWhite));
-                            followButton.setText(EventFragment.getCountBadgeSpannable("FOLLOW", body.getBodyFollowersCount()));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(getContext(), "Network Error", Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });*/
-
-        /* Initialize web button
-        if (body.getBodyWebsiteURL() != null && !body.getBodyWebsiteURL().isEmpty()) {
-            webBodyButton.setVisibility(View.VISIBLE);
-            webBodyButton.setOnClickListener(new View.OnClickListener() {
-                String bodywebURL = body.getBodyWebsiteURL();
-
-                @Override
-                public void onClick(View view) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(bodywebURL));
-                    startActivity(browserIntent);
-                }
-            });
-        }*/
-
-        /* Initialize share button
-        shareBodyButton.setOnClickListener(new View.OnClickListener() {
-            String shareUrl = ShareURLMaker.getBodyURL(body);
-
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("text/plain");
-                i.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
-                i.putExtra(Intent.EXTRA_TEXT, shareUrl);
-                startActivity(Intent.createChooser(i, "Share URL"));
-            }
-        });*/
 
         final List<Role> roles = body.getBodyRoles();
         final List<User> users = new ArrayList<>();
