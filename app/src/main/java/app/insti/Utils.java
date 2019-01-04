@@ -20,7 +20,6 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +30,6 @@ import app.insti.api.model.Event;
 import app.insti.api.model.Notification;
 import app.insti.api.model.User;
 import app.insti.fragment.BodyFragment;
-import app.insti.fragment.BodyFragmentNew;
 import app.insti.fragment.EventFragment;
 import app.insti.fragment.TransitionTargetChild;
 import app.insti.fragment.TransitionTargetFragment;
@@ -141,11 +139,11 @@ public final class Utils {
                 .commit();
     }
 
-    public static BodyFragmentNew getBodyFragment(Body body, boolean sharedElements) {
+    public static BodyFragment getBodyFragment(Body body, boolean sharedElements) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BODY_JSON, new Gson().toJson(body));
         bundle.putBoolean(Constants.NO_SHARED_ELEM, !sharedElements);
-        BodyFragmentNew bodyFragment = new BodyFragmentNew();
+        BodyFragment bodyFragment = new BodyFragment();
         bodyFragment.setArguments(bundle);
         return bodyFragment;
     }
