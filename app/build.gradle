@@ -57,6 +57,5 @@ dependencies {
     implementation "me.relex:circleindicator:${circleIndicatorVersion}"
     implementation "com.google.android:flexbox:${flexboxVersion}"
     implementation "io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:${sectionedRecyclerViewVersion}"
-    implementation 'com.android.support:support-v4:28.0.0'
 }
 apply plugin: 'com.google.gms.google-services'
