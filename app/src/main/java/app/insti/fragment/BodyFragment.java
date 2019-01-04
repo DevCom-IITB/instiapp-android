@@ -50,32 +50,21 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class BodyFragment extends BackHandledFragment implements TransitionTargetFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
-
     String TAG = "BodyFragment";
-    // TODO: Rename and change types of parameters
     private Body min_body;
     private SwipeRefreshLayout bodySwipeRefreshLayout;
 
+    private ImageView bodyPicture;
+    private Body body;
+    private boolean bodyDisplayed = false;
+    private boolean transitionEnded = false;
 
-    // Hold a reference to the current animator,
-    // so that it can be canceled mid-way.
     private Animator mCurrentAnimator;
-
-    // The system "short" animation time duration, in milliseconds. This
-    // duration is ideal for subtle animations or animations that occur
-    // very frequently.
     private int mShortAnimationDuration;
     private boolean zoomMode;
     private ImageView expandedImageView;
     private Rect startBounds;
     private float startScaleFinal;
-    private ImageView bodyPicture;
-    private Body body;
-    private boolean bodyDisplayed = false;
-    private boolean transitionEnded = false;
 
     public BodyFragment() {
         // Required empty public constructor
