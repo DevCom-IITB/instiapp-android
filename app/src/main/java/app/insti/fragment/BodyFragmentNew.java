@@ -136,10 +136,16 @@ public class BodyFragmentNew extends BackHandledFragment implements TransitionTa
 
         /* Initialize */
         bodyDisplayed = false;
-        body = min_body;
-        displayBody();
 
-        updateBody();
+        int index = Utils.bodyCache.indexOf(min_body);
+        if (index < 0) {
+            body = min_body;
+            updateBody();
+        } else {
+            body = Utils.bodyCache.get(index);
+        }
+
+        displayBody();
 
         bodySwipeRefreshLayout = getActivity().findViewById(R.id.body_swipe_refresh_layout);
         bodySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -166,6 +172,7 @@ public class BodyFragmentNew extends BackHandledFragment implements TransitionTa
             public void onResponse(Call<Body> call, Response<Body> response) {
                 if (response.isSuccessful()) {
                     Body bodyResponse = response.body();
+                    Utils.bodyCache.updateCache(response.body());
 
                     if (!bodyDisplayed) {
                         body = bodyResponse;
@@ -185,7 +192,7 @@ public class BodyFragmentNew extends BackHandledFragment implements TransitionTa
     private void displayBody() {
         /* Skip if we're already destroyed */
         if (getActivity() == null || getView() == null) return;
-        if (!body.equals(min_body)) bodyDisplayed = true;
+        if (!(body == min_body)) bodyDisplayed = true;
 
         bodyPicture = (ImageView) getActivity().findViewById(R.id.body_picture);
 
@@ -197,7 +204,7 @@ public class BodyFragmentNew extends BackHandledFragment implements TransitionTa
         }
 
         /* Skip for min body */
-        if (body.equals(min_body)) {
+        if (body == min_body) {
             return;
         }
 

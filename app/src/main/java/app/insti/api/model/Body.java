@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Objects;
 
 import app.insti.interfaces.CardInterface;
 
@@ -198,5 +199,13 @@ public class Body implements CardInterface {
 
     public String getAvatarUrl() {
         return getBodyImageURL();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Body body = (Body) o;
+        return Objects.equals(bodyID, body.getBodyID());
     }
 }
