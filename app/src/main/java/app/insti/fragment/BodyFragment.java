@@ -181,7 +181,7 @@ public class BodyFragment extends BackHandledFragment implements TransitionTarge
     private void displayBody() {
         /* Skip if we're already destroyed */
         if (getActivity() == null || getView() == null) return;
-        if (!(body == min_body)) bodyDisplayed = true;
+        if (body != min_body) bodyDisplayed = true;
 
         bodyPicture = (ImageView) getActivity().findViewById(R.id.body_picture);
 

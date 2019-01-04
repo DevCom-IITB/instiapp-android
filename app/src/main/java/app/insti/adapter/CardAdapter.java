@@ -124,6 +124,8 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
             case 4:
                 ((BodyHeadCard) tList.get(i)).bindView((BodyHeadViewHolder) holder, mFragment);
                 return;
+            default:
+                return;
         }
     }
 
