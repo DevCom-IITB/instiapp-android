@@ -2,18 +2,11 @@ package app.insti.fragment;
 
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,12 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -36,16 +24,11 @@ import java.util.List;
 
 import app.insti.Constants;
 import app.insti.R;
-import app.insti.ShareURLMaker;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
-import app.insti.adapter.BodyAdapter;
-import app.insti.adapter.FeedAdapter;
 import app.insti.adapter.GenericAdapter;
-import app.insti.adapter.UserAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
-import app.insti.api.model.Event;
 import app.insti.api.model.Role;
 import app.insti.api.model.User;
 import app.insti.interfaces.CardInterface;
@@ -54,7 +37,6 @@ import app.insti.utils.TitleCard;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.noties.markwon.Markwon;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -219,22 +201,22 @@ public class BodyFragmentNew extends BackHandledFragment implements TransitionTa
         addWithTitleCard(cards,  body.getBodyChildren(), "Organizations");
         addWithTitleCard(cards,  body.getBodyParents(), "Part of");
 
-        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.body_recycler_view);
+        final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.body_recycler_view);
         GenericAdapter genericAdapter =  new GenericAdapter(cards, this);
         recyclerView.setAdapter(genericAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
-        /* Show update button if role
+        /* Show update button if role */
         if (((MainActivity) getActivity()).editBodyAccess(body)) {
             final FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.edit_fab);
             fab.show();
-            NestedScrollView nsv = (NestedScrollView) getView().findViewById(R.id.body_scrollview);
-            nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
-                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                    if (scrollY > oldScrollY) fab.hide();
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (dy > 0) fab.hide();
                     else fab.show();
                 }
             });
@@ -249,7 +231,7 @@ public class BodyFragmentNew extends BackHandledFragment implements TransitionTa
                     ((MainActivity) getActivity()).updateFragment(addEventFragment);
                 }
             });
-        }*/
+        }
     }
 
     private <R extends CardInterface> void addWithTitleCard(List<CardInterface> cards, List<R> cardsToAdd, String title) {
