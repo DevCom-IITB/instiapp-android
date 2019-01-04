@@ -141,14 +141,14 @@ public class BodyFragmentNew extends BackHandledFragment implements TransitionTa
 
         updateBody();
 
-        /*bodySwipeRefreshLayout = getActivity().findViewById(R.id.body_swipe_refresh_layout);
+        bodySwipeRefreshLayout = getActivity().findViewById(R.id.body_swipe_refresh_layout);
         bodySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 bodyDisplayed = false;
                 updateBody();
             }
-        });*/
+        });
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(min_body.getBodyName());
@@ -171,15 +171,13 @@ public class BodyFragmentNew extends BackHandledFragment implements TransitionTa
                         body = bodyResponse;
                         displayBody();
                     }
-                    /*if (bodySwipeRefreshLayout.isRefreshing())
-                        bodySwipeRefreshLayout.setRefreshing(false);*/
+                    bodySwipeRefreshLayout.setRefreshing(false);
                 }
             }
 
             @Override
             public void onFailure(Call<Body> call, Throwable t) {
-                /*bodySwipeRefreshLayout.setRefreshing(false);*/
-                // Network Error
+                bodySwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
