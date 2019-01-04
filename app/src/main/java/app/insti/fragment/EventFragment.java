@@ -100,7 +100,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
      * @param count integer count to show in the badge
      * @return spannable to be used as view.setText(spannable)
      */
-    static Spannable getCountBadgeSpannable(String text, Integer count) {
+    public static Spannable getCountBadgeSpannable(String text, Integer count) {
         // Check for nulls
         if (count == null) return new SpannableString(text);
 

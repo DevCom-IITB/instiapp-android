@@ -31,6 +31,7 @@ import app.insti.api.model.Event;
 import app.insti.api.model.Notification;
 import app.insti.api.model.User;
 import app.insti.fragment.BodyFragment;
+import app.insti.fragment.BodyFragmentNew;
 import app.insti.fragment.EventFragment;
 import app.insti.fragment.TransitionTargetChild;
 import app.insti.fragment.TransitionTargetFragment;
@@ -139,11 +140,11 @@ public final class Utils {
                 .commit();
     }
 
-    public static BodyFragment getBodyFragment(Body body, boolean sharedElements) {
+    public static BodyFragmentNew getBodyFragment(Body body, boolean sharedElements) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BODY_JSON, new Gson().toJson(body));
         bundle.putBoolean(Constants.NO_SHARED_ELEM, !sharedElements);
-        BodyFragment bodyFragment = new BodyFragment();
+        BodyFragmentNew bodyFragment = new BodyFragmentNew();
         bodyFragment.setArguments(bundle);
         return bodyFragment;
     }
