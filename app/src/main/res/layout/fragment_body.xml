@@ -1,114 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container_body"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragment.BodyFragment"
+    android:background="?attr/themeColor">
 
-    <android.support.v7.widget.CardView
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/colorPrimary"
-        app:cardCornerRadius="0dp">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="12dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_weight="3"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
+            <android.support.design.widget.CollapsingToolbarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                <TextView
-                    android:id="@+id/body_name"
-                    android:layout_width="0dp"
+                <!-- HEADER -->
+                <RelativeLayout
                     android:layout_height="wrap_content"
-                    android:layout_weight="10"
-                    android:text="Org Title"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="21sp"
-                    android:textStyle="bold" />
+                    android:layout_width="wrap_content"
+                    app:layout_collapseMode="parallax"
+                    android:background="?attr/themeColor">
 
-                <ImageButton
-                    android:id="@+id/web_body_button"
-                    android:layout_width="10dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Org Website"
-                    android:src="@drawable/ic_language_black_24dp"
-                    android:tint="@color/colorWhite"
-                    android:visibility="invisible" />
+                    <ImageView
+                        android:id="@+id/body_picture"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:transitionName="sharedAvatar"
+                        android:background="?attr/themeColor" />
 
-                <ImageButton
-                    android:id="@+id/share_body_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Share Body"
-                    android:src="@drawable/ic_menu_share"
-                    android:tint="@color/colorWhite" />
-            </LinearLayout>
+                </RelativeLayout>
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
 
-            <TextView
-                android:id="@+id/body_subtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite" />
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/body_swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/body_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
-    <LinearLayout
-        style="?android:attr/buttonBarStyle"
-        android:layout_width="match_parent"
+    </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/edit_fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_edit_black_24dp"
+        android:tint="@android:color/black"
+        android:visibility="visible"
+        android:layout_gravity="end|bottom" />
 
-        <Button
-            android:id="@+id/follow_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:text="FOLLOW"
-            android:textAllCaps="false"
-            android:textColor="@color/secondaryTextColor" />
-    </LinearLayout>
+            android:indeterminate="true"
+            android:theme="@style/BlueAccent" />
+    </RelativeLayout>
 
-    <View
+    <app.insti.TouchImageView
+        android:id="@+id/expanded_image_body"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#aaa">
-
-    </View>
-
-    <TextView
-        android:id="@+id/body_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="12dp"
-        android:textColor="?attr/themeColorInverse"
-        android:textColorLink="?attr/urlColor"
-        android:textSize="16sp" />
-
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:contentDescription="Zoomed Image"
+        android:visibility="gone" />
+</FrameLayout>

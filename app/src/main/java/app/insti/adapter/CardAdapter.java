@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +58,7 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
         }
 
         if (viewType == 4) {
-            View bodyView = inflater.inflate(R.layout.fragment_body, viewGroup, false);
+            View bodyView = inflater.inflate(R.layout.body_head_view, viewGroup, false);
             return new BodyHeadViewHolder(bodyView);
         }
 

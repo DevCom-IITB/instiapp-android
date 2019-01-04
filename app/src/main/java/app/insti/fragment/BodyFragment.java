@@ -279,7 +279,7 @@ public class BodyFragment extends BackHandledFragment implements TransitionTarge
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_body_fragment_new, container, false);
+        return inflater.inflate(R.layout.fragment_body, container, false);
     }
 
     private void zoomImageFromThumb(final ImageView thumbView) {
