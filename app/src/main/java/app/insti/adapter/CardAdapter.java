@@ -98,6 +98,10 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
                     // Load big image with low resolution as avatar
                     Utils.loadImageWithPlaceholder(viewHolder.bigPicture, getBigImageUrl(t));
                 } else {
+                    // Make sure avatar is visible for recycled views
+                    viewHolder.bigPicture.setVisibility(View.GONE);
+                    viewHolder.avatar.setVisibility(View.VISIBLE);
+
                     // Build basic request
                     RequestCreator requestCreator;
                     if (t.getAvatarUrl() != null)
