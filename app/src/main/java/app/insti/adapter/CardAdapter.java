@@ -16,11 +16,14 @@ import com.squareup.picasso.RequestCreator;
 
 import java.util.List;
 
+import app.insti.Constants;
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.interfaces.CardInterface;
+import app.insti.utils.BodyHeadCard;
+import app.insti.utils.BodyHeadViewHolder;
 
-public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.Adapter<CardAdapter<T>.ViewHolder> {
+public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<T> tList;
     private Fragment mFragment;
@@ -45,12 +48,23 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
 
     @Override
     @NonNull
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, final int i) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, final int viewType) {
         Context context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
+
+        if (viewType == 2) {
+            View titleView = inflater.inflate(R.layout.title_card, viewGroup, false);
+            return new TitleViewHolder(titleView);
+        }
+
+        if (viewType == 4) {
+            View bodyView = inflater.inflate(R.layout.body_head_view, viewGroup, false);
+            return new BodyHeadViewHolder(bodyView);
+        }
+
         View postView = inflater.inflate(R.layout.feed_card, viewGroup, false);
 
-        final ViewHolder postViewHolder = new ViewHolder(postView);
+        final CardViewHolder postViewHolder = new CardViewHolder(postView);
         postView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,50 +77,69 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        T t = tList.get(i);
-        viewHolder.title.setText(t.getTitle());
-        viewHolder.subtitle.setText(t.getSubtitle());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int i) {
 
-        // Set transition names
-        viewHolder.avatar.setTransitionName(uid + Integer.toString((int) t.getId()) + "_sharedAvatar");
+        switch (holder.getItemViewType()) {
+            case 0:
+                CardViewHolder viewHolder = (CardViewHolder) holder;
+                T t = tList.get(i);
+                viewHolder.title.setText(t.getTitle());
+                viewHolder.subtitle.setText(t.getSubtitle());
 
-        if (getBigImageUrl(t) != null) {
-            // Show big image, hide avatar
-            viewHolder.bigPicture.setVisibility(View.VISIBLE);
-            viewHolder.bigPicture.setTransitionName(uid + Integer.toString((int) t.getId()) + "_sharedBigPicture");
-            viewHolder.avatar.setVisibility(View.GONE);
+                // Set transition names
+                viewHolder.avatar.setTransitionName(uid + Integer.toString((int) t.getId()) + "_sharedAvatar");
 
-            // Load big image with low resolution as avatar
-            Utils.loadImageWithPlaceholder(viewHolder.bigPicture, getBigImageUrl(t));
-        } else {
-            // Build basic request
-            RequestCreator requestCreator;
-            if (t.getAvatarUrl() != null)
-                requestCreator = Picasso.get().load(Utils.resizeImageUrl(t.getAvatarUrl()));
-            else if (getAvatarPlaceholder(t) != 0) {
-                requestCreator = Picasso.get().load(getAvatarPlaceholder(t));
-            } else {
+                if (getBigImageUrl(t) != null) {
+                    // Show big image, hide avatar
+                    viewHolder.bigPicture.setVisibility(View.VISIBLE);
+                    viewHolder.bigPicture.setTransitionName(uid + Integer.toString((int) t.getId()) + "_sharedBigPicture");
+                    viewHolder.avatar.setVisibility(View.GONE);
+
+                    // Load big image with low resolution as avatar
+                    Utils.loadImageWithPlaceholder(viewHolder.bigPicture, getBigImageUrl(t));
+                } else {
+                    // Make sure avatar is visible for recycled views
+                    viewHolder.bigPicture.setVisibility(View.GONE);
+                    viewHolder.avatar.setVisibility(View.VISIBLE);
+
+                    // Build basic request
+                    RequestCreator requestCreator;
+                    if (t.getAvatarUrl() != null)
+                        requestCreator = Picasso.get().load(Utils.resizeImageUrl(t.getAvatarUrl()));
+                    else if (getAvatarPlaceholder(t) != 0) {
+                        requestCreator = Picasso.get().load(getAvatarPlaceholder(t));
+                    } else {
+                        return;
+                    }
+
+                    // Check if we have a placeholder
+                    if (getAvatarPlaceholder(t) != 0) {
+                        requestCreator.placeholder(getAvatarPlaceholder(t));
+                    }
+
+                    // Load the image
+                    requestCreator.into(viewHolder.avatar);
+                }
                 return;
-            }
-
-            // Check if we have a placeholder
-            if (getAvatarPlaceholder(t) != 0) {
-                requestCreator.placeholder(getAvatarPlaceholder(t));
-            }
-
-            // Load the image
-            requestCreator.into(viewHolder.avatar);
+            case 2:
+                TitleViewHolder titleViewHolder = (TitleViewHolder) holder;
+                titleViewHolder.title.setText(tList.get(i).getTitle());
+                return;
+            case 4:
+                ((BodyHeadCard) tList.get(i)).bindView((BodyHeadViewHolder) holder, mFragment);
+                return;
+            default:
+                return;
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class CardViewHolder extends RecyclerView.ViewHolder {
         private ImageView avatar;
         private TextView title;
         private TextView subtitle;
         private ImageView bigPicture;
 
-        public ViewHolder(View itemView) {
+        public CardViewHolder(View itemView) {
             super(itemView);
 
             avatar = itemView.findViewById(R.id.object_picture);
@@ -116,10 +149,25 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
         }
     }
 
+    public class TitleViewHolder extends RecyclerView.ViewHolder {
+        private TextView title;
+
+        public TitleViewHolder(View itemView) {
+            super(itemView);
+            title = itemView.findViewById(R.id.title_text);
+        }
+    }
+
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) return 1;
-        else return 2;
+        if (tList.get(position) == null) return 0;
+
+        if (tList.get(position).getSubtitle().equals(Constants.CARD_TYPE_TITLE)) {
+            return 2;
+        } else if (tList.get(position).getSubtitle().equals(Constants.CARD_TYPE_BODY_HEAD)) {
+            return 4;
+        }
+        return 0;
     }
 
     @Override

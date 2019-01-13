@@ -20,7 +20,6 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +38,7 @@ import app.insti.fragment.UserFragment;
 public final class Utils {
     public static UpdatableList<Event> eventCache = new UpdatableList<>();
     public static UpdatableList<Notification> notificationCache = null;
+    public static UpdatableList<Body> bodyCache = new UpdatableList<>();
 
     private static String sessionId;
     private static RetrofitInterface retrofitInterface;
