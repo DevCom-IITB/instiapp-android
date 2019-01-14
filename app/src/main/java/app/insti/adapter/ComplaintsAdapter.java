@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +19,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import app.insti.R;
 import app.insti.Utils;
@@ -30,7 +28,6 @@ import app.insti.api.model.Venter;
 import app.insti.fragment.ComplaintFragment;
 import app.insti.utils.DateTimeUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
-import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,24 +45,24 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private String userProfileUrl;
     private static final String TAG = ComplaintsAdapter.class.getSimpleName();
     private List<Venter.Complaint> complaintList = new ArrayList<>();
+    private LinearLayout linearLayoutSuggestions;
+    private LinearLayout linearLayoutLocationDetails;
+    private TextView textViewDescription;
+    private TextView textViewSuggestions;
+    private TextView textViewlocationDetails;
+    private TextView textViewLocation;
+    private TextView textViewUserName;
+    private TextView textViewReportDate;
+    private TextView textViewStatus;
+    private TextView textViewComments;
+    private TextView textViewVotes;
 
     public class ComplaintsViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cardView;
         private CircleImageView circleImageView;
-        private LinearLayout linearLayoutSuggestions;
-        private LinearLayout linearLayoutLocationDetails;
-        private TextView textViewDescription;
-        private TextView textViewSuggestions;
-        private TextView textViewlocationDetails;
         private ImageButton buttonComments;
         private ImageButton buttonVotes;
-        private TextView textViewComments;
-        private TextView textViewVotes;
-        private TextView textViewLocation;
-        private TextView textViewUserName;
-        private TextView textViewReportDate;
-        private TextView textViewStatus;
         private int pos;
 
         public ComplaintsViewHolder(View currentView) {
@@ -87,7 +84,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             circleImageView = currentView.findViewById(R.id.circleImageViewUserImage);
         }
 
-        public void bindHolder(final int position) {
+        private void bindHolder(final int position) {
             this.pos = position;
             try {
                 String profileUrl = complaintList.get(pos).getComplaintCreatedBy().getUserProfilePictureUrl();
@@ -113,33 +110,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             Venter.Complaint complaint = complaintList.get(position);
             try {
-                textViewLocation.setText(complaint.getLocationDescription());
-                textViewUserName.setText(complaint.getComplaintCreatedBy().getUserName());
-                textViewStatus.setText(complaint.getStatus().toUpperCase());
-                if (complaint.getStatus().equalsIgnoreCase("Reported")) {
-                    textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorRed)));
-                    textViewStatus.setTextColor(context.getResources().getColor(R.color.primaryTextColor));
-                } else if (complaint.getStatus().equalsIgnoreCase("In Progress")) {
-                    textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorSecondary)));
-                    textViewStatus.setTextColor(context.getResources().getColor(R.color.secondaryTextColor));
-                } else if (complaint.getStatus().equalsIgnoreCase("Resolved")) {
-                    textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorGreen)));
-                    textViewStatus.setTextColor(context.getResources().getColor(R.color.secondaryTextColor));
-                }
-                String time = DateTimeUtil.getDate(complaint.getComplaintReportDate());
-                Log.i(TAG, "time: " + time);
-                textViewReportDate.setText(time);
-                textViewDescription.setText(complaint.getDescription());
-                if (!(complaint.getComplaintSuggestions().equals(""))){
-                    linearLayoutSuggestions.setVisibility(View.VISIBLE);
-                    textViewSuggestions.setText(complaint.getComplaintSuggestions());
-                }
-                if (!(complaint.getComplaintLocationDetails().equals(""))){
-                    linearLayoutLocationDetails.setVisibility(View.VISIBLE);
-                    textViewlocationDetails.setText(complaint.getComplaintSuggestions());
-                }
-                textViewComments.setText(String.valueOf(complaint.getComment().size()));
-                textViewVotes.setText(String.valueOf(complaint.getUsersUpVoted().size()));
+                populateViews(complaint);
                 buttonComments.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -202,6 +173,36 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 e.printStackTrace();
             }
         }
+    }
+
+    private void populateViews(Venter.Complaint complaint) {
+        textViewLocation.setText(complaint.getLocationDescription());
+        textViewUserName.setText(complaint.getComplaintCreatedBy().getUserName());
+        textViewStatus.setText(complaint.getStatus().toUpperCase());
+        if (complaint.getStatus().equalsIgnoreCase("Reported")) {
+            textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorRed)));
+            textViewStatus.setTextColor(context.getResources().getColor(R.color.primaryTextColor));
+        } else if (complaint.getStatus().equalsIgnoreCase("In Progress")) {
+            textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorSecondary)));
+            textViewStatus.setTextColor(context.getResources().getColor(R.color.secondaryTextColor));
+        } else if (complaint.getStatus().equalsIgnoreCase("Resolved")) {
+            textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorGreen)));
+            textViewStatus.setTextColor(context.getResources().getColor(R.color.secondaryTextColor));
+        }
+        String time = DateTimeUtil.getDate(complaint.getComplaintReportDate());
+        Log.i(TAG, "time: " + time);
+        textViewReportDate.setText(time);
+        textViewDescription.setText(complaint.getDescription());
+        if (!(complaint.getComplaintSuggestions().equals(""))){
+            linearLayoutSuggestions.setVisibility(View.VISIBLE);
+            textViewSuggestions.setText(complaint.getComplaintSuggestions());
+        }
+        if (!(complaint.getComplaintLocationDetails().equals(""))){
+            linearLayoutLocationDetails.setVisibility(View.VISIBLE);
+            textViewlocationDetails.setText(complaint.getComplaintSuggestions());
+        }
+        textViewComments.setText(String.valueOf(complaint.getComment().size()));
+        textViewVotes.setText(String.valueOf(complaint.getUsersUpVoted().size()));
     }
 
     public ComplaintsAdapter(Activity ctx, String sessionID, String userID, String userProfileUrl) {
