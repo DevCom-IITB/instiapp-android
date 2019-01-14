@@ -17,6 +17,10 @@ public class Venter {
         private User complaintCreatedBy;
         @SerializedName("description")
         private String description;
+        @SerializedName("suggestions")
+        private String complaintSuggestions;
+        @SerializedName("location_details")
+        private String complaintLocationDetails;
         @SerializedName("report_date")
         private String complaintReportDate;
         @SerializedName("status")
@@ -61,6 +65,23 @@ public class Venter {
         public void setDescription(String description) {
             this.description = description;
         }
+
+        public String getComplaintSuggestions() {
+            return complaintSuggestions;
+        }
+
+        public void setComplaintSuggestions(String complaiintSuggestions) {
+            this.complaintSuggestions = complaiintSuggestions;
+        }
+
+        public String getComplaintLocationDetails() {
+            return complaintLocationDetails;
+        }
+
+        public void setComplaintLocationDetails(String complaintLocationDetails) {
+            this.complaintLocationDetails = complaintLocationDetails;
+        }
+
 
         public String getComplaintReportDate() {
             return complaintReportDate;

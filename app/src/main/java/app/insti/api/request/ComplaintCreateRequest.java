@@ -11,6 +11,10 @@ import java.util.List;
 public class ComplaintCreateRequest {
     @SerializedName("description")
     private String complaintDescription;
+    @SerializedName("suggestions")
+    private String complaintSuggestions;
+    @SerializedName("location_details")
+    private String complaintLocationDetails;
     @SerializedName("location_description")
     private String complaintLocation;
     @SerializedName("latitude")
@@ -22,8 +26,10 @@ public class ComplaintCreateRequest {
     @SerializedName("images")
     private List<String> images;
 
-    public ComplaintCreateRequest(String complaintDescription, String complaintLocation, Float complaintLatitude, Float complaintLongitude, List<String> tags, List<String> images) {
+    public ComplaintCreateRequest(String complaintDescription, String complaintSuggestions, String complaintLocationDetails, String complaintLocation, Float complaintLatitude, Float complaintLongitude, List<String> tags, List<String> images) {
         this.complaintDescription = complaintDescription;
+        this.complaintSuggestions = complaintSuggestions;
+        this.complaintLocationDetails = complaintLocationDetails;
         this.complaintLocation = complaintLocation;
         this.complaintLatitude = complaintLatitude;
         this.complaintLongitude = complaintLongitude;
@@ -37,6 +43,22 @@ public class ComplaintCreateRequest {
 
     public void setComplaintDescription(String complaintDescription) {
         this.complaintDescription = complaintDescription;
+    }
+
+    public String getComplaintSuggestions() {
+        return complaintSuggestions;
+    }
+
+    public void setComplaintSuggestions(String complaintSuggestions) {
+        this.complaintSuggestions = complaintSuggestions;
+    }
+
+    public String getComplaintLocationDetails() {
+        return complaintLocationDetails;
+    }
+
+    public void setComplaintLocationDetails(String complaintLocationDetails) {
+        this.complaintLocationDetails = complaintLocationDetails;
     }
 
     public String getComplaintLocation() {

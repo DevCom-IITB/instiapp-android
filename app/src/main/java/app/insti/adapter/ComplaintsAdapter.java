@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -12,9 +13,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.api.RetrofitInterface;
@@ -22,6 +29,8 @@ import app.insti.api.model.User;
 import app.insti.api.model.Venter;
 import app.insti.fragment.ComplaintFragment;
 import app.insti.utils.DateTimeUtil;
+import de.hdodenhof.circleimageview.CircleImageView;
+import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,7 +52,12 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public class ComplaintsViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cardView;
+        private CircleImageView circleImageView;
+        private LinearLayout linearLayoutSuggestions;
+        private LinearLayout linearLayoutLocationDetails;
         private TextView textViewDescription;
+        private TextView textViewSuggestions;
+        private TextView textViewlocationDetails;
         private ImageButton buttonComments;
         private ImageButton buttonVotes;
         private TextView textViewComments;
@@ -61,15 +75,27 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             textViewStatus = currentView.findViewById(R.id.textViewStatus);
             textViewReportDate = currentView.findViewById(R.id.textViewReportDate);
             textViewLocation = currentView.findViewById(R.id.textViewLocation);
+            linearLayoutSuggestions = currentView.findViewById(R.id.linearLayoutSuggestions);
+            linearLayoutLocationDetails = currentView.findViewById(R.id.linearLayoutLocationDetails);
             textViewDescription = currentView.findViewById(R.id.textViewDescription);
+            textViewSuggestions = currentView.findViewById(R.id.textViewSuggestions);
+            textViewlocationDetails = currentView.findViewById(R.id.textViewLocationDetails);
             buttonComments = currentView.findViewById(R.id.buttonComments);
             buttonVotes = currentView.findViewById(R.id.buttonVotes);
             textViewComments = currentView.findViewById(R.id.text_comments);
             textViewVotes = currentView.findViewById(R.id.text_votes);
+            circleImageView = currentView.findViewById(R.id.circleImageViewUserImage);
         }
 
         public void bindHolder(final int position) {
             this.pos = position;
+            try {
+                String profileUrl = complaintList.get(pos).getComplaintCreatedBy().getUserProfilePictureUrl();
+                Log.i(TAG, "PROFILE URL: " + profileUrl);
+                Picasso.get().load(profileUrl).placeholder(R.drawable.user_placeholder).into(circleImageView);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -87,7 +113,6 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             Venter.Complaint complaint = complaintList.get(position);
             try {
-                textViewDescription.setText(complaint.getDescription());
                 textViewLocation.setText(complaint.getLocationDescription());
                 textViewUserName.setText(complaint.getComplaintCreatedBy().getUserName());
                 textViewStatus.setText(complaint.getStatus().toUpperCase());
@@ -104,6 +129,15 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 String time = DateTimeUtil.getDate(complaint.getComplaintReportDate());
                 Log.i(TAG, "time: " + time);
                 textViewReportDate.setText(time);
+                textViewDescription.setText(complaint.getDescription());
+                if (!(complaint.getComplaintSuggestions().equals(""))){
+                    linearLayoutSuggestions.setVisibility(View.VISIBLE);
+                    textViewSuggestions.setText(complaint.getComplaintSuggestions());
+                }
+                if (!(complaint.getComplaintLocationDetails().equals(""))){
+                    linearLayoutLocationDetails.setVisibility(View.VISIBLE);
+                    textViewlocationDetails.setText(complaint.getComplaintSuggestions());
+                }
                 textViewComments.setText(String.valueOf(complaint.getComment().size()));
                 textViewVotes.setText(String.valueOf(complaint.getUsersUpVoted().size()));
                 buttonComments.setOnClickListener(new View.OnClickListener() {

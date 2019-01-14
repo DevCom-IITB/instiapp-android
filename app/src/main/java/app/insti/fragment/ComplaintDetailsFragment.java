@@ -58,8 +58,12 @@ public class ComplaintDetailsFragment extends Fragment {
     private MapView mMapView;
     private TextView textViewUserName;
     private TextView textViewReportDate;
+    private LinearLayout linearLayoutSuggestions;
+    private LinearLayout linearLayoutLocationDetails;
     private TextView textViewLocation;
     private TextView textViewDescription;
+    private TextView textViewSuggestions;
+    private TextView textViewLocationDetails;
     private TextView textViewCommentLabel;
     private TextView textViewVoteUpLabel;
     private TextView textViewStatus;
@@ -70,6 +74,7 @@ public class ComplaintDetailsFragment extends Fragment {
     private RecyclerView recyclerViewComments;
     private RecyclerView recyclerViewUpVotes;
     private Button buttonVoteUp;
+    private CircleImageView circleImageViewCreatorImage;
     private View mView;
 
     private static String sId, cId, uId, uProfileUrl;
@@ -146,10 +151,15 @@ public class ComplaintDetailsFragment extends Fragment {
 
     private void initialiseViews(View view) {
         nestedScrollView = view.findViewById(R.id.nestedScrollViewComplaintDetail);
+        circleImageViewCreatorImage = view.findViewById(R.id.circleImageViewCreatorImage);
+        linearLayoutSuggestions = view.findViewById(R.id.linearLayoutSuggestions);
+        linearLayoutLocationDetails = view.findViewById(R.id.linearLayoutLocationDetails);
         textViewUserName = view.findViewById(R.id.textViewUserName);
         textViewReportDate = view.findViewById(R.id.textViewReportDate);
         textViewLocation = view.findViewById(R.id.textViewLocation);
         textViewDescription = view.findViewById(R.id.textViewDescription);
+        textViewSuggestions = view.findViewById(R.id.textViewSuggestions);
+        textViewLocationDetails = view.findViewById(R.id.textViewLocationDetails);
         textViewStatus = view.findViewById(R.id.textViewStatus);
         textViewCommentLabel = view.findViewById(R.id.comment_label);
         textViewVoteUpLabel = view.findViewById(R.id.up_vote_label);
@@ -178,11 +188,13 @@ public class ComplaintDetailsFragment extends Fragment {
     private void populateViews() {
         try {
             buttonVoteUp.setText("UpVote");
+            Picasso.get().load(detailedComplaint.getComplaintCreatedBy().getUserProfilePictureUrl()).placeholder(R.drawable.user_placeholder).into(circleImageViewCreatorImage);
             textViewUserName.setText(detailedComplaint.getComplaintCreatedBy().getUserName());
             String time = DateTimeUtil.getDate(detailedComplaint.getComplaintReportDate().toString());
             Log.i(TAG, " time: " + time);
             textViewReportDate.setText(time);
             textViewLocation.setText(detailedComplaint.getLocationDescription());
+            textViewDescription.setText(detailedComplaint.getDescription());
             textViewDescription.setText(detailedComplaint.getDescription());
             textViewStatus.setText(detailedComplaint.getStatus().toUpperCase());
             if (detailedComplaint.getStatus().equalsIgnoreCase("Reported")) {
@@ -204,6 +216,14 @@ public class ComplaintDetailsFragment extends Fragment {
             textViewCommentLabel.setText("Comments (" + detailedComplaint.getComment().size() + ")");
             textViewVoteUpLabel.setText("Up Votes (" + detailedComplaint.getUsersUpVoted().size() + ")");
             Picasso.get().load(uProfileUrl).placeholder(R.drawable.user_placeholder).into(circleImageViewCommentUserImage);
+            if (!(detailedComplaint.getComplaintSuggestions().equals(""))){
+                linearLayoutSuggestions.setVisibility(View.VISIBLE);
+                textViewSuggestions.setText(detailedComplaint.getComplaintSuggestions());
+            }
+            if (!(detailedComplaint.getComplaintLocationDetails().equals(""))){
+                linearLayoutLocationDetails.setVisibility(View.VISIBLE);
+                textViewLocationDetails.setText(detailedComplaint.getComplaintSuggestions());
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
