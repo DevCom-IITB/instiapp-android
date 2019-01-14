@@ -20,7 +20,6 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +38,7 @@ import app.insti.fragment.UserFragment;
 public final class Utils {
     public static UpdatableList<Event> eventCache = new UpdatableList<>();
     public static UpdatableList<Notification> notificationCache = null;
+    public static UpdatableList<Body> bodyCache = new UpdatableList<>();
 
     private static String sessionId;
     private static RetrofitInterface retrofitInterface;
@@ -139,23 +139,24 @@ public final class Utils {
                 .commit();
     }
 
-    public static BodyFragment getBodyFragment(Body body) {
+    public static BodyFragment getBodyFragment(Body body, boolean sharedElements) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.BODY_JSON, new Gson().toJson(body));
+        bundle.putBoolean(Constants.NO_SHARED_ELEM, !sharedElements);
         BodyFragment bodyFragment = new BodyFragment();
         bodyFragment.setArguments(bundle);
         return bodyFragment;
     }
 
     public static void openBodyFragment(Body body, FragmentActivity fragmentActivity) {
-        updateFragment(getBodyFragment(body), fragmentActivity);
+        updateFragment(getBodyFragment(body, false), fragmentActivity);
     }
 
     public static void openBodyFragment(Body body, Fragment currentFragment, View sharedAvatar) {
         Map<View, String> sharedElements = new HashMap<>();
         sharedElements.put(sharedAvatar, "sharedAvatar");
         updateSharedElementFragment(
-                getBodyFragment(body), currentFragment, sharedElements
+                getBodyFragment(body, true), currentFragment, sharedElements
         );
     }
 
@@ -182,7 +183,7 @@ public final class Utils {
     }
 
     public static void openUserFragment(User user, FragmentActivity fragmentActivity) {
-        updateFragment(UserFragment.newInstance(user.getUserID()), fragmentActivity);
+        openUserFragment(user.getUserID(), fragmentActivity);
     }
 
     public static void openUserFragment(User user, Fragment currentFragment, View sharedAvatar) {
@@ -191,6 +192,10 @@ public final class Utils {
         updateSharedElementFragment(
                 UserFragment.newInstance(user), currentFragment, sharedElements
         );
+    }
+
+    public static void openUserFragment(String userId, FragmentActivity fragmentActivity) {
+        updateFragment(UserFragment.newInstance(userId), fragmentActivity);
     }
 
     public static void setSessionId(String sessionId1) {

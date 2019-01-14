@@ -99,7 +99,10 @@ public class TrainingBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public long getItemId(int position) {
-        return posts.get(position).getPostID().hashCode();
+        if (position < posts.size()) {
+            return posts.get(position).getPostID().hashCode();
+        }
+        return -1;
     }
 
     @Override
