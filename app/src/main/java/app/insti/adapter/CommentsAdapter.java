@@ -1,6 +1,5 @@
 package app.insti.adapter;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -13,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,10 +23,8 @@ import java.util.List;
 
 import app.insti.R;
 import app.insti.Utils;
-import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Venter;
-import app.insti.api.request.CommentCreateRequest;
 import app.insti.utils.DateTimeUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -44,7 +39,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private static final String TAG = CommentsAdapter.class.getSimpleName();
 
-    private Activity activity;
+    private Context context;
     private LayoutInflater inflater;
     private String sessionId, userId;
     private Fragment fragment;
@@ -52,12 +47,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private List<Venter.Comment> commentList = new ArrayList<>();
 
-    public CommentsAdapter(Activity activity, String sessionId, String userId, Fragment fragment) {
+    public CommentsAdapter(Context context, String sessionId, String userId, Fragment fragment) {
+        this.context = context;
         this.sessionId = sessionId;
         this.userId = userId;
-        inflater = LayoutInflater.from(activity);
+        inflater = LayoutInflater.from(context);
         this.fragment =fragment;
-        this.activity = activity;
     }
 
     public class CommentsViewHolder extends RecyclerView.ViewHolder {
@@ -67,9 +62,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView textViewName;
         private TextView textViewCommentTime;
         private TextView textViewComment;
-        private EditText editTextComment;
-        private ImageButton send_comment;
-        private ImageButton back_button;
         private final RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
 
         CommentsViewHolder(View itemView) {
@@ -77,11 +69,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             cardView = itemView.findViewById(R.id.cardViewComment);
             textViewName = itemView.findViewById(R.id.textViewUserComment);
             textViewComment = itemView.findViewById(R.id.textViewComment);
-            editTextComment = itemView.findViewById(R.id.editTextComment);
             textViewCommentTime = itemView.findViewById(R.id.textViewTime);
             circleImageView = itemView.findViewById(R.id.circleImageViewUserImage);
-            send_comment = itemView.findViewById(R.id.send_comment);
-            back_button = itemView.findViewById(R.id.back_button);
         }
 
         private void bindHolder(final int position) {
@@ -107,7 +96,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             cardView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(final View v) {
-                    PopupMenu popupMenu = new PopupMenu(activity, cardView);
+                    PopupMenu popupMenu = new PopupMenu(context, cardView);
                     if (!(comment.getUser().getUserID().equals(userId))) {
                         popupMenu.inflate(R.menu.comments_options_secondary_menu);
                     } else {
@@ -117,48 +106,13 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
-                                case R.id.edit_comment_option:
-                                    final String temp = textViewComment.getText().toString();
-                                    preEditComments(cardView, textViewComment, editTextComment,send_comment, back_button);
-                                    back_button.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            textViewComment.setText(temp);
-                                            postEditComments(cardView, textViewComment, editTextComment,send_comment, back_button, activity);
-                                        }
-                                    });
-                                    send_comment.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            CommentCreateRequest commentCreateRequest = new CommentCreateRequest(editTextComment.getText().toString());
-                                            retrofitInterface.updateComment("sessionid=" + sessionId, comment.getId(), commentCreateRequest).enqueue(new Callback<Venter.Comment>() {
-                                                @Override
-                                                public void onResponse(Call<Venter.Comment> call, Response<Venter.Comment> response) {
-                                                    if (response.isSuccessful()){
-                                                        textViewComment.setText(editTextComment.getText().toString());
-                                                        postEditComments(cardView, textViewComment, editTextComment,send_comment, back_button, activity);
-                                                    } else {
-                                                        Toast.makeText(activity, "Comment not edited", Toast.LENGTH_SHORT).show();
-                                                        textViewComment.setText(temp);
-                                                        postEditComments(cardView, textViewComment, editTextComment,send_comment, back_button, activity);
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onFailure(Call<Venter.Comment> call, Throwable t) {
-                                                    Log.i(TAG, " failure in editing: " + t.toString());
-                                                }
-                                            });
-                                        }
-                                    });
-                                    break;
                                 case R.id.copy_comment_option:
-                                    ClipboardManager clipboardManager = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                                    ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                                     ClipData clipData = ClipData.newPlainText("Text Copied", textViewComment.getText().toString());
                                     if (clipboardManager != null) {
                                         clipboardManager.setPrimaryClip(clipData);
                                     }
-                                    Toast.makeText(activity, "Comment Copied", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "Comment Copied", Toast.LENGTH_SHORT).show();
                                     break;
                                 case R.id.delete_comment_option:
                                     retrofitInterface.deleteComment("sessionid=" + sessionId, comment.getId()).enqueue(new Callback<String>() {
@@ -171,7 +125,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                 notifyItemRangeChanged(position, commentList.size() - position);
                                                 textViewCommentLabel.setText("Comments (" + commentList.size() + ")");
                                             } else {
-                                                Toast.makeText(activity, "You can't delete this comment", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(context, "You can't delete this comment", Toast.LENGTH_SHORT).show();
                                             }
                                         }
 
@@ -183,12 +137,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     break;
 
                                 default:
-                                    clipboardManager = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                                    clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                                     clipData = ClipData.newPlainText("Text Copied", textViewComment.getText().toString());
                                     if (clipboardManager != null) {
                                         clipboardManager.setPrimaryClip(clipData);
                                     }
-                                    Toast.makeText(activity, "Comment Copied", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "Comment Copied", Toast.LENGTH_SHORT).show();
                                     break;
                             }
                             return true;
@@ -232,27 +186,5 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void setCommentList(List<Venter.Comment> commentList, TextView textViewCommentLabel) {
         this.commentList = commentList;
         this.textViewCommentLabel = textViewCommentLabel;
-    }
-
-    private void preEditComments(CardView cardView, TextView textViewComment, EditText editTextComment, ImageButton send_comment, ImageButton back_button) {
-        cardView.setClickable(false);
-        cardView.setLongClickable(false);
-        textViewComment.setVisibility(View.GONE);
-        editTextComment.setVisibility(View.VISIBLE);
-        editTextComment.setText(textViewComment.getText().toString());
-        send_comment.setVisibility(View.VISIBLE);
-        back_button.setVisibility(View.VISIBLE);
-        editTextComment.requestFocus();
-    }
-
-    private void postEditComments(CardView cardView, TextView textViewComment, EditText editTextComment, ImageButton send_comment, ImageButton back_button, Activity activity) {
-        editTextComment.clearFocus();
-        textViewComment.setVisibility(View.VISIBLE);
-        send_comment.setVisibility(View.GONE);
-        back_button.setVisibility(View.GONE);
-        editTextComment.setVisibility(View.GONE);
-        cardView.setClickable(true);
-        cardView.setLongClickable(true);
-        MainActivity.hideKeyboard(activity);
     }
 }

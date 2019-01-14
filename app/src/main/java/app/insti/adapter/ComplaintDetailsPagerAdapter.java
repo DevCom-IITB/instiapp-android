@@ -27,6 +27,11 @@ public class ComplaintDetailsPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return ComplaintDetailsFragment.getInstance(sessionid, complaintid, userid, userProfileUrl);
+           /*
+            For version 2:
+            case 1:
+               return RelevantComplaintsFragment.getInstance(sessionid, userid);
+           */
             default:
                 return ComplaintDetailsFragment.getInstance(sessionid, complaintid, userid, userProfileUrl);
         }

@@ -2,10 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/edit_comment_option"
-        android:title="Edit"/>
-
-    <item
         android:id="@+id/copy_comment_option"
         android:title="Copy"/>
     <item

@@ -104,7 +104,7 @@ public class ComplaintDetailsFragment extends Fragment {
 
         initialiseViews(view);
         upVotesList = new ArrayList<>();
-        commentListAdapter = new CommentsAdapter(getActivity(), sId, uId, this);
+        commentListAdapter = new CommentsAdapter(getContext(), sId, uId, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         upVotesAdapter = new UpVotesAdapter(this, getContext());
         recyclerViewComments.setLayoutManager(linearLayoutManager);
