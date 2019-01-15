@@ -103,15 +103,8 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("id", complaintList.get(pos).getComplaintID());
-                    bundle.putString("sessionId", sessionID);
-                    bundle.putString("userId", userID);
-                    bundle.putString("userProfileUrl", userProfileUrl);
-                    ComplaintFragment complaintFragment = new ComplaintFragment();
-                    complaintFragment.setArguments(bundle);
-                    AppCompatActivity activity = (AppCompatActivity) context;
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_for_fragment, complaintFragment).addToBackStack(TAG).commit();
+                    Venter.Complaint detailedComplaint = complaintList.get(pos);
+                    getComplaint(detailedComplaint);
                 }
             });
 
@@ -128,15 +121,9 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 buttonComments.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("id", complaintList.get(pos).getComplaintID());
-                        bundle.putString("sessionId", sessionID);
-                        bundle.putString("userId", userID);
-                        bundle.putString("userProfileUrl", userProfileUrl);
-                        ComplaintFragment complaintFragment = new ComplaintFragment();
-                        complaintFragment.setArguments(bundle);
-                        AppCompatActivity activity = (AppCompatActivity) context;
-                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_for_fragment, complaintFragment).addToBackStack(TAG).commit();
+                        Venter.Complaint detailedComplaint = complaintList.get(pos);
+                        getComplaint(detailedComplaint);
+
                     }
                 });
                 buttonVotes.setOnClickListener(new View.OnClickListener() {
@@ -234,6 +221,18 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         textViewComments.setText(String.valueOf(complaint.getComment().size()));
         textViewVotes.setText(String.valueOf(complaint.getUsersUpVoted().size()));
+    }
+
+    private void getComplaint(Venter.Complaint detailedComplaint) {
+        Bundle bundle = new Bundle();
+        bundle.putString("id", detailedComplaint.getComplaintID());
+        bundle.putString("sessionId", sessionID);
+        bundle.putString("userId", userID);
+        bundle.putString("userProfileUrl", userProfileUrl);
+        ComplaintFragment complaintFragment = new ComplaintFragment();
+        complaintFragment.setArguments(bundle);
+        AppCompatActivity activity = (AppCompatActivity) context;
+        activity.getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_for_fragment, complaintFragment).addToBackStack(TAG).commit();
     }
 
     private void subscribeToComplaint(final Venter.Complaint detailedComplaint) {
