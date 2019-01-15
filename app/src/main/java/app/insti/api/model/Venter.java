@@ -40,6 +40,7 @@ public class Venter {
         @SerializedName("comments")
         private List<Comment> comment;
         private int voteCount;
+        private int complaintsubscribed;
 
         @NonNull
         public String getComplaintID() {
@@ -161,6 +162,13 @@ public class Venter {
 
         public void setVoteCount(int voteCount) {
             this.voteCount = voteCount;
+        }
+        public int getComplaintsubscribed() {
+            return complaintsubscribed;
+        }
+
+        public void setComplaintsubscribed(int complaintsubscribed) {
+            this.complaintsubscribed = complaintsubscribed;
         }
     }
 

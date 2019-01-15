@@ -109,6 +109,7 @@
                         android:text="STATUS"
                         android:textSize="16sp"
                         android:textStyle="bold" />
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -120,49 +121,43 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="20dp" />
+                android:layout_height="20dp"/>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/complaint_description"
+                <ImageButton
+                    android:id="@+id/buttonnotificationsoff"
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Complaint:"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:layout_height="20dp"
+                    android:src="@drawable/baseline_notifications_black_24"
+                    android:visibility="visible"
+                    android:layout_alignEnd="@id/complaint_details"
+                    android:layout_alignParentTop="true"/>
 
-                <View
+                <ImageButton
+                    android:id="@+id/buttonnotificationson"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:src="@drawable/baseline_notifications_active_black_24"
+                    android:visibility="gone"
+                    android:layout_alignEnd="@id/complaint_details"
+                    android:layout_alignParentTop="true"/>
+
+                <LinearLayout
+                    android:id="@+id/complaint_details"
                     android:layout_width="match_parent"
-                    android:layout_height="5dp" />
-
-                <TextView
-                    android:id="@+id/textViewDescription"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutSuggestions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="20dp" />
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/complaint_suggestions"
+                        android:id="@+id/complaint_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Suggestions:"
+                        android:text="Complaint:"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
@@ -172,48 +167,81 @@
                         android:layout_height="5dp" />
 
                     <TextView
-                        android:id="@+id/textViewSuggestions"
+                        android:id="@+id/textViewDescription"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutLocationDetails"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="20dp" />
-
-                    <TextView
-                        android:id="@+id/complaint_locationDetails"
+                    <LinearLayout
+                        android:id="@+id/linearLayoutSuggestions"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Location Details:"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="5dp" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp" />
 
-                    <TextView
-                        android:id="@+id/textViewLocationDetails"
+                        <TextView
+                            android:id="@+id/complaint_suggestions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Suggestions:"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp" />
+
+                        <TextView
+                            android:id="@+id/textViewSuggestions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayoutLocationDetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp" />
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp" />
+
+                        <TextView
+                            android:id="@+id/complaint_locationDetails"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Location Details:"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp" />
+
+                        <TextView
+                            android:id="@+id/textViewLocationDetails"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </LinearLayout>
 

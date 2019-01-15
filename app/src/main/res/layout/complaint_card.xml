@@ -199,14 +199,14 @@
             android:layout_gravity="center_horizontal"
             android:paddingStart="50dp"
             android:paddingEnd="20dp"
-            android:weightSum="2"
+            android:weightSum="3"
             android:background="@drawable/customborder">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:weightSum="2">
+                android:weightSum="3">
 
                 <ImageButton
                     android:id="@+id/buttonVotes"
@@ -231,7 +231,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:weightSum="2">
+                android:weightSum="3">
 
                 <ImageButton
                     android:id="@+id/buttonComments"
@@ -249,6 +249,32 @@
                     android:textColor="@color/secondaryTextColor"
                     android:layout_weight="1"
                     android:text="12"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:weightSum="3">
+
+                <ImageButton
+                    android:id="@+id/buttonnotificationsoff"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="10dp"
+                    android:layout_height="40dp"
+                    android:visibility="visible"
+                    android:layout_weight="1"
+                    android:src="@drawable/baseline_notifications_black_24"/>
+
+                <ImageButton
+                    android:id="@+id/buttonnotificationson"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="10dp"
+                    android:layout_height="40dp"
+                    android:visibility="gone"
+                    android:layout_weight="1"
+                    android:src="@drawable/baseline_notifications_active_black_24"/>
+
             </LinearLayout>
 
         </LinearLayout>
