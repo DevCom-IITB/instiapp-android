@@ -57,8 +57,6 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private TextView textViewUserName;
     private TextView textViewReportDate;
     private TextView textViewStatus;
-    private TextView textViewComments;
-    private TextView textViewVotes;
 
     public class ComplaintsViewHolder extends RecyclerView.ViewHolder {
 
@@ -68,6 +66,8 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private ImageButton buttonVotes;
         private ImageButton notificationson;
         private ImageButton notificationsoff;
+        private TextView textViewVotes;
+        private TextView textViewComments;
         private int pos;
 
         public ComplaintsViewHolder(View currentView) {
@@ -93,13 +93,6 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private void bindHolder(final int position) {
             this.pos = position;
-            try {
-                String profileUrl = complaintList.get(pos).getComplaintCreatedBy().getUserProfilePictureUrl();
-                Log.i(TAG, "PROFILE URL: " + profileUrl);
-                Picasso.get().load(profileUrl).placeholder(R.drawable.user_placeholder).into(circleImageView);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -108,16 +101,8 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
 
-            Venter.Complaint complaint = complaintList.get(position);
             try {
-                populateViews(complaint);
-                if (complaintList.get(pos).getComplaintsubscribed() == 1){
-                    notificationson.setVisibility(View.VISIBLE);
-                    notificationsoff.setVisibility(View.GONE);
-                }else if (complaintList.get(pos).getComplaintsubscribed() == 0){
-                    notificationson.setVisibility(View.GONE);
-                    notificationsoff.setVisibility(View.VISIBLE);
-                }
+                populateViews(pos, circleImageView, notificationson, notificationsoff, textViewVotes, textViewComments);
                 buttonComments.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -172,19 +157,15 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 notificationsoff.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        notificationson.setVisibility(View.VISIBLE);
-                        notificationsoff.setVisibility(View.GONE);
                         Venter.Complaint detailedComplaint = complaintList.get(pos);
-                        subscribeToComplaint(detailedComplaint);
+                        subscribeToComplaint(detailedComplaint, notificationsoff, notificationson);
                     }
                 });
                 notificationson.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        notificationson.setVisibility(View.GONE);
-                        notificationsoff.setVisibility(View.VISIBLE);
                         Venter.Complaint detailedComplaint = complaintList.get(pos);
-                        subscribeToComplaint(detailedComplaint);
+                        subscribeToComplaint(detailedComplaint, notificationsoff, notificationson);
                     }
                 });
             } catch (Exception e) {
@@ -193,34 +174,46 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void populateViews(Venter.Complaint complaint) {
-        textViewLocation.setText(complaint.getLocationDescription());
-        textViewUserName.setText(complaint.getComplaintCreatedBy().getUserName());
-        textViewStatus.setText(complaint.getStatus().toUpperCase());
-        if (complaint.getStatus().equalsIgnoreCase("Reported")) {
-            textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorRed)));
-            textViewStatus.setTextColor(context.getResources().getColor(R.color.primaryTextColor));
-        } else if (complaint.getStatus().equalsIgnoreCase("In Progress")) {
-            textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorSecondary)));
-            textViewStatus.setTextColor(context.getResources().getColor(R.color.secondaryTextColor));
-        } else if (complaint.getStatus().equalsIgnoreCase("Resolved")) {
-            textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorGreen)));
-            textViewStatus.setTextColor(context.getResources().getColor(R.color.secondaryTextColor));
+    private void populateViews(int pos, CircleImageView circleImageView, ImageButton notificationson, ImageButton notificationsoff, TextView textViewVotes, TextView textViewComments) {
+        try {
+            String profileUrl = complaintList.get(pos).getComplaintCreatedBy().getUserProfilePictureUrl();
+            Picasso.get().load(profileUrl).placeholder(R.drawable.user_placeholder).into(circleImageView);
+            textViewLocation.setText(complaintList.get(pos).getLocationDescription());
+            textViewUserName.setText(complaintList.get(pos).getComplaintCreatedBy().getUserName());
+            textViewStatus.setText(complaintList.get(pos).getStatus().toUpperCase());
+            if (complaintList.get(pos).getStatus().equalsIgnoreCase("Reported")) {
+                textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorRed)));
+                textViewStatus.setTextColor(context.getResources().getColor(R.color.primaryTextColor));
+            } else if (complaintList.get(pos).getStatus().equalsIgnoreCase("In Progress")) {
+                textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorSecondary)));
+                textViewStatus.setTextColor(context.getResources().getColor(R.color.secondaryTextColor));
+            } else if (complaintList.get(pos).getStatus().equalsIgnoreCase("Resolved")) {
+                textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorGreen)));
+                textViewStatus.setTextColor(context.getResources().getColor(R.color.secondaryTextColor));
+            }
+            String time = DateTimeUtil.getDate(complaintList.get(pos).getComplaintReportDate());
+            textViewReportDate.setText(time);
+            textViewDescription.setText(complaintList.get(pos).getDescription());
+            if (complaintList.get(pos).getComplaintsubscribed() == 1){
+                notificationson.setVisibility(View.VISIBLE);
+                notificationsoff.setVisibility(View.GONE);
+            }else if (complaintList.get(pos).getComplaintsubscribed() == 0){
+                notificationson.setVisibility(View.GONE);
+                notificationsoff.setVisibility(View.VISIBLE);
+            }
+            textViewVotes.setText(String.valueOf(complaintList.get(pos).getUsersUpVoted().size()));
+            textViewComments.setText(String.valueOf(complaintList.get(pos).getComment().size()));
+            if (!(complaintList.get(pos).getComplaintSuggestions().equals(""))){
+                linearLayoutSuggestions.setVisibility(View.VISIBLE);
+                textViewSuggestions.setText(complaintList.get(pos).getComplaintSuggestions());
+            }
+            if (!(complaintList.get(pos).getComplaintLocationDetails().equals(""))){
+                linearLayoutLocationDetails.setVisibility(View.VISIBLE);
+                textViewlocationDetails.setText(complaintList.get(pos).getComplaintLocationDetails());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        String time = DateTimeUtil.getDate(complaint.getComplaintReportDate());
-        Log.i(TAG, "time: " + time);
-        textViewReportDate.setText(time);
-        textViewDescription.setText(complaint.getDescription());
-        if (!(complaint.getComplaintSuggestions().equals(""))){
-            linearLayoutSuggestions.setVisibility(View.VISIBLE);
-            textViewSuggestions.setText(complaint.getComplaintSuggestions());
-        }
-        if (!(complaint.getComplaintLocationDetails().equals(""))){
-            linearLayoutLocationDetails.setVisibility(View.VISIBLE);
-            textViewlocationDetails.setText(complaint.getComplaintSuggestions());
-        }
-        textViewComments.setText(String.valueOf(complaint.getComment().size()));
-        textViewVotes.setText(String.valueOf(complaint.getUsersUpVoted().size()));
     }
 
     private void getComplaint(Venter.Complaint detailedComplaint) {
@@ -235,7 +228,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         activity.getSupportFragmentManager().beginTransaction().replace(R.id.framelayout_for_fragment, complaintFragment).addToBackStack(TAG).commit();
     }
 
-    private void subscribeToComplaint(final Venter.Complaint detailedComplaint) {
+    private void subscribeToComplaint(final Venter.Complaint detailedComplaint, final ImageButton notificationsoff, final ImageButton notificationson) {
         final RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         if (detailedComplaint.getComplaintsubscribed() == 1) {
             AlertDialog.Builder unsubscribe = new AlertDialog.Builder(context);
@@ -250,7 +243,11 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 @Override
                                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                                     if (response.isSuccessful()) {
+                                        notificationson.setVisibility(View.GONE);
+                                        notificationsoff.setVisibility(View.VISIBLE);
                                         detailedComplaint.setComplaintsubscribed(0);
+                                        Toast.makeText(context, "You have been unsubscribed from this complaint!",
+                                                Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
@@ -277,8 +274,10 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                     if (response.isSuccessful()) {
+                        notificationson.setVisibility(View.VISIBLE);
+                        notificationsoff.setVisibility(View.GONE);
                         detailedComplaint.setComplaintsubscribed(1);
-                        Toast.makeText(context, "You are subscribed to this complaint!",
+                        Toast.makeText(context, "You have been subscribed to this complaint!",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -324,6 +323,11 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemCount() {
         return complaintList.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     public void setcomplaintList(List<Venter.Complaint> list) {
