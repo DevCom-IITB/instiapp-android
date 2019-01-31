@@ -248,7 +248,7 @@ public class ComplaintDetailsFragment extends Fragment {
             }
             if (!(detailedComplaint.getComplaintLocationDetails().equals(""))){
                 linearLayoutLocationDetails.setVisibility(View.VISIBLE);
-                textViewLocationDetails.setText(detailedComplaint.getComplaintSuggestions());
+                textViewLocationDetails.setText(detailedComplaint.getComplaintLocationDetails());
             }
 
         } catch (Exception e) {
