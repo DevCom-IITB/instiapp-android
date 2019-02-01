@@ -35,6 +35,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.view.View.VISIBLE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -122,6 +124,8 @@ public class CalendarFragment extends BaseFragment {
                     NewsFeedResponse newsFeedResponse = response.body();
                     events = newsFeedResponse.getEvents();
                     DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                    getView().findViewById(R.id.calendar_layout).setVisibility(VISIBLE);
+
                     try {
                         Date todayWithZeroTime = formatter.parse(formatter.format(today));
                         showEventsForDate(todayWithZeroTime);
