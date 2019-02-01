@@ -28,7 +28,7 @@ ext {
     okhttpVersion = '3.11.0'
     picassoVersion = '2.71828'
     circleImageViewVersion = '2.2.0'
-    markwonVersion = '1.0.6'
+    markwonVersion = '2.0.1'
     tagViewVersion = '1.3'
     circleIndicatorVersion = '1.2.2@aar'
     firebaseVersion = '17.3.4'
