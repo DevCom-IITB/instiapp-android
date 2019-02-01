@@ -45,6 +45,7 @@ public class Constants {
     public static final String FCM_BUNDLE_IMAGE = "image_url";
     public static final String FCM_BUNDLE_LARGE_ICON = "large_icon";
     public static final String FCM_BUNDLE_LARGE_CONTENT = "large_content";
+    public static final String NOTIF_CANCELLED = "notif_cancelled";
 
     public static final String FCM_BUNDLE_ACTION_STARTING = "starting";
 

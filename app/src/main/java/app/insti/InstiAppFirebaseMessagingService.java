@@ -53,6 +53,14 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
         return PendingIntent.getActivity(this, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
+    /** In case the notification is dismissed */
+    protected PendingIntent getDeleteIntent(RemoteMessage remoteMessage) {
+        Intent intent = new Intent(getApplicationContext(), NotificationBroadcastReceiver.class);
+        intent.setAction(Constants.NOTIF_CANCELLED);
+        intent.putExtra(Constants.FCM_BUNDLE_NOTIFICATION_ID, remoteMessage.getData().get(Constants.FCM_BUNDLE_NOTIFICATION_ID));
+        return PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+    }
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         channel = getResources().getString(R.string.default_notification_channel_id);
@@ -84,7 +92,8 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder builder = standardNotificationBuilder()
                 .setContentTitle(remoteMessage.getData().get(Constants.FCM_BUNDLE_TITLE))
                 .setContentText(message)
-                .setContentIntent(getNotificationIntent(remoteMessage, notification_id));
+                .setContentIntent(getNotificationIntent(remoteMessage, notification_id))
+                .setDeleteIntent(getDeleteIntent(remoteMessage));
 
         /* Check for article */
         String largeContent = remoteMessage.getData().get(Constants.FCM_BUNDLE_LARGE_CONTENT);
