@@ -75,6 +75,8 @@ import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.fragment.UserFragment;
+import app.insti.notifications.NotificationId;
+import me.leolin.shortcutbadger.ShortcutBadger;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -195,6 +197,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Utils.notificationCache = new UpdatableList<>();
                     Utils.notificationCache.setList(response.body());
                     showNotifications();
+
+                    NotificationId.setCurrentCount(Utils.notificationCache.size());
+                    ShortcutBadger.applyCount(getApplicationContext(), NotificationId.getCurrentCount());
                 }
             }
         });

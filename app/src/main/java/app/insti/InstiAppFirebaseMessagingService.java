@@ -26,6 +26,7 @@ import java.util.Map;
 
 import app.insti.activity.MainActivity;
 import app.insti.notifications.NotificationId;
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
     String channel;
@@ -94,6 +95,17 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentText(message)
                 .setContentIntent(getNotificationIntent(remoteMessage, notification_id))
                 .setDeleteIntent(getDeleteIntent(remoteMessage, notification_id));
+
+        /* Update the badge */
+        final String count = remoteMessage.getData().get(Constants.FCM_BUNDLE_TOTAL_COUNT);
+        if (count != null) {
+            try {
+                int total_count = Integer.parseInt(count);
+                NotificationId.setCurrentCount(total_count);
+                ShortcutBadger.applyCount(getApplicationContext(), total_count);
+            }
+            catch (NumberFormatException ignored) {}
+        }
 
         /* Check for article */
         String largeContent = remoteMessage.getData().get(Constants.FCM_BUNDLE_LARGE_CONTENT);

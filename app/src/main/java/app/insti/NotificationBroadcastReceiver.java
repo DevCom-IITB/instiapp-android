@@ -7,6 +7,8 @@ import android.content.Intent;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
+import app.insti.notifications.NotificationId;
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 public class NotificationBroadcastReceiver extends BroadcastReceiver {
     @Override
@@ -27,6 +29,9 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
             // Mark as read
             retrofitInterface.markNotificationDeleted(Utils.getSessionIDHeader(), id).enqueue(new EmptyCallback<Void>());
+
+            // Reduce current count
+            ShortcutBadger.applyCount(context.getApplicationContext(), NotificationId.decrementAndGetCurrentCount());
         }
     }
 }

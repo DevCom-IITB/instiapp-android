@@ -19,6 +19,8 @@ import app.insti.fragment.NewsFragment;
 import app.insti.fragment.NotificationsFragment;
 import app.insti.fragment.PlacementBlogFragment;
 import app.insti.fragment.TrainingBlogFragment;
+import app.insti.notifications.NotificationId;
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 public class NotificationsAdapter extends CardAdapter<Notification> {
     private NotificationsFragment notificationsFragment;
@@ -34,6 +36,7 @@ public class NotificationsAdapter extends CardAdapter<Notification> {
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         String sessId = Utils.getSessionIDHeader();
         retrofitInterface.markNotificationRead(sessId, notification.getNotificationId().toString()).enqueue(new EmptyCallback<Void>());
+        ShortcutBadger.applyCount(fragmentActivity.getApplicationContext(), NotificationId.decrementAndGetCurrentCount());
 
         /* Close the bottom sheet */
         notificationsFragment.dismiss();

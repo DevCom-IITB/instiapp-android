@@ -19,6 +19,8 @@ import app.insti.adapter.NotificationsAdapter;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Notification;
+import app.insti.notifications.NotificationId;
+import me.leolin.shortcutbadger.ShortcutBadger;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -61,6 +63,9 @@ public class NotificationsFragment extends BottomSheetDialogFragment {
                 if (response.isSuccessful()) {
                     Utils.notificationCache.setList(response.body());
                     showNotifications(Utils.notificationCache);
+
+                    NotificationId.setCurrentCount(Utils.notificationCache.size());
+                    ShortcutBadger.applyCount(getContext().getApplicationContext(), NotificationId.getCurrentCount());
                 }
             }
         });
