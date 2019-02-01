@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 openEventFragment(id);
                 return;
             case DATA_TYPE_NEWS:
-                updateFragment(new NewsFragment());
+                updateFragment((new NewsFragment()).withId(id));
                 return;
         }
         Log.e("NOTIFICATIONS", "Server sent invalid notification?");
@@ -355,9 +355,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             switch (type) {
                 case DATA_TYPE_PT:
                     if (extra.contains("/trainingblog")) {
-                        openTrainingBlog();
+                        openTrainingBlog(id);
                     } else {
-                        openPlacementBlog();
+                        openPlacementBlog(id);
                     }
                     return;
             }
@@ -586,8 +586,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Open placement blog fragment
      */
     private void openPlacementBlog() {
+        openPlacementBlog(null);
+    }
+
+    private void openPlacementBlog(String id) {
         if (session.isLoggedIn()) {
             PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
+            if (id != null) placementBlogFragment.withId(id);
             updateFragment(placementBlogFragment);
         } else {
             Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
@@ -595,8 +600,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void openTrainingBlog() {
+        openTrainingBlog(null);
+    }
+
+    private void openTrainingBlog(String id) {
         if (session.isLoggedIn()) {
             TrainingBlogFragment trainingBlogFragment = new TrainingBlogFragment();
+            if (id != null) trainingBlogFragment.withId(id);
             updateFragment(trainingBlogFragment);
         } else {
             Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
