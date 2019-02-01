@@ -12,6 +12,7 @@ import app.insti.Utils;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Event;
+import app.insti.api.model.NewsArticle;
 import app.insti.api.model.Notification;
 import app.insti.api.model.PlacementBlogPost;
 import app.insti.fragment.NewsFragment;
@@ -37,22 +38,26 @@ public class NotificationsAdapter extends CardAdapter<Notification> {
         /* Close the bottom sheet */
         notificationsFragment.dismiss();
 
+        Gson gson = Utils.gson;
+
         /* Open event */
         if (notification.isEvent()) {
-            Gson gson = new Gson();
             Event event = gson.fromJson(gson.toJson(notification.getNotificationActor()), Event.class) ;
             Utils.openEventFragment(event, fragmentActivity);
         } else if (notification.isNews()) {
             NewsFragment newsFragment = new NewsFragment();
+            NewsArticle newsArticle = gson.fromJson(gson.toJson(notification.getNotificationActor()), NewsArticle.class) ;
+            newsFragment.withId(newsArticle.getId());
             Utils.updateFragment(newsFragment, fragmentActivity);
         } else if (notification.isBlogPost()) {
-            Gson gson = new Gson();
             PlacementBlogPost post = gson.fromJson(gson.toJson(notification.getNotificationActor()), PlacementBlogPost.class);
+            Fragment fragment;
             if (post.getLink().contains("training")) {
-                Utils.updateFragment(new TrainingBlogFragment(), fragmentActivity);
+                fragment = (new TrainingBlogFragment()).withId(post.getId());
             } else {
-                Utils.updateFragment(new PlacementBlogFragment(), fragmentActivity);
+                fragment = (new PlacementBlogFragment()).withId(post.getId());
             }
+            Utils.updateFragment(fragment, fragmentActivity);
         }
     }
 
