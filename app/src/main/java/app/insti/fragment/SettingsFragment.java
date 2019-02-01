@@ -174,6 +174,7 @@ public class SettingsFragment extends Fragment {
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if (response.isSuccessful()) {
                                 sessionManager.logout();
+                                Utils.clearCookies(getActivity());
                                 Intent intent = new Intent(getContext(), LoginActivity.class);
                                 startActivity(intent);
                                 getActivity().finish();
