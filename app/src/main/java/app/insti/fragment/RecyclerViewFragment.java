@@ -108,7 +108,7 @@ public abstract class RecyclerViewFragment<T extends Clickable, S extends Recycl
     }
 
     /** Set position of id in list of clickables */
-    int getPosition(List<T> result, String id) {
+    private int getPosition(List<T> result, String id) {
         for (int i = 0; i < result.size(); i++) {
             if (result.get(i).getId().equals(id)) {
                 return i;
@@ -118,7 +118,7 @@ public abstract class RecyclerViewFragment<T extends Clickable, S extends Recycl
     }
 
     /** Scroll the recyclerview to position */
-    void scrollToPosition(int i) {
+    private void scrollToPosition(int i) {
         if (i < 0) return;
 
         RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
