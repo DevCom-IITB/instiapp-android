@@ -18,6 +18,7 @@ import app.insti.api.request.ComplaintCreateRequest;
 import app.insti.api.request.EventCreateRequest;
 import app.insti.api.request.ImageUploadRequest;
 import app.insti.api.request.UserFCMPatchRequest;
+import app.insti.api.request.UserShowContactPatchRequest;
 import app.insti.api.response.ComplaintCreateResponse;
 import app.insti.api.response.EventCreateResponse;
 import app.insti.api.response.ExploreResponse;
@@ -86,6 +87,9 @@ public interface RetrofitInterface {
 
     @PATCH("user-me")
     Call<User> patchUserMe(@Header("Cookie") String sessionID, @Body UserFCMPatchRequest userFCMPatchRequest);
+
+    @PATCH("user-me")
+    Call<User> patchUserMe(@Header("Cookie") String sessionID, @Body UserShowContactPatchRequest userShowContactPatchRequest);
 
     @GET("user-me/ues/{eventID}")
     Call<Void> updateUserEventStatus(@Header("Cookie") String sessionID, @Path("eventID") String eventID, @Query("status") int status);

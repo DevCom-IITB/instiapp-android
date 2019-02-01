@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -23,6 +25,7 @@ import app.insti.activity.LoginActivity;
 import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.User;
+import app.insti.api.request.UserShowContactPatchRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,12 +67,44 @@ public class SettingsFragment extends Fragment {
                 if (response.isSuccessful()) {
                     user = response.body();
                     populateUserCard();
+                    setupContactSwitch(user);
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
 
+            }
+        });
+    }
+
+    private void setupContactSwitch(User user) {
+        final Switch showContactSwitch = getView().findViewById(R.id.show_contact_switch);
+        showContactSwitch.setVisibility(View.VISIBLE);
+        showContactSwitch.setChecked(user.getShowContactNumber());
+
+        showContactSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
+                showContactSwitch.setEnabled(false);
+                RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+                retrofitInterface.patchUserMe(Utils.getSessionIDHeader(), new UserShowContactPatchRequest(isChecked)).enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        if (response.isSuccessful()) {
+                            showContactSwitch.setEnabled(true);
+                        } else {
+                            showContactSwitch.setChecked(!isChecked);
+                            showContactSwitch.setEnabled(true);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        showContactSwitch.setChecked(!isChecked);
+                        showContactSwitch.setEnabled(true);
+                    }
+                });
             }
         });
     }
