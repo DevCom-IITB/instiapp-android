@@ -34,6 +34,7 @@ ext {
     firebaseVersion = '17.3.4'
     flexboxVersion = '1.0.0'
     sectionedRecyclerViewVersion = '1.2.0'
+    lottieVersion = '2.7.0'
 }
 
 dependencies {
@@ -57,5 +58,6 @@ dependencies {
     implementation "me.relex:circleindicator:${circleIndicatorVersion}"
     implementation "com.google.android:flexbox:${flexboxVersion}"
     implementation "io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:${sectionedRecyclerViewVersion}"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
 }
 apply plugin: 'com.google.gms.google-services'
