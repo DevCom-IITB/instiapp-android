@@ -278,7 +278,9 @@ public class MapFragment extends Fragment implements TextWatcher,
         Locations mLocations = new Locations(venues);
         data = mLocations.data;
         markerlist = new ArrayList<com.mrane.data.Marker>(data.values());
-        setupMap();
+        if (getArguments() != null) {
+            setupMap(getArguments().getString(Constants.MAP_INITIAL_MARKER));
+        }
 
         // Setup locate button
         FloatingActionButton fab = getView().findViewById(R.id.locate_fab);
@@ -308,6 +310,10 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void setupMap() {
+        setupMap(null);
+    }
+
+    private void setupMap(String initalMarkerName) {
         if (getView() == null) {
             return;
         }
@@ -340,6 +346,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         campusMapView.setImageAsset("map.jpg");
         campusMapView.setSettingsManager(settingsManager);
         campusMapView.setData(data);
+        campusMapView.setInitialMarkerName(initalMarkerName);
 
         addMarkerIcon = (ImageButton) getActivity().findViewById(R.id.add_marker_icon);
 
