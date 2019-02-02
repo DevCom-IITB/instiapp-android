@@ -61,7 +61,6 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public class ComplaintsViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cardView;
-        private CircleImageView circleImageView;
         private ImageButton buttonComments;
         private ImageButton buttonVotes;
         private ImageButton notificationson;
@@ -88,7 +87,6 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             notificationson = currentView.findViewById(R.id.buttonnotificationson);
             textViewComments = currentView.findViewById(R.id.text_comments);
             textViewVotes = currentView.findViewById(R.id.text_votes);
-            circleImageView = currentView.findViewById(R.id.circleImageViewUserImage);
         }
 
         private void bindHolder(final int position) {
@@ -102,7 +100,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
 
             try {
-                populateViews(pos, circleImageView, notificationson, notificationsoff, textViewVotes, textViewComments);
+                populateViews(pos, notificationson, notificationsoff, textViewVotes, textViewComments);
                 buttonComments.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -174,10 +172,8 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void populateViews(int pos, CircleImageView circleImageView, ImageButton notificationson, ImageButton notificationsoff, TextView textViewVotes, TextView textViewComments) {
+    private void populateViews(int pos, ImageButton notificationson, ImageButton notificationsoff, TextView textViewVotes, TextView textViewComments) {
         try {
-            String profileUrl = complaintList.get(pos).getComplaintCreatedBy().getUserProfilePictureUrl();
-            Picasso.get().load(profileUrl).placeholder(R.drawable.user_placeholder).into(circleImageView);
             textViewLocation.setText(complaintList.get(pos).getLocationDescription());
             textViewUserName.setText(complaintList.get(pos).getComplaintCreatedBy().getUserName());
             textViewStatus.setText(complaintList.get(pos).getStatus().toUpperCase());
