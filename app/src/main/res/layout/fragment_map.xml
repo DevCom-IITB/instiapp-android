@@ -33,17 +33,10 @@
                 android:id="@+id/main_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/darker_gray"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 tools:context="com.mrane.campusmap.MainActivity"
                 tools:ignore="MergeRootFrame">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"></LinearLayout>
 
                 <com.mrane.navigation.SlidingUpPanelLayout
                     android:id="@+id/sliding_layout"
@@ -90,7 +83,8 @@
             android:layout_marginBottom="96dp"
             android:layout_marginRight="8dp"
             android:src="@drawable/ic_my_location_black_24dp"
-            android:tint="@android:color/black" />
+            android:tint="@android:color/black"
+            android:visibility="invisible" />
     </RelativeLayout>
 
 </FrameLayout>
