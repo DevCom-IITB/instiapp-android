@@ -31,8 +31,8 @@
                     app:mcv_showOtherDates="all"
                     app:mcv_selectionColor="@color/colorPrimary"
                     app:mcv_headerTextAppearance="@style/MatCalendarHeader"
-                    app:mcv_leftArrow="@color/primaryTextColor"
-                    app:mcv_rightArrow="@color/primaryTextColor"
+                    app:mcv_leftArrow="@drawable/ic_keyboard_arrow_left_white_24dp"
+                    app:mcv_rightArrow="@drawable/ic_keyboard_arrow_right_white_24dp"
                     app:mcv_dateTextAppearance="@style/CalendarDateAppearance"
                     android:padding="5dp" />
 
