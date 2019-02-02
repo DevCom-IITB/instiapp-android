@@ -81,6 +81,7 @@
     <style name="MatCalendarHeader" parent="TextAppearance.MaterialCalendarWidget.Header">
         <item name="android:textColor">@color/primaryTextColor</item>
         <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CalendarDateAppearance" parent="TextAppearance.AppCompat.Medium">
