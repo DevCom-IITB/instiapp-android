@@ -15,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -221,9 +223,15 @@ public class CalendarFragment extends BaseFragment {
                         if (!events.contains(event)) events.add(event);
                     }
 
-                    // Make the calendar visible
-                    getView().findViewById(R.id.calendar_layout).setVisibility(VISIBLE);
-                    getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                    // Make the calendar visible if it isn't
+                    final LinearLayout calendarLayout = getView().findViewById(R.id.calendar_layout);
+                    if (calendarLayout.getVisibility() == View.GONE) {
+                        calendarLayout.setVisibility(VISIBLE);
+                        getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                        AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
+                        anim.setDuration(250);
+                        calendarLayout.startAnimation(anim);
+                    }
 
                     // Initialize to show today's date
                     if (setToday) {
