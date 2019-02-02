@@ -173,9 +173,6 @@ public class ExploreFragment extends Fragment {
     public void doSearch(final String query) {
         if (getActivity() == null || getView() == null) return;
 
-        // Show loading spinner
-        getView().findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
-
         // Set the lastest query
         currentQuery = query;
 

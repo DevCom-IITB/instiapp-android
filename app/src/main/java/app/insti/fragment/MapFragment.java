@@ -1,10 +1,13 @@
 package app.insti.fragment;
 
 import android.Manifest;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Typeface;
@@ -37,6 +40,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.StyleSpan;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -235,6 +239,29 @@ public class MapFragment extends Fragment implements TextWatcher,
             @Override
             public void onResponse(Call<List<Venue>> call, Response<List<Venue>> response) {
                 if (response.isSuccessful()) {
+
+                    // Setup fade animation for background
+                    TypedValue typedValue = new TypedValue();
+                    Resources.Theme theme = getContext().getTheme();
+                    theme.resolveAttribute(R.attr.themeColor, typedValue, true);
+                    int colorFrom = typedValue.data;
+                    int colorTo = getResources().getColor(R.color.colorGray);
+                    ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+                    colorAnimation.setDuration(250); // milliseconds
+                    colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animator) {
+                            getView().findViewById(R.id.main_container).setBackgroundColor(
+                                    (int) animator.getAnimatedValue()
+                            );
+                        }
+                    });
+                    colorAnimation.start();
+
+                    // Show the location fab
+                    ((FloatingActionButton) getView().findViewById(R.id.locate_fab)).show();
+
+                    // Show the map and data
                     setupWithData(response.body());
                 }
             }
@@ -251,7 +278,9 @@ public class MapFragment extends Fragment implements TextWatcher,
         Locations mLocations = new Locations(venues);
         data = mLocations.data;
         markerlist = new ArrayList<com.mrane.data.Marker>(data.values());
-        setupMap();
+        if (getArguments() != null) {
+            setupMap(getArguments().getString(Constants.MAP_INITIAL_MARKER));
+        }
 
         // Setup locate button
         FloatingActionButton fab = getView().findViewById(R.id.locate_fab);
@@ -281,6 +310,10 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void setupMap() {
+        setupMap(null);
+    }
+
+    private void setupMap(String initalMarkerName) {
         if (getView() == null) {
             return;
         }
@@ -313,6 +346,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         campusMapView.setImageAsset("map.jpg");
         campusMapView.setSettingsManager(settingsManager);
         campusMapView.setData(data);
+        campusMapView.setInitialMarkerName(initalMarkerName);
 
         addMarkerIcon = (ImageButton) getActivity().findViewById(R.id.add_marker_icon);
 

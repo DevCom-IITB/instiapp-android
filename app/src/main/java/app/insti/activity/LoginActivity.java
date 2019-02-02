@@ -52,9 +52,10 @@ public class LoginActivity extends AppCompatActivity {
         session = new SessionManager(mContext);
         if (session.isLoggedIn()) {
             openMainActivity();
+        } else {
+            setContentView(R.layout.activity_login);
+            progressDialog = new ProgressDialog(LoginActivity.this);
         }
-        setContentView(R.layout.activity_login);
-        progressDialog = new ProgressDialog(LoginActivity.this);
     }
 
     private void openMainActivity() {

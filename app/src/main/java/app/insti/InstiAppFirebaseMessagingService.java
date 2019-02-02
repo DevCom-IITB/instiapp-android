@@ -26,6 +26,7 @@ import java.util.Map;
 
 import app.insti.activity.MainActivity;
 import app.insti.notifications.NotificationId;
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
     String channel;
@@ -51,6 +52,14 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra(Constants.MAIN_INTENT_EXTRAS, stringMapToBundle(remoteMessage.getData()));
         return PendingIntent.getActivity(this, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    /** In case the notification is dismissed */
+    protected PendingIntent getDeleteIntent(RemoteMessage remoteMessage, Integer notificationId) {
+        Intent intent = new Intent(getApplicationContext(), NotificationBroadcastReceiver.class);
+        intent.setAction(Constants.NOTIF_CANCELLED);
+        intent.putExtra(Constants.FCM_BUNDLE_NOTIFICATION_ID, remoteMessage.getData().get(Constants.FCM_BUNDLE_NOTIFICATION_ID));
+        return PendingIntent.getBroadcast(getApplicationContext(), notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     @Override
@@ -84,7 +93,19 @@ public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder builder = standardNotificationBuilder()
                 .setContentTitle(remoteMessage.getData().get(Constants.FCM_BUNDLE_TITLE))
                 .setContentText(message)
-                .setContentIntent(getNotificationIntent(remoteMessage, notification_id));
+                .setContentIntent(getNotificationIntent(remoteMessage, notification_id))
+                .setDeleteIntent(getDeleteIntent(remoteMessage, notification_id));
+
+        /* Update the badge */
+        final String count = remoteMessage.getData().get(Constants.FCM_BUNDLE_TOTAL_COUNT);
+        if (count != null) {
+            try {
+                int total_count = Integer.parseInt(count);
+                NotificationId.setCurrentCount(total_count);
+                ShortcutBadger.applyCount(getApplicationContext(), total_count);
+            }
+            catch (NumberFormatException ignored) {}
+        }
 
         /* Check for article */
         String largeContent = remoteMessage.getData().get(Constants.FCM_BUNDLE_LARGE_CONTENT);

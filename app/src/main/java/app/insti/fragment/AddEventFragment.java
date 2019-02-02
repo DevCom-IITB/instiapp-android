@@ -38,9 +38,15 @@ import retrofit2.Response;
 public class AddEventFragment extends BaseFragment {
     public ValueCallback<Uri[]> uploadMessage;
     private ProgressDialog progressDialog;
+    private String query = "";
 
     public AddEventFragment() {
         // Required empty public constructor
+    }
+
+    public AddEventFragment withDate(String date) {
+        query += "&date=" + date;
+        return this;
     }
 
     @Override
@@ -92,6 +98,9 @@ public class AddEventFragment extends BaseFragment {
                 url = "https://" + host + "/edit-body/" + getArguments().getString("bodyId") + "?sandbox=true";
                 toolbar.setTitle("Update Organization");
             }
+
+            url += query;
+
             webView.loadUrl(url);
 
             webView.setOnTouchListener(new View.OnTouchListener() {

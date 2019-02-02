@@ -9,7 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:paddingLeft="15dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="5dp">
 
         <TextView
             style="@style/QuickLinksHeading"
