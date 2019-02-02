@@ -654,17 +654,16 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void addComplaint() {
-        final String complaint = "Complaint: \n" + descriptionAutoCompleteTextview.getText().toString();
+        final String complaint = descriptionAutoCompleteTextview.getText().toString();
         final String suggestion;
         final String locationDetails;
-        Log.i(TAG, "\nSuggestion: " + editTextSuggestions.getText().toString());
         if (!(editTextSuggestions.getText().toString().isEmpty())) {
-            suggestion = "\n\nSuggestion: \n" + editTextSuggestions.getText().toString();
+            suggestion = editTextSuggestions.getText().toString();
         } else {
             suggestion = "";
         }
         if (!(editTextLocationDetails.getText().toString().isEmpty())) {
-            locationDetails = "\n\nLocation Details: \n" + editTextLocationDetails.getText().toString();
+            locationDetails = editTextLocationDetails.getText().toString();
         } else {
             locationDetails = "";
         }
@@ -679,7 +678,7 @@ public class FileComplaintFragment extends Fragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Location = new LatLng(19.133810, 72.913257);
                             Address = "IIT Area";
-                            ComplaintCreateRequest complaintCreateRequest = new ComplaintCreateRequest(complaint + suggestion + locationDetails, Address, (float) Location.latitude, (float) Location.longitude, Tags, uploadedImagesUrl);
+                            ComplaintCreateRequest complaintCreateRequest = new ComplaintCreateRequest(complaint, suggestion, locationDetails, Address, (float) Location.latitude, (float) Location.longitude, Tags, uploadedImagesUrl);
                             RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
                             retrofitInterface.postComplaint("sessionid=" + getArguments().getString(Constants.SESSION_ID), complaintCreateRequest).enqueue(new Callback<ComplaintCreateResponse>() {
                                 @Override
@@ -715,7 +714,7 @@ public class FileComplaintFragment extends Fragment {
                     .create()
                     .show();
         } else {
-            ComplaintCreateRequest complaintCreateRequest = new ComplaintCreateRequest(complaint + suggestion + locationDetails, Address, (float) Location.latitude, (float) Location.longitude, Tags, uploadedImagesUrl);
+            ComplaintCreateRequest complaintCreateRequest = new ComplaintCreateRequest(complaint, suggestion, locationDetails, Address, (float) Location.latitude, (float) Location.longitude, Tags, uploadedImagesUrl);
             RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
             retrofitInterface.postComplaint("sessionid=" + getArguments().getString(Constants.SESSION_ID), complaintCreateRequest).enqueue(new Callback<ComplaintCreateResponse>() {
                 @Override

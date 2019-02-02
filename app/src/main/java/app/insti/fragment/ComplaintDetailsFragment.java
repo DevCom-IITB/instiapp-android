@@ -1,10 +1,12 @@
 package app.insti.fragment;
 
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -58,18 +60,25 @@ public class ComplaintDetailsFragment extends Fragment {
     private MapView mMapView;
     private TextView textViewUserName;
     private TextView textViewReportDate;
+    private LinearLayout linearLayoutSuggestions;
+    private LinearLayout linearLayoutLocationDetails;
     private TextView textViewLocation;
     private TextView textViewDescription;
+    private TextView textViewSuggestions;
+    private TextView textViewLocationDetails;
     private TextView textViewCommentLabel;
     private TextView textViewVoteUpLabel;
     private TextView textViewStatus;
     private LinearLayout tagsLayout;
     private EditText editTextComment;
     private ImageButton imageButtonSend;
+    private ImageButton notificationsoff;
+    private ImageButton notificationson;
     private CircleImageView circleImageViewCommentUserImage;
     private RecyclerView recyclerViewComments;
     private RecyclerView recyclerViewUpVotes;
     private Button buttonVoteUp;
+    private CircleImageView circleImageViewCreatorImage;
     private View mView;
 
     private static String sId, cId, uId, uProfileUrl;
@@ -121,6 +130,20 @@ public class ComplaintDetailsFragment extends Fragment {
             e.printStackTrace();
         }
 
+        notificationsoff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscribeToComplaint(detailedComplaint);
+            }
+        });
+
+        notificationson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscribeToComplaint(detailedComplaint);
+            }
+        });
+
         imageButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,10 +169,15 @@ public class ComplaintDetailsFragment extends Fragment {
 
     private void initialiseViews(View view) {
         nestedScrollView = view.findViewById(R.id.nestedScrollViewComplaintDetail);
+        circleImageViewCreatorImage = view.findViewById(R.id.circleImageViewCreatorImage);
+        linearLayoutSuggestions = view.findViewById(R.id.linearLayoutSuggestions);
+        linearLayoutLocationDetails = view.findViewById(R.id.linearLayoutLocationDetails);
         textViewUserName = view.findViewById(R.id.textViewUserName);
         textViewReportDate = view.findViewById(R.id.textViewReportDate);
         textViewLocation = view.findViewById(R.id.textViewLocation);
         textViewDescription = view.findViewById(R.id.textViewDescription);
+        textViewSuggestions = view.findViewById(R.id.textViewSuggestions);
+        textViewLocationDetails = view.findViewById(R.id.textViewLocationDetails);
         textViewStatus = view.findViewById(R.id.textViewStatus);
         textViewCommentLabel = view.findViewById(R.id.comment_label);
         textViewVoteUpLabel = view.findViewById(R.id.up_vote_label);
@@ -160,6 +188,8 @@ public class ComplaintDetailsFragment extends Fragment {
         recyclerViewUpVotes = view.findViewById(R.id.recyclerViewUpVotes);
         editTextComment = view.findViewById(R.id.edit_comment);
         imageButtonSend = view.findViewById(R.id.send_comment);
+        notificationsoff = view.findViewById(R.id.buttonnotificationsoff);
+        notificationson = view.findViewById(R.id.buttonnotificationson);
         circleImageViewCommentUserImage = view.findViewById(R.id.comment_user_image);
         buttonVoteUp = view.findViewById(R.id.buttonVoteUp);
         circleIndicator  = view.findViewById(R.id.indicator);
@@ -178,6 +208,7 @@ public class ComplaintDetailsFragment extends Fragment {
     private void populateViews() {
         try {
             buttonVoteUp.setText("UpVote");
+            Picasso.get().load(detailedComplaint.getComplaintCreatedBy().getUserProfilePictureUrl()).placeholder(R.drawable.user_placeholder).into(circleImageViewCreatorImage);
             textViewUserName.setText(detailedComplaint.getComplaintCreatedBy().getUserName());
             String time = DateTimeUtil.getDate(detailedComplaint.getComplaintReportDate().toString());
             Log.i(TAG, " time: " + time);
@@ -195,16 +226,31 @@ public class ComplaintDetailsFragment extends Fragment {
                 textViewStatus.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.colorGreen)));
                 textViewStatus.setTextColor(getContext().getResources().getColor(R.color.secondaryTextColor));
             }
+            addVotesToView(detailedComplaint);
+            addCommentsToView(detailedComplaint);
+            initViewPagerForImages(detailedComplaint);
             addTagsToView(detailedComplaint);
+            if (detailedComplaint.getComplaintsubscribed() == 1){
+                notificationson.setVisibility(View.VISIBLE);
+                notificationsoff.setVisibility(View.GONE);
+            } else if (detailedComplaint.getComplaintsubscribed() == 0){
+                notificationson.setVisibility(View.GONE);
+                notificationsoff.setVisibility(View.VISIBLE);
+            }
             if (detailedComplaint.getTags().isEmpty())
                 linearLayoutTags.setVisibility(View.GONE);
             textViewCommentLabel.setText("Comments (" + detailedComplaint.getComment().size() + ")");
             textViewVoteUpLabel.setText("Up Votes (" + detailedComplaint.getUsersUpVoted().size() + ")");
             Picasso.get().load(uProfileUrl).placeholder(R.drawable.user_placeholder).into(circleImageViewCommentUserImage);
-            addVotesToView(detailedComplaint);
-            addCommentsToView(detailedComplaint);
+            if (!(detailedComplaint.getComplaintSuggestions().equals(""))){
+                linearLayoutSuggestions.setVisibility(View.VISIBLE);
+                textViewSuggestions.setText(detailedComplaint.getComplaintSuggestions());
+            }
+            if (!(detailedComplaint.getComplaintLocationDetails().equals(""))){
+                linearLayoutLocationDetails.setVisibility(View.VISIBLE);
+                textViewLocationDetails.setText(detailedComplaint.getComplaintLocationDetails());
+            }
 
-            initViewPagerForImages(detailedComplaint);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -299,6 +345,66 @@ public class ComplaintDetailsFragment extends Fragment {
                 @Override
                 public void onFailure(Call<Venter.Complaint> call, Throwable t) {
                     Log.i(TAG, "failure in up vote: " + t.toString());
+                }
+            });
+        }
+    }
+
+    private void subscribeToComplaint(final Venter.Complaint detailedComplaint){
+        final RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        if (detailedComplaint.getComplaintsubscribed() == 1) {
+            AlertDialog.Builder unsubscribe = new AlertDialog.Builder(getActivity());
+            unsubscribe.setMessage("Are you sure you want to unsubscribe to this complaint?");
+            unsubscribe.setCancelable(true);
+
+            unsubscribe.setPositiveButton(
+                    "Yes",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            retrofitInterface.subscribetoComplaint("sessionid=" + sId, detailedComplaint.getComplaintID(), 0).enqueue(new Callback<Venter.Complaint>() {
+                                @Override
+                                public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
+                                    if (response.isSuccessful()) {
+                                        detailedComplaint.setComplaintsubscribed(0);
+                                        notificationson.setVisibility(View.GONE);
+                                        notificationsoff.setVisibility(View.VISIBLE);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
+                                    Log.i(TAG, "failure in subscribe: " + t.toString());
+                                }
+                            });
+                        }
+                    });
+
+            unsubscribe.setNegativeButton(
+                    "No",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+            AlertDialog alert11 = unsubscribe.create();
+            alert11.show();
+        } else if (detailedComplaint.getComplaintsubscribed() == 0){
+            retrofitInterface.subscribetoComplaint("sessionid=" + sId, detailedComplaint.getComplaintID(), 1).enqueue(new Callback<Venter.Complaint>() {
+                @Override
+                public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
+                    if (response.isSuccessful()) {
+                        detailedComplaint.setComplaintsubscribed(1);
+                        notificationsoff.setVisibility(View.GONE);
+                        notificationson.setVisibility(View.VISIBLE);
+                        Toast.makeText(getActivity(), "You are subscribed to this complaint!",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
+                    Log.i(TAG, "failure in subscribe: " + t.toString());
                 }
             });
         }

@@ -133,6 +133,9 @@ public interface RetrofitInterface {
     @GET("venter/complaints/{complaintId}/upvote")
     Call<Venter.Complaint> upVote(@Header("Cookie") String sessionId, @Path("complaintId") String complaintId, @Query("action") int count);
 
+    @GET("venter/complaints/{complaintId}/subscribe")
+    Call<Venter.Complaint> subscribetoComplaint(@Header("Cookie") String sessionId, @Path("complaintId") String complaintId, @Query("action") int count);
+
     @POST("venter/complaints")
     Call<ComplaintCreateResponse> postComplaint(@Header("Cookie") String sessionId, @Body ComplaintCreateRequest complaintCreateRequest);
 
