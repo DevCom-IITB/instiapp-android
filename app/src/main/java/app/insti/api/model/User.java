@@ -35,6 +35,9 @@ public class User implements CardInterface {
     @SerializedName("contact_no")
     private String userContactNumber;
 
+    @SerializedName("show_contact_no")
+    private Boolean showContactNumber;
+
     @SerializedName("about")
     private String userAbout;
 
@@ -64,7 +67,7 @@ public class User implements CardInterface {
 
     private String currentRole;
 
-    public User(@NonNull String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, List<Role> userRoles, List<Role> userInstituteRoles, List<Role> userFormerRoles, String userWebsiteURL, String userLDAPId, String hostel) {
+    public User(@NonNull String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, Boolean showContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, List<Role> userRoles, List<Role> userInstituteRoles, List<Role> userFormerRoles, String userWebsiteURL, String userLDAPId, String hostel, String currentRole) {
         this.userID = userID;
         this.userName = userName;
         this.userProfilePictureUrl = userProfilePictureUrl;
@@ -73,6 +76,7 @@ public class User implements CardInterface {
         this.userEmail = userEmail;
         this.userRollNumber = userRollNumber;
         this.userContactNumber = userContactNumber;
+        this.showContactNumber = showContactNumber;
         this.userAbout = userAbout;
         this.userFollowedBodies = userFollowedBodies;
         this.userFollowedBodiesID = userFollowedBodiesID;
@@ -82,6 +86,7 @@ public class User implements CardInterface {
         this.userWebsiteURL = userWebsiteURL;
         this.userLDAPId = userLDAPId;
         this.hostel = hostel;
+        this.currentRole = currentRole;
     }
 
     public static User fromString(String json) {
@@ -223,6 +228,14 @@ public class User implements CardInterface {
 
     public void setHostel(String hostel) {
         this.hostel = hostel;
+    }
+
+    public Boolean getShowContactNumber() {
+        return showContactNumber;
+    }
+
+    public void setShowContactNumber(Boolean showContactNumber) {
+        this.showContactNumber = showContactNumber;
     }
 
     public String getCurrentRole() {

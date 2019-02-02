@@ -41,6 +41,8 @@ public class NewsArticle implements Clickable {
         this.body = body;
     }
 
+    public String getId() { return articleID; }
+
     public String getArticleID() {
         return articleID;
     }

@@ -75,6 +75,8 @@ import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.fragment.UserFragment;
+import app.insti.notifications.NotificationId;
+import me.leolin.shortcutbadger.ShortcutBadger;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -195,6 +197,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Utils.notificationCache = new UpdatableList<>();
                     Utils.notificationCache.setList(response.body());
                     showNotifications();
+
+                    NotificationId.setCurrentCount(Utils.notificationCache.size());
+                    ShortcutBadger.applyCount(getApplicationContext(), NotificationId.getCurrentCount());
                 }
             }
         });
@@ -339,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 openEventFragment(id);
                 return;
             case DATA_TYPE_NEWS:
-                updateFragment(new NewsFragment());
+                updateFragment((new NewsFragment()).withId(id));
                 return;
         }
         Log.e("NOTIFICATIONS", "Server sent invalid notification?");
@@ -355,9 +360,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             switch (type) {
                 case DATA_TYPE_PT:
                     if (extra.contains("/trainingblog")) {
-                        openTrainingBlog();
+                        openTrainingBlog(id);
                     } else {
-                        openPlacementBlog();
+                        openPlacementBlog(id);
                     }
                     return;
             }
@@ -586,8 +591,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Open placement blog fragment
      */
     private void openPlacementBlog() {
+        openPlacementBlog(null);
+    }
+
+    private void openPlacementBlog(String id) {
         if (session.isLoggedIn()) {
             PlacementBlogFragment placementBlogFragment = new PlacementBlogFragment();
+            if (id != null) placementBlogFragment.withId(id);
             updateFragment(placementBlogFragment);
         } else {
             Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
@@ -595,8 +605,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void openTrainingBlog() {
+        openTrainingBlog(null);
+    }
+
+    private void openTrainingBlog(String id) {
         if (session.isLoggedIn()) {
             TrainingBlogFragment trainingBlogFragment = new TrainingBlogFragment();
+            if (id != null) trainingBlogFragment.withId(id);
             updateFragment(trainingBlogFragment);
         } else {
             Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();

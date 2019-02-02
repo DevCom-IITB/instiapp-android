@@ -74,6 +74,7 @@ public class CampusMapView extends SubsamplingScaleImageView {
     private float density;
     private boolean isFirstLoad = true;
     private SettingsManager settingsManager;
+    private String initialMarkerName = null;
 
     public CampusMapView(Context context) {
         this(context, null);
@@ -100,6 +101,14 @@ public class CampusMapView extends SubsamplingScaleImageView {
         RATIO_SHOW_PIN_TEXT = ratio;
     }
 
+    public String getInitialMarkerName() {
+        return initialMarkerName;
+    }
+
+    public void setInitialMarkerName(String initialMarkerName) {
+        this.initialMarkerName = initialMarkerName;
+    }
+
     private void initialise() {
         displayMetrics = getResources().getDisplayMetrics();
         density = displayMetrics.density;
@@ -119,11 +128,31 @@ public class CampusMapView extends SubsamplingScaleImageView {
         if (isFirstLoad) {
             Runnable runnable = new Runnable() {
                 public void run() {
-                    AnimationBuilder anim;
-                    anim = animateScaleAndCenter(
-                            getTargetMinScale(), MapFragment.MAP_CENTER);
-                    anim.withDuration(MapFragment.DURATION_INIT_MAP_ANIM)
-                            .start();
+                    // Center marker on start
+                    Marker centerMarker = null;
+
+                    // Iterate all markers
+                    if (getInitialMarkerName() != null) {
+                        for (Marker m : markerList) {
+                            if (m.getName().equals(getInitialMarkerName())) {
+                                centerMarker = m;
+                                break;
+                            }
+                        }
+                    }
+
+                    // If a marker is to be centered
+                    if (centerMarker != null) {
+                        setAndShowResultMarker(centerMarker);
+                    } else {
+                        AnimationBuilder anim;
+                        anim = animateScaleAndCenter(
+                                getTargetMinScale(), MapFragment.MAP_CENTER);
+                        anim.withDuration(MapFragment.DURATION_INIT_MAP_ANIM)
+                                .start();
+                    }
+
+                    // Don't do this again
                     isFirstLoad = false;
                 }
             };

@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name="app.insti.InstiAppApplication">
+        android:name="app.insti.InstiAppApplication"
+        android:networkSecurityConfig="@xml/network_security_config">
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -97,6 +98,12 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".NotificationBroadcastReceiver">
+            <intent-filter>
+                <action android:name="notification_cancelled"/>
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"

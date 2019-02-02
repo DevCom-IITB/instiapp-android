@@ -1,11 +1,13 @@
 package app.insti.fragment;
 
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,8 @@ import app.insti.adapter.NotificationsAdapter;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Notification;
+import app.insti.notifications.NotificationId;
+import me.leolin.shortcutbadger.ShortcutBadger;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -61,6 +65,9 @@ public class NotificationsFragment extends BottomSheetDialogFragment {
                 if (response.isSuccessful()) {
                     Utils.notificationCache.setList(response.body());
                     showNotifications(Utils.notificationCache);
+
+                    NotificationId.setCurrentCount(Utils.notificationCache.size());
+                    ShortcutBadger.applyCount(getContext().getApplicationContext(), NotificationId.getCurrentCount());
                 }
             }
         });
@@ -79,6 +86,40 @@ public class NotificationsFragment extends BottomSheetDialogFragment {
             notificationsRecyclerView = (RecyclerView) getView().findViewById(R.id.notifications_recycler_view);
             notificationsRecyclerView.setAdapter(notificationsAdapter);
             notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+            /* Handle swiping of notifications */
+            ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                @Override
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    return false;
+                }
+
+                public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                    if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                        // Fade out the view when it is swiped out of the parent
+                        final float alpha = 1.0f - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
+                        viewHolder.itemView.setAlpha(alpha);
+                        viewHolder.itemView.setTranslationX(dX);
+                    } else {
+                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                    }
+                }
+
+                @Override
+                public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+                    final int position = viewHolder.getAdapterPosition(); //swiped position
+                    final String id = Utils.notificationCache.get(position).getNotificationId().toString();
+                    Utils.notificationCache.remove(position);
+                    notificationsAdapter.notifyItemRemoved(position);
+                    Utils.getRetrofitInterface().markNotificationDeleted(Utils.getSessionIDHeader(), id).enqueue(new EmptyCallback<Void>());
+                    NotificationId.setCurrentCount(Utils.notificationCache.size());
+                    ShortcutBadger.applyCount(getContext().getApplicationContext(), NotificationId.getCurrentCount());
+                }
+            };
+
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+            itemTouchHelper.attachToRecyclerView(notificationsRecyclerView);
+
         } else {
             notificationsAdapter.setList(notifications);
             notificationsAdapter.notifyDataSetChanged();

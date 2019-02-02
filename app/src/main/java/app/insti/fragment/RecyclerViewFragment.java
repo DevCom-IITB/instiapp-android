@@ -1,10 +1,9 @@
 package app.insti.fragment;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -42,6 +41,12 @@ public abstract class RecyclerViewFragment<T extends Clickable, S extends Recycl
     private S adapter = null;
     boolean loading = false;
     private boolean allLoaded = false;
+    private String initId = null;
+
+    public RecyclerViewFragment<T, S> withId(String id) {
+        initId = id;
+        return this;
+    }
 
     /** Update the data clearing existing */
     protected void updateData() {
@@ -89,12 +94,40 @@ public abstract class RecyclerViewFragment<T extends Clickable, S extends Recycl
 
         if (adapter == null || recyclerView.getAdapter() != adapter) {
             initAdapter(result);
+
+            /* Scroll to current post */
+            if (initId != null) {
+                scrollToPosition(getPosition(result, initId));
+            }
         } else {
             adapter.setPosts(result);
             adapter.notifyDataSetChanged();
         }
 
         getActivity().findViewById(R.id.loadingPanel).setVisibility(GONE);
+    }
+
+    /** Set position of id in list of clickables */
+    private int getPosition(List<T> result, String id) {
+        for (int i = 0; i < result.size(); i++) {
+            if (result.get(i).getId().equals(id)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /** Scroll the recyclerview to position */
+    private void scrollToPosition(int i) {
+        if (i < 0) return;
+
+        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
+            @Override protected int getVerticalSnapPreference() {
+                return LinearSmoothScroller.SNAP_TO_START;
+            }
+        };
+        smoothScroller.setTargetPosition(i);
+        recyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
     }
 
     /** Initialize the adapter */

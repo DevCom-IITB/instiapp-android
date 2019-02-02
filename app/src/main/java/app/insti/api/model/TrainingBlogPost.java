@@ -37,6 +37,8 @@ public class TrainingBlogPost implements Clickable {
         this.published = published;
     }
 
+    public String getId() { return postID; }
+
     public String getPostID() {
         return postID;
     }

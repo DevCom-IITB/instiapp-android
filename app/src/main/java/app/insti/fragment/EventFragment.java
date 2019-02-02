@@ -11,6 +11,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
@@ -19,6 +20,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
@@ -154,8 +160,6 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         eventPicture = (ImageView) getActivity().findViewById(R.id.event_picture_2);
         TextView eventTitle = (TextView) getActivity().findViewById(R.id.event_page_title);
         TextView eventDate = (TextView) getActivity().findViewById(R.id.event_page_date);
-        TextView eventTime = (TextView) getActivity().findViewById(R.id.event_page_time);
-        TextView eventVenue = (TextView) getActivity().findViewById(R.id.event_page_venue);
         TextView eventDescription = (TextView) getActivity().findViewById(R.id.event_page_description);
         goingButton = getActivity().findViewById(R.id.going_button);
         interestedButton = getActivity().findViewById(R.id.interested_button);
@@ -175,13 +179,6 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         Date Date = new Date(timestamp.getTime());
         SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
         SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm");
-        eventDate.setText(simpleDateFormatDate.format(Date));
-        eventTime.setText(simpleDateFormatTime.format(Date));
-        StringBuilder eventVenueName = new StringBuilder();
-
-        for (Venue venue : event.getEventVenues()) {
-            eventVenueName.append(", ").append(venue.getVenueShortName());
-        }
 
         final List<Body> bodyList = event.getEventBodies();
         bodyRecyclerView = (RecyclerView) getActivity().findViewById(R.id.body_card_recycler_view);
@@ -189,9 +186,51 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         bodyRecyclerView.setAdapter(bodyAdapter);
         bodyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        // Common
+        final String timing = simpleDateFormatDate.format(Date) + " | " + simpleDateFormatTime.format(Date);
 
-        if (!eventVenueName.toString().equals(""))
-            eventVenue.setText(eventVenueName.toString().substring(2));
+        StringBuilder eventVenueName = new StringBuilder();
+        for (Venue venue : event.getEventVenues()) {
+            eventVenueName.append(", ").append(venue.getVenueShortName());
+        }
+
+        // Make the venues clickable
+        if (eventVenueName.length() > 0) {
+            // Get the whole string
+            SpannableString ss = new SpannableString(eventVenueName.toString().substring(2));
+
+            // Make each venue clickable
+            int i = 0;
+            for (final Venue venue : event.getEventVenues()) {
+                int length = venue.getVenueShortName().length();
+                ClickableSpan cs = new ClickableSpan() {
+                    @Override
+                    public void onClick(@NonNull View widget) {
+                        MapFragment mapFragment = new MapFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Constants.MAP_INITIAL_MARKER, venue.getVenueName());
+                        mapFragment.setArguments(bundle);
+                        ((MainActivity) getActivity()).updateFragment(mapFragment);
+                    }
+
+                    @Override
+                    public void updateDrawState(TextPaint ds) {
+                        super.updateDrawState(ds);
+                        if (getActivity() == null || !isAdded()) return;
+                        ds.setColor(getResources().getColor(R.color.primaryTextColor));
+                        ds.setUnderlineText(false);
+                    }
+                };
+                ss.setSpan(cs, i, i + length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                i += length + 2;
+            }
+
+            // Setup the text view
+            eventDate.setText(TextUtils.concat(timing + " | ", ss));
+            eventDate.setMovementMethod(LinkMovementMethod.getInstance());
+        } else {
+            eventDate.setText(TextUtils.concat(timing));
+        }
 
         interestedButton.setOnClickListener(getUESOnClickListener(1));
 

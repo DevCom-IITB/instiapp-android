@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.transition.Fade;
 import android.support.transition.Slide;
@@ -13,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -246,5 +248,11 @@ public final class Utils {
                 navigationView.setCheckedItem(id);
             }
         }
+    }
+
+    @RequiresApi(21)
+    public static void clearCookies(Context context) {
+        CookieManager.getInstance().removeAllCookies(null);
+        CookieManager.getInstance().flush();
     }
 }
