@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -116,6 +117,14 @@ public class CalendarFragment extends BaseFragment {
         // Show the fab if we can make events
         if (((MainActivity) getActivity()).createEventAccess()) {
             fab.show();
+            NestedScrollView nsv = view.findViewById(R.id.calendar_nsv);
+            nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    if (scrollY > oldScrollY) fab.hide();
+                    else fab.show();
+                }
+            });
         }
 
         return view;
