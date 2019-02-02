@@ -22,6 +22,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -159,8 +160,6 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         eventPicture = (ImageView) getActivity().findViewById(R.id.event_picture_2);
         TextView eventTitle = (TextView) getActivity().findViewById(R.id.event_page_title);
         TextView eventDate = (TextView) getActivity().findViewById(R.id.event_page_date);
-        TextView eventTime = (TextView) getActivity().findViewById(R.id.event_page_time);
-        TextView eventVenue = (TextView) getActivity().findViewById(R.id.event_page_venue);
         TextView eventDescription = (TextView) getActivity().findViewById(R.id.event_page_description);
         goingButton = getActivity().findViewById(R.id.going_button);
         interestedButton = getActivity().findViewById(R.id.interested_button);
@@ -180,13 +179,6 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         Date Date = new Date(timestamp.getTime());
         SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
         SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm");
-        eventDate.setText(simpleDateFormatDate.format(Date));
-        eventTime.setText(simpleDateFormatTime.format(Date));
-        StringBuilder eventVenueName = new StringBuilder();
-
-        for (Venue venue : event.getEventVenues()) {
-            eventVenueName.append(", ").append(venue.getVenueShortName());
-        }
 
         final List<Body> bodyList = event.getEventBodies();
         bodyRecyclerView = (RecyclerView) getActivity().findViewById(R.id.body_card_recycler_view);
@@ -194,8 +186,16 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         bodyRecyclerView.setAdapter(bodyAdapter);
         bodyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        // Common
+        final String timing = simpleDateFormatDate.format(Date) + " | " + simpleDateFormatTime.format(Date);
+
+        StringBuilder eventVenueName = new StringBuilder();
+        for (Venue venue : event.getEventVenues()) {
+            eventVenueName.append(", ").append(venue.getVenueShortName());
+        }
+
         // Make the venues clickable
-        if (!eventVenueName.toString().equals("")) {
+        if (eventVenueName.length() > 0) {
             // Get the whole string
             SpannableString ss = new SpannableString(eventVenueName.toString().substring(2));
 
@@ -226,8 +226,10 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
             }
 
             // Setup the text view
-            eventVenue.setText(ss);
-            eventVenue.setMovementMethod(LinkMovementMethod.getInstance());
+            eventDate.setText(TextUtils.concat(timing + " | ", ss));
+            eventDate.setMovementMethod(LinkMovementMethod.getInstance());
+        } else {
+            eventDate.setText(TextUtils.concat(timing));
         }
 
         interestedButton.setOnClickListener(getUESOnClickListener(1));
