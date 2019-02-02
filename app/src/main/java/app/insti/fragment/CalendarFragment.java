@@ -105,28 +105,6 @@ public class CalendarFragment extends BaseFragment {
             }
         });
 
-        // Handle fab click
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddEventFragment addEventFragment = new AddEventFragment();
-                ((MainActivity) getActivity()).updateFragment(addEventFragment);
-            }
-        });
-
-        // Show the fab if we can make events
-        if (((MainActivity) getActivity()).createEventAccess()) {
-            fab.show();
-            NestedScrollView nsv = view.findViewById(R.id.calendar_nsv);
-            nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-                @Override
-                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                    if (scrollY > oldScrollY) fab.hide();
-                    else fab.show();
-                }
-            });
-        }
-
         return view;
     }
 
@@ -137,15 +115,40 @@ public class CalendarFragment extends BaseFragment {
         updateEvents(CalendarDay.today(), true);
     }
 
+    /** Show the fab if we can make events */
+    private void showFab() {
+        if (((MainActivity) getActivity()).createEventAccess()) {
+            fab.show();
+            NestedScrollView nsv = view.findViewById(R.id.calendar_nsv);
+            nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    if (scrollY > oldScrollY) fab.hide();
+                    else fab.show();
+                }
+            });
+
+            // Handle fab click
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AddEventFragment addEventFragment = new AddEventFragment();
+                    ((MainActivity) getActivity()).updateFragment(addEventFragment);
+                }
+            });
+        }
+    }
+
+
     /** Convert CalendarDay to Date */
-    public Date toDate(CalendarDay date) throws ParseException {
+    private Date toDate(CalendarDay date) throws ParseException {
         String sdate = date.getDay() + "/" + date.getMonth() + "/" + date.getYear();
         Date showDate = new SimpleDateFormat("dd/M/yyyy").parse(sdate);
         return showDate;
     }
 
     /** Decorator for Calendar */
-    public class EventDecorator implements DayViewDecorator {
+    private class EventDecorator implements DayViewDecorator {
         private final int color = getResources().getColor(R.color.colorAccent);
         private final int white = getResources().getColor(R.color.primaryTextColor);
         private final HashSet<CalendarDay> dates;
@@ -234,6 +237,9 @@ public class CalendarFragment extends BaseFragment {
                         // Select today's date
                         final MaterialCalendarView matCalendarView = view.findViewById(R.id.simpleCalendarView);
                         matCalendarView.setSelectedDate(CalendarDay.today());
+
+                        // Show the fab
+                        showFab();
                     }
 
                     // Generate the decorators
