@@ -45,6 +45,7 @@ dependencies {
     implementation "com.android.support:design:${supportLibVersion}"
     implementation "com.android.support:exifinterface:${supportLibVersion}"
     implementation "com.android.support:support-v4:${supportLibVersion}"
+    implementation "com.android.support:preference-v7:${supportLibVersion}"
     implementation "com.google.android.gms:play-services-maps:${playServicesVersion}"
     implementation "com.google.android.gms:play-services-location:${playServicesVersion}"
     implementation "com.google.android.gms:play-services-places:${playServicesVersion}"

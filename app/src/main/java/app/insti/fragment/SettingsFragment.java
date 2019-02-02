@@ -1,28 +1,19 @@
 package app.insti.fragment;
 
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.SessionManager;
 import app.insti.Utils;
 import app.insti.activity.LoginActivity;
-import app.insti.activity.MainActivity;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.User;
 import app.insti.api.request.UserShowContactPatchRequest;
@@ -30,169 +21,145 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class SettingsFragment extends Fragment {
-    User user;
-
-    public SettingsFragment() {
-        // Required empty public constructor
-    }
+public class SettingsFragment extends PreferenceFragmentCompat {
+    SwitchPreferenceCompat showContactPref;
+    Preference profilePref;
+    Preference feedbackPref;
+    Preference aboutPref;
+    Preference logoutPref;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.preferences, rootKey);
+
+        // Show contact number
+        showContactPref = (SwitchPreferenceCompat) findPreference("show_contact");
+        showContactPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                toggleShowContact((SwitchPreferenceCompat) preference, o);
+                return false;
+            }
+        });
+
+        // Update Profile
+        profilePref = findPreference("profile");
+        profilePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                openWebURL("https://gymkhana.iitb.ac.in/sso/user");
+                return false;
+            }
+        });
+
+        // Feedback
+        feedbackPref = findPreference("feedback");
+        feedbackPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                openWebURL("https://insti.app/feedback");
+                return false;
+            }
+        });
+
+        // About
+        aboutPref = findPreference("about");
+        aboutPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                openAbout();
+                return false;
+            }
+        });
+
+        // Logout
+        logoutPref = findPreference("logout");
+        logoutPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                logout();
+                return false;
+            }
+        });
+
+        // Disable buttons if not logged in
+        final SessionManager sessionManager = new SessionManager(getContext());
+        if (!sessionManager.isLoggedIn()) {
+            showContactPref.setVisible(false);
+            logoutPref.setVisible(false);
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
+        // Set toolbar title
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Settings");
         Utils.setSelectedMenuItem(getActivity(), R.id.nav_settings);
 
+        // Get the user id
         Bundle bundle = getArguments();
-
         String userID = bundle.getString(Constants.USER_ID);
 
-        populateViews();
-
+        // Fill in the user
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        retrofitInterface.getUser(Utils.getSessionIDHeader(), userID).enqueue(new Callback<User>() {
+        retrofitInterface.getUser(Utils.getSessionIDHeader(), userID).enqueue(new EmptyCallback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
-                    user = response.body();
-                    populateUserCard();
-                    setupContactSwitch(user);
+                    User user = response.body();
+                    showContactPref.setChecked(user.getShowContactNumber());
+                }
+            }
+        });
+
+    }
+
+    public void toggleShowContact(final SwitchPreferenceCompat showContactPref, Object o) {
+        final boolean isChecked = (boolean) o;
+        showContactPref.setEnabled(false);
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.patchUserMe(Utils.getSessionIDHeader(), new UserShowContactPatchRequest(isChecked)).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    showContactPref.setChecked(isChecked);
+                    showContactPref.setEnabled(true);
+                } else {
+                    showContactPref.setChecked(!isChecked);
+                    showContactPref.setEnabled(true);
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-
+                showContactPref.setChecked(!isChecked);
+                showContactPref.setEnabled(true);
             }
         });
     }
 
-    private void setupContactSwitch(User user) {
-        final Switch showContactSwitch = getView().findViewById(R.id.show_contact_switch);
-        showContactSwitch.setVisibility(View.VISIBLE);
-        showContactSwitch.setChecked(user.getShowContactNumber());
-
-        showContactSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                showContactSwitch.setEnabled(false);
-                RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-                retrofitInterface.patchUserMe(Utils.getSessionIDHeader(), new UserShowContactPatchRequest(isChecked)).enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
-                        if (response.isSuccessful()) {
-                            showContactSwitch.setEnabled(true);
-                        } else {
-                            showContactSwitch.setChecked(!isChecked);
-                            showContactSwitch.setEnabled(true);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<User> call, Throwable t) {
-                        showContactSwitch.setChecked(!isChecked);
-                        showContactSwitch.setEnabled(true);
-                    }
-                });
-            }
-        });
+    public void openAbout() {
+        Utils.updateFragment(new AboutFragment(), getActivity());
     }
 
-    private void populateUserCard() {
-        if (getActivity() == null || getView() == null) {
-            return;
-        }
-        ImageView userProfilePictureImageView = getActivity().findViewById(R.id.user_card_avatar);
-        TextView userNameTextView = getActivity().findViewById(R.id.user_card_name);
-
-        Picasso.get()
-                .load(user.getUserProfilePictureUrl())
-                .resize(800, 0)
-                .placeholder(R.drawable.user_placeholder)
-                .into(userProfilePictureImageView);
-        userNameTextView.setText(user.getUserName());
-
-        getView().findViewById(R.id.role_card_layout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UserFragment userFragment = UserFragment.newInstance(user.getUserID());
-                ((MainActivity)getActivity()).updateFragment(userFragment);
-            }
-        });
-    }
-
-    private void populateViews() {
-        // Check if we exist
-        if (getActivity() == null || getView() == null) return;
-
-        Button updateProfileButton = getView().findViewById(R.id.settings_update_profile);
-        Button feedbackButton = getView().findViewById(R.id.settings_feedback);
-        Button aboutButton = getView().findViewById(R.id.settings_about);
-        Button logoutButton = getView().findViewById(R.id.settings_logout);
-
-        updateProfileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openWebURL("https://gymkhana.iitb.ac.in/sso/user");
-            }
-        });
-
-        feedbackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openWebURL("https://insti.app/feedback");
-            }
-        });
-
-        aboutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.updateFragment(new AboutFragment(), getActivity());
-            }
-        });
-
-        // Logged in user vs Guest
+    public void logout() {
         final SessionManager sessionManager = new SessionManager(getContext());
-        if (sessionManager.isLoggedIn()) {
-            logoutButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-                    retrofitInterface.logout(Utils.getSessionIDHeader()).enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            if (response.isSuccessful()) {
-                                sessionManager.logout();
-                                Utils.clearCookies(getActivity());
-                                Intent intent = new Intent(getContext(), LoginActivity.class);
-                                startActivity(intent);
-                                getActivity().finish();
-                            }
-                            //Server Error
-                        }
-
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            //Network Error
-                        }
-                    });
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.logout(Utils.getSessionIDHeader()).enqueue(new EmptyCallback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    sessionManager.logout();
+                    Utils.clearCookies(getActivity());
+                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
-            });
-        } else {
-            logoutButton.setVisibility(View.GONE);
-            getView().findViewById(R.id.role_card_layout).setVisibility(View.GONE);
-        }
+            }
+        });
     }
 
     private void openWebURL(String URL) {

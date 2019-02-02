@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        app:key="show_contact"
+        app:title="Show contact number"
+        app:summary="Toggle visibility on your profile"
+        android:icon="@drawable/ic_local_phone_gray_36dp"/>
+
+    <Preference
+        app:key="profile"
+        app:title="Update Profile"
+        app:summary="Update personal details on SSO"
+        android:icon="@drawable/baseline_account_circle_gray_36"/>
+
+    <Preference
+        app:key="feedback"
+        app:title="Send feedback"
+        app:summary="Report technical issues or suggest new features"
+        android:icon="@drawable/baseline_feedback_gray_36"/>
+
+    <Preference
+        app:key="about"
+        app:title="About"
+        app:summary="The InstiApp Team"
+        android:icon="@drawable/baseline_info_gray_36"/>
+
+    <Preference
+        app:key="logout"
+        app:title="Logout"
+        app:summary="Sign out of InstiApp"
+        android:icon="@drawable/baseline_exit_to_app_gray_36"/>
+
+</PreferenceScreen>
