@@ -64,6 +64,7 @@ public class CalendarFragment extends BaseFragment {
     private FeedAdapter feedAdapter = null;
     private List<Event> events = new ArrayList<>();
     private HashSet<CalendarDay> haveMonths = new HashSet<>();
+    private boolean initialized = false;
 
 
     public CalendarFragment() {
@@ -178,7 +179,13 @@ public class CalendarFragment extends BaseFragment {
 
     private void updateEvents(CalendarDay calendarDay, final boolean setToday) {
         // Do not make duplicate calls
-        if (!setToday && haveMonths.contains(calendarDay)) return;
+        if (haveMonths.contains(calendarDay)) {
+            if (!setToday) {
+                return;
+            } else {
+                setupCalendar(true);
+            }
+        }
         haveMonths.add(calendarDay);
 
         // Parsers
@@ -186,9 +193,6 @@ public class CalendarFragment extends BaseFragment {
         final TimeZone utc = TimeZone.getTimeZone("UTC");
         final SimpleDateFormat isoFormatter = new SimpleDateFormat(ISO_FORMAT);
         isoFormatter.setTimeZone(utc);
-
-        // Get the date to start at
-        final Date today = new Date();
 
         // Get the start date
         final Date startDate;
@@ -223,35 +227,7 @@ public class CalendarFragment extends BaseFragment {
                         if (!events.contains(event)) events.add(event);
                     }
 
-                    // Make the calendar visible if it isn't
-                    final LinearLayout calendarLayout = getView().findViewById(R.id.calendar_layout);
-                    if (calendarLayout.getVisibility() == View.GONE) {
-                        calendarLayout.setVisibility(VISIBLE);
-                        getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                        AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
-                        anim.setDuration(250);
-                        calendarLayout.startAnimation(anim);
-                    }
-
-                    // Initialize to show today's date
-                    if (setToday) {
-                        // Show today
-                        try {
-                            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                            Date todayWithZeroTime = formatter.parse(formatter.format(today));
-                            showEventsForDate(todayWithZeroTime);
-                        } catch (ParseException ignored) {}
-
-                        // Select today's date
-                        final MaterialCalendarView matCalendarView = view.findViewById(R.id.simpleCalendarView);
-                        matCalendarView.setSelectedDate(CalendarDay.today());
-
-                        // Show the fab
-                        showFab();
-                    }
-
-                    // Generate the decorators
-                    showHeatMap(events);
+                    setupCalendar(setToday);
                 }
             }
 
@@ -261,6 +237,42 @@ public class CalendarFragment extends BaseFragment {
                 Toast.makeText(getContext(), "Failed to fetch events!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /** Show the calendar */
+    private void setupCalendar(boolean setToday) {
+        // Make the calendar visible if it isn't
+        final LinearLayout calendarLayout = getView().findViewById(R.id.calendar_layout);
+        if (calendarLayout.getVisibility() == View.GONE) {
+            calendarLayout.setVisibility(VISIBLE);
+            getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+            AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
+            anim.setDuration(250);
+            calendarLayout.startAnimation(anim);
+        }
+
+        // Initialize to show today's date
+        final MaterialCalendarView matCalendarView = view.findViewById(R.id.simpleCalendarView);
+        if (setToday) {
+            // Select today's date
+            if (!initialized) {
+                initialized = true;
+                matCalendarView.setSelectedDate(CalendarDay.today());
+            }
+
+            // Show the fab
+            showFab();
+        }
+
+        // Show today
+        try {
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Date todayWithZeroTime = formatter.parse(formatter.format(toDate(matCalendarView.getSelectedDate())));
+            showEventsForDate(todayWithZeroTime);
+        } catch (ParseException ignored) {}
+
+        // Generate the decorators
+        showHeatMap(events);
     }
 
     /** Build and show the heat map from the list of events */
