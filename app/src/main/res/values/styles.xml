@@ -47,6 +47,7 @@
         <item name="android:paddingBottom">8dp</item>
         <item name="android:textColor">?attr/themeColorInverse</item>
         <item name="android:textSize">36sp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="QuickLink">
