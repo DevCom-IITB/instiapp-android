@@ -135,7 +135,9 @@ public class CalendarFragment extends BaseFragment {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AddEventFragment addEventFragment = new AddEventFragment();
+                    CalendarDay day = ((MaterialCalendarView) view.findViewById(R.id.simpleCalendarView)).getSelectedDate();
+                    String date = day.getYear() + "-" + day.getMonth() + "-" + day.getDay();
+                    AddEventFragment addEventFragment = (new AddEventFragment()).withDate(date);
                     ((MainActivity) getActivity()).updateFragment(addEventFragment);
                 }
             });
