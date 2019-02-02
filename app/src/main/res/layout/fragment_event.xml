@@ -235,7 +235,7 @@
             android:layout_margin="16dp"
             android:src="@drawable/ic_edit_black_24dp"
             android:tint="@android:color/black"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
     </RelativeLayout>
 
