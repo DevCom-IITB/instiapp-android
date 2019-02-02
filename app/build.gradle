@@ -36,6 +36,7 @@ ext {
     sectionedRecyclerViewVersion = '1.2.0'
     lottieVersion = '2.7.0'
     shortcutBadgerVersion = '1.1.22@aar'
+    materialCalendarViewVersion = '2.0.1'
 }
 
 dependencies {
@@ -61,5 +62,6 @@ dependencies {
     implementation "io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:${sectionedRecyclerViewVersion}"
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation "me.leolin:ShortcutBadger:$shortcutBadgerVersion"
+    implementation "com.github.prolificinteractive:material-calendarview:${materialCalendarViewVersion}"
 }
 apply plugin: 'com.google.gms.google-services'
