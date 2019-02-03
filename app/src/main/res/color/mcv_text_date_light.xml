@@ -4,13 +4,13 @@
     android:exitFadeDuration="@android:integer/config_shortAnimTime">
 
     <item android:state_checked="true"
-        android:color="@color/secondaryTextColor" />
+        android:color="?attr/themeColorInverse" />
 
     <item android:state_pressed="true"
-        android:color="@color/secondaryTextColor" />
+        android:color="?attr/themeColorInverse" />
 
     <item android:state_enabled="false"
         android:color="#BBBBBB" />
 
-    <item android:color="@color/secondaryTextColor" />
+    <item android:color="?attr/themeColorInverse" />
 </selector>
