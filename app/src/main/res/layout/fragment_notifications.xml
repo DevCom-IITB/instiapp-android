@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="app.insti.fragment.NotificationsFragment">
+    tools:context="app.insti.fragment.NotificationsFragment"
+    android:background="?attr/themeColor">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/notifications_recycler_view"

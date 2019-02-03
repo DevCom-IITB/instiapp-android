@@ -67,7 +67,9 @@
                         android:maxLines="1"
                         android:scrollHorizontally="true"
                         android:text="Subtitle"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textColor="@color/colorGray" />
+
                 </LinearLayout>
 
             </LinearLayout>
