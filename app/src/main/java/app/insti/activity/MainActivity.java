@@ -645,7 +645,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         /* Animate only for UserFragment */
         if (fragment instanceof UserFragment) {
-            transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+            transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out_down);
         }
 
         transaction.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());
