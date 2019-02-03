@@ -75,7 +75,8 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
     ImageButton shareEventButton;
     RecyclerView bodyRecyclerView;
     String TAG = "EventFragment";
-    int appBarOffset = 0;
+    private int appBarOffset = 0;
+    private boolean creatingView = false;
 
     // Hold a reference to the current animator,
     // so that it can be canceled mid-way.
@@ -127,6 +128,9 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Check if we are not returning after a pause
+        creatingView = true;
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_event, container, false);
     }
@@ -154,9 +158,10 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(event.getEventName());
 
-        if (bundle.getBoolean(Constants.NO_SHARED_ELEM, true)) {
+        if (creatingView && bundle.getBoolean(Constants.NO_SHARED_ELEM, true)) {
             this.transitionEnd();
         }
+        creatingView = false;
 
         setupAppBarLayout();
     }
@@ -205,7 +210,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         webEventButton = getActivity().findViewById(R.id.web_event_button);
         shareEventButton = getActivity().findViewById(R.id.share_event_button);
 
-        if (event.isEventBigImage()) {
+        if (event.isEventBigImage() || !creatingView) {
             Picasso.get().load(event.getEventImageURL()).into(eventPicture);
         } else {
             Picasso.get().load(Utils.resizeImageUrl(event.getEventImageURL())).into(eventPicture);
