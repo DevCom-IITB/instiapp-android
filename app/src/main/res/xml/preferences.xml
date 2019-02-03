@@ -23,7 +23,7 @@
 
     <Preference
         app:key="feedback"
-        app:title="Send feedback"
+        app:title="Send Feedback"
         app:summary="Report technical issues or suggest new features"
         android:icon="@drawable/baseline_feedback_gray_36"/>
 
