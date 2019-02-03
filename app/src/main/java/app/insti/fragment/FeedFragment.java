@@ -36,7 +36,7 @@ public class FeedFragment extends BaseFragment {
     private SwipeRefreshLayout feedSwipeRefreshLayout;
     private FloatingActionButton fab;
     LinearLayoutManager mLayoutManager;
-    public static int index = -1, top = -1;
+    private int index = -1, top = -1;
     private FeedAdapter feedAdapter = null;
 
     public FeedFragment() {

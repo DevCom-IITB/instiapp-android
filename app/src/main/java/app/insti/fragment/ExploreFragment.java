@@ -50,13 +50,11 @@ public class ExploreFragment extends Fragment {
 
     private static List<CardInterface> cards = new ArrayList<>();
 
-    private static int index;
-    private static int top;
-
     private String sessionId;
     private GenericAdapter genericAdapter;
 
     private String currentQuery = null;
+    private int index = -1, top = -1;
 
     public ExploreFragment() {
         // Required empty public constructor
