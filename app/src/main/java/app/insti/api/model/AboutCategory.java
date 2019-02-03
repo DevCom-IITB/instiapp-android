@@ -64,6 +64,7 @@ public class AboutCategory extends StatelessSection {
         IndividualViewHolder individualViewHolder = (IndividualViewHolder) holder;
         Picasso.get()
                 .load("https://insti.app/team-pics/" + individual.getImageName())
+                .placeholder(R.drawable.user_placeholder)
                 .resize(0, 300)
                 .into(individualViewHolder.pictureImageView);
         individualViewHolder.nameTextView.setText(individual.getName());
