@@ -47,7 +47,7 @@
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/event_scrollview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
@@ -210,7 +210,8 @@
                         android:id="@+id/body_card_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp" />
+                        android:layout_marginTop="10dp"
+                        android:nestedScrollingEnabled="false" />
                 </LinearLayout>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
