@@ -8,8 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="themeColor">#FFFFFF</item>
         <item name="themeColorInverse">#000000</item>
+        <item name="themeGray">#666666</item>
         <item name="newsColor">#F2F2F2</item>
         <item name="urlColor">@color/colorPrimary</item>
+        <item name="drawerCheckedColor">@color/colorPrimary</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -25,8 +27,10 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="themeColor">#000000</item>
         <item name="themeColorInverse">#FFFFFF</item>
+        <item name="themeGray">#aaaaaa</item>
         <item name="newsColor">#00000000</item>
         <item name="urlColor">@color/colorAccent</item>
+        <item name="drawerCheckedColor">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

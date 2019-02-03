@@ -39,7 +39,9 @@ limitations under the License.
 
     <attr name="themeColor" format="reference|color" />
     <attr name="themeColorInverse" format="reference|color" />
+    <attr name="themeGray" format="reference|color" />
     <attr name="newsColor" format="reference|color" />
     <attr name="urlColor" format="reference|color" />
+    <attr name="drawerCheckedColor" format="reference|color" />
 
 </resources>
