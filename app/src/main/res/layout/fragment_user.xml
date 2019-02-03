@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/container_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -60,21 +60,6 @@
                     android:textSize="16sp" />
 
             </LinearLayout>
-
-            <ImageButton
-                android:id="@+id/share_user_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Share User"
-                android:padding="16dp"
-                android:src="@drawable/ic_menu_share"
-                android:tint="?attr/themeColorInverse"
-                android:visibility="gone" />
-
         </LinearLayout>
 
         <android.support.design.widget.TabLayout
@@ -104,6 +89,16 @@
 
     </LinearLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/share_user_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_menu_share"
+        android:tint="@android:color/black"
+        android:visibility="invisible" />
+
     <include layout="@layout/loading_panel" />
 
     <app.insti.TouchImageView
@@ -112,4 +107,4 @@
         android:layout_height="match_parent"
         android:contentDescription="Zoomed Image"
         android:visibility="gone" />
-</RelativeLayout>
+</FrameLayout>
