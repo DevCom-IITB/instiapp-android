@@ -5,6 +5,15 @@
     tools:context="app.insti.fragment.NotificationsFragment"
     android:background="?attr/themeColor">
 
+    <TextView
+        android:id="@+id/no_notifs"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:visibility="gone"
+        android:text="No notifications for now!" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/notifications_recycler_view"
         android:layout_width="match_parent"

@@ -3,6 +3,7 @@ package app.insti.fragment;
 
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -73,12 +75,21 @@ public class NotificationsFragment extends BottomSheetDialogFragment {
         });
     }
 
-    private void showNotifications(final List<Notification> notifications) {
+    private void showNotifications(@Nullable final List<Notification> notifications) {
         /* Check if activity is done with */
         if (getActivity() == null || getView() == null) return;
 
         /* Hide loader */
         getView().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+
+        /* Check if there's nothing to show */
+        TextView noNotifs = getView().findViewById(R.id.no_notifs);
+        if (notifications == null || notifications.size() == 0) {
+            noNotifs.setVisibility(View.VISIBLE);
+            return;
+        } else {
+            noNotifs.setVisibility(View.GONE);
+        }
 
         /* Initialize */
         if (notificationsAdapter == null) {
@@ -114,6 +125,7 @@ public class NotificationsFragment extends BottomSheetDialogFragment {
                     Utils.getRetrofitInterface().markNotificationDeleted(Utils.getSessionIDHeader(), id).enqueue(new EmptyCallback<Void>());
                     NotificationId.setCurrentCount(Utils.notificationCache.size());
                     ShortcutBadger.applyCount(getContext().getApplicationContext(), NotificationId.getCurrentCount());
+                    if (Utils.notificationCache.size() == 0) showNotifications(null);
                 }
             };
 
