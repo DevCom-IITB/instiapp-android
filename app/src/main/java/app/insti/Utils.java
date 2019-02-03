@@ -3,6 +3,7 @@ package app.insti;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -13,6 +14,7 @@ import android.support.transition.Transition;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.TypedValue;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.widget.ImageView;
@@ -248,6 +250,13 @@ public final class Utils {
                 navigationView.setCheckedItem(id);
             }
         }
+    }
+
+    public static int getAttrColor(Context context, int attrId) {
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(attrId, typedValue, true);
+        return typedValue.data;
     }
 
     @RequiresApi(21)

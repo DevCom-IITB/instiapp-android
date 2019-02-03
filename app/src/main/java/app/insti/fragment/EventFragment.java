@@ -27,9 +27,7 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,7 +118,6 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
 
         // Set font face and color of badge
         spannable.setSpan(new RelativeSizeSpan(0.75f), text.length(), text.length() + 1 + countString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(Color.DKGRAY), text.length(), text.length() + 1 + countString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
         return spannable;
     }
@@ -358,9 +355,23 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         });
     }
 
+    /** Setup button colors depending on status */
     void setFollowButtonColors(int status) {
-        interestedButton.setBackgroundColor(getResources().getColor(status == Constants.STATUS_INTERESTED ? R.color.colorAccent : R.color.colorWhite));
-        goingButton.setBackgroundColor(getResources().getColor(status == Constants.STATUS_GOING ? R.color.colorAccent : R.color.colorWhite));
+        // Get background colors
+        final int themeColor = Utils.getAttrColor(getContext(), R.attr.themeColor);
+        final int accent = getResources().getColor(R.color.colorAccent);
+
+        // Get font colors
+        final int themeColorInverse = Utils.getAttrColor(getContext(), R.attr.themeColorInverse);
+        final int black = Color.BLACK;
+
+        // Set background colors
+        interestedButton.setBackgroundColor(status == Constants.STATUS_INTERESTED ? accent : themeColor);
+        goingButton.setBackgroundColor(status == Constants.STATUS_GOING ? accent : themeColor);
+
+        // Set font colors
+        interestedButton.setTextColor(status == Constants.STATUS_INTERESTED ? black : themeColorInverse);
+        goingButton.setTextColor(status == Constants.STATUS_GOING ? black : themeColorInverse);
 
         // Show badges
         interestedButton.setText(getCountBadgeSpannable("INTERESTED", event.getEventInterestedCount()));

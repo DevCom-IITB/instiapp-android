@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Typeface;
@@ -40,7 +39,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.StyleSpan;
 import android.text.util.Linkify;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -241,10 +239,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                 if (response.isSuccessful()) {
 
                     // Setup fade animation for background
-                    TypedValue typedValue = new TypedValue();
-                    Resources.Theme theme = getContext().getTheme();
-                    theme.resolveAttribute(R.attr.themeColor, typedValue, true);
-                    int colorFrom = typedValue.data;
+                    int colorFrom = Utils.getAttrColor(getContext(), R.attr.themeColor);
                     int colorTo = getResources().getColor(R.color.colorGray);
                     ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
                     colorAnimation.setDuration(250); // milliseconds

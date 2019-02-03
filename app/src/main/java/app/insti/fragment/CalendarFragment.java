@@ -156,7 +156,8 @@ public class CalendarFragment extends BaseFragment {
     /** Decorator for Calendar */
     private class EventDecorator implements DayViewDecorator {
         private final int color = getResources().getColor(R.color.colorAccent);
-        private final int white = getResources().getColor(R.color.primaryTextColor);
+        private final int white = Utils.getAttrColor(getContext(), R.attr.themeColor);
+
         private final HashSet<CalendarDay> dates;
         private final int alpha;
 
