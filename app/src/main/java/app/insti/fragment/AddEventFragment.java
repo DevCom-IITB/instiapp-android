@@ -146,7 +146,7 @@ public class AddEventFragment extends BaseFragment {
         eventFragment.setArguments(bundle);
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+        transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out_down);
         transaction.replace(R.id.framelayout_for_fragment, eventFragment, eventFragment.getTag());
         transaction.addToBackStack(eventFragment.getTag()).commit();
     }
@@ -155,7 +155,7 @@ public class AddEventFragment extends BaseFragment {
         BodyFragment bodyFragment = BodyFragment.newInstance(body);
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+        transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out_down);
         transaction.replace(R.id.framelayout_for_fragment, bodyFragment, bodyFragment.getTag());
         transaction.addToBackStack(bodyFragment.getTag()).commit();
     }

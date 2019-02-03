@@ -12,6 +12,8 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
@@ -73,6 +75,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
     ImageButton shareEventButton;
     RecyclerView bodyRecyclerView;
     String TAG = "EventFragment";
+    int appBarOffset = 0;
 
     // Hold a reference to the current animator,
     // so that it can be canceled mid-way.
@@ -144,7 +147,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
 
         Bundle bundle = getArguments();
         String eventJson = bundle.getString(Constants.EVENT_JSON);
-        Log.d(TAG, "onStart: " + eventJson);
+
         event = new Gson().fromJson(eventJson, Event.class);
         inflateViews(event);
 
@@ -154,6 +157,41 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         if (bundle.getBoolean(Constants.NO_SHARED_ELEM, true)) {
             this.transitionEnd();
         }
+
+        setupAppBarLayout();
+    }
+
+    /** Initialize app bar layout */
+    private void setupAppBarLayout() {
+        // Set the behavior
+        AppBarLayout mAppBarLayout = getView().findViewById(R.id.appBar);
+        ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).setBehavior(new AppBarLayout.Behavior());
+
+        // Set offset on init
+        mAppBarLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                setAppBarOffset(appBarOffset);
+            }
+        });
+
+        // Store offset for next init
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+                if (i != 0) appBarOffset = -i;
+            }
+        });
+    }
+
+    /** Set appbar to have an offset */
+    private void setAppBarOffset(int offsetPx){
+        AppBarLayout mAppBarLayout = getView().findViewById(R.id.appBar);
+        CoordinatorLayout mCoordinatorLayour = getView().findViewById(R.id.coordinator);
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
+        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+        if (behavior == null) return;
+        behavior.onNestedPreScroll(mCoordinatorLayour, mAppBarLayout, null, 0, offsetPx, new int[]{0, 0}, 0);
     }
 
     private void inflateViews(final Event event) {

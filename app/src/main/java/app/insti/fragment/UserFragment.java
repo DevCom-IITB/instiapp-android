@@ -11,6 +11,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -19,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -150,7 +150,7 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
         TextView userRollNumberTextView = getActivity().findViewById(R.id.user_rollno_profile);
         final TextView userEmailIDTextView = getActivity().findViewById(R.id.user_email_profile);
         TextView userContactNumberTextView = getActivity().findViewById(R.id.user_contact_no_profile);
-        ImageButton userShareImageButton = getActivity().findViewById(R.id.share_user_button);
+        FloatingActionButton userShareFab = getActivity().findViewById(R.id.share_user_button);
 
         Picasso.get()
                 .load(user.getUserProfilePictureUrl())
@@ -229,7 +229,7 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
             });
         }
 
-        userShareImageButton.setOnClickListener(new View.OnClickListener() {
+        userShareFab.setOnClickListener(new View.OnClickListener() {
             String shareUrl = ShareURLMaker.getUserURL(user);
 
             @Override
@@ -241,7 +241,7 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
                 startActivity(Intent.createChooser(i, "Share URL"));
             }
         });
-        userShareImageButton.setVisibility(VISIBLE);
+        userShareFab.show();
     }
 
     private void call(String contactNumber) {

@@ -82,7 +82,7 @@ public final class Utils {
      */
     public static final void updateFragment(Fragment fragment, FragmentActivity fragmentActivity) {
         FragmentTransaction ft = fragmentActivity.getSupportFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right);
+        ft.setCustomAnimations(R.anim.slide_in_up, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out_down);
         ft.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());
         ft.addToBackStack(fragment.getTag());
         ft.commit();

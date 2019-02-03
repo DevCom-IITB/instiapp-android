@@ -41,6 +41,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return false;
             }
         });
+        showContactPref.setEnabled(false);
 
         // Update Profile
         profilePref = findPreference("profile");
@@ -109,8 +110,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
+                    if(getActivity() == null || getView() == null) return;
                     User user = response.body();
                     showContactPref.setChecked(user.getShowContactNumber());
+                    showContactPref.setEnabled(true);
                 }
             }
         });
@@ -124,6 +127,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         retrofitInterface.patchUserMe(Utils.getSessionIDHeader(), new UserShowContactPatchRequest(isChecked)).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
+                if(getActivity() == null || getView() == null) return;
                 if (response.isSuccessful()) {
                     showContactPref.setChecked(isChecked);
                     showContactPref.setEnabled(true);
@@ -135,6 +139,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                if(getActivity() == null || getView() == null) return;
                 showContactPref.setChecked(!isChecked);
                 showContactPref.setEnabled(true);
             }
