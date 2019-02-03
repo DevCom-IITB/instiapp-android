@@ -147,7 +147,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
 
         Bundle bundle = getArguments();
         String eventJson = bundle.getString(Constants.EVENT_JSON);
-        Log.d(TAG, "onStart: " + eventJson);
+
         event = new Gson().fromJson(eventJson, Event.class);
         inflateViews(event);
 
