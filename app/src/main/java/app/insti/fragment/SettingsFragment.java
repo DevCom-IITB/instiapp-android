@@ -140,7 +140,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             public void onResponse(Call<User> call, Response<User> response) {
                 if(getActivity() == null || getView() == null) return;
                 if (response.isSuccessful()) {
-                    showContactPref.setChecked(isChecked);
+                    showContactPref.setChecked(response.body().getShowContactNumber());
                     showContactPref.setEnabled(true);
                 } else {
                     showContactPref.setChecked(!isChecked);
