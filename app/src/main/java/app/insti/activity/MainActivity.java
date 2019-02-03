@@ -425,6 +425,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        Utils.eventCache.clear();
+        Utils.notificationCache = null;
+        super.onDestroy();
+    }
+
     /**
      * Update FCM Id and update profile
      */
