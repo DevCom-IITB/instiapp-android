@@ -23,6 +23,7 @@ import retrofit2.Response;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
     SwitchPreferenceCompat showContactPref;
+    SwitchPreferenceCompat darkThemePref;
     Preference profilePref;
     Preference feedbackPref;
     Preference aboutPref;
@@ -42,6 +43,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
         showContactPref.setEnabled(false);
+
+        // Dark Theme
+        darkThemePref = (SwitchPreferenceCompat) findPreference("dark_theme");
+        darkThemePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                toggleDarkTheme((SwitchPreferenceCompat) preference, o);
+                return true;
+            }
+        });
 
         // Update Profile
         profilePref = findPreference("profile");
@@ -144,6 +155,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 showContactPref.setEnabled(true);
             }
         });
+    }
+
+    public void toggleDarkTheme(final SwitchPreferenceCompat showContactPref, Object o) {
+        Utils.changeTheme(this, (boolean) o);
     }
 
     public void openAbout() {

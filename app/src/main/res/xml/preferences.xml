@@ -9,6 +9,12 @@
         app:summary="Toggle visibility on your profile"
         android:icon="@drawable/ic_local_phone_gray_36dp"/>
 
+    <SwitchPreferenceCompat
+        app:key="dark_theme"
+        app:title="Dark Theme"
+        app:summary="Note: this feature is in beta"
+        android:icon="@drawable/ic_color_lens_gray_36dp"/>
+
     <Preference
         app:key="profile"
         app:title="Update Profile"

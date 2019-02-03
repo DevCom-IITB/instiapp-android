@@ -14,13 +14,13 @@ import android.support.transition.Slide;
 import android.support.transition.Transition;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.TypedValue;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
@@ -29,7 +29,6 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.Map;
 
-import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
@@ -37,6 +36,7 @@ import app.insti.api.model.Notification;
 import app.insti.api.model.User;
 import app.insti.fragment.BodyFragment;
 import app.insti.fragment.EventFragment;
+import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TransitionTargetChild;
 import app.insti.fragment.TransitionTargetFragment;
 import app.insti.fragment.UserFragment;
@@ -49,7 +49,6 @@ public final class Utils {
     private static String sessionId;
     private static RetrofitInterface retrofitInterface;
     public static Gson gson;
-    public static boolean darkTheme = false;
 
     public static final void loadImageWithPlaceholder(final ImageView imageView, final String url) {
         Picasso.get()
@@ -231,18 +230,22 @@ public final class Utils {
         Utils.gson = new Gson();
     }
 
-    public static void changeTheme(FragmentActivity context) {
-        if (darkTheme) {
-            context.setTheme(R.style.AppTheme);
-        } else {
-            Toast.makeText(context, "You have unlocked super max pro mode", Toast.LENGTH_SHORT).show();
-            context.setTheme(R.style.AppThemeDark);
-        }
-        darkTheme = !darkTheme;
-        Intent intent = new Intent(context, MainActivity.class);
-        context.startActivity(intent);
-        context.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        context.finish();
+    public static void changeTheme(SettingsFragment fragment, boolean darkTheme) {
+        FragmentActivity fragmentActivity = fragment.getActivity();
+        fragmentActivity.setTheme(darkTheme ? R.style.AppThemeDark : R.style.AppTheme);
+
+        // Set background color of activity
+        fragmentActivity.findViewById(R.id.drawer_layout).setBackgroundColor(
+                getAttrColor(fragmentActivity, R.attr.themeColor));
+
+        // Put in a new settings fragment
+        Fragment newFragment = new SettingsFragment();
+        newFragment.setArguments(fragment.getArguments());
+        FragmentManager fm = fragmentActivity.getSupportFragmentManager();
+        fm.popBackStack();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.addToBackStack(newFragment.getTag());
+        ft.replace(R.id.framelayout_for_fragment, newFragment, newFragment.getTag()).commit();
     }
 
     public static void setSelectedMenuItem(Activity activity, int id) {

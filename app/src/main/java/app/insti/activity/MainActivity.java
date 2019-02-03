@@ -25,10 +25,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -115,9 +113,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (Utils.darkTheme) {
-            setTheme(R.style.AppThemeDark_NoActionBar);
-        }
         super.onCreate(savedInstanceState);
 
         ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
@@ -158,22 +153,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 handleIntent(intent);
             }
         }
-
-        toolbar.setOnTouchListener(new View.OnTouchListener() {
-            private GestureDetector gestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public boolean onDoubleTap(MotionEvent e) {
-                    Utils.changeTheme(MainActivity.this);
-                    return super.onDoubleTap(e);
-                }
-            });
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                gestureDetector.onTouchEvent(event);
-                return true;
-            }
-        });
 
         checkLatestVersion();
     }
