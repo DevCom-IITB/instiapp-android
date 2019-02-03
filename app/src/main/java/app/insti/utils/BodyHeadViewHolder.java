@@ -1,5 +1,6 @@
 package app.insti.utils;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,11 @@ public class BodyHeadViewHolder  extends RecyclerView.ViewHolder {
         followButton = itemView.findViewById(R.id.follow_button);
     }
 
+    private void setupFollowButton(Context context, Body body) {
+        Utils.setupFollowButton(context, followButton, body.getBodyUserFollows());
+        followButton.setText(EventFragment.getCountBadgeSpannable("FOLLOW", body.getBodyFollowersCount()));
+    }
+
     public void bindView(final Body body, final Fragment fragment) {
         /* Set body information */
         bodyName.setText(body.getBodyName());
@@ -53,8 +59,7 @@ public class BodyHeadViewHolder  extends RecyclerView.ViewHolder {
 
         /* Check if user is already following
          * Initialize follow button */
-        followButton.setBackgroundColor(fragment.getResources().getColor(body.getBodyUserFollows() ? R.color.colorAccent : R.color.colorWhite));
-        followButton.setText(EventFragment.getCountBadgeSpannable("FOLLOW", body.getBodyFollowersCount()));
+        setupFollowButton(fragment.getContext(), body);
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,8 +70,7 @@ public class BodyHeadViewHolder  extends RecyclerView.ViewHolder {
                         if (response.isSuccessful()) {
                             body.setBodyUserFollows(!body.getBodyUserFollows());
                             body.setBodyFollowersCount(body.getBodyUserFollows()? body.getBodyFollowersCount()+1:body.getBodyFollowersCount()-1);
-                            followButton.setBackgroundColor(fragment.getResources().getColor(body.getBodyUserFollows() ? R.color.colorAccent : R.color.colorWhite));
-                            followButton.setText(EventFragment.getCountBadgeSpannable("FOLLOW", body.getBodyFollowersCount()));
+                            setupFollowButton(fragment.getContext(), body);
                         }
                     }
 
