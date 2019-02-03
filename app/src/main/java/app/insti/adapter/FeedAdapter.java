@@ -37,6 +37,6 @@ public class FeedAdapter extends CardAdapter<Event> {
 
     @Override
     public int getAvatarPlaceholder(Event event) {
-        return R.drawable.lotus_placeholder;
+        return Utils.isDarkTheme ? R.drawable.lotus_placeholder_dark : R.drawable.lotus_placeholder;
     }
 }

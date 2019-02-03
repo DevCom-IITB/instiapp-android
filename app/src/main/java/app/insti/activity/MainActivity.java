@@ -118,7 +118,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         /* Check for dark theme */
         SharedPreferences sharedPref = getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
-        if(sharedPref.getBoolean(Constants.DARK_THEME, false))
+        Utils.isDarkTheme = sharedPref.getBoolean(Constants.DARK_THEME, false);
+        if (Utils.isDarkTheme)
             this.setTheme(R.style.AppThemeDark);
 
         ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());

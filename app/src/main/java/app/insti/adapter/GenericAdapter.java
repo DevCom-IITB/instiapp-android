@@ -33,6 +33,6 @@ public class GenericAdapter extends CardAdapter<CardInterface> {
         if (cardInterface instanceof User) {
             return R.drawable.user_placeholder;
         }
-        return R.drawable.lotus_placeholder;
+        return Utils.isDarkTheme ? R.drawable.lotus_placeholder_dark : R.drawable.lotus_placeholder;    
     }
 }

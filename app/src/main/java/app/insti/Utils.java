@@ -50,6 +50,7 @@ public final class Utils {
     private static String sessionId;
     private static RetrofitInterface retrofitInterface;
     public static Gson gson;
+    public static boolean isDarkTheme = false;
 
     public static final void loadImageWithPlaceholder(final ImageView imageView, final String url) {
         Picasso.get()
@@ -232,6 +233,7 @@ public final class Utils {
     }
 
     public static void changeTheme(SettingsFragment fragment, boolean darkTheme) {
+        isDarkTheme = darkTheme;
         FragmentActivity fragmentActivity = fragment.getActivity();
         fragmentActivity.setTheme(darkTheme ? R.style.AppThemeDark : R.style.AppTheme);
 
