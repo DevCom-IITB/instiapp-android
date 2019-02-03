@@ -111,24 +111,29 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         toolbar.setTitle("Settings");
         Utils.setSelectedMenuItem(getActivity(), R.id.nav_settings);
 
-        // Get the user id
-        Bundle bundle = getArguments();
-        String userID = bundle.getString(Constants.USER_ID);
+        if (Utils.currentUserCache == null) {
+            // Get the user id
+            Bundle bundle = getArguments();
+            String userID = bundle.getString(Constants.USER_ID);
 
-        // Fill in the user
-        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        retrofitInterface.getUser(Utils.getSessionIDHeader(), userID).enqueue(new EmptyCallback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
-                    if(getActivity() == null || getView() == null) return;
-                    User user = response.body();
-                    showContactPref.setChecked(user.getShowContactNumber());
-                    showContactPref.setEnabled(true);
+            // Fill in the user
+            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+            retrofitInterface.getUser(Utils.getSessionIDHeader(), userID).enqueue(new EmptyCallback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if (response.isSuccessful()) {
+                        if (getActivity() == null || getView() == null) return;
+                        User user = response.body();
+                        showContactPref.setChecked(user.getShowContactNumber());
+                        showContactPref.setEnabled(true);
+                        Utils.currentUserCache = user;
+                    }
                 }
-            }
-        });
-
+            });
+        } else {
+            showContactPref.setChecked(Utils.currentUserCache.getShowContactNumber());
+            showContactPref.setEnabled(true);
+        }
     }
 
     public void toggleShowContact(final SwitchPreferenceCompat showContactPref, Object o) {
@@ -142,6 +147,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 if (response.isSuccessful()) {
                     showContactPref.setChecked(response.body().getShowContactNumber());
                     showContactPref.setEnabled(true);
+                    Utils.currentUserCache = response.body();
                 } else {
                     showContactPref.setChecked(!isChecked);
                     showContactPref.setEnabled(true);

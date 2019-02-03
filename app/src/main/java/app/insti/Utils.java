@@ -45,6 +45,7 @@ public final class Utils {
     public static UpdatableList<Event> eventCache = new UpdatableList<>();
     public static UpdatableList<Notification> notificationCache = null;
     public static UpdatableList<Body> bodyCache = new UpdatableList<>();
+    public static User currentUserCache = null;
 
     private static String sessionId;
     private static RetrofitInterface retrofitInterface;

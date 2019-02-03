@@ -427,6 +427,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         if (response.isSuccessful()) {
                             session.createLoginSession(response.body().getUserName(), response.body(), session.getSessionID());
                             currentUser = response.body();
+                            Utils.currentUserCache = currentUser;
                         } else {
                             session.logout();
                             currentUser = null;
