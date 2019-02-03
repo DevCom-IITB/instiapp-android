@@ -276,7 +276,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
 
         goingButton.setOnClickListener(getUESOnClickListener(2));
 
-        setFollowButtonColors(event.getEventUserUes());
+        setFollowButtons(event.getEventUserUes());
 
         if (!event.getEventVenues().isEmpty()) {
             if (event.getEventVenues().get(0).getVenueLatitude() == 0) {
@@ -356,22 +356,10 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
     }
 
     /** Setup button colors depending on status */
-    void setFollowButtonColors(int status) {
-        // Get background colors
-        final int themeColor = Utils.getAttrColor(getContext(), R.attr.themeColor);
-        final int accent = getResources().getColor(R.color.colorAccent);
-
-        // Get font colors
-        final int themeColorInverse = Utils.getAttrColor(getContext(), R.attr.themeColorInverse);
-        final int black = Color.BLACK;
-
-        // Set background colors
-        interestedButton.setBackgroundColor(status == Constants.STATUS_INTERESTED ? accent : themeColor);
-        goingButton.setBackgroundColor(status == Constants.STATUS_GOING ? accent : themeColor);
-
-        // Set font colors
-        interestedButton.setTextColor(status == Constants.STATUS_INTERESTED ? black : themeColorInverse);
-        goingButton.setTextColor(status == Constants.STATUS_GOING ? black : themeColorInverse);
+    void setFollowButtons(int status) {
+        // Set colors
+        Utils.setupFollowButton(getContext(), interestedButton, status == Constants.STATUS_INTERESTED);
+        Utils.setupFollowButton(getContext(), goingButton, status == Constants.STATUS_GOING);
 
         // Show badges
         interestedButton.setText(getCountBadgeSpannable("INTERESTED", event.getEventInterestedCount()));
@@ -413,7 +401,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
                             }
 
                             event.setEventUserUes(endStatus);
-                            setFollowButtonColors(endStatus);
+                            setFollowButtons(endStatus);
 
                             // Update global memory cache
                             Utils.eventCache.updateCache(event);

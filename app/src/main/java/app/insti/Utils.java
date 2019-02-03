@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -17,6 +18,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.TypedValue;
 import android.view.View;
 import android.webkit.CookieManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -257,6 +259,20 @@ public final class Utils {
         Resources.Theme theme = context.getTheme();
         theme.resolveAttribute(attrId, typedValue, true);
         return typedValue.data;
+    }
+
+    public static void setupFollowButton(Context context, Button view, boolean follows) {
+        // Get background colors
+        final int themeColor = Utils.getAttrColor(context, R.attr.themeColor);
+        final int accent = context.getResources().getColor(R.color.colorAccent);
+
+        // Get font colors
+        final int themeColorInverse = Utils.getAttrColor(context, R.attr.themeColorInverse);
+        final int black = Color.BLACK;
+
+        // Set background and foreground colors
+        view.setBackgroundColor(follows ? accent : themeColor);
+        view.setTextColor(follows ? black : themeColorInverse);
     }
 
     @RequiresApi(21)
