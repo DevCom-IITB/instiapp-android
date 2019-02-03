@@ -89,4 +89,8 @@
         <item name="android:textColor">@color/mcv_text_date_light</item>
         <item name="android:textSize">14sp</item>
     </style>
+
+    <style name="UserTabsTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>
