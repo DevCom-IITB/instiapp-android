@@ -140,6 +140,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="No Date Specified"
                                     android:textColor="@color/colorWhite"
+                                    android:textColorLink="@color/colorWhite"
                                     android:textSize="16sp" />
                             </LinearLayout>
 
