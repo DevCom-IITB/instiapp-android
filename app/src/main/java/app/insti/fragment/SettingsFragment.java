@@ -1,6 +1,8 @@
 package app.insti.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.preference.Preference;
@@ -22,16 +24,22 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
-    SwitchPreferenceCompat showContactPref;
-    SwitchPreferenceCompat darkThemePref;
-    Preference profilePref;
-    Preference feedbackPref;
-    Preference aboutPref;
-    Preference logoutPref;
+    private SwitchPreferenceCompat showContactPref;
+    private SwitchPreferenceCompat darkThemePref;
+    private Preference profilePref;
+    private Preference feedbackPref;
+    private Preference aboutPref;
+    private Preference logoutPref;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
+
+        // Get preferences and editor
+        sharedPref = getActivity().getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
 
         // Show contact number
         showContactPref = (SwitchPreferenceCompat) findPreference("show_contact");
@@ -53,6 +61,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
+        darkThemePref.setChecked(sharedPref.getBoolean(Constants.DARK_THEME, false));
 
         // Update Profile
         profilePref = findPreference("profile");
@@ -164,6 +173,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     public void toggleDarkTheme(final SwitchPreferenceCompat showContactPref, Object o) {
+        editor.putBoolean(Constants.DARK_THEME, (boolean) o);
+        editor.commit();
         Utils.changeTheme(this, (boolean) o);
     }
 

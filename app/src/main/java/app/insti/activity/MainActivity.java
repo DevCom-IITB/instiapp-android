@@ -7,6 +7,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -114,6 +115,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /* Check for dark theme */
+        SharedPreferences sharedPref = getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
+        if(sharedPref.getBoolean(Constants.DARK_THEME, false))
+            this.setTheme(R.style.AppThemeDark);
 
         ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
         Utils.setRetrofitInterface(serviceGenerator.getRetrofitInterface());
