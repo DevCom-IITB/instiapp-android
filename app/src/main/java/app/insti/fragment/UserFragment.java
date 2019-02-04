@@ -47,7 +47,7 @@ import static android.view.View.VISIBLE;
  * A simple {@link Fragment} subclass.
  */
 public class UserFragment extends BackHandledFragment implements TransitionTargetFragment {
-    private User user;
+    private User user = null;
 
     // Hold a reference to the current animator,
     // so that it can be canceled mid-way.
@@ -119,7 +119,6 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
                     if (getActivity() == null || getView() == null) return;
                     user = response.body();
                     populateViews();
-                    getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 }
             }
         });
@@ -136,7 +135,9 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
 
         String userID = bundle.getString(Constants.USER_ID);
         String userJson = bundle.getString(Constants.USER_JSON);
-        if (userID != null) {
+        if (user != null) {
+            populateViews();
+        } else if (userID != null) {
             loadUser(userID);
         } else if (userJson != null) {
             user = Utils.gson.fromJson(userJson, User.class);
@@ -204,6 +205,9 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
 
             TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
             tabLayout.setupWithViewPager(viewPager);
+
+            userShareFab.show();
+            getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         }
 
         userNameTextView.setText(user.getUserName());
@@ -222,7 +226,7 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
             }
         });
 
-        if (user.getUserContactNumber() != null) {
+        if (!"N/A".equals(user.getUserContactNumber())) {
             userContactNumberTextView.setText(user.getUserContactNumber());
             userContactNumberTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -230,6 +234,8 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
                     call(user.getUserContactNumber());
                 }
             });
+        } else {
+            userContactNumberTextView.setVisibility(View.GONE);
         }
 
         userShareFab.setOnClickListener(new View.OnClickListener() {
@@ -244,14 +250,13 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
                 startActivity(Intent.createChooser(i, "Share URL"));
             }
         });
-        userShareFab.show();
     }
 
     private void call(String contactNumber) {
         String uri = "tel:" + contactNumber;
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse(uri));
-        startActivity(Intent.createChooser(intent, "PLace a Call"));
+        startActivity(Intent.createChooser(intent, "Place a Call"));
     }
 
     private void mail(String email) {
