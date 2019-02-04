@@ -28,7 +28,6 @@ public class TrainingBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final int VIEW_PROG = 0;
 
     private List<TrainingBlogPost> posts;
-    private Context context;
     private ItemClickListener itemClickListener;
 
     public TrainingBlogAdapter(List<TrainingBlogPost> posts, ItemClickListener itemClickListener) {
@@ -47,7 +46,7 @@ public class TrainingBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
+        final Context context = parent.getContext();
         if (viewType == VIEW_ITEM) {
             LayoutInflater inflater = LayoutInflater.from(context);
             View postView = inflater.inflate(R.layout.blog_post_card, parent, false);
@@ -63,7 +62,6 @@ public class TrainingBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else {
             LayoutInflater inflater = LayoutInflater.from(context);
             View loadView = inflater.inflate(R.layout.blog_load_item, parent, false);
-            final TrainingBlogAdapter.ViewHolder postViewHolder = new TrainingBlogAdapter.ViewHolder(loadView);
             return new TrainingBlogAdapter.ProgressViewHolder(loadView);
         }
     }

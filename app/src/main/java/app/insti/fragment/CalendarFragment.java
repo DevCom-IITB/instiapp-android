@@ -60,7 +60,7 @@ import static android.view.View.VISIBLE;
  */
 public class CalendarFragment extends BaseFragment {
 
-    FloatingActionButton fab;
+    private FloatingActionButton fab;
     private View view;
     private FeedAdapter feedAdapter = null;
     private List<Event> events = new ArrayList<>();

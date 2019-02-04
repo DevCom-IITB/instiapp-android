@@ -50,7 +50,7 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class BodyFragment extends BackHandledFragment implements TransitionTargetFragment {
-    String TAG = "BodyFragment";
+    public final String TAG = "BodyFragment";
     private Body min_body;
     private SwipeRefreshLayout bodySwipeRefreshLayout;
 

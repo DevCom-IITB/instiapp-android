@@ -40,7 +40,6 @@ public class MessMenuFragment extends BaseFragment {
     private MessMenuAdapter messMenuAdapter;
     private RecyclerView messMenuRecyclerView;
     private SwipeRefreshLayout messMenuSwipeRefreshLayout;
-    private Spinner hostelSpinner;
     private String hostel;
 
     public MessMenuFragment() {
@@ -74,7 +73,7 @@ public class MessMenuFragment extends BaseFragment {
             }
         });
 
-        hostelSpinner = getActivity().findViewById(R.id.hostel_spinner);
+        Spinner hostelSpinner = getActivity().findViewById(R.id.hostel_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.hostels_array, R.layout.hostel_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         hostelSpinner.setAdapter(adapter);

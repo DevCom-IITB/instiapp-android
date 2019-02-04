@@ -24,7 +24,7 @@ import app.insti.api.model.Role;
  * create an instance of this fragment.
  */
 public class RoleRecyclerViewFragment extends Fragment implements TransitionTargetFragment, TransitionTargetChild {
-    private static final String TAG = "RoleRecyclerViewFragment";
+    public static final String TAG = "RoleRecyclerViewFragment";
     public Fragment parentFragment = null;
 
     private List<Role> roleList;

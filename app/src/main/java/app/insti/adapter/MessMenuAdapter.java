@@ -15,7 +15,6 @@ import app.insti.api.model.MessMenu;
 
 public class MessMenuAdapter extends RecyclerView.Adapter<MessMenuAdapter.ViewHolder> {
     private List<MessMenu> messMenus;
-    private Context context;
 
     public MessMenuAdapter(List<MessMenu> messMenus) {
         this.messMenus = messMenus;
@@ -25,7 +24,7 @@ public class MessMenuAdapter extends RecyclerView.Adapter<MessMenuAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context = parent.getContext();
+        final Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View postView = inflater.inflate(R.layout.mess_menu_card, parent, false);
 

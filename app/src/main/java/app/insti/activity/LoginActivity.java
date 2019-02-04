@@ -36,8 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     private final String guestUri = "https://guesturi";
     public String authCode = null;
     public String fcmId = null;
-    SessionManager session;
-    Context mContext = this;
+    private SessionManager session;
+    private Context mContext = this;
     private boolean loggingIn = false;
     private ProgressDialog progressDialog;
 
@@ -167,22 +167,6 @@ public class LoginActivity extends AppCompatActivity {
                 loggingIn = false;
             }
         });
-    }
-
-    private boolean checkPlayServices() {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
-                        .show();
-            } else {
-                Log.i(TAG, "This device is not supported.");
-                finish();
-            }
-            return false;
-        }
-        return true;
     }
 
     private class WvClient extends WebViewClient {

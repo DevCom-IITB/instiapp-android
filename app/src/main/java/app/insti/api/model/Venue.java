@@ -42,19 +42,8 @@ public class Venue {
     @SerializedName("lng")
     private double venueLongitude;
 
-    public Venue(String venueID, String venueName, String venueShortName, String venueDescripion, String venueParentId, String venueParentRelation, Integer venueGroupId, Integer venuePixelX, Integer venuePixelY, Boolean venueReusable, double venueLatitude, double venueLongitude) {
+    public Venue(@NonNull String venueID) {
         this.venueID = venueID;
-        this.venueName = venueName;
-        this.venueShortName = venueShortName;
-        this.venueDescripion = venueDescripion;
-        this.venueParentId = venueParentId;
-        this.venueParentRelation = venueParentRelation;
-        this.venueGroupId = venueGroupId;
-        this.venuePixelX = venuePixelX;
-        this.venuePixelY = venuePixelY;
-        this.venueReusable = venueReusable;
-        this.venueLatitude = venueLatitude;
-        this.venueLongitude = venueLongitude;
     }
 
     public String getVenueID() {

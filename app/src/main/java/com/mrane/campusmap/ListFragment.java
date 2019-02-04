@@ -7,18 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.mrane.data.Marker;
-
-import java.util.HashMap;
-
 import app.insti.R;
 import app.insti.fragment.MapFragment;
 
 public class ListFragment extends Fragment {
-
-    MapFragment mainActivity;
-    View rootView;
-    ListView list;
 
     public ListFragment() {
     }
@@ -26,10 +18,10 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mainActivity = MapFragment.getMainActivity();
+        MapFragment mainActivity = MapFragment.getMainActivity();
         final FuzzySearchAdapter adapter = mainActivity.getAdapter();
-        rootView = inflater.inflate(R.layout.map_list_fragment, container, false);
-        list = (ListView) rootView.findViewById(R.id.suggestion_list);
+        View rootView = inflater.inflate(R.layout.map_list_fragment, container, false);
+        ListView list = rootView.findViewById(R.id.suggestion_list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(mainActivity);
         list.setOnTouchListener(mainActivity);

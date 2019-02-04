@@ -30,9 +30,6 @@ public class BodyRecyclerViewFragment extends Fragment implements TransitionTarg
     public static final String TAG = "BodyRecyclerViewFragment";
     public Fragment parentFragment = null;
 
-    private RecyclerView recyclerView;
-    private BodyAdapter bodyAdapter;
-
     private List<Body> bodyList;
 
     public BodyRecyclerViewFragment() {
@@ -74,8 +71,8 @@ public class BodyRecyclerViewFragment extends Fragment implements TransitionTarg
     public void onStart() {
         super.onStart();
 
-        recyclerView = (RecyclerView) getActivity().findViewById(R.id.body_recycler_view);
-        bodyAdapter = new BodyAdapter(bodyList, this);
+        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.body_recycler_view);
+        BodyAdapter bodyAdapter = new BodyAdapter(bodyList, this);
         bodyAdapter.uid = "BRVFrag";
         recyclerView.setAdapter(bodyAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

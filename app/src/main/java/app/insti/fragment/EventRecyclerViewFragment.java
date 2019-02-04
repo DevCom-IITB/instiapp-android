@@ -29,9 +29,6 @@ public class EventRecyclerViewFragment extends Fragment implements TransitionTar
     private static final String TAG = "EventRecyclerViewFragment";
     public Fragment parentFragment = null;
 
-    private RecyclerView recyclerView;
-    private FeedAdapter feedAdapter;
-
     private List<Event> eventList;
 
     public EventRecyclerViewFragment() {
@@ -72,8 +69,8 @@ public class EventRecyclerViewFragment extends Fragment implements TransitionTar
     public void onStart() {
         super.onStart();
 
-        recyclerView = (RecyclerView) getActivity().findViewById(R.id.event_recycler_view);
-        feedAdapter = new FeedAdapter(eventList, this);
+        RecyclerView recyclerView = getActivity().findViewById(R.id.event_recycler_view);
+        FeedAdapter feedAdapter = new FeedAdapter(eventList, this);
         recyclerView.setAdapter(feedAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

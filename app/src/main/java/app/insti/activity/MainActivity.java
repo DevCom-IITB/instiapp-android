@@ -93,8 +93,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private static final String TAG = "MainActivity";
-    SessionManager session;
-    FeedFragment feedFragment;
+    private SessionManager session;
+    private FeedFragment feedFragment;
     private User currentUser;
     private BackHandledFragment selectedFragment;
     private Menu menu;

@@ -56,23 +56,6 @@ public class Body implements CardInterface {
         this.bodyID = bodyID;
     }
 
-    public Body(String bodyID, String bodyStrID, String bodyName, String bodyShortDescription, String bodyDescription, String bodyImageURL, List<Body> bodyChildren, List<Body> bodyParents, List<Event> bodyEvents, int bodyFollowersCount, String bodyWebsiteURL, String bodyBlogURL, boolean bodyUserFollows, List<Role> bodyRoles) {
-        this.bodyID = bodyID;
-        this.bodyStrID = bodyStrID;
-        this.bodyName = bodyName;
-        this.bodyShortDescription = bodyShortDescription;
-        this.bodyDescription = bodyDescription;
-        this.bodyImageURL = bodyImageURL;
-        this.bodyChildren = bodyChildren;
-        this.bodyParents = bodyParents;
-        this.bodyEvents = bodyEvents;
-        this.bodyFollowersCount = bodyFollowersCount;
-        this.bodyWebsiteURL = bodyWebsiteURL;
-        this.bodyBlogURL = bodyBlogURL;
-        this.bodyUserFollows = bodyUserFollows;
-        this.bodyRoles = bodyRoles;
-    }
-
     public String getBodyID() {
         return bodyID;
     }
