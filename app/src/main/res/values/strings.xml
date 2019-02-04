@@ -6,10 +6,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
 
-    <string name="django_api"> <a href="https://github.com/wncc/IITBapp"> Django API</a></string>
-    <string name="android_app"> <a href="https://github.com/wncc/InstiApp"> Android App</a></string>
-    <string name="angular_pwa"> <a href="https://github.com/pulsejet/iitb-app-angular"> Angular PWA </a></string>
-
     <string-array name="hostels_array">
         <item>Hostel 1</item>
         <item>Hostel 2</item>
@@ -41,13 +37,11 @@
     <string name="vent_your_issues_now">Vent your issues now!</string>
     <string name="venter_super_head">Nobody taking care of your civic complaints? Be it garbage, water, potholes etc.</string>
     <string name="error_message">Please check your Network Connectivity</string>
-    <string name="enter_comment">Enter Comment</string>
     <string name="enter_suggestions_if_any">Enter Suggestions (if any)</string>
     <string name="no_complaints">No complaints at the moment</string>
     <string name="initial_message_file_complaint">Please provide the complaint description before submitting</string>
     <string name="getting_current_location">Getting current location.</string>
     <string name="GPS_not_enables">GPS is not enabled!</string>
     <string name="no_permission">No permission!</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enter_location_details">Enter Location Details</string>
 </resources>
