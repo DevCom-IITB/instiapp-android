@@ -57,6 +57,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -1124,6 +1125,15 @@ public class MapFragment extends Fragment implements TextWatcher,
             }
 
             super.onLocationResult(locationResult);
+        }
+
+        @Override
+        public void onLocationAvailability(LocationAvailability locationAvailability) {
+            if (!locationAvailability.isLocationAvailable() && campusMapView.isAddedMarker(user)) {
+                campusMapView.removeAddedMarker(user);
+                campusMapView.invalidate();
+            }
+            super.onLocationAvailability(locationAvailability);
         }
     }
 }
