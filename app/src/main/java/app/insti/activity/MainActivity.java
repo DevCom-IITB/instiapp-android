@@ -667,7 +667,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     // File complaint
                     FileComplaintFragment fileComplaintFragment = (FileComplaintFragment) getSupportFragmentManager().findFragmentByTag(FileComplaintFragment.TAG);
                     if (fileComplaintFragment != null && fileComplaintFragment.isVisible()) {
-                        FileComplaintFragment.getMainActivity().getMapReady();
+                        fileComplaintFragment.getMapReady();
                     }
                 } else {
                     Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);

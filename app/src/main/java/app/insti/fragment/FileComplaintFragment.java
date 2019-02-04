@@ -96,7 +96,6 @@ import static app.insti.Constants.RESULT_LOAD_IMAGE;
 public class FileComplaintFragment extends Fragment {
 
     public static final String TAG = FileComplaintFragment.class.getSimpleName();
-    private static FileComplaintFragment mainactivity;
     private Button buttonSubmit;
     private ComplaintDescriptionAutoCompleteTextView descriptionAutoCompleteTextview;
     private EditText editTextSuggestions;
@@ -132,10 +131,6 @@ public class FileComplaintFragment extends Fragment {
     private Button buttonAnalysis;
     private ImageButton imageActionButton;
 
-    public static FileComplaintFragment getMainActivity() {
-        return mainactivity;
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -148,7 +143,6 @@ public class FileComplaintFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        mainactivity = this;
         super.onCreate(savedInstanceState);
     }
 
