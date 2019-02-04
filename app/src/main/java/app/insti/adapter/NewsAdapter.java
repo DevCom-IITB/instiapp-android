@@ -29,7 +29,6 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private final int VIEW_PROG = 0;
 
     private List<NewsArticle> newsArticles;
-    private Context context;
     private ItemClickListener itemClickListener;
 
     public NewsAdapter(List<NewsArticle> newsArticles, ItemClickListener itemClickListener) {
@@ -51,7 +50,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context = parent.getContext();
+        final Context context = parent.getContext();
         if (viewType == VIEW_ITEM) {
             LayoutInflater inflater = LayoutInflater.from(context);
             View postView = inflater.inflate(R.layout.news_article_card, parent, false);

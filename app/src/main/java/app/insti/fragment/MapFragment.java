@@ -110,8 +110,6 @@ public class MapFragment extends Fragment implements TextWatcher,
     public static final int SOUND_ID_RESULT = 0;
     public static final int SOUND_ID_ADD = 1;
     public static final int SOUND_ID_REMOVE = 2;
-    private static final String INSTANCE_CARD_STATE = "instanceCardState";
-    private static final String INSTANCE_VISIBILITY_INDEX = "instanceVisibilityIndex";
     private static MapFragment mainactivity;
     private final String firstStackTag = "FIRST_TAG";
     private final int MSG_ANIMATE = 1;
@@ -137,10 +135,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     private ListFragment listFragment;
     private Fragment fragment;
     private RelativeLayout fragmentContainer;
-    private View actionBarView;
     private List<com.mrane.data.Marker> markerlist;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
     private SlidingUpPanelLayout slidingLayout;
     private CardSlideListener cardSlideListener;
     private boolean noFragments = true;
@@ -363,22 +358,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        // TODO Auto-generated method stub
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO Auto-generated method stub
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void initShowDefault() {
         String[] keys = {"Convocation Hall", "Hostel 13 House of Titans",
                 "Hostel 15", "Main Gate no. 2",
@@ -426,12 +405,8 @@ public class MapFragment extends Fragment implements TextWatcher,
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                int totalHeight = slidingLayout.getHeight();
-                int expandedCardHeight = getResources().getDimensionPixelSize(
-                        R.dimen.expanded_card_height);
                 float anchorPoint = 0.5f;
                 slidingLayout.setAnchorPoint(anchorPoint);
-                Log.d("testing", "Anchor point = " + anchorPoint);
             }
         };
 
@@ -703,12 +678,12 @@ public class MapFragment extends Fragment implements TextWatcher,
         if (marker instanceof Room) {
             Room room = (Room) marker;
             String tag = room.tag;
-            if (!tag.equals("Inside")) {
+            if (!"Inside".equals(tag)) {
                 tag += ",";
             } else {
                 tag = "in";
             }
-            com.mrane.data.Marker parent = data.get(room.parentKey);
+            Marker parent = data.get(room.parentKey);
             final String parentKey = parent.getName();
             String parentName = parent.getName();
             if (!parent.getShortName().equals("0"))
@@ -899,11 +874,7 @@ public class MapFragment extends Fragment implements TextWatcher,
 
     private boolean handleRemoveIcon() {
         String text = editText.getText().toString();
-        if (text.isEmpty() || text.equals(null)) {
-            return false;
-        } else {
-            return true;
-        }
+        return !text.isEmpty();
     }
 
     @Override

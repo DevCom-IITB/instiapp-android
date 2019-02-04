@@ -74,7 +74,7 @@ public class MessMenuAdapter extends RecyclerView.Adapter<MessMenuAdapter.ViewHo
             case 7:
                 return "Sunday";
             default:
-                throw new RuntimeException("DayIndexOutOfBounds: " + day);
+                throw new IndexOutOfBoundsException("DayIndexOutOfBounds: " + day);
         }
     }
 

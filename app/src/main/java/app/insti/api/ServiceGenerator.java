@@ -18,9 +18,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
-    public static final String HEADER_CACHE_CONTROL = "Cache-Control";
-    public static final String HEADER_PRAGMA = "Pragma";
+    private static final String HEADER_CACHE_CONTROL = "Cache-Control";
+    private static final String HEADER_PRAGMA = "Pragma";
     private static final String BASE_URL = "https://api.insti.app/api/";
+    public RetrofitInterface retrofitInterface;
 
     private Context context;
 
@@ -99,10 +100,9 @@ public class ServiceGenerator {
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create());
 
-    private Retrofit retrofit;
-    public RetrofitInterface retrofitInterface;
     public ServiceGenerator(Context mContext) {
         context = mContext;
+        final Retrofit retrofit;
         retrofit = retrofitBuilder.client(
                 clientBuilder
                         .addInterceptor(provideOfflineCacheInterceptor)

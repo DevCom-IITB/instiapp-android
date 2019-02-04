@@ -136,7 +136,7 @@ public class AddEventFragment extends BaseFragment {
         return view;
     }
 
-    void openEvent(Event event) {
+    private void openEvent(Event event) {
         String eventJson = new Gson().toJson(event);
         Bundle bundle = getArguments();
         if (bundle == null)
@@ -151,7 +151,7 @@ public class AddEventFragment extends BaseFragment {
         transaction.addToBackStack(eventFragment.getTag()).commit();
     }
 
-    void openBody(Body body) {
+    private void openBody(Body body) {
         BodyFragment bodyFragment = BodyFragment.newInstance(body);
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
