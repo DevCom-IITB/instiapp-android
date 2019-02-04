@@ -64,7 +64,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_edit_black_24dp"
         android:tint="@android:color/black"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:layout_gravity="end|bottom" />
 
     <include layout="@layout/loading_panel" />
