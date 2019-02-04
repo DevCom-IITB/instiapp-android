@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.Utils;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
@@ -194,16 +195,12 @@ public class AddEventFragment extends BaseFragment {
                 url = url.substring(url.lastIndexOf("/") + 1);
 
                 RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-                retrofitInterface.getBody(Utils.getSessionIDHeader(), url).enqueue(new Callback<Body>() {
+                retrofitInterface.getBody(Utils.getSessionIDHeader(), url).enqueue(new EmptyCallback<Body>() {
                     @Override
                     public void onResponse(Call<Body> call, Response<Body> response) {
                         if (response.isSuccessful()) {
                             openBody(response.body());
                         }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Body> call, Throwable t) {
                     }
                 });
 

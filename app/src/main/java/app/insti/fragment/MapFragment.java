@@ -134,7 +134,6 @@ public class MapFragment extends Fragment implements TextWatcher,
     private ExpandableListAdapter expAdapter;
     private FragmentManager fragmentManager;
     private ListFragment listFragment;
-    private Fragment fragment;
     private RelativeLayout fragmentContainer;
     private List<Marker> markerlist;
     private SlidingUpPanelLayout slidingLayout;
@@ -347,10 +346,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         }
     }
 
-    private void setupMap() {
-        setupMap(null);
-    }
-
     private void setupMap(String initalMarkerName) {
         if (getView() == null) {
             return;
@@ -516,7 +511,6 @@ public class MapFragment extends Fragment implements TextWatcher,
     private void putFragment(Fragment tempFragment) {
         this.dismissCard();
         transaction = fragmentManager.beginTransaction();
-        fragment = tempFragment;
         if (noFragments) {
             transaction.add(R.id.fragment_container, tempFragment);
             transaction.addToBackStack(firstStackTag);
@@ -872,8 +866,10 @@ public class MapFragment extends Fragment implements TextWatcher,
         }
 
         if (text == null) {
+            return;
+        }
 
-        } else if (text.equals("")) {
+        if (text.equals("")) {
             this.setOldText();
         } else {
             editText.setText(text);
@@ -894,11 +890,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         } else {
             editText.setText(oldMarker.getName());
         }
-    }
-
-    private boolean handleRemoveIcon() {
-        String text = editText.getText().toString();
-        return !text.isEmpty();
     }
 
     @Override

@@ -59,7 +59,7 @@ public class TrainingBlogFragment extends RecyclerViewFragment<TrainingBlogPost,
     }
 
     @Override
-    Call<List<TrainingBlogPost>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader, int postCount) {
+    protected Call<List<TrainingBlogPost>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader, int postCount) {
         return retrofitInterface.getTrainingBlogFeed(sessionIDHeader, postCount, 20, searchQuery);
     }
 }

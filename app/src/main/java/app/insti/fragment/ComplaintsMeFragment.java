@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import java.util.List;
+
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.adapter.ComplaintsAdapter;

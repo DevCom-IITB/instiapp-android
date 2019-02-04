@@ -3,7 +3,6 @@ package com.mrane.campusmap;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Resources;
 import android.preference.PreferenceManager;
 
 public class SettingsManager implements OnSharedPreferenceChangeListener {
@@ -15,7 +14,6 @@ public class SettingsManager implements OnSharedPreferenceChangeListener {
     public SettingsManager(Context context) {
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
-        Resources res = context.getResources();
         muteKey = "mute";
         residencesKey = "residences";
         lastUpdatedKey = "lastupdated";

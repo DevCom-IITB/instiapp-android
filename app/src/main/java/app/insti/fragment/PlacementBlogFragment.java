@@ -59,7 +59,7 @@ public class PlacementBlogFragment extends RecyclerViewFragment<PlacementBlogPos
     }
 
     @Override
-    Call<List<PlacementBlogPost>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader, int postCount) {
+    protected Call<List<PlacementBlogPost>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader, int postCount) {
         return retrofitInterface.getPlacementBlogFeed(sessionIDHeader, postCount, 20, searchQuery);
     }
 }

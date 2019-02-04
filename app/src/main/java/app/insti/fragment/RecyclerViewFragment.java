@@ -39,7 +39,7 @@ public abstract class RecyclerViewFragment<T extends Clickable, S extends Recycl
     protected SwipeRefreshLayout swipeRefreshLayout;
     protected String searchQuery;
     private S adapter = null;
-    boolean loading = false;
+    private boolean loading = false;
     private boolean allLoaded = false;
     private String initId = null;
 
@@ -86,7 +86,7 @@ public abstract class RecyclerViewFragment<T extends Clickable, S extends Recycl
         });
     }
 
-    abstract Call<List<T>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader, int postCount);
+    protected abstract Call<List<T>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader, int postCount);
 
     private void displayData(final List<T> result) {
         /* Skip if we're already destroyed */

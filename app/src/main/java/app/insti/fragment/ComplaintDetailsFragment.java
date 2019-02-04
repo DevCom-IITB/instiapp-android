@@ -47,7 +47,6 @@ import app.insti.api.model.Venter;
 import app.insti.api.request.CommentCreateRequest;
 import app.insti.utils.DateTimeUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
-
 import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
 import retrofit2.Callback;

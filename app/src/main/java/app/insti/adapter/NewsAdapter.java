@@ -73,7 +73,6 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         } else {
             LayoutInflater inflater = LayoutInflater.from(context);
             View loadView = inflater.inflate(R.layout.blog_load_item, parent, false);
-            final NewsAdapter.ViewHolder postViewHolder = new NewsAdapter.ViewHolder(loadView);
             return new NewsAdapter.ProgressViewHolder(loadView);
         }
     }

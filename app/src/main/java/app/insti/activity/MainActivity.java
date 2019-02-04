@@ -573,6 +573,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 SettingsFragment settingsFragment = new SettingsFragment();
                 updateFragment(settingsFragment);
                 break;
+
+            default:
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -685,13 +688,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public boolean createEventAccess() {
-        if (currentUser == null || currentUser.getUserRoles() == null || currentUser.getUserRoles().size() == 0)
-            return false;
-        return true;
+        return (currentUser != null && currentUser.getUserRoles() != null && currentUser.getUserRoles().size() > 0);
     }
 
     public boolean editEventAccess(Event event) {
-        if (currentUser == null || currentUser.getUserRoles() == null || currentUser.getUserRoles().size() == 0)
+        if (!createEventAccess())
             return false;
 
         for (Role role : currentUser.getUserRoles()) {
@@ -708,7 +709,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public boolean editBodyAccess(Body toEditBody) {
-        if (currentUser == null || currentUser.getUserRoles() == null || currentUser.getUserRoles().size() == 0)
+        if (!createEventAccess())
             return false;
 
         for (Role role : currentUser.getUserRoles()) {

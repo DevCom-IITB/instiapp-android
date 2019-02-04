@@ -29,7 +29,7 @@ import app.insti.notifications.NotificationId;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
 public class InstiAppFirebaseMessagingService extends FirebaseMessagingService {
-    String channel;
+    private String channel;
 
     @Override
     public void onNewToken(String s) {

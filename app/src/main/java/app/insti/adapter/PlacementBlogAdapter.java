@@ -60,7 +60,6 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
         } else {
             LayoutInflater inflater = LayoutInflater.from(context);
             View loadView = inflater.inflate(R.layout.blog_load_item, parent, false);
-            final PlacementBlogAdapter.ViewHolder postViewHolder = new PlacementBlogAdapter.ViewHolder(loadView);
             return new PlacementBlogAdapter.ProgressViewHolder(loadView);
         }
     }
