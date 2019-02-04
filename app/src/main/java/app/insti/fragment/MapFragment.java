@@ -11,6 +11,7 @@ import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -321,11 +322,14 @@ public class MapFragment extends Fragment implements TextWatcher,
             }
         });
 
-        // Setup GPS if already has permission
+        // Setup GPS if already has permission and GPS is on
         String permission = Manifest.permission.ACCESS_FINE_LOCATION;
         int res = getContext().checkCallingOrSelfPermission(permission);
         if (res == PackageManager.PERMISSION_GRANTED) {
-            locate(false);
+            final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE );
+            if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER) ) {
+                locate(false);
+            }
         }
     }
 
