@@ -24,21 +24,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
-    private SwitchPreferenceCompat showContactPref;
-    private SwitchPreferenceCompat darkThemePref;
-    private Preference profilePref;
-    private Preference feedbackPref;
-    private Preference aboutPref;
-    private Preference logoutPref;
-    private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
+    SwitchPreferenceCompat showContactPref;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
 
         // Get preferences and editor
-        sharedPref = getActivity().getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
         // Show contact number
@@ -53,7 +47,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         showContactPref.setEnabled(false);
 
         // Dark Theme
-        darkThemePref = (SwitchPreferenceCompat) findPreference("dark_theme");
+        SwitchPreferenceCompat darkThemePref = (SwitchPreferenceCompat) findPreference("dark_theme");
         darkThemePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
@@ -64,7 +58,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         darkThemePref.setChecked(sharedPref.getBoolean(Constants.DARK_THEME, false));
 
         // Update Profile
-        profilePref = findPreference("profile");
+        Preference profilePref = findPreference("profile");
         profilePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -74,7 +68,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         // Feedback
-        feedbackPref = findPreference("feedback");
+        Preference feedbackPref = findPreference("feedback");
         feedbackPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -84,7 +78,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         // About
-        aboutPref = findPreference("about");
+        Preference aboutPref = findPreference("about");
         aboutPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -94,7 +88,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         // Logout
-        logoutPref = findPreference("logout");
+        Preference logoutPref = findPreference("logout");
         logoutPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
