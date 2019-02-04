@@ -1,7 +1,6 @@
 package app.insti.fragment;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,7 +19,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import app.insti.ActivityBuffer;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.Utils;
@@ -37,8 +35,8 @@ import retrofit2.Response;
  */
 public class MessMenuFragment extends BaseFragment {
 
+    private List<HostelMessMenu> instituteMessMenu = null;
     private MessMenuAdapter messMenuAdapter;
-    private RecyclerView messMenuRecyclerView;
     private SwipeRefreshLayout messMenuSwipeRefreshLayout;
     private String hostel;
 
@@ -61,9 +59,8 @@ public class MessMenuFragment extends BaseFragment {
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Mess Menu");
         Utils.setSelectedMenuItem(getActivity(), R.id.nav_mess_menu);
-
+        setupAdapter();
         hostel = (String) getArguments().get(Constants.USER_HOSTEL);
-        displayMenu(hostel);
 
         messMenuSwipeRefreshLayout = getActivity().findViewById(R.id.mess_menu_swipe_refresh_layout);
         messMenuSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -104,7 +101,13 @@ public class MessMenuFragment extends BaseFragment {
     }
 
     private void displayMenu(final String hostel) {
-        updateMessMenu(hostel);
+        if (instituteMessMenu != null) {
+            HostelMessMenu hostelMessMenu = findMessMenu(instituteMessMenu, hostel);
+            if(hostelMessMenu != null)
+                displayMessMenu(hostelMessMenu);
+        } else {
+            updateMessMenu(hostel);
+        }
     }
 
     private void updateMessMenu(final String hostel) {
@@ -113,10 +116,10 @@ public class MessMenuFragment extends BaseFragment {
             @Override
             public void onResponse(Call<List<HostelMessMenu>> call, Response<List<HostelMessMenu>> response) {
                 if (response.isSuccessful()) {
-                    List<HostelMessMenu> instituteMessMenu = response.body();
-                    HostelMessMenu hostelMessMenu = findMessMenu(instituteMessMenu, hostel);
-                    if(hostelMessMenu != null)
-                        displayMessMenu(hostelMessMenu);
+                    if (getActivity() == null || getView() == null || response.body() == null) return;
+
+                    instituteMessMenu = response.body();
+                    displayMenu(hostel);
                 }
                 //Server Error
                 messMenuSwipeRefreshLayout.setRefreshing(false);
@@ -155,6 +158,7 @@ public class MessMenuFragment extends BaseFragment {
             today = 6;
         }
 
+        /* Sort by day */
         for (int i = 0; i < 7; i++) {
             final int day = (today + i) % 7 + 1;
             for (MessMenu menu : messMenus) {
@@ -164,24 +168,22 @@ public class MessMenuFragment extends BaseFragment {
             }
         }
 
-        getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
-            @Override
-            public void run(Activity pActivity) {
-                try {
-                    if (messMenuAdapter == null) {
-                        messMenuAdapter = new MessMenuAdapter(sortedMenus);
-                        messMenuRecyclerView = getActivity().findViewById(R.id.mess_menu_recycler_view);
-                        messMenuRecyclerView.setAdapter(messMenuAdapter);
-                        messMenuRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    } else {
-                        messMenuAdapter.setMenu(sortedMenus);
-                        messMenuAdapter.notifyDataSetChanged();
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        /* Display */
+        notifyChange(sortedMenus);
         getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+    }
+
+    private void setupAdapter() {
+        if (messMenuAdapter == null) {
+            messMenuAdapter = new MessMenuAdapter(new ArrayList<MessMenu>());
+        }
+        RecyclerView messMenuRecyclerView = getActivity().findViewById(R.id.mess_menu_recycler_view);
+        messMenuRecyclerView.setAdapter(messMenuAdapter);
+        messMenuRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    private void notifyChange(final List<MessMenu> menus) {
+        messMenuAdapter.setMenu(menus);
+        messMenuAdapter.notifyDataSetChanged();
     }
 }
