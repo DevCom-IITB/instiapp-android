@@ -65,14 +65,10 @@ import ru.noties.markwon.Markwon;
  * A simple {@link Fragment} subclass.
  */
 public class EventFragment extends BackHandledFragment implements TransitionTargetFragment {
-    Event event;
-    Button goingButton;
-    Button interestedButton;
-    ImageButton navigateButton;
-    ImageButton webEventButton;
-    ImageButton shareEventButton;
-    RecyclerView bodyRecyclerView;
-    String TAG = "EventFragment";
+    private Event event;
+    private Button goingButton;
+    private Button interestedButton;
+    public String TAG = "EventFragment";
     private int appBarOffset = 0;
     private boolean creatingView = false;
 
@@ -198,14 +194,14 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
 
     private void inflateViews(final Event event) {
         eventPicture = (ImageView) getActivity().findViewById(R.id.event_picture_2);
-        TextView eventTitle = (TextView) getActivity().findViewById(R.id.event_page_title);
-        TextView eventDate = (TextView) getActivity().findViewById(R.id.event_page_date);
-        TextView eventDescription = (TextView) getActivity().findViewById(R.id.event_page_description);
+        final TextView eventTitle = (TextView) getActivity().findViewById(R.id.event_page_title);
+        final TextView eventDate = (TextView) getActivity().findViewById(R.id.event_page_date);
+        final TextView eventDescription = (TextView) getActivity().findViewById(R.id.event_page_description);
         goingButton = getActivity().findViewById(R.id.going_button);
         interestedButton = getActivity().findViewById(R.id.interested_button);
-        navigateButton = getActivity().findViewById(R.id.navigate_button);
-        webEventButton = getActivity().findViewById(R.id.web_event_button);
-        shareEventButton = getActivity().findViewById(R.id.share_event_button);
+        final ImageButton navigateButton = getActivity().findViewById(R.id.navigate_button);
+        final ImageButton webEventButton = getActivity().findViewById(R.id.web_event_button);
+        final ImageButton shareEventButton = getActivity().findViewById(R.id.share_event_button);
 
         if (event.isEventBigImage() || !creatingView) {
             Picasso.get().load(event.getEventImageURL()).into(eventPicture);
@@ -221,7 +217,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm");
 
         final List<Body> bodyList = event.getEventBodies();
-        bodyRecyclerView = (RecyclerView) getActivity().findViewById(R.id.body_card_recycler_view);
+        final RecyclerView bodyRecyclerView = getActivity().findViewById(R.id.body_card_recycler_view);
         BodyAdapter bodyAdapter = new BodyAdapter(bodyList, this);
         bodyRecyclerView.setAdapter(bodyAdapter);
         bodyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

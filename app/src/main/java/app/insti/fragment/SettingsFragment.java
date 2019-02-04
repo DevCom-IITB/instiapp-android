@@ -25,7 +25,7 @@ import retrofit2.Response;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
     private SharedPreferences.Editor editor;
-    SwitchPreferenceCompat showContactPref;
+    private SwitchPreferenceCompat showContactPref;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

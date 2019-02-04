@@ -27,7 +27,7 @@ import app.insti.api.model.Body;
  * create an instance of this fragment.
  */
 public class BodyRecyclerViewFragment extends Fragment implements TransitionTargetFragment, TransitionTargetChild {
-    private static final String TAG = "BodyRecyclerViewFragment";
+    public static final String TAG = "BodyRecyclerViewFragment";
     public Fragment parentFragment = null;
 
     private RecyclerView recyclerView;

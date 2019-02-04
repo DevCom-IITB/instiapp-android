@@ -17,7 +17,6 @@ import app.insti.fragment.MapFragment;
 public class ListFragment extends Fragment {
 
     MapFragment mainActivity;
-    FuzzySearchAdapter adapter;
     View rootView;
     ListView list;
 
@@ -28,7 +27,7 @@ public class ListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainActivity = MapFragment.getMainActivity();
-        adapter = mainActivity.getAdapter();
+        final FuzzySearchAdapter adapter = mainActivity.getAdapter();
         rootView = inflater.inflate(R.layout.map_list_fragment, container, false);
         list = (ListView) rootView.findViewById(R.id.suggestion_list);
         list.setAdapter(adapter);

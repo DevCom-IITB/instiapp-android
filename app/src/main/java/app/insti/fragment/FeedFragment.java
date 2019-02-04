@@ -35,7 +35,7 @@ public class FeedFragment extends BaseFragment {
     private RecyclerView feedRecyclerView;
     private SwipeRefreshLayout feedSwipeRefreshLayout;
     private FloatingActionButton fab;
-    LinearLayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private int index = -1, top = -1;
     private FeedAdapter feedAdapter = null;
 

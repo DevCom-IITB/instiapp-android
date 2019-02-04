@@ -121,7 +121,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     public TextView placeNameTextView;
     public TextView placeSubHeadTextView;
     public EditText editText;
-    public HashMap<String, com.mrane.data.Marker> data;
+    public HashMap<String, Marker> data;
     public FragmentTransaction transaction;
     public CampusMapView campusMapView;
     public ImageButton addMarkerIcon;
@@ -134,7 +134,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     private ListFragment listFragment;
     private Fragment fragment;
     private RelativeLayout fragmentContainer;
-    private List<com.mrane.data.Marker> markerlist;
+    private List<Marker> markerlist;
     private SlidingUpPanelLayout slidingLayout;
     private CardSlideListener cardSlideListener;
     private boolean noFragments = true;
@@ -269,7 +269,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         if (getView() == null || getActivity() == null) return;
         Locations mLocations = new Locations(venues);
         data = mLocations.data;
-        markerlist = new ArrayList<com.mrane.data.Marker>(data.values());
+        markerlist = new ArrayList<>(data.values());
         if (getArguments() != null) {
             setupMap(getArguments().getString(Constants.MAP_INITIAL_MARKER));
         }
@@ -520,7 +520,7 @@ public class MapFragment extends Fragment implements TextWatcher,
             String key = editText.getText().toString();
 
             // get Marker object if exists
-            com.mrane.data.Marker marker = data.get(key);
+            Marker marker = data.get(key);
 
             // display and zoom to marker if exists
             if (marker != null) {
@@ -535,17 +535,12 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void showResultOnMap(String key) {
-        com.mrane.data.Marker marker = data.get(key);
+        Marker marker = data.get(key);
         showCard(marker);
         campusMapView.setAndShowResultMarker(marker);
     }
 
-    public void showCard() {
-        com.mrane.data.Marker marker = campusMapView.getResultMarker();
-        showCard(marker);
-    }
-
-    public void showCard(com.mrane.data.Marker marker) {
+    public void showCard(Marker marker) {
         String name = marker.getName();
         if (!marker.getShortName().equals("0"))
             name = marker.getShortName();
@@ -561,7 +556,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         cardSlideListener.showCard();
     }
 
-    private void setImage(LinearLayout parent, com.mrane.data.Marker marker) {
+    private void setImage(LinearLayout parent, Marker marker) {
         View v = getLayoutInflater().inflate(R.layout.map_card_image, parent);
         ImageView iv = (ImageView) v.findViewById(R.id.place_image);
         int imageId = getResources().getIdentifier(marker.getImageUri(),
@@ -569,7 +564,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         iv.setImageResource(imageId);
     }
 
-    private void addDescriptionView(com.mrane.data.Marker marker) {
+    private void addDescriptionView(Marker marker) {
         LinearLayout parent = (LinearLayout) getActivity().findViewById(R.id.other_details);
         parent.removeAllViews();
         if (!marker.getImageUri().isEmpty()) {
@@ -655,7 +650,7 @@ public class MapFragment extends Fragment implements TextWatcher,
 
     }
 
-    private SpannableStringBuilder getDescriptionText(com.mrane.data.Marker marker) {
+    private SpannableStringBuilder getDescriptionText(Marker marker) {
         String text = marker.getDescription();
         SpannableStringBuilder desc = new SpannableStringBuilder(text);
         String[] toBoldParts = {"Email", "Phone No.", "Fax No."};
@@ -674,7 +669,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                     SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    private void setSubHeading(com.mrane.data.Marker marker) {
+    private void setSubHeading(Marker marker) {
         SpannableStringBuilder result = new SpannableStringBuilder("");
         result.append(marker.getName());
         if (marker instanceof Room) {
@@ -766,17 +761,17 @@ public class MapFragment extends Fragment implements TextWatcher,
         placeSubHeadTextView.setText(result);
     }
 
-    private Drawable getLockIcon(com.mrane.data.Marker marker) {
+    private Drawable getLockIcon(Marker marker) {
         int color = marker.getColor();
         int drawableId = R.drawable.lock_all_off;
         if (campusMapView.isAddedMarker(marker)) {
-            if (color == com.mrane.data.Marker.COLOR_BLUE)
+            if (color == Marker.COLOR_BLUE)
                 drawableId = R.drawable.lock_blue_on;
-            else if (color == com.mrane.data.Marker.COLOR_YELLOW)
+            else if (color == Marker.COLOR_YELLOW)
                 drawableId = R.drawable.lock_on_yellow;
-            else if (color == com.mrane.data.Marker.COLOR_GREEN)
+            else if (color == Marker.COLOR_GREEN)
                 drawableId = R.drawable.lock_green_on;
-            else if (color == com.mrane.data.Marker.COLOR_GRAY)
+            else if (color == Marker.COLOR_GRAY)
                 drawableId = R.drawable.lock_gray_on;
         }
         Drawable lock = getResources().getDrawable(drawableId);
@@ -788,11 +783,11 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void reCenterMarker() {
-        com.mrane.data.Marker marker = campusMapView.getResultMarker();
+        Marker marker = campusMapView.getResultMarker();
         reCenterMarker(marker);
     }
 
-    private void reCenterMarker(com.mrane.data.Marker marker) {
+    private void reCenterMarker(Marker marker) {
         PointF p = marker.getPoint();
         float shift = getResources().getDimension(R.dimen.expanded_card_height) / 2.0f;
         PointF center = new PointF(p.x, p.y + shift);
@@ -847,7 +842,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void setOldText() {
-        com.mrane.data.Marker oldMarker = campusMapView.getResultMarker();
+        Marker oldMarker = campusMapView.getResultMarker();
         if (oldMarker == null) {
             if (editText.length() > 0) {
                 editText.getText().clear();
@@ -928,7 +923,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         setAddMarkerIcon(campusMapView.getResultMarker());
     }
 
-    private void setAddMarkerIcon(com.mrane.data.Marker m) {
+    private void setAddMarkerIcon(Marker m) {
         addMarkerIcon.setImageDrawable(getLockIcon(m));
     }
 
