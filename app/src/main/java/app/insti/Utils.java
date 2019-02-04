@@ -88,8 +88,8 @@ public final class Utils {
     public static final void updateFragment(Fragment fragment, FragmentActivity fragmentActivity) {
         FragmentTransaction ft = fragmentActivity.getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.slide_in_up, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out_down);
-        ft.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());
-        ft.addToBackStack(fragment.getTag());
+        ft.replace(R.id.framelayout_for_fragment, fragment, getTag(fragment));
+        ft.addToBackStack(getTag(fragment));
         ft.commit();
     }
 
@@ -141,8 +141,8 @@ public final class Utils {
         }
 
         /* Update the fragment */
-        ft.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag())
-                .addToBackStack(fragment.getTag())
+        ft.replace(R.id.framelayout_for_fragment, fragment, getTag(fragment))
+                .addToBackStack(getTag(fragment))
                 .commit();
     }
 
@@ -247,8 +247,8 @@ public final class Utils {
         FragmentManager fm = fragmentActivity.getSupportFragmentManager();
         fm.popBackStack();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.addToBackStack(newFragment.getTag());
-        ft.replace(R.id.framelayout_for_fragment, newFragment, newFragment.getTag()).commit();
+        ft.addToBackStack(getTag(fragment));
+        ft.replace(R.id.framelayout_for_fragment, newFragment, getTag(fragment)).commit();
     }
 
     public static void setSelectedMenuItem(Activity activity, int id) {
@@ -285,5 +285,13 @@ public final class Utils {
     public static void clearCookies(Context context) {
         CookieManager.getInstance().removeAllCookies(null);
         CookieManager.getInstance().flush();
+    }
+
+    public static String getTag(Fragment fragment) {
+        String TAG = fragment.getTag();
+        try {
+            TAG = (String) fragment.getClass().getField("TAG").get(fragment);
+        } catch (NoSuchFieldException | IllegalAccessException ignored) {}
+        return TAG;
     }
 }

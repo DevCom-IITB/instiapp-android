@@ -18,7 +18,6 @@ public class ListFragment extends Fragment {
 
     MapFragment mainActivity;
     FuzzySearchAdapter adapter;
-    HashMap<String, Marker> data;
     View rootView;
     ListView list;
 

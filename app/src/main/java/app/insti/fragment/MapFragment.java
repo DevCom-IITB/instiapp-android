@@ -6,7 +6,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Typeface;
@@ -27,8 +26,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
@@ -41,7 +38,6 @@ import android.text.util.Linkify;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,6 +99,9 @@ import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 public class MapFragment extends Fragment implements TextWatcher,
         TextView.OnEditorActionListener, AdapterView.OnItemClickListener, View.OnFocusChangeListener,
         View.OnTouchListener, ExpandableListView.OnChildClickListener {
+
+    public static final String TAG = MapFragment.class.getSimpleName();
+
     public static final PointF MAP_CENTER = new PointF(2971f, 1744f);
     public static final long DURATION_INIT_MAP_ANIM = 500;
     public static final String FONT_SEMIBOLD = "rigascreen_bold.ttf";
@@ -232,6 +231,7 @@ public class MapFragment extends Fragment implements TextWatcher,
             @Override
             public void onResponse(Call<List<Venue>> call, Response<List<Venue>> response) {
                 if (response.isSuccessful()) {
+                    if (getActivity() == null || getView() == null) return;
 
                     // Setup fade animation for background
                     int colorFrom = Utils.getAttrColor(getContext(), R.attr.themeColor);
