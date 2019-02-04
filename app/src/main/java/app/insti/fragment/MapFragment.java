@@ -231,7 +231,7 @@ public class MapFragment extends Fragment implements TextWatcher,
             @Override
             public void onResponse(Call<List<Venue>> call, Response<List<Venue>> response) {
                 if (response.isSuccessful()) {
-                    if (getActivity() == null || getView() == null) return;
+                    if (getActivity() == null || getView() == null || getContext() == null) return;
 
                     // Setup fade animation for background
                     int colorFrom = Utils.getAttrColor(getContext(), R.attr.themeColor);
@@ -241,6 +241,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                     colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animator) {
+                            if (getActivity() == null || getView() == null) return;
                             getView().findViewById(R.id.main_container).setBackgroundColor(
                                     (int) animator.getAnimatedValue()
                             );
@@ -249,6 +250,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                     colorAnimation.start();
 
                     // Show the location fab
+                    if (getView() == null) return;
                     ((FloatingActionButton) getView().findViewById(R.id.locate_fab)).show();
 
                     // Show the map and data

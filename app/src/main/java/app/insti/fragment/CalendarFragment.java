@@ -230,6 +230,8 @@ public class CalendarFragment extends BaseFragment {
             @Override
             public void onResponse(Call<NewsFeedResponse> call, Response<NewsFeedResponse> response) {
                 if (response.isSuccessful()) {
+                    if (getActivity() == null || getView() == null) return;
+
                     // Concatenate the response
                     NewsFeedResponse newsFeedResponse = response.body();
                     List<Event> eventList = newsFeedResponse.getEvents();
