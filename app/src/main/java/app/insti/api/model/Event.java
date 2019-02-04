@@ -66,23 +66,8 @@ public class Event implements CardInterface {
 
     private boolean eventBigImage = false;
 
-    public Event(String eventID, String eventStrID, String eventName, String eventDescription, String eventImageURL, Timestamp eventStartTime, Timestamp eventEndTime, boolean allDayEvent, List<Venue> eventVenues, List<Body> eventBodies, int eventInterestedCount, int eventGoingCount, List<User> eventInterested, List<User> eventGoing, String eventWebsiteURL, int eventUserUes) {
+    public Event(@NonNull String eventID) {
         this.eventID = eventID;
-        this.eventStrID = eventStrID;
-        this.eventName = eventName;
-        this.eventDescription = eventDescription;
-        this.eventImageURL = eventImageURL;
-        this.eventStartTime = eventStartTime;
-        this.eventEndTime = eventEndTime;
-        this.allDayEvent = allDayEvent;
-        this.eventVenues = eventVenues;
-        this.eventBodies = eventBodies;
-        this.eventInterestedCount = eventInterestedCount;
-        this.eventGoingCount = eventGoingCount;
-        this.eventInterested = eventInterested;
-        this.eventGoing = eventGoing;
-        this.eventWebsiteURL = eventWebsiteURL;
-        this.eventUserUes = eventUserUes;
     }
 
     public String getEventID() {

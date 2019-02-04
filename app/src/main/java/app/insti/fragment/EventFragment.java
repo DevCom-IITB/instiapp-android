@@ -352,7 +352,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
     }
 
     /** Setup button colors depending on status */
-    void setFollowButtons(int status) {
+    private void setFollowButtons(int status) {
         // Set colors
         Utils.setupFollowButton(getContext(), interestedButton, status == Constants.STATUS_INTERESTED);
         Utils.setupFollowButton(getContext(), goingButton, status == Constants.STATUS_GOING);

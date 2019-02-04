@@ -11,9 +11,9 @@ import app.insti.api.model.User;
 
 public class SessionManager {
     public SharedPreferences pref;
-    Editor editor;
-    Context context;
-    int PRIVATE_MODE = 0;
+    private Editor editor;
+    private Context context;
+    private final int PRIVATE_MODE = 0;
 
     public SessionManager(Context context) {
         this.context = context;

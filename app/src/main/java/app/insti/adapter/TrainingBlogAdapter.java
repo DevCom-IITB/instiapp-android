@@ -63,7 +63,6 @@ public class TrainingBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else {
             LayoutInflater inflater = LayoutInflater.from(context);
             View loadView = inflater.inflate(R.layout.blog_load_item, parent, false);
-            final TrainingBlogAdapter.ViewHolder postViewHolder = new TrainingBlogAdapter.ViewHolder(loadView);
             return new TrainingBlogAdapter.ProgressViewHolder(loadView);
         }
     }
