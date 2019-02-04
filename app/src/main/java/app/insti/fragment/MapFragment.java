@@ -11,13 +11,11 @@ import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -57,11 +55,15 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.mrane.campusmap.ExpandableListAdapter;
@@ -141,8 +143,15 @@ public class MapFragment extends Fragment implements TextWatcher,
     private boolean editTextFocused = false;
     private Toast toast;
     private String message = "Sorry, no such place in our data.";
+
+    private boolean creatingView = false;
+    private List<Venue> venues;
     private boolean GPSIsSetup = false;
     private boolean followingUser = false;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private MyLocationCallback myLocationCallback;
+    private LocationRequest mLocationRequest;
+
     private Marker user = new Marker("You", "", 0, 0, -10, "");
     private Handler mHandler = new Handler() {
         @Override
@@ -204,6 +213,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        creatingView = true;
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -220,9 +230,36 @@ public class MapFragment extends Fragment implements TextWatcher,
 
         /* Initialize */
         editText = (EditText) getView().findViewById(R.id.search);
-        setFonts();
 
-        getAPILocations();
+        if (markerlist == null) {
+            setFonts();
+            getAPILocations();
+        } else if (creatingView) {
+            setFonts();
+            if (venues != null) setupWithData(venues);
+            else getAPILocations();
+        }
+        creatingView = false;
+    }
+
+    @Override
+    public void onPause() {
+        if (fusedLocationProviderClient != null && myLocationCallback != null) {
+            fusedLocationProviderClient.removeLocationUpdates(myLocationCallback);
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        if (fusedLocationProviderClient != null && myLocationCallback != null) {
+            try {
+                fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, myLocationCallback, Looper.myLooper());
+            } catch (SecurityException ignored) {}
+        }
+
+        super.onResume();
     }
 
     private void getAPILocations() {
@@ -232,29 +269,9 @@ public class MapFragment extends Fragment implements TextWatcher,
             public void onResponse(Call<List<Venue>> call, Response<List<Venue>> response) {
                 if (response.isSuccessful()) {
                     if (getActivity() == null || getView() == null || getContext() == null) return;
-
-                    // Setup fade animation for background
-                    int colorFrom = Utils.getAttrColor(getContext(), R.attr.themeColor);
-                    int colorTo = getResources().getColor(R.color.colorGray);
-                    ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-                    colorAnimation.setDuration(250); // milliseconds
-                    colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator animator) {
-                            if (getActivity() == null || getView() == null) return;
-                            getView().findViewById(R.id.main_container).setBackgroundColor(
-                                    (int) animator.getAnimatedValue()
-                            );
-                        }
-                    });
-                    colorAnimation.start();
-
-                    // Show the location fab
-                    if (getView() == null) return;
-                    ((FloatingActionButton) getView().findViewById(R.id.locate_fab)).show();
-
                     // Show the map and data
-                    setupWithData(response.body());
+                    venues = response.body();
+                    setupWithData(venues);
                 }
             }
 
@@ -266,7 +283,29 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     void setupWithData(List<Venue> venues) {
-        if (getView() == null || getActivity() == null) return;
+        if (getActivity() == null || getView() == null || getContext() == null) return;
+
+        // Setup fade animation for background
+        int colorFrom = Utils.getAttrColor(getContext(), R.attr.themeColor);
+        int colorTo = getResources().getColor(R.color.colorGray);
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        colorAnimation.setDuration(250); // milliseconds
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                if (getActivity() == null || getView() == null) return;
+                getView().findViewById(R.id.main_container).setBackgroundColor(
+                        (int) animator.getAnimatedValue()
+                );
+            }
+        });
+        colorAnimation.start();
+
+        // Show the location fab
+        if (getView() == null) return;
+        ((FloatingActionButton) getView().findViewById(R.id.locate_fab)).show();
+
+        // Start the setup
         Locations mLocations = new Locations(venues);
         data = mLocations.data;
         markerlist = new ArrayList<>(data.values());
@@ -287,7 +326,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     private void locate() {
         followingUser = true;
         if (!GPSIsSetup) {
-            displayLocationSettingsRequest(getContext());
+            displayLocationSettingsRequest();
         } else if (user != null) {
             if (!campusMapView.isAddedMarker(user)) {
                 campusMapView.addMarker(user);
@@ -956,12 +995,29 @@ public class MapFragment extends Fragment implements TextWatcher,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_LOCATION);
         } else {
-            LocationManager locationManager = (LocationManager)
-                    getActivity().getSystemService(Context.LOCATION_SERVICE);
-            LocationListener locationListener = new MyLocationListener();
             try {
-                locationManager.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER, 50, 1, locationListener);
+
+
+                // Create the location request to start receiving updates
+                mLocationRequest = new LocationRequest();
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                mLocationRequest.setInterval(500);
+                mLocationRequest.setFastestInterval(200);
+
+                // Create LocationSettingsRequest object using location request
+                LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+                builder.addLocationRequest(mLocationRequest);
+                LocationSettingsRequest locationSettingsRequest = builder.build();
+
+                // Check whether location settings are satisfied
+                SettingsClient settingsClient = LocationServices.getSettingsClient(getActivity());
+                settingsClient.checkLocationSettings(locationSettingsRequest);
+
+                // Setup the callback
+                myLocationCallback = new MyLocationCallback();
+                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+                fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, myLocationCallback, Looper.myLooper());
+
                 GPSIsSetup = true;
                 Toast.makeText(getContext(), "WARNING: Location is in Beta. Use with Caution.", Toast.LENGTH_LONG).show();
             } catch (SecurityException ignored) {
@@ -974,7 +1030,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         this.followingUser = followingUser;
     }
 
-    private void displayLocationSettingsRequest(Context context) {
+    private void displayLocationSettingsRequest() {
         if (getView() == null || getActivity() == null) return;
         LocationRequest mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -1055,17 +1111,16 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     /*---------- Listener class to get coordinates ------------- */
-    private class MyLocationListener implements LocationListener {
-
+    private class MyLocationCallback extends LocationCallback {
         @Override
-        public void onLocationChanged(Location loc) {
+        public void onLocationResult(LocationResult locationResult) {
             if (getView() == null || getActivity() == null) return;
 
             // Set the origin
             double Xn = Constants.MAP_Xn, Yn = Constants.MAP_Yn, Zn = Constants.MAP_Zn, Zyn = Constants.MAP_Zyn;
 
-            double x = (loc.getLatitude() - Xn) * 1000;
-            double y = (loc.getLongitude() - Yn) * 1000;
+            double x = (locationResult.getLastLocation().getLatitude() - Xn) * 1000;
+            double y = (locationResult.getLastLocation().getLongitude() - Yn) * 1000;
 
             // Pre-trained weights
             double[] A = Constants.MAP_WEIGHTS_X;
@@ -1079,25 +1134,15 @@ public class MapFragment extends Fragment implements TextWatcher,
                     campusMapView.addMarker(user);
                 }
                 user.setPoint(new PointF(px, py));
-                user.setName("You - " + (int) loc.getAccuracy() + "m");
+                user.setName("You - " + (int) locationResult.getLastLocation().getAccuracy() + "m");
                 if (followingUser) {
                     SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
                     if (anim != null) anim.start();
                 }
                 campusMapView.invalidate();
             }
-        }
 
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
+            super.onLocationResult(locationResult);
         }
     }
 }
