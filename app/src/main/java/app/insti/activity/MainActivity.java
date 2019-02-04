@@ -658,7 +658,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     // Map
                     MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.TAG);
                     if (mapFragment != null && mapFragment.isVisible()) {
-                        MapFragment.getMainActivity().setupGPS();
+                        MapFragment.getMainActivity().setupGPS(true);
                     }
 
                     // File complaint

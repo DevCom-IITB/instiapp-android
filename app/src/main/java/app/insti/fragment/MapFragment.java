@@ -318,15 +318,22 @@ public class MapFragment extends Fragment implements TextWatcher,
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                locate();
+                locate(true);
             }
         });
+
+        // Setup GPS if already has permission
+        String permission = Manifest.permission.ACCESS_FINE_LOCATION;
+        int res = getContext().checkCallingOrSelfPermission(permission);
+        if (res == PackageManager.PERMISSION_GRANTED) {
+            locate(false);
+        }
     }
 
-    private void locate() {
+    private void locate(boolean showWarning) {
         followingUser = true;
         if (!GPSIsSetup) {
-            displayLocationSettingsRequest();
+            displayLocationSettingsRequest(showWarning);
         } else if (user != null) {
             if (!campusMapView.isAddedMarker(user)) {
                 campusMapView.addMarker(user);
@@ -985,7 +992,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         return slidingLayout;
     }
 
-    public void setupGPS() {
+    public void setupGPS(boolean showWarning) {
         if (getView() == null || getActivity() == null) return;
         // Permissions stuff
         if (ContextCompat.checkSelfPermission(getActivity(),
@@ -996,8 +1003,6 @@ public class MapFragment extends Fragment implements TextWatcher,
                     MY_PERMISSIONS_REQUEST_LOCATION);
         } else {
             try {
-
-
                 // Create the location request to start receiving updates
                 mLocationRequest = new LocationRequest();
                 mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -1019,7 +1024,10 @@ public class MapFragment extends Fragment implements TextWatcher,
                 fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, myLocationCallback, Looper.myLooper());
 
                 GPSIsSetup = true;
-                Toast.makeText(getContext(), "WARNING: Location is in Beta. Use with Caution.", Toast.LENGTH_LONG).show();
+
+                if (showWarning) {
+                    Toast.makeText(getContext(), "WARNING: Location is in Beta. Use with Caution.", Toast.LENGTH_LONG).show();
+                }
             } catch (SecurityException ignored) {
                 Toast.makeText(getContext(), "No permission!", Toast.LENGTH_LONG).show();
             }
@@ -1030,7 +1038,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         this.followingUser = followingUser;
     }
 
-    private void displayLocationSettingsRequest() {
+    private void displayLocationSettingsRequest(final boolean showWarning) {
         if (getView() == null || getActivity() == null) return;
         LocationRequest mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -1050,7 +1058,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                             result.getLocationSettingsStates().isGpsUsable() &&
                             result.getLocationSettingsStates().isLocationPresent() &&
                             result.getLocationSettingsStates().isLocationUsable()) {
-                        setupGPS();
+                        setupGPS(showWarning);
                     }
                 } catch (ApiException ex) {
                     switch (ex.getStatusCode()) {
@@ -1060,7 +1068,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                                         (ResolvableApiException) ex;
                                 resolvableApiException
                                         .startResolutionForResult(getActivity(), 87);
-                                setupGPS();
+                                setupGPS(showWarning);
                             } catch (IntentSender.SendIntentException e) {
                             }
                             break;
