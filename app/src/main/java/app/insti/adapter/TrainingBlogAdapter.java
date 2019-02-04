@@ -28,7 +28,6 @@ public class TrainingBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final int VIEW_PROG = 0;
 
     private List<TrainingBlogPost> posts;
-    private Context context;
     private ItemClickListener itemClickListener;
 
     public TrainingBlogAdapter(List<TrainingBlogPost> posts, ItemClickListener itemClickListener) {
@@ -47,7 +46,7 @@ public class TrainingBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
+        final Context context = parent.getContext();
         if (viewType == VIEW_ITEM) {
             LayoutInflater inflater = LayoutInflater.from(context);
             View postView = inflater.inflate(R.layout.blog_post_card, parent, false);

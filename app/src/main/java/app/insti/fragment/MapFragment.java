@@ -282,7 +282,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         });
     }
 
-    void setupWithData(List<Venue> venues) {
+    private void setupWithData(List<Venue> venues) {
         if (getActivity() == null || getView() == null || getContext() == null) return;
 
         // Setup fade animation for background
@@ -502,7 +502,6 @@ public class MapFragment extends Fragment implements TextWatcher,
 
     @Override
     public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-        this.setCorrectIcons();
     }
 
     @Override
@@ -536,7 +535,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         fragmentManager.popBackStack(firstStackTag,
                 FragmentManager.POP_BACK_STACK_INCLUSIVE);
         this.removeEditTextFocus(null);
-        this.setCorrectIcons();
         this.displayMap();
     }
 
@@ -898,23 +896,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         }
     }
 
-    private void setCorrectIcons() {
-        if (noFragments) {
-            if (this.handleRemoveIcon()) {
-                this.noIndexButton();
-            }
-        } else {
-            if (fragment instanceof ListFragment) {
-                if (this.handleRemoveIcon()) {
-                    this.noIndexButton();
-                }
-            }
-        }
-    }
-
-    private void noIndexButton() {
-    }
-
     private boolean handleRemoveIcon() {
         String text = editText.getText().toString();
         return !text.isEmpty();
@@ -932,7 +913,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         } else {
             fragmentContainer.setOnTouchListener(null);
         }
-        this.setCorrectIcons();
     }
 
     private void hideKeyboard() {
@@ -953,10 +933,8 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     public void playAnimSound(int sound_index) {
-        if (sound_index >= 0 && sound_index < soundPoolIds.length) {
-            if (!settingsManager.isMuted()) {
-                soundPool.play(soundPoolIds[sound_index], 1.0f, 1.0f, 1, 0, 1f);
-            }
+        if ((sound_index >= 0 && sound_index < soundPoolIds.length) && !settingsManager.isMuted()) {
+            soundPool.play(soundPoolIds[sound_index], 1.0f, 1.0f, 1, 0, 1f);
         }
     }
 

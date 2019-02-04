@@ -36,8 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     private final String guestUri = "https://guesturi";
     public String authCode = null;
     public String fcmId = null;
-    SessionManager session;
-    Context mContext = this;
+    private SessionManager session;
+    private Context mContext = this;
     private boolean loggingIn = false;
     private ProgressDialog progressDialog;
 

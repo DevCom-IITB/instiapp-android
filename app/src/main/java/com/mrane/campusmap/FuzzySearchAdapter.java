@@ -24,8 +24,8 @@ import app.insti.fragment.MapFragment;
 
 public class FuzzySearchAdapter extends BaseAdapter {
 
-    Context mContext;
-    LayoutInflater inflater;
+    private Context mContext;
+    private LayoutInflater inflater;
     private List<Marker> resultlist = null;
     private ArrayList<Marker> inputlist;
     private List<ScoredMarker> map;

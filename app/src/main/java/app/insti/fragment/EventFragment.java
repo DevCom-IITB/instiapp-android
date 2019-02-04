@@ -362,7 +362,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         goingButton.setText(getCountBadgeSpannable("GOING", event.getEventGoingCount()));
     }
 
-    View.OnClickListener getUESOnClickListener(final int status) {
+    private View.OnClickListener getUESOnClickListener(final int status) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
