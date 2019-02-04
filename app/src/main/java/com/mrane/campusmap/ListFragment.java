@@ -12,19 +12,25 @@ import app.insti.fragment.MapFragment;
 
 public class ListFragment extends Fragment {
 
+    private MapFragment mapFragment = null;
+
     public ListFragment() {
+    }
+
+    public ListFragment forFragment(MapFragment mapFragment) {
+        this.mapFragment = mapFragment;
+        return this;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        MapFragment mainActivity = MapFragment.getMainActivity();
-        final FuzzySearchAdapter adapter = mainActivity.getAdapter();
+        final FuzzySearchAdapter adapter = mapFragment.getAdapter();
         View rootView = inflater.inflate(R.layout.map_list_fragment, container, false);
         ListView list = rootView.findViewById(R.id.suggestion_list);
         list.setAdapter(adapter);
-        list.setOnItemClickListener(mainActivity);
-        list.setOnTouchListener(mainActivity);
+        list.setOnItemClickListener(mapFragment);
+        list.setOnTouchListener(mapFragment);
         list.setFastScrollEnabled(true);
         return rootView;
     }

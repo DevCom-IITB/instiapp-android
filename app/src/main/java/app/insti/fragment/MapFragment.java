@@ -113,7 +113,6 @@ public class MapFragment extends Fragment implements TextWatcher,
     public static final int SOUND_ID_RESULT = 0;
     public static final int SOUND_ID_ADD = 1;
     public static final int SOUND_ID_REMOVE = 2;
-    private static MapFragment mainactivity;
     private final String firstStackTag = "FIRST_TAG";
     private final int MSG_ANIMATE = 1;
     private final int MSG_PLAY_SOUND = 2;
@@ -175,10 +174,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         // Required empty public constructor
     }
 
-    public static MapFragment getMainActivity() {
-        return mainactivity;
-    }
-
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null)
@@ -206,7 +201,6 @@ public class MapFragment extends Fragment implements TextWatcher,
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mainactivity = this;
         super.onCreate(savedInstanceState);
     }
 
@@ -381,6 +375,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         settingsManager = new SettingsManager(getContext());
 
         campusMapView = (CampusMapView) getActivity().findViewById(R.id.campusMapView);
+        campusMapView.initialise(this);
         campusMapView.setImageAsset("map.jpg");
         campusMapView.setSettingsManager(settingsManager);
         campusMapView.setData(data);
@@ -389,7 +384,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         addMarkerIcon = (ImageButton) getActivity().findViewById(R.id.add_marker_icon);
 
         fragmentManager = getChildFragmentManager();
-        listFragment = new ListFragment();
+        listFragment = (new ListFragment()).forFragment(this);
 
         adapter.setSettingsManager(settingsManager);
 

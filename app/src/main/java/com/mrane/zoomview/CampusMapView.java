@@ -82,7 +82,6 @@ public class CampusMapView extends SubsamplingScaleImageView {
 
     public CampusMapView(Context context, AttributeSet attr) {
         super(context, attr);
-        initialise();
     }
 
     public static int getShowPinRatio() {
@@ -109,15 +108,14 @@ public class CampusMapView extends SubsamplingScaleImageView {
         this.initialMarkerName = initialMarkerName;
     }
 
-    private void initialise() {
+    public void initialise(MapFragment mapFragment) {
         displayMetrics = getResources().getDisplayMetrics();
         density = displayMetrics.density;
         highlightedMarkerScale = 1.0f;
         initMarkers();
 
         initPaints();
-
-        mainActivity = MapFragment.getMainActivity();
+        mainActivity = mapFragment;
 
         setGestureDetector();
         super.setMaxScale(density * MAX_SCALE);
@@ -769,7 +767,7 @@ public class CampusMapView extends SubsamplingScaleImageView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        MapFragment.getMainActivity().setFollowingUser(false);
+        mainActivity.setFollowingUser(false);
         return super.onTouchEvent(event);
     }
 
