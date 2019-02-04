@@ -27,9 +27,6 @@ public class RoleRecyclerViewFragment extends Fragment implements TransitionTarg
     private static final String TAG = "RoleRecyclerViewFragment";
     public Fragment parentFragment = null;
 
-    private RecyclerView recyclerView;
-    private RoleAdapter roleAdapter;
-
     private List<Role> roleList;
 
     public RoleRecyclerViewFragment() {
@@ -70,8 +67,8 @@ public class RoleRecyclerViewFragment extends Fragment implements TransitionTarg
     public void onStart() {
         super.onStart();
 
-        recyclerView = (RecyclerView) getActivity().findViewById(R.id.role_recycler_view);
-        roleAdapter = new RoleAdapter(roleList, this);
+        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.role_recycler_view);
+        RoleAdapter roleAdapter = new RoleAdapter(roleList, this);
         roleAdapter.uid = "RRVFrag";
         recyclerView.setAdapter(roleAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

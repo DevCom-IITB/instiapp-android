@@ -412,20 +412,17 @@ public class CampusMapView extends SubsamplingScaleImageView {
 
         for (Marker marker : markerList) {
             if (isInView(marker.getPoint())) {
-                if (isShowPinScale(marker)
-                        && !(isResultMarker(marker) || addedMarkerList
-                        .contains(marker))) {
-                    if (shouldShowUp(marker))
-                        drawPionterAndText(canvas, marker);
+                if (isShowPinScale(marker) &&
+                        !(isResultMarker(marker) || addedMarkerList.contains(marker)) &&
+                        shouldShowUp(marker)) {
+                    drawPionterAndText(canvas, marker);
                 }
             }
         }
         for (Marker marker : addedMarkerList) {
-            if (isInView(marker.getPoint())) {
-                if (!isResultMarker(marker)) {
-                    drawMarkerBitmap(canvas, marker);
-                    drawMarkerText(canvas, marker);
-                }
+            if (isInView(marker.getPoint()) && !isResultMarker(marker)) {
+                drawMarkerBitmap(canvas, marker);
+                drawMarkerText(canvas, marker);
             }
         }
         Marker marker = getResultMarker();
@@ -689,8 +686,6 @@ public class CampusMapView extends SubsamplingScaleImageView {
                     if (motionEvent.getX() < 20 * density) {
                         getParent().requestDisallowInterceptTouchEvent(false);
                         return true;
-                    } else {
-//						CampusMapView.this.setPanEnabled(true);
                     }
                 } else if (action == MotionEvent.ACTION_UP) {
                     CampusMapView.this.setPanEnabled(true);

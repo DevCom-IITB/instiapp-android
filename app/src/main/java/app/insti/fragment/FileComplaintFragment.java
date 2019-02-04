@@ -69,10 +69,10 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.insti.Constants;
 import app.insti.ComplaintDescriptionAutoCompleteTextView;
-import app.insti.R;
 import app.insti.ComplaintTag;
+import app.insti.Constants;
+import app.insti.R;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.ImageViewPagerAdapter;
@@ -95,7 +95,7 @@ import static app.insti.Constants.RESULT_LOAD_IMAGE;
 
 public class FileComplaintFragment extends Fragment {
 
-    private static final String TAG = FileComplaintFragment.class.getSimpleName();
+    public static final String TAG = FileComplaintFragment.class.getSimpleName();
     private static FileComplaintFragment mainactivity;
     private Button buttonSubmit;
     private ComplaintDescriptionAutoCompleteTextView descriptionAutoCompleteTextview;

@@ -27,7 +27,6 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
     private List<PlacementBlogPost> posts;
-    private Context context;
     private ItemClickListener itemClickListener;
     public PlacementBlogAdapter(List<PlacementBlogPost> posts, ItemClickListener itemClickListener) {
         this.posts = posts;
@@ -45,7 +44,7 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        context = parent.getContext();
+        final Context context = parent.getContext();
         if (viewType == VIEW_ITEM) {
             LayoutInflater inflater = LayoutInflater.from(context);
             View postView = inflater.inflate(R.layout.blog_post_card, parent, false);

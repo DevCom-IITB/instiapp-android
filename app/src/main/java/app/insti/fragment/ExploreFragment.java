@@ -41,7 +41,7 @@ import retrofit2.Response;
 public class ExploreFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    LinearLayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
 
     private static List<Body> allBodies = new ArrayList<>();
     private static List<Body> bodies = new ArrayList<>();

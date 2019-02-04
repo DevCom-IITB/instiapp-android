@@ -6,19 +6,16 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -27,8 +24,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
@@ -41,7 +36,6 @@ import android.text.util.Linkify;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,11 +55,15 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.mrane.campusmap.ExpandableListAdapter;
@@ -103,6 +101,9 @@ import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 public class MapFragment extends Fragment implements TextWatcher,
         TextView.OnEditorActionListener, AdapterView.OnItemClickListener, View.OnFocusChangeListener,
         View.OnTouchListener, ExpandableListView.OnChildClickListener {
+
+    public static final String TAG = MapFragment.class.getSimpleName();
+
     public static final PointF MAP_CENTER = new PointF(2971f, 1744f);
     public static final long DURATION_INIT_MAP_ANIM = 500;
     public static final String FONT_SEMIBOLD = "rigascreen_bold.ttf";
@@ -110,8 +111,6 @@ public class MapFragment extends Fragment implements TextWatcher,
     public static final int SOUND_ID_RESULT = 0;
     public static final int SOUND_ID_ADD = 1;
     public static final int SOUND_ID_REMOVE = 2;
-    private static final String INSTANCE_CARD_STATE = "instanceCardState";
-    private static final String INSTANCE_VISIBILITY_INDEX = "instanceVisibilityIndex";
     private static MapFragment mainactivity;
     private final String firstStackTag = "FIRST_TAG";
     private final int MSG_ANIMATE = 1;
@@ -124,7 +123,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     public TextView placeNameTextView;
     public TextView placeSubHeadTextView;
     public EditText editText;
-    public HashMap<String, com.mrane.data.Marker> data;
+    public HashMap<String, Marker> data;
     public FragmentTransaction transaction;
     public CampusMapView campusMapView;
     public ImageButton addMarkerIcon;
@@ -137,18 +136,22 @@ public class MapFragment extends Fragment implements TextWatcher,
     private ListFragment listFragment;
     private Fragment fragment;
     private RelativeLayout fragmentContainer;
-    private View actionBarView;
-    private List<com.mrane.data.Marker> markerlist;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
+    private List<Marker> markerlist;
     private SlidingUpPanelLayout slidingLayout;
     private CardSlideListener cardSlideListener;
     private boolean noFragments = true;
     private boolean editTextFocused = false;
     private Toast toast;
     private String message = "Sorry, no such place in our data.";
+
+    private boolean creatingView = false;
+    private List<Venue> venues;
     private boolean GPSIsSetup = false;
     private boolean followingUser = false;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private MyLocationCallback myLocationCallback;
+    private LocationRequest mLocationRequest;
+
     private Marker user = new Marker("You", "", 0, 0, -10, "");
     private Handler mHandler = new Handler() {
         @Override
@@ -210,6 +213,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        creatingView = true;
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -226,9 +230,36 @@ public class MapFragment extends Fragment implements TextWatcher,
 
         /* Initialize */
         editText = (EditText) getView().findViewById(R.id.search);
-        setFonts();
 
-        getAPILocations();
+        if (markerlist == null) {
+            setFonts();
+            getAPILocations();
+        } else if (creatingView) {
+            setFonts();
+            if (venues != null) setupWithData(venues);
+            else getAPILocations();
+        }
+        creatingView = false;
+    }
+
+    @Override
+    public void onPause() {
+        if (fusedLocationProviderClient != null && myLocationCallback != null) {
+            fusedLocationProviderClient.removeLocationUpdates(myLocationCallback);
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        if (fusedLocationProviderClient != null && myLocationCallback != null) {
+            try {
+                fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, myLocationCallback, Looper.myLooper());
+            } catch (SecurityException ignored) {}
+        }
+
+        super.onResume();
     }
 
     private void getAPILocations() {
@@ -237,27 +268,10 @@ public class MapFragment extends Fragment implements TextWatcher,
             @Override
             public void onResponse(Call<List<Venue>> call, Response<List<Venue>> response) {
                 if (response.isSuccessful()) {
-
-                    // Setup fade animation for background
-                    int colorFrom = Utils.getAttrColor(getContext(), R.attr.themeColor);
-                    int colorTo = getResources().getColor(R.color.colorGray);
-                    ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-                    colorAnimation.setDuration(250); // milliseconds
-                    colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator animator) {
-                            getView().findViewById(R.id.main_container).setBackgroundColor(
-                                    (int) animator.getAnimatedValue()
-                            );
-                        }
-                    });
-                    colorAnimation.start();
-
-                    // Show the location fab
-                    ((FloatingActionButton) getView().findViewById(R.id.locate_fab)).show();
-
+                    if (getActivity() == null || getView() == null || getContext() == null) return;
                     // Show the map and data
-                    setupWithData(response.body());
+                    venues = response.body();
+                    setupWithData(venues);
                 }
             }
 
@@ -269,10 +283,32 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     void setupWithData(List<Venue> venues) {
-        if (getView() == null || getActivity() == null) return;
+        if (getActivity() == null || getView() == null || getContext() == null) return;
+
+        // Setup fade animation for background
+        int colorFrom = Utils.getAttrColor(getContext(), R.attr.themeColor);
+        int colorTo = getResources().getColor(R.color.colorGray);
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        colorAnimation.setDuration(250); // milliseconds
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                if (getActivity() == null || getView() == null) return;
+                getView().findViewById(R.id.main_container).setBackgroundColor(
+                        (int) animator.getAnimatedValue()
+                );
+            }
+        });
+        colorAnimation.start();
+
+        // Show the location fab
+        if (getView() == null) return;
+        ((FloatingActionButton) getView().findViewById(R.id.locate_fab)).show();
+
+        // Start the setup
         Locations mLocations = new Locations(venues);
         data = mLocations.data;
-        markerlist = new ArrayList<com.mrane.data.Marker>(data.values());
+        markerlist = new ArrayList<>(data.values());
         if (getArguments() != null) {
             setupMap(getArguments().getString(Constants.MAP_INITIAL_MARKER));
         }
@@ -282,15 +318,22 @@ public class MapFragment extends Fragment implements TextWatcher,
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                locate();
+                locate(true);
             }
         });
+
+        // Setup GPS if already has permission
+        String permission = Manifest.permission.ACCESS_FINE_LOCATION;
+        int res = getContext().checkCallingOrSelfPermission(permission);
+        if (res == PackageManager.PERMISSION_GRANTED) {
+            locate(false);
+        }
     }
 
-    private void locate() {
+    private void locate(boolean showWarning) {
         followingUser = true;
         if (!GPSIsSetup) {
-            displayLocationSettingsRequest(getContext());
+            displayLocationSettingsRequest(showWarning);
         } else if (user != null) {
             if (!campusMapView.isAddedMarker(user)) {
                 campusMapView.addMarker(user);
@@ -363,22 +406,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        // TODO Auto-generated method stub
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO Auto-generated method stub
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void initShowDefault() {
         String[] keys = {"Convocation Hall", "Hostel 13 House of Titans",
                 "Hostel 15", "Main Gate no. 2",
@@ -426,12 +453,8 @@ public class MapFragment extends Fragment implements TextWatcher,
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                int totalHeight = slidingLayout.getHeight();
-                int expandedCardHeight = getResources().getDimensionPixelSize(
-                        R.dimen.expanded_card_height);
                 float anchorPoint = 0.5f;
                 slidingLayout.setAnchorPoint(anchorPoint);
-                Log.d("testing", "Anchor point = " + anchorPoint);
             }
         };
 
@@ -543,7 +566,7 @@ public class MapFragment extends Fragment implements TextWatcher,
             String key = editText.getText().toString();
 
             // get Marker object if exists
-            com.mrane.data.Marker marker = data.get(key);
+            Marker marker = data.get(key);
 
             // display and zoom to marker if exists
             if (marker != null) {
@@ -558,17 +581,12 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void showResultOnMap(String key) {
-        com.mrane.data.Marker marker = data.get(key);
+        Marker marker = data.get(key);
         showCard(marker);
         campusMapView.setAndShowResultMarker(marker);
     }
 
-    public void showCard() {
-        com.mrane.data.Marker marker = campusMapView.getResultMarker();
-        showCard(marker);
-    }
-
-    public void showCard(com.mrane.data.Marker marker) {
+    public void showCard(Marker marker) {
         String name = marker.getName();
         if (!marker.getShortName().equals("0"))
             name = marker.getShortName();
@@ -584,7 +602,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         cardSlideListener.showCard();
     }
 
-    private void setImage(LinearLayout parent, com.mrane.data.Marker marker) {
+    private void setImage(LinearLayout parent, Marker marker) {
         View v = getLayoutInflater().inflate(R.layout.map_card_image, parent);
         ImageView iv = (ImageView) v.findViewById(R.id.place_image);
         int imageId = getResources().getIdentifier(marker.getImageUri(),
@@ -592,7 +610,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         iv.setImageResource(imageId);
     }
 
-    private void addDescriptionView(com.mrane.data.Marker marker) {
+    private void addDescriptionView(Marker marker) {
         LinearLayout parent = (LinearLayout) getActivity().findViewById(R.id.other_details);
         parent.removeAllViews();
         if (!marker.getImageUri().isEmpty()) {
@@ -678,7 +696,7 @@ public class MapFragment extends Fragment implements TextWatcher,
 
     }
 
-    private SpannableStringBuilder getDescriptionText(com.mrane.data.Marker marker) {
+    private SpannableStringBuilder getDescriptionText(Marker marker) {
         String text = marker.getDescription();
         SpannableStringBuilder desc = new SpannableStringBuilder(text);
         String[] toBoldParts = {"Email", "Phone No.", "Fax No."};
@@ -697,18 +715,18 @@ public class MapFragment extends Fragment implements TextWatcher,
                     SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    private void setSubHeading(com.mrane.data.Marker marker) {
+    private void setSubHeading(Marker marker) {
         SpannableStringBuilder result = new SpannableStringBuilder("");
         result.append(marker.getName());
         if (marker instanceof Room) {
             Room room = (Room) marker;
             String tag = room.tag;
-            if (!tag.equals("Inside")) {
+            if (!"Inside".equals(tag)) {
                 tag += ",";
             } else {
                 tag = "in";
             }
-            com.mrane.data.Marker parent = data.get(room.parentKey);
+            Marker parent = data.get(room.parentKey);
             final String parentKey = parent.getName();
             String parentName = parent.getName();
             if (!parent.getShortName().equals("0"))
@@ -789,17 +807,17 @@ public class MapFragment extends Fragment implements TextWatcher,
         placeSubHeadTextView.setText(result);
     }
 
-    private Drawable getLockIcon(com.mrane.data.Marker marker) {
+    private Drawable getLockIcon(Marker marker) {
         int color = marker.getColor();
         int drawableId = R.drawable.lock_all_off;
         if (campusMapView.isAddedMarker(marker)) {
-            if (color == com.mrane.data.Marker.COLOR_BLUE)
+            if (color == Marker.COLOR_BLUE)
                 drawableId = R.drawable.lock_blue_on;
-            else if (color == com.mrane.data.Marker.COLOR_YELLOW)
+            else if (color == Marker.COLOR_YELLOW)
                 drawableId = R.drawable.lock_on_yellow;
-            else if (color == com.mrane.data.Marker.COLOR_GREEN)
+            else if (color == Marker.COLOR_GREEN)
                 drawableId = R.drawable.lock_green_on;
-            else if (color == com.mrane.data.Marker.COLOR_GRAY)
+            else if (color == Marker.COLOR_GRAY)
                 drawableId = R.drawable.lock_gray_on;
         }
         Drawable lock = getResources().getDrawable(drawableId);
@@ -811,11 +829,11 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void reCenterMarker() {
-        com.mrane.data.Marker marker = campusMapView.getResultMarker();
+        Marker marker = campusMapView.getResultMarker();
         reCenterMarker(marker);
     }
 
-    private void reCenterMarker(com.mrane.data.Marker marker) {
+    private void reCenterMarker(Marker marker) {
         PointF p = marker.getPoint();
         float shift = getResources().getDimension(R.dimen.expanded_card_height) / 2.0f;
         PointF center = new PointF(p.x, p.y + shift);
@@ -870,7 +888,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void setOldText() {
-        com.mrane.data.Marker oldMarker = campusMapView.getResultMarker();
+        Marker oldMarker = campusMapView.getResultMarker();
         if (oldMarker == null) {
             if (editText.length() > 0) {
                 editText.getText().clear();
@@ -899,11 +917,7 @@ public class MapFragment extends Fragment implements TextWatcher,
 
     private boolean handleRemoveIcon() {
         String text = editText.getText().toString();
-        if (text.isEmpty() || text.equals(null)) {
-            return false;
-        } else {
-            return true;
-        }
+        return !text.isEmpty();
     }
 
     @Override
@@ -955,7 +969,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         setAddMarkerIcon(campusMapView.getResultMarker());
     }
 
-    private void setAddMarkerIcon(com.mrane.data.Marker m) {
+    private void setAddMarkerIcon(Marker m) {
         addMarkerIcon.setImageDrawable(getLockIcon(m));
     }
 
@@ -978,7 +992,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         return slidingLayout;
     }
 
-    public void setupGPS() {
+    public void setupGPS(boolean showWarning) {
         if (getView() == null || getActivity() == null) return;
         // Permissions stuff
         if (ContextCompat.checkSelfPermission(getActivity(),
@@ -988,14 +1002,32 @@ public class MapFragment extends Fragment implements TextWatcher,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_LOCATION);
         } else {
-            LocationManager locationManager = (LocationManager)
-                    getActivity().getSystemService(Context.LOCATION_SERVICE);
-            LocationListener locationListener = new MyLocationListener();
             try {
-                locationManager.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER, 50, 1, locationListener);
+                // Create the location request to start receiving updates
+                mLocationRequest = new LocationRequest();
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                mLocationRequest.setInterval(500);
+                mLocationRequest.setFastestInterval(200);
+
+                // Create LocationSettingsRequest object using location request
+                LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+                builder.addLocationRequest(mLocationRequest);
+                LocationSettingsRequest locationSettingsRequest = builder.build();
+
+                // Check whether location settings are satisfied
+                SettingsClient settingsClient = LocationServices.getSettingsClient(getActivity());
+                settingsClient.checkLocationSettings(locationSettingsRequest);
+
+                // Setup the callback
+                myLocationCallback = new MyLocationCallback();
+                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+                fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, myLocationCallback, Looper.myLooper());
+
                 GPSIsSetup = true;
-                Toast.makeText(getContext(), "WARNING: Location is in Beta. Use with Caution.", Toast.LENGTH_LONG).show();
+
+                if (showWarning) {
+                    Toast.makeText(getContext(), "WARNING: Location is in Beta. Use with Caution.", Toast.LENGTH_LONG).show();
+                }
             } catch (SecurityException ignored) {
                 Toast.makeText(getContext(), "No permission!", Toast.LENGTH_LONG).show();
             }
@@ -1006,7 +1038,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         this.followingUser = followingUser;
     }
 
-    private void displayLocationSettingsRequest(Context context) {
+    private void displayLocationSettingsRequest(final boolean showWarning) {
         if (getView() == null || getActivity() == null) return;
         LocationRequest mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -1026,7 +1058,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                             result.getLocationSettingsStates().isGpsUsable() &&
                             result.getLocationSettingsStates().isLocationPresent() &&
                             result.getLocationSettingsStates().isLocationUsable()) {
-                        setupGPS();
+                        setupGPS(showWarning);
                     }
                 } catch (ApiException ex) {
                     switch (ex.getStatusCode()) {
@@ -1036,7 +1068,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                                         (ResolvableApiException) ex;
                                 resolvableApiException
                                         .startResolutionForResult(getActivity(), 87);
-                                setupGPS();
+                                setupGPS(showWarning);
                             } catch (IntentSender.SendIntentException e) {
                             }
                             break;
@@ -1087,17 +1119,16 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     /*---------- Listener class to get coordinates ------------- */
-    private class MyLocationListener implements LocationListener {
-
+    private class MyLocationCallback extends LocationCallback {
         @Override
-        public void onLocationChanged(Location loc) {
+        public void onLocationResult(LocationResult locationResult) {
             if (getView() == null || getActivity() == null) return;
 
             // Set the origin
             double Xn = Constants.MAP_Xn, Yn = Constants.MAP_Yn, Zn = Constants.MAP_Zn, Zyn = Constants.MAP_Zyn;
 
-            double x = (loc.getLatitude() - Xn) * 1000;
-            double y = (loc.getLongitude() - Yn) * 1000;
+            double x = (locationResult.getLastLocation().getLatitude() - Xn) * 1000;
+            double y = (locationResult.getLastLocation().getLongitude() - Yn) * 1000;
 
             // Pre-trained weights
             double[] A = Constants.MAP_WEIGHTS_X;
@@ -1111,25 +1142,15 @@ public class MapFragment extends Fragment implements TextWatcher,
                     campusMapView.addMarker(user);
                 }
                 user.setPoint(new PointF(px, py));
-                user.setName("You - " + (int) loc.getAccuracy() + "m");
+                user.setName("You - " + (int) locationResult.getLastLocation().getAccuracy() + "m");
                 if (followingUser) {
                     SubsamplingScaleImageView.AnimationBuilder anim = campusMapView.animateCenter(user.getPoint());
                     if (anim != null) anim.start();
                 }
                 campusMapView.invalidate();
             }
-        }
 
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
+            super.onLocationResult(locationResult);
         }
     }
 }

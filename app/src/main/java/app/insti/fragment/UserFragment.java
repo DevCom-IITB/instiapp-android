@@ -116,6 +116,7 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
+                    if (getActivity() == null || getView() == null) return;
                     user = response.body();
                     populateViews();
                     getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
@@ -145,6 +146,8 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
     }
 
     private void populateViews() {
+        if (getActivity() == null || getView() == null) return;
+
         userProfilePictureImageView = getActivity().findViewById(R.id.user_profile_picture_profile);
         TextView userNameTextView = getActivity().findViewById(R.id.user_name_profile);
         TextView userRollNumberTextView = getActivity().findViewById(R.id.user_rollno_profile);

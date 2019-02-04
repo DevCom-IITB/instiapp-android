@@ -67,26 +67,8 @@ public class User implements CardInterface {
 
     private String currentRole;
 
-    public User(@NonNull String userID, String userName, String userProfilePictureUrl, List<Event> userInterestedEvents, List<Event> userGoingEvents, String userEmail, String userRollNumber, String userContactNumber, Boolean showContactNumber, String userAbout, List<Body> userFollowedBodies, List<String> userFollowedBodiesID, List<Role> userRoles, List<Role> userInstituteRoles, List<Role> userFormerRoles, String userWebsiteURL, String userLDAPId, String hostel, String currentRole) {
+    public User(@NonNull String userID) {
         this.userID = userID;
-        this.userName = userName;
-        this.userProfilePictureUrl = userProfilePictureUrl;
-        this.userInterestedEvents = userInterestedEvents;
-        this.userGoingEvents = userGoingEvents;
-        this.userEmail = userEmail;
-        this.userRollNumber = userRollNumber;
-        this.userContactNumber = userContactNumber;
-        this.showContactNumber = showContactNumber;
-        this.userAbout = userAbout;
-        this.userFollowedBodies = userFollowedBodies;
-        this.userFollowedBodiesID = userFollowedBodiesID;
-        this.userRoles = userRoles;
-        this.userInstituteRoles = userInstituteRoles;
-        this.userFormerRoles = userFormerRoles;
-        this.userWebsiteURL = userWebsiteURL;
-        this.userLDAPId = userLDAPId;
-        this.hostel = hostel;
-        this.currentRole = currentRole;
     }
 
     public static User fromString(String json) {

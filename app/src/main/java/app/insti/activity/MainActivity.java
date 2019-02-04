@@ -85,7 +85,6 @@ import static app.insti.Constants.DATA_TYPE_NEWS;
 import static app.insti.Constants.DATA_TYPE_PT;
 import static app.insti.Constants.DATA_TYPE_USER;
 import static app.insti.Constants.FCM_BUNDLE_NOTIFICATION_ID;
-import static app.insti.Constants.MY_PERMISSIONS_REQUEST_ACCESS_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_LOCATION;
 import static app.insti.Constants.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static app.insti.Constants.RESULT_LOAD_IMAGE;
@@ -616,7 +615,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Change the active fragment to the supplied one
      */
     public void updateFragment(Fragment fragment) {
-        Log.d(TAG, "updateFragment: " + fragment.toString());
         Bundle bundle = fragment.getArguments();
         if (bundle == null) {
             bundle = new Bundle();
@@ -642,8 +640,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out_down);
         }
 
-        transaction.replace(R.id.framelayout_for_fragment, fragment, fragment.getTag());
-        transaction.addToBackStack(fragment.getTag()).commit();
+        transaction.replace(R.id.framelayout_for_fragment, fragment, Utils.getTag(fragment));
+        transaction.addToBackStack(Utils.getTag(fragment)).commit();
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -655,21 +653,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     startActivityForResult(i, RESULT_LOAD_IMAGE);
                 }
                 return;
-            case MY_PERMISSIONS_REQUEST_ACCESS_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    MapFragment.getMainActivity().setupGPS();
-                } else {
-                    Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-                break;
             case MY_PERMISSIONS_REQUEST_LOCATION:
-                Log.i(TAG, "Permission request captured");
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "Permission Granted");
-                    FileComplaintFragment.getMainActivity().getMapReady();
+                    // Map
+                    MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MapFragment.TAG);
+                    if (mapFragment != null && mapFragment.isVisible()) {
+                        MapFragment.getMainActivity().setupGPS(true);
+                    }
+
+                    // File complaint
+                    FileComplaintFragment fileComplaintFragment = (FileComplaintFragment) getSupportFragmentManager().findFragmentByTag(FileComplaintFragment.TAG);
+                    if (fileComplaintFragment != null && fileComplaintFragment.isVisible()) {
+                        FileComplaintFragment.getMainActivity().getMapReady();
+                    }
                 } else {
-                    Log.i(TAG, "Permission Cancelled");
                     Toast toast = Toast.makeText(MainActivity.this, "Need Permission", Toast.LENGTH_SHORT);
                     toast.show();
                 }
