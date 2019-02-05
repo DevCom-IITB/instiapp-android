@@ -7,9 +7,9 @@
     android:layout_alignParentRight="true"
     android:layout_gravity="center"
     android:layout_margin="5dp"
-    card_view:cardBackgroundColor="@color/colorWhite"
+    card_view:cardBackgroundColor="?attr/themeColor"
     card_view:cardCornerRadius="0dp"
-    card_view:cardElevation="5dp"
+    card_view:cardElevation="1dp"
     card_view:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:text="User"
-                    android:textColor="@android:color/black"
+                    android:textColor="?attr/themeColorInverse"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -48,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="report date"
-                    android:textColor="@color/colorGray"
+                    android:textColor="?attr/themeGray"
                     android:textSize="14sp" />
 
                 <TextView
@@ -56,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="location"
-                    android:textColor="@color/colorGray"
+                    android:textColor="?attr/themeGray"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="10dp"
                 android:text="status"
-                android:textColor="@android:color/black"
+                android:textColor="?attr/themeColorInverse"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:background="@drawable/customborder" />
@@ -93,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Complaint:"
-            android:textColor="@android:color/black"
+            android:textColor="?attr/themeColorInverse"
             android:textSize="16sp"
             android:textStyle="bold"/>
 
@@ -105,7 +105,7 @@
             android:id="@+id/textViewDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
+            android:textColor="?attr/themeColorInverse"
             android:textSize="16sp" />
 
         <LinearLayout
@@ -124,7 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Suggestions:"
-                android:textColor="@android:color/black"
+                android:textColor="?attr/themeColorInverse"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
 
@@ -136,7 +136,7 @@
                 android:id="@+id/textViewSuggestions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="?attr/themeColorInverse"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -157,7 +157,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Location Details:"
-                android:textColor="@android:color/black"
+                android:textColor="?attr/themeColorInverse"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
 
@@ -169,7 +169,7 @@
                 android:id="@+id/textViewLocationDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="?attr/themeColorInverse"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -205,6 +205,7 @@
                     android:layout_width="10dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:tint="?attr/themeGray"
                     android:src="@drawable/baseline_arrow_upward_24" />
 
                 <TextView
@@ -214,7 +215,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="23"
-                    android:textColor="@color/secondaryTextColor"/>
+                    android:textColor="?attr/themeColorInverse"/>
 
             </LinearLayout>
 
@@ -230,6 +231,7 @@
                     android:layout_width="10dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:tint="?attr/themeGray"
                     android:src="@drawable/baseline_comment_24" />
 
                 <TextView
@@ -237,7 +239,7 @@
                     android:layout_width="20dp"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:textColor="@color/secondaryTextColor"
+                    android:textColor="?attr/themeColorInverse"
                     android:layout_weight="1"
                     android:text="12"/>
             </LinearLayout>
@@ -254,6 +256,7 @@
                     android:layout_width="10dp"
                     android:layout_height="40dp"
                     android:visibility="visible"
+                    android:tint="?attr/themeGray"
                     android:layout_weight="1"
                     android:src="@drawable/baseline_notifications_black_24"/>
 
@@ -264,6 +267,7 @@
                     android:layout_height="40dp"
                     android:visibility="gone"
                     android:layout_weight="1"
+                    android:tint="?attr/themeGray"
                     android:src="@drawable/baseline_notifications_active_black_24"/>
 
             </LinearLayout>

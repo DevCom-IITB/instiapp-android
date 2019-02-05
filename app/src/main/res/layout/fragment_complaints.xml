@@ -80,7 +80,7 @@
                 android:layout_gravity="bottom"
                 app:tabIndicatorColor="@color/colorAccent"
                 style="@style/CustomTabLayout"
-                android:background="?attr/colorPrimary" />
+                android:background="@color/colorPrimary" />
 
         </android.support.design.widget.AppBarLayout>
 

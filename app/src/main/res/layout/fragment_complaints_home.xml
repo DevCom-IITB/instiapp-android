@@ -8,7 +8,7 @@
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ededed">
+        android:background="?attr/themeColor">
 
         <TextView
             android:id="@+id/error_message_home"
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
             android:text="@string/error_message"
-            android:textColor="@color/secondaryTextColor"
+            android:textColor="?attr/themeColorInverse"
             android:visibility="invisible" />
 
         <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
