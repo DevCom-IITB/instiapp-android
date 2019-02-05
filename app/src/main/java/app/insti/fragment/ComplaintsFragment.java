@@ -98,7 +98,7 @@ public class ComplaintsFragment extends BaseFragment {
             }
         });
 
-        slidingTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        slidingTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
