@@ -25,15 +25,14 @@ import retrofit2.Response;
 
 public class ComplaintsMeFragment extends Fragment {
 
-    private static String uID, sID, uProfileUrl;
+    private static String uID, uProfileUrl;
     private ComplaintsAdapter meListAdapter;
     private TextView error_message_me;
     private SwipeRefreshLayout swipeContainer;
     private static String TAG = ComplaintsMeFragment.class.getSimpleName();
     private boolean isCalled = false;
 
-    public static ComplaintsMeFragment getInstance(String sessionID, String userID, String userProfileUrl) {
-        sID = sessionID;
+    public static ComplaintsMeFragment getInstance(String userID, String userProfileUrl) {
         uID = userID;
         uProfileUrl = userProfileUrl;
         return new ComplaintsMeFragment();
@@ -57,7 +56,7 @@ public class ComplaintsMeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_complaints_me, container, false);
         RecyclerView recyclerViewMe = view.findViewById(R.id.recyclerViewMe);
-        meListAdapter = new ComplaintsAdapter(getActivity(), sID, uID, uProfileUrl);
+        meListAdapter = new ComplaintsAdapter(getActivity(), uID, uProfileUrl);
         swipeContainer = view.findViewById(R.id.swipeContainer);
         error_message_me = view.findViewById(R.id.error_message_me);
 
@@ -93,7 +92,7 @@ public class ComplaintsMeFragment extends Fragment {
     private void callServerToGetMyComplaints() {
         try {
             RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-            retrofitInterface.getUserComplaints("sessionid=" + sID).enqueue(new Callback<List<Venter.Complaint>>() {
+            retrofitInterface.getUserComplaints(Utils.getSessionIDHeader()).enqueue(new Callback<List<Venter.Complaint>>() {
                 @Override
                 public void onResponse(@NonNull Call<List<Venter.Complaint>> call, @NonNull Response<List<Venter.Complaint>> response) {
                     if (response.body() != null && !(response.body().isEmpty())) {

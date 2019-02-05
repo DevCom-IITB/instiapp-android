@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,12 +22,12 @@ import java.util.List;
 
 import app.insti.R;
 import app.insti.Utils;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Venter;
 import app.insti.utils.DateTimeUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -41,15 +40,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private Context context;
     private LayoutInflater inflater;
-    private String sessionId, userId;
+    private String userId;
     private Fragment fragment;
     private TextView textViewCommentLabel;
 
     private List<Venter.Comment> commentList = new ArrayList<>();
 
-    public CommentsAdapter(Context context, String sessionId, String userId, Fragment fragment) {
+    public CommentsAdapter(Context context, String userId, Fragment fragment) {
         this.context = context;
-        this.sessionId = sessionId;
         this.userId = userId;
         inflater = LayoutInflater.from(context);
         this.fragment =fragment;
@@ -78,15 +76,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             final Venter.Comment comment = commentList.get(position);
             try {
                 String profileUrl = comment.getUser().getUserProfilePictureUrl();
-                Log.i(TAG, "PROFILE URL: " + profileUrl);
                 Picasso.get().load(profileUrl).placeholder(R.drawable.user_placeholder).into(circleImageView);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
                 textViewName.setText(comment.getUser().getUserName());
                 String time = DateTimeUtil.getDate(comment.getTime());
-                Log.i(TAG, "time: " + time);
                 textViewCommentTime.setText(time);
                 textViewComment.setText(comment.getText());
             } catch (Exception e) {
@@ -115,7 +107,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                     Toast.makeText(context, "Comment Copied", Toast.LENGTH_SHORT).show();
                                     break;
                                 case R.id.delete_comment_option:
-                                    retrofitInterface.deleteComment("sessionid=" + sessionId, comment.getId()).enqueue(new Callback<String>() {
+                                    retrofitInterface.deleteComment(Utils.getSessionIDHeader(), comment.getId()).enqueue(new EmptyCallback<String>() {
                                         @Override
                                         public void onResponse(Call<String> call, Response<String> response) {
                                             if (response.isSuccessful()) {
@@ -127,11 +119,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                             } else {
                                                 Toast.makeText(context, "You can't delete this comment", Toast.LENGTH_SHORT).show();
                                             }
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<String> call, Throwable t) {
-                                            Log.i(TAG, " failure in deleting: " + t.toString());
                                         }
                                     });
                                     break;

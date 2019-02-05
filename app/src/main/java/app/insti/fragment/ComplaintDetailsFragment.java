@@ -80,7 +80,7 @@ public class ComplaintDetailsFragment extends Fragment {
     private CircleImageView circleImageViewCreatorImage;
     private View mView;
 
-    private static String sId, cId, uId, uProfileUrl;
+    private static String cId, uId, uProfileUrl;
     private CommentsAdapter commentListAdapter;
     private UpVotesAdapter upVotesAdapter;
     private List<Venter.Comment> commentList;
@@ -90,8 +90,7 @@ public class ComplaintDetailsFragment extends Fragment {
     private NestedScrollView nestedScrollView;
     private CircleIndicator circleIndicator;
 
-    public static ComplaintDetailsFragment getInstance(String sessionid, String complaintid, String userid, String userProfileUrl) {
-        sId = sessionid;
+    public static ComplaintDetailsFragment getInstance(String complaintid, String userid, String userProfileUrl) {
         cId = complaintid;
         uId = userid;
         uProfileUrl = userProfileUrl;
@@ -107,7 +106,7 @@ public class ComplaintDetailsFragment extends Fragment {
 
         initialiseViews(view);
         upVotesList = new ArrayList<>();
-        commentListAdapter = new CommentsAdapter(getContext(), sId, uId, this);
+        commentListAdapter = new CommentsAdapter(getContext(), uId, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         upVotesAdapter = new UpVotesAdapter(this, getContext());
         recyclerViewComments.setLayoutManager(linearLayoutManager);
@@ -273,7 +272,7 @@ public class ComplaintDetailsFragment extends Fragment {
     private void postComment() {
         final CommentCreateRequest commentCreateRequest = new CommentCreateRequest(editTextComment.getText().toString());
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        retrofitInterface.postComment("sessionid=" + sId, cId, commentCreateRequest).enqueue(new Callback<Venter.Comment>() {
+        retrofitInterface.postComment(Utils.getSessionIDHeader(), cId, commentCreateRequest).enqueue(new Callback<Venter.Comment>() {
             @Override
             public void onResponse(Call<Venter.Comment> call, Response<Venter.Comment> response) {
                 if (response.isSuccessful()) {
@@ -314,7 +313,7 @@ public class ComplaintDetailsFragment extends Fragment {
     private void upVote(final Venter.Complaint detailedComplaint) {
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         if (detailedComplaint.getVoteCount() == 0) {
-            retrofitInterface.upVote("sessionid=" + sId, cId, 1).enqueue(new Callback<Venter.Complaint>() {
+            retrofitInterface.upVote(Utils.getSessionIDHeader(), cId, 1).enqueue(new Callback<Venter.Complaint>() {
                 @Override
                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                     if (response.isSuccessful()) {
@@ -331,7 +330,7 @@ public class ComplaintDetailsFragment extends Fragment {
                }
             });
         } else if (detailedComplaint.getVoteCount() ==1){
-            retrofitInterface.upVote("sessionid=" + sId, cId, 0).enqueue(new Callback<Venter.Complaint>() {
+            retrofitInterface.upVote(Utils.getSessionIDHeader(), cId, 0).enqueue(new Callback<Venter.Complaint>() {
                 @Override
                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                     if (response.isSuccessful()) {
@@ -360,7 +359,7 @@ public class ComplaintDetailsFragment extends Fragment {
                     "Yes",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            retrofitInterface.subscribetoComplaint("sessionid=" + sId, detailedComplaint.getComplaintID(), 0).enqueue(new Callback<Venter.Complaint>() {
+                            retrofitInterface.subscribetoComplaint(Utils.getSessionIDHeader(), detailedComplaint.getComplaintID(), 0).enqueue(new Callback<Venter.Complaint>() {
                                 @Override
                                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                                     if (response.isSuccessful()) {
@@ -389,7 +388,7 @@ public class ComplaintDetailsFragment extends Fragment {
             AlertDialog alert11 = unsubscribe.create();
             alert11.show();
         } else if (detailedComplaint.getComplaintsubscribed() == 0){
-            retrofitInterface.subscribetoComplaint("sessionid=" + sId, detailedComplaint.getComplaintID(), 1).enqueue(new Callback<Venter.Complaint>() {
+            retrofitInterface.subscribetoComplaint(Utils.getSessionIDHeader(), detailedComplaint.getComplaintID(), 1).enqueue(new Callback<Venter.Complaint>() {
                 @Override
                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                     if (response.isSuccessful()) {

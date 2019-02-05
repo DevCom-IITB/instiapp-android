@@ -23,6 +23,7 @@ import java.util.List;
 
 import app.insti.R;
 import app.insti.Utils;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.User;
 import app.insti.api.model.Venter;
@@ -40,7 +41,6 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private LayoutInflater inflater;
     private Activity context;
-    private String sessionID;
     private String userID;
     private String userProfileUrl;
     private static final String TAG = ComplaintsAdapter.class.getSimpleName();
@@ -111,7 +111,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     public void onClick(View v) {
                         if (complaintList.get(position).getVoteCount() == 0) {
                             RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-                            retrofitInterface.upVote("sessionid=" + sessionID, complaintList.get(pos).getComplaintID(), 1).enqueue(new Callback<Venter.Complaint>() {
+                            retrofitInterface.upVote(Utils.getSessionIDHeader(), complaintList.get(pos).getComplaintID(), 1).enqueue(new Callback<Venter.Complaint>() {
                                 @Override
                                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                                     if (response.isSuccessful()) {
@@ -130,7 +130,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             });
                         } else if (complaintList.get(position).getVoteCount() == 1) {
                             RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-                            retrofitInterface.upVote("sessionid=" + sessionID, complaintList.get(pos).getComplaintID(), 0).enqueue(new Callback<Venter.Complaint>() {
+                            retrofitInterface.upVote(Utils.getSessionIDHeader(), complaintList.get(pos).getComplaintID(), 0).enqueue(new Callback<Venter.Complaint>() {
                                 @Override
                                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                                     if (response.isSuccessful()) {
@@ -212,7 +212,6 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void getComplaint(Venter.Complaint detailedComplaint) {
         Bundle bundle = new Bundle();
         bundle.putString("id", detailedComplaint.getComplaintID());
-        bundle.putString("sessionId", sessionID);
         bundle.putString("userId", userID);
         bundle.putString("userProfileUrl", userProfileUrl);
         ComplaintFragment complaintFragment = new ComplaintFragment();
@@ -232,7 +231,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     "Yes",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            retrofitInterface.subscribetoComplaint("sessionid=" + sessionID, detailedComplaint.getComplaintID(), 0).enqueue(new Callback<Venter.Complaint>() {
+                            retrofitInterface.subscribetoComplaint(Utils.getSessionIDHeader(), detailedComplaint.getComplaintID(), 0).enqueue(new Callback<Venter.Complaint>() {
                                 @Override
                                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                                     if (response.isSuccessful()) {
@@ -263,7 +262,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             AlertDialog alert11 = unsubscribe.create();
             alert11.show();
         } else if (detailedComplaint.getComplaintsubscribed() == 0){
-            retrofitInterface.subscribetoComplaint("sessionid=" + sessionID, detailedComplaint.getComplaintID(), 1).enqueue(new Callback<Venter.Complaint>() {
+            retrofitInterface.subscribetoComplaint(Utils.getSessionIDHeader(), detailedComplaint.getComplaintID(), 1).enqueue(new EmptyCallback<Venter.Complaint>() {
                 @Override
                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                     if (response.isSuccessful()) {
@@ -274,18 +273,12 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
-
-                @Override
-                public void onFailure(Call<Venter.Complaint> call, Throwable t) {
-                    Log.i(TAG, "failure in subscribe: " + t.toString());
-                }
             });
         }
     }
 
-    public ComplaintsAdapter(Activity ctx, String sessionID, String userID, String userProfileUrl) {
+    public ComplaintsAdapter(Activity ctx, String userID, String userProfileUrl) {
         this.context = ctx;
-        this.sessionID = sessionID;
         this.userID = userID;
         this.userProfileUrl = userProfileUrl;
         inflater = LayoutInflater.from(ctx);

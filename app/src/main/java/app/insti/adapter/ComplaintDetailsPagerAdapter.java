@@ -12,11 +12,10 @@ import app.insti.fragment.ComplaintDetailsFragment;
 
 public class ComplaintDetailsPagerAdapter extends FragmentPagerAdapter {
 
-    private String sessionid, complaintid, userid, userProfileUrl;
+    private String complaintid, userid, userProfileUrl;
 
-    public ComplaintDetailsPagerAdapter(FragmentManager fm, String sessionid, String complaintid, String userid, String userProfileUrl) {
+    public ComplaintDetailsPagerAdapter(FragmentManager fm, String complaintid, String userid, String userProfileUrl) {
         super(fm);
-        this.sessionid = sessionid;
         this.complaintid = complaintid;
         this.userid = userid;
         this.userProfileUrl = userProfileUrl;
@@ -26,14 +25,14 @@ public class ComplaintDetailsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return ComplaintDetailsFragment.getInstance(sessionid, complaintid, userid, userProfileUrl);
+                return ComplaintDetailsFragment.getInstance(complaintid, userid, userProfileUrl);
            /*
             For version 2:
             case 1:
                return RelevantComplaintsFragment.getInstance(sessionid, userid);
            */
             default:
-                return ComplaintDetailsFragment.getInstance(sessionid, complaintid, userid, userProfileUrl);
+                return ComplaintDetailsFragment.getInstance(complaintid, userid, userProfileUrl);
         }
     }
 

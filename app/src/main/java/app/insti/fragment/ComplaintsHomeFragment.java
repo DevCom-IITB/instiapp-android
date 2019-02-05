@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +30,9 @@ public class ComplaintsHomeFragment extends Fragment {
     private static String TAG = ComplaintsHomeFragment.class.getSimpleName();
     private boolean isCalled = false;
     private TextView error_message_home;
-    private static String sID, uID, uProfileUrl;
+    private static String uID, uProfileUrl;
 
-    public static ComplaintsHomeFragment getInstance(String sessionID, String userID, String userProfileUrl) {
-        sID = sessionID;
+    public static ComplaintsHomeFragment getInstance(String userID, String userProfileUrl) {
         uID = userID;
         uProfileUrl = userProfileUrl;
         return new ComplaintsHomeFragment();
@@ -57,7 +55,7 @@ public class ComplaintsHomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_complaints_home, container, false);
         RecyclerView recyclerViewHome = view.findViewById(R.id.recyclerViewHome);
-        homeListAdapter = new ComplaintsAdapter(getActivity(), sID, uID, uProfileUrl);
+        homeListAdapter = new ComplaintsAdapter(getActivity(), uID, uProfileUrl);
         swipeContainer = view.findViewById(R.id.swipeContainer);
         error_message_home = view.findViewById(R.id.error_message_home);
 
@@ -93,16 +91,13 @@ public class ComplaintsHomeFragment extends Fragment {
     private void callServerToGetNearbyComplaints() {
         try {
             RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-            retrofitInterface.getAllComplaints("sessionid=" + sID).enqueue(new Callback<List<Venter.Complaint>>() {
+            retrofitInterface.getAllComplaints(Utils.getSessionIDHeader()).enqueue(new Callback<List<Venter.Complaint>>() {
                 @Override
                 public void onResponse(@NonNull Call<List<Venter.Complaint>> call, @NonNull Response<List<Venter.Complaint>> response) {
                     if (response.body() != null && !(response.body().isEmpty())) {
-                        Log.i(TAG, "response.body != null");
-                        Log.i(TAG, "response: " + response.body());
                         initialiseRecyclerView(response.body());
                         swipeContainer.setRefreshing(false);
                     } else {
-                        Log.i(TAG, "response.body is empty");
                         error_message_home.setVisibility(View.VISIBLE);
                         error_message_home.setText(getString(R.string.no_complaints));
                         swipeContainer.setRefreshing(false);
@@ -111,7 +106,6 @@ public class ComplaintsHomeFragment extends Fragment {
 
                 @Override
                 public void onFailure(@NonNull Call<List<Venter.Complaint>> call, @NonNull Throwable t) {
-                    Log.i(TAG, "failure" + t.toString());
                     swipeContainer.setRefreshing(false);
                     error_message_home.setVisibility(View.VISIBLE);
                 }

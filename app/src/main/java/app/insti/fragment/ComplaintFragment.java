@@ -19,6 +19,7 @@ import java.util.Objects;
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.adapter.ComplaintDetailsPagerAdapter;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.User;
 import app.insti.api.model.Venter;
@@ -32,7 +33,7 @@ public class ComplaintFragment extends Fragment {
     private TabLayout slidingTabLayout;
     private ViewPager viewPager;
     private View mview;
-    private String complaintId, sessionID, userId, userProfileUrl;
+    private String complaintId, userId, userProfileUrl;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -51,7 +52,6 @@ public class ComplaintFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             complaintId = bundle.getString("id");
-            sessionID = bundle.getString("sessionId");
             userId = bundle.getString("userId");
             userProfileUrl = bundle.getString("userProfileUrl");
             callServerToGetDetailedComplaint();
@@ -61,30 +61,22 @@ public class ComplaintFragment extends Fragment {
     private void callServerToGetDetailedComplaint() {
 
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        retrofitInterface.getComplaint("sessionid=" + sessionID, complaintId).enqueue(new Callback<Venter.Complaint>() {
+        retrofitInterface.getComplaint(Utils.getSessionIDHeader(), complaintId).enqueue(new EmptyCallback<Venter.Complaint>() {
             @Override
             public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
+                if (getActivity() == null || getView() == null) return;
                 if (response.body() != null) {
                     Venter.Complaint complaint = response.body();
-                    if (complaint != null) {
-                        for (User currentUser : complaint.getUsersUpVoted()) {
-                            if (currentUser.getUserID().equals(userId)) {
-                                complaint.setVoteCount(1);
-                            } else {
-                                complaint.setVoteCount(0);
-                            }
+                    for (User currentUser : complaint.getUsersUpVoted()) {
+                        if (currentUser.getUserID().equals(userId)) {
+                            complaint.setVoteCount(1);
+                        } else {
+                            complaint.setVoteCount(0);
                         }
                     }
                     initTabViews(complaint);
                     //Make progress circle gone After loading
                     getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Venter.Complaint> call, Throwable t) {
-                if (t != null) {
-                    Log.i(TAG, "error and t = " + t.toString());
                 }
             }
         });
@@ -95,8 +87,7 @@ public class ComplaintFragment extends Fragment {
             if (detailedComplaint != null) {
                 viewPager = mview.findViewById(R.id.tab_viewpager_details);
                 if (viewPager != null) {
-                    Log.i(TAG, "viewPager != null");
-                    ComplaintDetailsPagerAdapter complaintDetailsPagerAdapter = new ComplaintDetailsPagerAdapter(getChildFragmentManager(), sessionID, complaintId, userId, userProfileUrl);
+                    ComplaintDetailsPagerAdapter complaintDetailsPagerAdapter = new ComplaintDetailsPagerAdapter(getChildFragmentManager(), complaintId, userId, userProfileUrl);
 
                     viewPager.setAdapter(complaintDetailsPagerAdapter);
                     slidingTabLayout.setupWithViewPager(viewPager);

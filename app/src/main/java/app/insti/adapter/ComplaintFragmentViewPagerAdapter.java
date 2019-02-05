@@ -27,11 +27,11 @@ public class ComplaintFragmentViewPagerAdapter extends FragmentStatePagerAdapter
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return ComplaintsHomeFragment.getInstance(sessionID, userID, userProfileUrl);
+                return ComplaintsHomeFragment.getInstance(userID, userProfileUrl);
             case 1:
-                return ComplaintsMeFragment.getInstance(sessionID,userID, userProfileUrl);
+                return ComplaintsMeFragment.getInstance(userID, userProfileUrl);
             default:
-                return ComplaintsHomeFragment.getInstance(sessionID, userID, userProfileUrl);
+                return ComplaintsHomeFragment.getInstance(userID, userProfileUrl);
         }
     }
 
