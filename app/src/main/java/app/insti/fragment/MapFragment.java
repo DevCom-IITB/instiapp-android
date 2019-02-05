@@ -117,7 +117,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     private final int MSG_ANIMATE = 1;
     private final int MSG_PLAY_SOUND = 2;
     private final int MSG_DISPLAY_MAP = 3;
-    private final long DELAY_ANIMATE = 150;
+    private final long DELAY_ANIMATE = 50;
     private final long DELAY_INIT_LAYOUT = 250;
     public LinearLayout newSmallCard;
     public ImageView placeColor;
