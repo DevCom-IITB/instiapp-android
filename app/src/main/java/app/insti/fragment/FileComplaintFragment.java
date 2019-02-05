@@ -242,6 +242,14 @@ public class FileComplaintFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onPause() {
+        try {
+            if (googleMap != null) googleMap.setMyLocationEnabled(false);
+        } catch (SecurityException ignored) {}
+        super.onPause();
+    }
+
     private void initviews(View view) {
         LinearLayout imageViewHolder = view.findViewById(R.id.image_holder_view);
         CollapsingToolbarLayout.LayoutParams layoutParams = new CollapsingToolbarLayout.LayoutParams(
