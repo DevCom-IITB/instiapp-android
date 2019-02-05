@@ -342,8 +342,6 @@ public class FileComplaintFragment extends Fragment {
     }
 
     public void getMapReady() {
-
-        Log.i(TAG, "in getMapReady");
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap map) {
@@ -356,18 +354,15 @@ public class FileComplaintFragment extends Fragment {
                 uiSettings.setScrollGesturesEnabled(true);
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                         && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    Log.i(TAG, "No initial permission granted");
                     ActivityCompat.requestPermissions(getActivity(),
                             new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                             MY_PERMISSIONS_REQUEST_LOCATION);
                 } else {
-                    Log.i(TAG, "Initial Permission Granted");
                     googleMap.setMyLocationEnabled(true);
                     googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                     googleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
                         @Override
                         public boolean onMyLocationButtonClick() {
-                            Log.i(TAG, "in onMyLocationButtonClick");
                             locate();
                             return false;
                         }
@@ -379,7 +374,6 @@ public class FileComplaintFragment extends Fragment {
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
                                 // Logic to handle location object
-                                Log.i(TAG, "lat = " + location.getLatitude() + " lon = " + location.getLongitude());
                                 Location = new LatLng(location.getLatitude(), location.getLongitude());
                                 updateMap(Location, "Current Location", location.getLatitude() + ", " + location.getLongitude(), cursor);
                             } else {
@@ -400,12 +394,9 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void locate() {
-        Log.i(TAG, "In locate");
         if (!GPSIsSetup) {
-            Log.i(TAG, "GPS not enabled");
             displayLocationSettingsRequest();
         } else {
-            Log.i(TAG, "GPS enabled");
             try {
                 FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
                 mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
@@ -414,7 +405,6 @@ public class FileComplaintFragment extends Fragment {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             // Logic to handle location object
-                            Log.i(TAG, "lat = " + location.getLatitude() + " lon = " + location.getLongitude());
                             Location = new LatLng(location.getLatitude(), location.getLongitude());
                             updateMap(Location, "Current Location", location.getLatitude() + ", " + location.getLongitude(), cursor);
                         } else {
@@ -438,7 +428,6 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void displayLocationSettingsRequest() {
-        Log.i(TAG, "In displayLocationSettingsRequest");
         if (getView() == null || getActivity() == null) return;
         LocationRequest mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -453,17 +442,14 @@ public class FileComplaintFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
                 try {
-                    Log.i(TAG, "In displayLocationSettingsRequest try");
                     LocationSettingsResponse result = task.getResult(ApiException.class);
                     if (result.getLocationSettingsStates().isGpsPresent() &&
                             result.getLocationSettingsStates().isGpsUsable() &&
                             result.getLocationSettingsStates().isLocationPresent() &&
                             result.getLocationSettingsStates().isLocationUsable()) {
-                        Log.i(TAG, "In displayLocationSettingsRequest if setupGPS called");
                         setupGPS();
                     }
                 } catch (ApiException ex) {
-                    Log.i(TAG, "In displayLocationSettingsRequest catch");
                     switch (ex.getStatusCode()) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                             try {
@@ -471,7 +457,6 @@ public class FileComplaintFragment extends Fragment {
                                         (ResolvableApiException) ex;
                                 resolvableApiException
                                         .startResolutionForResult(getActivity(), 87);
-                                Log.i(TAG, "In displayLocationSettingsRequest catch case1 try setupGPS called");
                                 setupGPS();
                             } catch (IntentSender.SendIntentException e) {
                             }
@@ -489,7 +474,6 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void setupGPS() {
-        Log.i(TAG, "In setup");
         if (getView() == null || getActivity() == null) return;
         // Permissions stuff
         if (ContextCompat.checkSelfPermission(getActivity(),
@@ -507,7 +491,6 @@ public class FileComplaintFragment extends Fragment {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             // Logic to handle location object
-                            Log.i(TAG, "lat = " + location.getLatitude() + " lon = " + location.getLongitude());
                             Location = new LatLng(location.getLatitude(), location.getLongitude());
                             updateMap(Location, "Current Location", location.getLatitude() + ", " + location.getLongitude(), cursor);
                         } else {
