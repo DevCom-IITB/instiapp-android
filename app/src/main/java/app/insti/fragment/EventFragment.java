@@ -242,10 +242,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
                 ClickableSpan cs = new ClickableSpan() {
                     @Override
                     public void onClick(@NonNull View widget) {
-                        MapFragment mapFragment = new MapFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString(Constants.MAP_INITIAL_MARKER, MapFragment.getPassableName(venue.getVenueShortName()));
-                        mapFragment.setArguments(bundle);
+                        MapFragment mapFragment = MapFragment.newInstance(MapFragment.getPassableName(venue.getVenueShortName()));
                         ((MainActivity) getActivity()).updateFragment(mapFragment);
                     }
 

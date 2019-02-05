@@ -81,6 +81,7 @@ import retrofit2.Response;
 
 import static app.insti.Constants.DATA_TYPE_BODY;
 import static app.insti.Constants.DATA_TYPE_EVENT;
+import static app.insti.Constants.DATA_TYPE_MAP;
 import static app.insti.Constants.DATA_TYPE_NEWS;
 import static app.insti.Constants.DATA_TYPE_PT;
 import static app.insti.Constants.DATA_TYPE_USER;
@@ -336,6 +337,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case DATA_TYPE_NEWS:
                 updateFragment((new NewsFragment()).withId(id));
                 return;
+            case DATA_TYPE_MAP:
+                updateFragment(MapFragment.newInstance(id));
+                return;
         }
         Log.e("NOTIFICATIONS", "Server sent invalid notification?");
     }
@@ -399,6 +403,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     return DATA_TYPE_EVENT;
                 case "user":
                     return DATA_TYPE_USER;
+                case "map":
+                    return DATA_TYPE_MAP;
             }
         } catch (MalformedURLException ignored) {}
         return null;

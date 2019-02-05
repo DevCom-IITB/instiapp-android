@@ -257,6 +257,14 @@ public class MapFragment extends Fragment implements TextWatcher,
         super.onResume();
     }
 
+    public static MapFragment newInstance(String location) {
+        Bundle args = new Bundle();
+        args.putString(Constants.MAP_INITIAL_MARKER, location);
+        MapFragment fragment = new MapFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     private void getAPILocations() {
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.getAllVenues().enqueue(new Callback<List<Venue>>() {

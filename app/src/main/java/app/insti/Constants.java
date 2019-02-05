@@ -55,6 +55,7 @@ public class Constants {
     public static final String DATA_TYPE_USER = "userprofile";
     public static final String DATA_TYPE_NEWS = "newsentry";
     public static final String DATA_TYPE_PT = "blogentry";
+    public static final String DATA_TYPE_MAP= "map";
 
     public static final String CARD_TYPE_TITLE = "card_type_title";
     public static final String CARD_TYPE_BODY_HEAD = "card_type_body_head";
