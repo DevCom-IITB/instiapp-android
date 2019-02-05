@@ -1149,8 +1149,8 @@ public class MapFragment extends Fragment implements TextWatcher,
 
         @Override
         public void onLocationAvailability(LocationAvailability locationAvailability) {
-            if (!locationAvailability.isLocationAvailable() && campusMapView.isAddedMarker(user)) {
-                campusMapView.removeAddedMarker(user);
+            if (campusMapView.isAddedMarker(user)) {
+                user.setGroupIndex(!locationAvailability.isLocationAvailable() ? -9 : -10);
                 campusMapView.invalidate();
             }
             super.onLocationAvailability(locationAvailability);

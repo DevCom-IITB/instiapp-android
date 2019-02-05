@@ -571,9 +571,9 @@ public class CampusMapView extends SubsamplingScaleImageView {
             markerBitmap = grayMarker;
             if (isAddedMarker(marker))
                 markerBitmap = grayLockedMarker;
-        } else if (color == -10) {
+        } else if (color < -8) {
             if (isAddedMarker(marker))
-                markerBitmap = userMarker;
+                markerBitmap = color == -10 ? userMarker : grayMarker;
         }
 
         if (highlightedMarkerScale != 1.0f && isResultMarker(marker)) {

@@ -78,8 +78,8 @@ public class Marker {
     }
 
     public static int getColor(int group) {
-        if (group == -10) {
-            return -10;
+        if (group < -8) {
+            return group;
         }
 
         Integer[] yellowGroup = new Integer[]{HOSTELS};
