@@ -72,7 +72,8 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
-                android:textSize="@dimen/place_name_text_size"></TextView>
+                android:textColor="@color/colorGray"
+                android:textSize="@dimen/place_name_text_size" />
 
             <TextView
                 android:id="@+id/place_sub_head"

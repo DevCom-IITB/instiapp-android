@@ -661,7 +661,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         View headerLayout = childrenView.findViewById(R.id.header_layout);
         TextView headerName = (TextView) childrenView
                 .findViewById(R.id.list_header);
-        String headerText = "inside ";
+        String headerText = "Inside ";
         if (building.getShortName().equals("0"))
             headerText += building.getName();
         else
@@ -695,6 +695,8 @@ public class MapFragment extends Fragment implements TextWatcher,
             }
 
         });
+
+        icon.setImageResource(R.drawable.ic_action_next_item);
 
         headerLayout.setOnClickListener(new View.OnClickListener() {
             @Override

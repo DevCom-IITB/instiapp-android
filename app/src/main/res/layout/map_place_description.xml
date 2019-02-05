@@ -11,6 +11,7 @@
         android:padding="8dp"
         android:paddingBottom="0dp"
         android:text="Description"
+        android:textColor="@color/colorGray"
         android:textSize="20sp" />
 
     <TextView
@@ -22,7 +23,8 @@
         android:padding="8dp"
         android:paddingTop="0dp"
         android:textIsSelectable="true"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@color/secondaryTextColor" />
 
     <View
         android:layout_width="match_parent"
