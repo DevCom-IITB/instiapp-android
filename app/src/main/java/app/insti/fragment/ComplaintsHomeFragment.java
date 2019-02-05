@@ -27,10 +27,13 @@ public class ComplaintsHomeFragment extends Fragment {
     private ComplaintsAdapter homeListAdapter;
     private SwipeRefreshLayout swipeContainer;
 
-    private static String TAG = ComplaintsHomeFragment.class.getSimpleName();
+    public static String TAG = ComplaintsHomeFragment.class.getSimpleName();
     private boolean isCalled = false;
     private TextView error_message_home;
     private static String uID, uProfileUrl;
+    private boolean networkBusy = false;
+    private int currentIndex = 0;
+    private List<Venter.Complaint> complaints;
 
     public static ComplaintsHomeFragment getInstance(String userID, String userProfileUrl) {
         uID = userID;
@@ -44,8 +47,12 @@ public class ComplaintsHomeFragment extends Fragment {
         swipeContainer.post(new Runnable() {
             @Override
             public void run() {
-                swipeContainer.setRefreshing(true);
-                callServerToGetNearbyComplaints();
+                if (complaints == null) {
+                    callServerToGetNearbyComplaints();
+                    swipeContainer.setRefreshing(true);
+                } else {
+                    initialiseRecyclerView(complaints);
+                }
             }
         });
     }
@@ -62,8 +69,45 @@ public class ComplaintsHomeFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerViewHome.setLayoutManager(llm);
         recyclerViewHome.setHasFixedSize(true);
-
         recyclerViewHome.setAdapter(homeListAdapter);
+
+        recyclerViewHome.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (networkBusy || currentIndex == -1) return;
+
+                if (!recyclerView.canScrollVertically(1)) {
+                    networkBusy = true;
+                    swipeContainer.setRefreshing(true);
+                    RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+                    retrofitInterface.getAllComplaints(Utils.getSessionIDHeader(), currentIndex, 5).enqueue(new Callback<List<Venter.Complaint>>() {
+                        @Override
+                        public void onResponse(Call<List<Venter.Complaint>> call, Response<List<Venter.Complaint>> response) {
+                            if (response.isSuccessful()) {
+                                if (response.body() != null && !response.body().isEmpty()) {
+                                    complaints.addAll(response.body());
+                                    initialiseRecyclerView(complaints);
+                                    currentIndex += 5;
+                                } else {
+                                    currentIndex = -1;
+                                }
+                            }
+                            networkBusy = false;
+                            swipeContainer.setRefreshing(false);
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<Venter.Complaint>> call, Throwable t) {
+                            networkBusy = false;
+                            swipeContainer.setRefreshing(false);
+                        }
+                    });
+
+                }
+            }
+        });
 
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -91,17 +135,20 @@ public class ComplaintsHomeFragment extends Fragment {
     private void callServerToGetNearbyComplaints() {
         try {
             RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-            retrofitInterface.getAllComplaints(Utils.getSessionIDHeader()).enqueue(new Callback<List<Venter.Complaint>>() {
+            retrofitInterface.getAllComplaints(Utils.getSessionIDHeader(), 0, 5).enqueue(new Callback<List<Venter.Complaint>>() {
                 @Override
                 public void onResponse(@NonNull Call<List<Venter.Complaint>> call, @NonNull Response<List<Venter.Complaint>> response) {
-                    if (response.body() != null && !(response.body().isEmpty())) {
-                        initialiseRecyclerView(response.body());
-                        swipeContainer.setRefreshing(false);
-                    } else {
-                        error_message_home.setVisibility(View.VISIBLE);
-                        error_message_home.setText(getString(R.string.no_complaints));
-                        swipeContainer.setRefreshing(false);
+                    if (response.isSuccessful()) {
+                        if (response.body() != null && !(response.body().isEmpty())) {
+                            complaints = response.body();
+                            currentIndex = complaints.size();
+                            initialiseRecyclerView(complaints);
+                        } else {
+                            error_message_home.setVisibility(View.VISIBLE);
+                            error_message_home.setText(getString(R.string.no_complaints));
+                        }
                     }
+                    swipeContainer.setRefreshing(false);
                 }
 
                 @Override

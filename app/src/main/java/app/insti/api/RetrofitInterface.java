@@ -122,7 +122,7 @@ public interface RetrofitInterface {
     Call<ExploreResponse> search(@Header("Cookie") String sessionID, @Query("query") String query);
 
     @GET("venter/complaints")
-    Call<List<Venter.Complaint>> getAllComplaints(@Header("Cookie") String sessionId);
+    Call<List<Venter.Complaint>> getAllComplaints(@Header("Cookie") String sessionId, @Query("from") int from, @Query("num") int num);
 
     @GET("venter/complaints?filter=me")
     Call<List<Venter.Complaint>> getUserComplaints(@Header("Cookie") String sessionId);
