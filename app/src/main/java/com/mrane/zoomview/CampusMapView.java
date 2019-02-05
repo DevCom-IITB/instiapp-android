@@ -132,7 +132,7 @@ public class CampusMapView extends SubsamplingScaleImageView {
                     // Iterate all markers
                     if (getInitialMarkerName() != null) {
                         for (Marker m : markerList) {
-                            if (m.getName().equals(getInitialMarkerName())) {
+                            if (MapFragment.getPassableName(m.getShortName()).equals(getInitialMarkerName())) {
                                 centerMarker = m;
                                 break;
                             }

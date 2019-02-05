@@ -244,7 +244,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
                     public void onClick(@NonNull View widget) {
                         MapFragment mapFragment = new MapFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putString(Constants.MAP_INITIAL_MARKER, venue.getVenueName());
+                        bundle.putString(Constants.MAP_INITIAL_MARKER, MapFragment.getPassableName(venue.getVenueShortName()));
                         mapFragment.setArguments(bundle);
                         ((MainActivity) getActivity()).updateFragment(mapFragment);
                     }

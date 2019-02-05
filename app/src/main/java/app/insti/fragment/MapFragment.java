@@ -1134,5 +1134,9 @@ public class MapFragment extends Fragment implements TextWatcher,
             super.onLocationAvailability(locationAvailability);
         }
     }
+
+    public static String getPassableName(String name) {
+        return name.toLowerCase().replace(" ", "-").replaceAll("[^A-Za-z0-9\\-]", "");
+    }
 }
 
