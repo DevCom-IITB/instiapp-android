@@ -324,6 +324,7 @@ public class MapFragment extends Fragment implements TextWatcher,
             final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE );
             if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER) ) {
                 locate(false);
+                setFollowingUser(false);
             }
         }
     }
