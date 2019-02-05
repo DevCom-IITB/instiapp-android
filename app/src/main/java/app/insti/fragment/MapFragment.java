@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -89,6 +90,7 @@ import java.util.regex.Pattern;
 
 import app.insti.Constants;
 import app.insti.R;
+import app.insti.ShareURLMaker;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.api.RetrofitInterface;
@@ -404,6 +406,18 @@ public class MapFragment extends Fragment implements TextWatcher,
             @Override
             public void onClick(View v) {
                 addMarkerClick(v);
+            }
+        });
+
+        getActivity().findViewById(R.id.share_map_icon).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String shareUrl = ShareURLMaker.getMapURL(campusMapView.getResultMarker());
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
+                i.putExtra(Intent.EXTRA_TEXT, shareUrl);
+                startActivity(Intent.createChooser(i, "Share URL"));
             }
         });
 
