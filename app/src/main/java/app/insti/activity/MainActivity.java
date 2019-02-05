@@ -289,7 +289,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /* Mark the notification read */
         final String notificationId = bundle.getString(FCM_BUNDLE_NOTIFICATION_ID);
         if (notificationId != null) {
-            Utils.getRetrofitInterface().markNotificationRead(Utils.getSessionIDHeader(), notificationId).enqueue(new EmptyCallback<Void>());
+            Utils.getRetrofitInterface().markNotificationRead(Utils.getSessionIDHeader(), notificationId).enqueue(new EmptyCallback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    ShortcutBadger.applyCount(getApplicationContext(), NotificationId.decrementAndGetCurrentCount());
+                }
+            });
         }
 
         /* Follow the notification */
