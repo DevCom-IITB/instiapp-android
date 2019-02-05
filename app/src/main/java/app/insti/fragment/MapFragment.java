@@ -530,6 +530,7 @@ public class MapFragment extends Fragment implements TextWatcher,
         fragmentManager.popBackStack(firstStackTag,
                 FragmentManager.POP_BACK_STACK_INCLUSIVE);
         this.removeEditTextFocus(null);
+        this.dismissCard();
         this.displayMap();
     }
 
@@ -733,6 +734,7 @@ public class MapFragment extends Fragment implements TextWatcher,
                 @Override
                 public void onClick(View widget) {
                     editText.setText(parentKey);
+                    dismissCard();
                     displayMap();
                 }
 
