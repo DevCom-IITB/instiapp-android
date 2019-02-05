@@ -767,7 +767,9 @@ public class CampusMapView extends SubsamplingScaleImageView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        mainActivity.setFollowingUser(false);
+        if (mainActivity != null) {
+            mainActivity.setFollowingUser(false);
+        }
         return super.onTouchEvent(event);
     }
 
