@@ -27,6 +27,7 @@
             android:paddingBottom="8dp">
 
             <LinearLayout
+                android:id="@+id/map_card_button_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -64,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@id/add_marker_icon"
+                android:layout_toLeftOf="@id/map_card_button_layout"
                 android:ellipsize="end"
                 android:fontFamily="sans_serif"
                 android:maxLines="1"
@@ -79,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/place_name"
-                android:layout_toLeftOf="@id/add_marker_icon"
+                android:layout_toLeftOf="@id/map_card_button_layout"
                 android:fontFamily="sans_serif_light"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
