@@ -148,4 +148,6 @@ public interface RetrofitInterface {
     @DELETE("venter/comments/{commentId}")
     Call<String> deleteComment(@Header("Cookie") String sessionId, @Path("commentId") String commentId);
 
+    @GET("venter/tags")
+    Call<List<Venter.TagUri>> getTags(@Header("Cookie") String sessionID);
 }
