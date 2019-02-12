@@ -38,9 +38,9 @@ public class Venter {
         @SerializedName("users_up_voted")
         private List<User> usersUpVoted;
         @SerializedName("is_subscribed")
-        private boolean complaint_subscribed;
+        private boolean complaintSubscribed;
         @SerializedName("upvoted")
-        private boolean complaint_upvoted;
+        private boolean complaintUpvoted;
         @SerializedName("images")
         private List<String> images;
         @SerializedName("comments")
@@ -159,20 +159,20 @@ public class Venter {
         public void setComment(List<Comment> comment) {
             this.comment = comment;
         }
-        public boolean isComplaint_upvoted() {
-            return complaint_upvoted;
+        public boolean isComplaintUpvoted() {
+            return complaintUpvoted;
         }
 
-        public void setComplaint_upvoted(boolean complaint_upvoted) {
-            this.complaint_upvoted = complaint_upvoted;
+        public void setComplaintUpvoted(boolean complaintUpvoted) {
+            this.complaintUpvoted = complaintUpvoted;
         }
 
-        public boolean isComplaint_subscribed() {
-            return complaint_subscribed;
+        public boolean isComplaintSubscribed() {
+            return complaintSubscribed;
         }
 
-        public void setComplaint_subscribed(boolean complaint_subscribed) {
-            this.complaint_subscribed = complaint_subscribed;
+        public void setComplaintSubscribed(boolean complaintSubscribed) {
+            this.complaintSubscribed = complaintSubscribed;
         }
     }
 
