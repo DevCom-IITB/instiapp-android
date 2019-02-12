@@ -24,6 +24,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -39,6 +40,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cunoraz.tagview.Tag;
@@ -130,6 +132,10 @@ public class FileComplaintFragment extends Fragment {
     private ImageButton imageButtonAddTags;
     private Button buttonAnalysis;
     private ImageButton imageActionButton;
+    private TextView error_message_me;
+    private SwipeRefreshLayout swipeContainer;
+    private boolean isCalled = false;
+    private LinearLayout linearLayoutNestedScrollView;
 
     @Override
     public void onDestroyView() {
@@ -147,6 +153,18 @@ public class FileComplaintFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        swipeContainer.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeContainer.setRefreshing(true);
+                prepareTags();
+            }
+        });
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         if (view != null) {
@@ -156,11 +174,32 @@ public class FileComplaintFragment extends Fragment {
         }
         view = inflater.inflate(R.layout.fragment_file_complaint, container, false);
         bundleCollection();
-        prepareTags();
         progressDialog = new ProgressDialog(getContext());
+        swipeContainer = view.findViewById(R.id.swipeContainer);
+        error_message_me = view.findViewById(R.id.error_message_me);
+        linearLayoutNestedScrollView = view.findViewById(R.id.linearLayoutNestedScrollView);
         final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Add Complaint");
         initviews(view);
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                prepareTags();
+            }
+        });
+
+        swipeContainer.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
+        if (!isCalled) {
+            swipeContainer.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeContainer.setRefreshing(true);
+                    prepareTags();
+                }
+            });
+            isCalled = true;
+        }
 
         editTextTags.addTextChangedListener(new TextWatcher() {
             @Override
@@ -219,7 +258,7 @@ public class FileComplaintFragment extends Fragment {
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
-        getMapReady();
+//        getMapReady();
 
         //Autocomplete location bar
         autoLocation();
@@ -602,26 +641,44 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void prepareTags() {
-        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        retrofitInterface.getTags("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<List<Venter.TagUri>>() {
-            @Override
-            public void onResponse(Call<List<Venter.TagUri>> call, Response<List<Venter.TagUri>> response) {
-                if (response != null && response.isSuccessful()) {
-                    List<Venter.TagUri> tagsApiList = response.body();
-                    tagList = new ArrayList<>();
+        try {
+            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+            retrofitInterface.getTags("sessionid=" + getArguments().getString(Constants.SESSION_ID)).enqueue(new Callback<List<Venter.TagUri>>() {
+                @Override
+                public void onResponse(Call<List<Venter.TagUri>> call, Response<List<Venter.TagUri>> response) {
+                    if (response != null && response.isSuccessful()) {
+                        List<Venter.TagUri> tagsApiList = response.body();
+                        tagList = new ArrayList<>();
 
-                    for (int i = 0; i < tagsApiList.size(); i++) {
-                        Venter.TagUri tagUri = tagsApiList.get(i);
-                        ComplaintTag complaintTag = new ComplaintTag(tagUri.getTagUri());
-                        tagList.add(complaintTag);
+                        for (int i = 0; i < tagsApiList.size(); i++) {
+                            Venter.TagUri tagUri = tagsApiList.get(i);
+                            ComplaintTag complaintTag = new ComplaintTag(tagUri.getTagUri());
+                            tagList.add(complaintTag);
+                        }
+                        swipeContainer.setRefreshing(false);
+                        linearLayoutNestedScrollView.setVisibility(View.VISIBLE);
+                        error_message_me.setVisibility(View.GONE);
+                        getMapReady();
+                    } else {
+                        error_message_me.setVisibility(View.VISIBLE);
+                        error_message_me.setText(getString(R.string.no_complaints));
+                        swipeContainer.setRefreshing(false);
+                        linearLayoutNestedScrollView.setVisibility(View.GONE);
                     }
                 }
-            }
-            @Override
-            public void onFailure(Call<List<Venter.TagUri>> call, Throwable t) {
-                Log.i(TAG, "failure in getting Tags: " + t.toString());
-            }
-        });
+                @Override
+                public void onFailure(Call<List<Venter.TagUri>> call, Throwable t) {
+                    Log.i(TAG, "failure in getting Tags: " + t.toString());
+                    swipeContainer.setRefreshing(false);
+                    error_message_me.setVisibility(View.VISIBLE);
+                    linearLayoutNestedScrollView.setVisibility(View.GONE);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            swipeContainer.setRefreshing(false);
+            linearLayoutNestedScrollView.setVisibility(View.GONE);
+        }
     }
 
     private void deleteTag(final TagView tagView, final Tag tag, final int i) {
