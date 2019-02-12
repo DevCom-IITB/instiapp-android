@@ -56,6 +56,15 @@
 
             </LinearLayout>
 
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:src="@drawable/baseline_arrow_back_black_18"
+                android:visibility="gone"/>
+
         </LinearLayout>
 
         <TextView
@@ -69,6 +78,28 @@
             android:paddingRight="5dp"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editTextComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:scrollHorizontally="true"
+            android:text="Comment"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+
+        <ImageButton
+            android:id="@+id/send_comment"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:src="@drawable/baseline_send_black_18"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
