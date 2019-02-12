@@ -258,8 +258,6 @@ public class FileComplaintFragment extends Fragment {
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
-//        getMapReady();
-
         //Autocomplete location bar
         autoLocation();
         //ends here
