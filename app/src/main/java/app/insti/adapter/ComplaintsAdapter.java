@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -25,7 +26,6 @@ import app.insti.R;
 import app.insti.Utils;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.model.User;
 import app.insti.api.model.Venter;
 import app.insti.fragment.ComplaintFragment;
 import app.insti.utils.DateTimeUtil;
@@ -97,7 +97,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
 
             try {
-                populateViews(pos, notificationson, notificationsoff, textViewVotes, textViewComments);
+                populateViews(pos, notificationson, notificationsoff, textViewVotes, textViewComments, buttonVotes);
                 buttonComments.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -120,6 +120,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             textViewVotes.setText(String.valueOf(complaint.getUsersUpVoted().size()));
                                         }
                                         complaintList.get(position).setComplaintUpvoted(true);
+                                        buttonVotes.setColorFilter(ResourcesCompat.getColor(context.getResources(), R.color.colorNavy, null));
                                     }
                                 }
 
@@ -139,6 +140,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             textViewVotes.setText(String.valueOf(complaint.getUsersUpVoted().size()));
                                         }
                                         complaintList.get(position).setComplaintUpvoted(false);
+                                        buttonVotes.clearColorFilter();
                                     }
                                 }
                                 @Override
@@ -169,7 +171,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void populateViews(int pos, ImageButton notificationson, ImageButton notificationsoff, TextView textViewVotes, TextView textViewComments) {
+    private void populateViews(int pos, ImageButton notificationson, ImageButton notificationsoff, TextView textViewVotes, TextView textViewComments, ImageButton buttonVotes) {
         try {
             textViewLocation.setText(complaintList.get(pos).getLocationDescription());
             textViewUserName.setText(complaintList.get(pos).getComplaintCreatedBy().getUserName());
@@ -184,6 +186,10 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 textViewStatus.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorGreen)));
                 textViewStatus.setTextColor(context.getResources().getColor(R.color.secondaryTextColor));
             }
+            if (complaintList.get(pos).isComplaintUpvoted()){
+                buttonVotes.setColorFilter(ResourcesCompat.getColor(context.getResources(), R.color.colorNavy, null));
+            } else
+                buttonVotes.clearColorFilter();
             String time = DateTimeUtil.getDate(complaintList.get(pos).getComplaintReportDate());
             textViewReportDate.setText(time);
             textViewDescription.setText(complaintList.get(pos).getDescription());
@@ -294,13 +300,6 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        List<User> userList = complaintList.get(position).getUsersUpVoted();
-        for (User user : userList) {
-            if (user.getUserID().equals(userID))
-               complaintList.get(position).setComplaintUpvoted(true);
-            else
-                complaintList.get(position).setComplaintUpvoted(false);
-        }
         if (viewHolder instanceof ComplaintsViewHolder) {
             ((ComplaintsViewHolder) viewHolder).bindHolder(position);
         }
