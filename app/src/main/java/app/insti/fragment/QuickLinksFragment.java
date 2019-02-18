@@ -28,6 +28,7 @@ public class QuickLinksFragment extends BaseFragment {
         TextView CMS = getActivity().findViewById(R.id.button_CMS);
         TextView CMSMaint = getActivity().findViewById(R.id.button_CMSMaint);
         TextView CMSNet = getActivity().findViewById(R.id.button_CMSNet);
+        TextView Eateries = getActivity().findViewById(R.id.button_Eateries);
         TextView ASC = getActivity().findViewById(R.id.button_ASC);
         TextView ASCExt = getActivity().findViewById(R.id.button_ASCExt);
         TextView Moodle = getActivity().findViewById(R.id.button_Moodle);
@@ -62,6 +63,11 @@ public class QuickLinksFragment extends BaseFragment {
         CMSNet.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 goToUrl("https://help-cc.iitb.ac.in/");
+            }
+        });
+        Eateries.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                goToUrl("https://gymkhana.iitb.ac.in/feedback/eateries/");
             }
         });
         ASC.setOnClickListener(new View.OnClickListener() {

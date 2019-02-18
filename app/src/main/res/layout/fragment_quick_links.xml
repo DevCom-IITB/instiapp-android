@@ -33,6 +33,11 @@
             android:text="CMS - Network" />
 
         <TextView
+            android:id="@+id/button_Eateries"
+            style="@style/QuickLink"
+            android:text="Eateries Feedback" />
+
+        <TextView
             style="@style/QuickLinksHeading"
             android:text="Academics" />
 
