@@ -45,12 +45,28 @@
                     android:gravity="bottom">
 
                     <!-- MAIN CONTENT -->
-
-                    <com.mrane.zoomview.CampusMapView
-                        android:id="@+id/campusMapView"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="fill_parent"
-                        android:paddingTop="48dp" />
+                        android:layout_height="match_parent">
+
+                        <com.mrane.zoomview.CampusMapView
+                            android:id="@+id/campusMapView"
+                            android:layout_width="match_parent"
+                            android:layout_height="fill_parent"
+                            android:paddingTop="48dp" />
+
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/locate_fab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginRight="16dp"
+                            android:src="@drawable/ic_my_location_black_24dp"
+                            android:tint="@android:color/black"
+                            android:visibility="invisible" />
+                    </RelativeLayout>
 
                     <!-- SLIDING LAYOUT -->
                     <include layout="@layout/map_card_layout" />
@@ -69,22 +85,5 @@
     </LinearLayout>
 
     <include layout="@layout/loading_panel" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/locate_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="96dp"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_my_location_black_24dp"
-            android:tint="@android:color/black"
-            android:visibility="invisible" />
-    </RelativeLayout>
 
 </FrameLayout>
