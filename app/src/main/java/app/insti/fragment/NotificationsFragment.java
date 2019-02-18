@@ -97,6 +97,7 @@ public class NotificationsFragment extends BottomSheetDialogFragment {
             notificationsRecyclerView = (RecyclerView) getView().findViewById(R.id.notifications_recycler_view);
             notificationsRecyclerView.setAdapter(notificationsAdapter);
             notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            notificationsRecyclerView.setItemAnimator(null);
 
             /* Handle swiping of notifications */
             ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
