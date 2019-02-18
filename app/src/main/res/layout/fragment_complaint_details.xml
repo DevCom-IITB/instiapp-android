@@ -282,40 +282,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/comment_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewComments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp">
-
-                <TextView
-                    android:id="@+id/comment_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerViewComments"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false" />
-            </LinearLayout>
+                android:nestedScrollingEnabled="false" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingHorizontal="10dp">
+                android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/comment_user_image"
@@ -354,63 +340,31 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/up_vote_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp" />
 
-        <LinearLayout
-            android:id="@+id/linearLayoutUpVotes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewUpVotes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp">
-
-                <TextView
-                    android:id="@+id/up_vote_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerViewUpVotes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:weightSum="2">
+                android:nestedScrollingEnabled="false" />
 
             <Button
                 android:id="@+id/buttonVoteUp"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="0dp"
                 android:layout_weight="2"
                 android:background="@color/colorSecondary"
                 android:text="Upvote"
-                android:textColor="@color/secondaryTextColor" />
+                android:textColor="@color/secondaryTextColor"
+                android:layout_marginTop="8dp" />
 
         </LinearLayout>
-
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

@@ -6,8 +6,9 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical"
-    android:layout_margin="5dp"
-    android:padding="10dp"
+    android:layout_margin="0dp"
+    android:padding="5dp"
+    app:cardElevation="0dp"
     app:cardUseCompatPadding="true"
     app:cardBackgroundColor="@color/colorWhite"
     app:cardCornerRadius="0dp">
