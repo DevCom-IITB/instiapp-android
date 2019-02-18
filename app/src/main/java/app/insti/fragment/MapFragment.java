@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.Typeface;
@@ -340,7 +341,7 @@ public class MapFragment extends Fragment implements TextWatcher,
     }
 
     private void locate(boolean showWarning) {
-        followingUser = true;
+        setFollowingUser(true);
         if (!GPSIsSetup) {
             displayLocationSettingsRequest(showWarning);
         } else if (user != null) {
@@ -1030,10 +1031,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         }
     }
 
-    public void setFollowingUser(boolean followingUser) {
-        this.followingUser = followingUser;
-    }
-
     private void displayLocationSettingsRequest(final boolean showWarning) {
         if (getView() == null || getActivity() == null) return;
         LocationRequest mLocationRequest = LocationRequest.create()
@@ -1161,6 +1158,19 @@ public class MapFragment extends Fragment implements TextWatcher,
 
     public static String getPassableName(String name) {
         return name.toLowerCase().replace(" ", "-").replaceAll("[^A-Za-z0-9\\-]", "");
+    }
+
+    public void setFollowingUser(boolean followingUser) {
+        if (getView() == null) return;
+        FloatingActionButton fab = getView().findViewById(R.id.locate_fab);
+        if (followingUser) {
+            fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary))) ;
+            fab.setColorFilter(getResources().getColor(R.color.primaryTextColor));
+        } else {
+            fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent))) ;
+            fab.setColorFilter(getResources().getColor(R.color.secondaryTextColor));
+        }
+        this.followingUser = followingUser;
     }
 }
 
