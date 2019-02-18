@@ -660,6 +660,14 @@ public class MapFragment extends Fragment implements TextWatcher,
                 parent);
 
         View headerLayout = childrenView.findViewById(R.id.header_layout);
+
+        /* Skip if we have no children */
+        if (building.children.length == 0) {
+            headerLayout.setVisibility(View.GONE);
+            return;
+        }
+        headerLayout.setVisibility(View.VISIBLE);
+
         TextView headerName = (TextView) childrenView
                 .findViewById(R.id.list_header);
         String headerText = "Inside ";
