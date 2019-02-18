@@ -309,9 +309,7 @@ public class CampusMapView extends SubsamplingScaleImageView {
 
     public void showResultMarker() {
         if (resultMarker != null) {
-            boolean noDelay = false;
-            if (isInView(getResultMarker().getPoint()))
-                noDelay = true;
+            boolean noDelay = isInView(getResultMarker().getPoint());
             AnimationBuilder anim = animateScaleAndCenter(getShowTextScale(),
                     resultMarker.getPoint());
             anim.withDuration(750).start();

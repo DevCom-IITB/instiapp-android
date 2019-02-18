@@ -120,7 +120,8 @@ public class MapFragment extends Fragment implements TextWatcher,
     private final int MSG_ANIMATE = 1;
     private final int MSG_PLAY_SOUND = 2;
     private final int MSG_DISPLAY_MAP = 3;
-    private final long DELAY_ANIMATE = 50;
+    private final long DELAY_ANIMATE = 300;
+    private final long DELAY_ANIMATE_SHORT = 50;
     private final long DELAY_INIT_LAYOUT = 50;
     public LinearLayout newSmallCard;
     public ImageView placeColor;
@@ -587,8 +588,9 @@ public class MapFragment extends Fragment implements TextWatcher,
 
             // display and zoom to marker if exists
             if (marker != null) {
+                showCard(marker);
                 Message msg = mHandler.obtainMessage(MSG_ANIMATE, key);
-                mHandler.sendMessageDelayed(msg, DELAY_ANIMATE);
+                mHandler.sendMessageDelayed(msg, cardSlideListener.isPanelOpen() ? DELAY_ANIMATE_SHORT : DELAY_ANIMATE);
             } else {
                 campusMapView.setResultMarker(null);
                 this.dismissCard();
@@ -615,7 +617,6 @@ public class MapFragment extends Fragment implements TextWatcher,
         getActivity().findViewById(R.id.place_group_color).setBackgroundColor(
                 marker.getColor());
         getActivity().findViewById(R.id.dragView).setVisibility(View.VISIBLE);
-        reCenterMarker(marker);
         cardSlideListener.showCard();
     }
 

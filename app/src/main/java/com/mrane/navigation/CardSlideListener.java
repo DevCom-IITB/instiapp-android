@@ -109,6 +109,10 @@ public class CardSlideListener implements PanelSlideListener,
         animator.start();
     }
 
+    public boolean isPanelOpen() {
+        return slidingLayout.getPanelHeight() > 10;
+    }
+
     @Override
     public void onAnimationUpdate(ValueAnimator animator) {
         int panelHeight = (Integer) animator.getAnimatedValue();
