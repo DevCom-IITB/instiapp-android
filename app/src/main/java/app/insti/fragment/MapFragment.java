@@ -640,11 +640,8 @@ public class MapFragment extends Fragment implements TextWatcher,
             View desc = getLayoutInflater().inflate(R.layout.map_place_description,
                     parent);
 
-            TextView descHeader = (TextView) desc
-                    .findViewById(R.id.desc_header);
             Typeface regular = Typeface.createFromAsset(getContext().getAssets(),
                     FONT_REGULAR);
-            descHeader.setTypeface(regular, Typeface.BOLD);
 
             TextView descContent = (TextView) desc
                     .findViewById(R.id.desc_content);

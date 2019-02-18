@@ -5,23 +5,12 @@
     android:paddingLeft="12dp">
 
     <TextView
-        android:id="@+id/desc_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:paddingBottom="0dp"
-        android:text="Description"
-        android:textColor="@color/colorGray"
-        android:textSize="20sp" />
-
-    <TextView
         android:id="@+id/desc_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/desc_header"
         android:lineSpacingExtra="3dp"
         android:padding="8dp"
-        android:paddingTop="0dp"
+        android:paddingTop="5dp"
         android:textIsSelectable="true"
         android:textSize="18sp"
         android:textColor="@color/secondaryTextColor" />
