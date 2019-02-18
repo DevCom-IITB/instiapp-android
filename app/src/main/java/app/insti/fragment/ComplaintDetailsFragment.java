@@ -181,7 +181,6 @@ public class ComplaintDetailsFragment extends Fragment {
         textViewVoteUpLabel = view.findViewById(R.id.up_vote_label);
         tagsLayout = view.findViewById(R.id.tags_layout);
         linearLayoutTags = view.findViewById(R.id.linearLayoutTags);
-        layoutUpVotes = view.findViewById(R.id.layoutUpVotes);
         recyclerViewComments = view.findViewById(R.id.recyclerViewComments);
         recyclerViewUpVotes = view.findViewById(R.id.recyclerViewUpVotes);
         editTextComment = view.findViewById(R.id.edit_comment);

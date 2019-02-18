@@ -298,8 +298,7 @@
 
             </LinearLayout>
 
-            <android.support.design.widget.CoordinatorLayout
-                android:id="@+id/layoutComments"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -308,9 +307,9 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerViewComments"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </android.support.design.widget.CoordinatorLayout>
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -377,27 +376,19 @@
 
             </LinearLayout>
 
-            <ScrollView
-                android:id="@+id/layoutUpVotes"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="6dp"
-                android:background="@android:color/white">
+                android:orientation="vertical"
+                android:padding="10dp">
 
-                <android.support.design.widget.CoordinatorLayout
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerViewUpVotes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp">
+                    android:nestedScrollingEnabled="false" />
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerViewUpVotes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                </android.support.design.widget.CoordinatorLayout>
-
-            </ScrollView>
+            </LinearLayout>
 
         </LinearLayout>
 
