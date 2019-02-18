@@ -138,6 +138,7 @@ public class AddEventFragment extends BaseFragment {
     }
 
     private void openEvent(Event event) {
+        Utils.eventCache.updateCache(event);
         String eventJson = new Gson().toJson(event);
         Bundle bundle = getArguments();
         if (bundle == null)
@@ -153,6 +154,7 @@ public class AddEventFragment extends BaseFragment {
     }
 
     private void openBody(Body body) {
+        Utils.bodyCache.invalidateCache(body);
         BodyFragment bodyFragment = BodyFragment.newInstance(body);
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

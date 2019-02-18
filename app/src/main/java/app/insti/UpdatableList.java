@@ -21,4 +21,15 @@ public class UpdatableList<T> extends ArrayList<T> {
         }
         this.add(t);
     }
+
+    /** Remove from cache */
+    public void invalidateCache(T t) {
+        for (int i = 0; i < this.size(); i++) {
+            T cachedT = this.get(i);
+            if (cachedT.equals(t)) {
+                this.remove(i);
+                return;
+            }
+        }
+    }
 }
