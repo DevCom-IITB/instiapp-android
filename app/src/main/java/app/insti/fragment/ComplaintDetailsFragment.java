@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +38,7 @@ import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.CommentsAdapter;
 import app.insti.adapter.ImageViewPagerAdapter;
-import app.insti.adapter.UpVotesAdapter;
+import app.insti.adapter.UserAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.User;
 import app.insti.api.model.Venter;
@@ -82,12 +80,10 @@ public class ComplaintDetailsFragment extends Fragment {
 
     private static String cId, uId, uProfileUrl;
     private CommentsAdapter commentListAdapter;
-    private UpVotesAdapter upVotesAdapter;
+    private UserAdapter upVotesAdapter;
     private List<Venter.Comment> commentList;
-    private List<User> upVotesList;
+    private List<User> upVotesList = new ArrayList<>();
     private LinearLayout linearLayoutTags;
-    private ScrollView layoutUpVotes;
-    private NestedScrollView nestedScrollView;
     private CircleIndicator circleIndicator;
 
     public static ComplaintDetailsFragment getInstance(String complaintid, String userid, String userProfileUrl) {
@@ -105,18 +101,15 @@ public class ComplaintDetailsFragment extends Fragment {
         commentList = new ArrayList<>();
 
         initialiseViews(view);
-        upVotesList = new ArrayList<>();
         commentListAdapter = new CommentsAdapter(getActivity(), uId, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        upVotesAdapter = new UpVotesAdapter(this, getContext());
+        upVotesAdapter = new UserAdapter(upVotesList, this);
         recyclerViewComments.setLayoutManager(linearLayoutManager);
         recyclerViewUpVotes.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewComments.setHasFixedSize(true);
         recyclerViewUpVotes.setHasFixedSize(true);
         recyclerViewComments.setAdapter(commentListAdapter);
         recyclerViewUpVotes.setAdapter(upVotesAdapter);
-        upVotesAdapter.setUpVoteList(upVotesList);
-        upVotesAdapter.notifyDataSetChanged();
 
         mMapView = view.findViewById(R.id.google_map);
         mMapView.onCreate(savedInstanceState);
@@ -166,7 +159,6 @@ public class ComplaintDetailsFragment extends Fragment {
     }
 
     private void initialiseViews(View view) {
-        nestedScrollView = view.findViewById(R.id.nestedScrollViewComplaintDetail);
         circleImageViewCreatorImage = view.findViewById(R.id.circleImageViewCreatorImage);
         linearLayoutSuggestions = view.findViewById(R.id.linearLayoutSuggestions);
         linearLayoutLocationDetails = view.findViewById(R.id.linearLayoutLocationDetails);
@@ -319,7 +311,6 @@ public class ComplaintDetailsFragment extends Fragment {
                         Venter.Complaint complaint = response.body();
                         detailedComplaint.setVoteCount(1);
                         addVotesToView(complaint);
-                        onUpvote();
                     }
                 }
 
@@ -412,18 +403,9 @@ public class ComplaintDetailsFragment extends Fragment {
         for (User users : detailedComplaint.getUsersUpVoted()) {
             upVotesList.add(users);
         }
-        upVotesAdapter.setUpVoteList(upVotesList);
+        upVotesAdapter.setList(upVotesList);
         upVotesAdapter.notifyDataSetChanged();
         textViewVoteUpLabel.setText("Up Votes (" + detailedComplaint.getUsersUpVoted().size() + ")");
-    }
-
-    private void onUpvote(){
-        layoutUpVotes.post(new Runnable() {
-            @Override
-            public void run() {
-                nestedScrollView.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-        });
     }
 
     private void addTagsToView(Venter.Complaint detailedComplaint) {
