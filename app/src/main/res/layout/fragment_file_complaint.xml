@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1">
 
+
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBar"
             android:layout_width="match_parent"
@@ -28,8 +29,8 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
                     android:id="@+id/image_holder_view"
+                    android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:orientation="vertical"
                     app:layout_collapseMode="parallax">
@@ -59,232 +60,253 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/nested_scrollview"
+        <TextView
+            android:id="@+id/error_message_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:text="@string/error_message"
+            android:textColor="?attr/themeColorInverse"
+            android:visibility="gone" />
+
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
+
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/nested_scrollview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="5dp"
-                        android:weightSum="10">
-
-                        <android.support.design.widget.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-                            android:id="@+id/editTextIncCreditScoreLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="8"
-                            app:hintTextAppearance="@style/edit_text_hint_apperarance">
-
-                            <app.insti.ComplaintDescriptionAutoCompleteTextView
-                                android:id="@+id/dynamicAutoCompleteTextView"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="top"
-                                android:hint="Enter Description"
-                                android:imeOptions="flagNoExtractUi|actionSearch"
-                                android:inputType="textMultiLine"
-                                android:minLines="3"
-                                android:textColor="@android:color/black"
-                                android:textColorHint="#4a4a4a"
-                                android:textSize="14sp" />
-
-                        </android.support.design.widget.TextInputLayout>
-
-                        <ProgressBar
-                            android:id="@+id/pb_loading_indicator"
-                            style="?android:attr/progressBarStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right|center_vertical"
-                            android:visibility="gone" />
-
-                        <android.support.v7.widget.AppCompatImageButton
-                            android:id="@+id/add_image"
-                            android:layout_width="40dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical|right"
-                            android:layout_weight="1"
-                            style="@style/Widget.AppCompat.Button.Borderless"
-                            android:src="@drawable/ic_add_a_photo_black_24dp" />
-
-                    </LinearLayout>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="5dp">
-
-                        <android.support.design.widget.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:hintTextAppearance="@style/edit_text_hint_apperarance">
-
-                            <EditText
-                                android:id="@+id/editTextSuggestions"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="top"
-                                android:hint="@string/enter_suggestions_if_any"
-                                android:inputType="textMultiLine"
-                                android:minLines="3"
-                                android:textColor="@android:color/black"
-                                android:textColorHint="#4a4a4a"
-                                android:textSize="14sp" />
-
-                        </android.support.design.widget.TextInputLayout>
-
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="5dp">
-
-                        <android.support.design.widget.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:hintTextAppearance="@style/edit_text_hint_apperarance">
-
-                            <EditText
-                                android:id="@+id/editTextLocationDetails"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="top"
-                                android:hint="@string/enter_location_details"
-                                android:inputType="textMultiLine"
-                                android:minLines="3"
-                                android:textColor="@android:color/black"
-                                android:textColorHint="#4a4a4a"
-                                android:textSize="14sp" />
-
-                        </android.support.design.widget.TextInputLayout>
-
-                    </FrameLayout>
-
-                    <android.support.v7.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5sp"
-                        android:paddingHorizontal="5dp">
-
-                        <fragment
-                            android:id="@+id/place_autocomplete_fragment"
-                            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
-                    </android.support.v7.widget.CardView>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layoutAnalyse"
+                    android:id="@+id/linearLayoutNestedScrollView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:id="@+id/google_map"
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp" />
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <com.cunoraz.tagview.TagView
-                            android:id="@+id/tag_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="10dp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="5dp"
-                        android:weightSum="100">
-
-                        <android.support.design.widget.TextInputLayout
-                            android:id="@+id/textLayoutTags"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="90"
-                            app:hintTextAppearance="@style/edit_text_hint_apperarance">
+                            android:paddingHorizontal="5dp"
+                            android:weightSum="10">
 
-                            <EditText
-                                android:id="@+id/editTextTags"
+                            <android.support.design.widget.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:id="@+id/editTextIncCreditScoreLayout"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Add Tags"
-                                android:inputType="text"
-                                android:textColor="@android:color/black"
-                                android:textColorHint="#66000000"
-                                android:textSize="14sp" />
+                                android:layout_weight="8"
+                                app:hintTextAppearance="@style/edit_text_hint_apperarance">
 
-                        </android.support.design.widget.TextInputLayout>
+                                <app.insti.ComplaintDescriptionAutoCompleteTextView
+                                    android:id="@+id/dynamicAutoCompleteTextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top"
+                                    android:hint="Enter Description"
+                                    android:imeOptions="flagNoExtractUi|actionSearch"
+                                    android:inputType="textMultiLine"
+                                    android:minLines="3"
+                                    android:textColor="@android:color/black"
+                                    android:textColorHint="#4a4a4a"
+                                    android:textSize="14sp" />
 
-                        <ImageButton
-                            android:id="@+id/imageButtonAddTags"
-                            android:layout_width="40dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="10"
-                            style="@style/Widget.AppCompat.Button.Borderless"
-                            app:srcCompat="@drawable/ic_add_black_24dp" />
+                            </android.support.design.widget.TextInputLayout>
+
+                            <ProgressBar
+                                android:id="@+id/pb_loading_indicator"
+                                style="?android:attr/progressBarStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right|center_vertical"
+                                android:visibility="gone" />
+
+                            <android.support.v7.widget.AppCompatImageButton
+                                android:id="@+id/add_image"
+                                style="@style/Widget.AppCompat.Button.Borderless"
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|right"
+                                android:layout_weight="1"
+                                android:src="@drawable/ic_add_a_photo_black_24dp" />
+
+                        </LinearLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="5dp">
+
+                            <android.support.design.widget.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:hintTextAppearance="@style/edit_text_hint_apperarance">
+
+                                <EditText
+                                    android:id="@+id/editTextSuggestions"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top"
+                                    android:hint="@string/enter_suggestions_if_any"
+                                    android:inputType="textMultiLine"
+                                    android:minLines="3"
+                                    android:textColor="@android:color/black"
+                                    android:textColorHint="#4a4a4a"
+                                    android:textSize="14sp" />
+
+                            </android.support.design.widget.TextInputLayout>
+
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="5dp">
+
+                            <android.support.design.widget.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:hintTextAppearance="@style/edit_text_hint_apperarance">
+
+                                <EditText
+                                    android:id="@+id/editTextLocationDetails"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top"
+                                    android:hint="@string/enter_location_details"
+                                    android:inputType="textMultiLine"
+                                    android:minLines="3"
+                                    android:textColor="@android:color/black"
+                                    android:textColorHint="#4a4a4a"
+                                    android:textSize="14sp" />
+
+                            </android.support.design.widget.TextInputLayout>
+
+                        </FrameLayout>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5sp"
+                            android:paddingHorizontal="5dp">
+
+                            <fragment
+                                android:id="@+id/place_autocomplete_fragment"
+                                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+
+                        </android.support.v7.widget.CardView>
 
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/linearLayoutScrollTags"
+                        android:id="@+id/layoutAnalyse"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="vertical">
 
-                        <ScrollView
-                            android:id="@+id/tags_layout"
+                        <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:id="@+id/google_map"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp" />
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="6dp"
-                            android:background="@android:color/white"
-                            android:visibility="invisible">
+                            android:orientation="vertical">
 
                             <com.cunoraz.tagview.TagView
-                                android:id="@+id/tag_populate"
+                                android:id="@+id/tag_view"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_margin="10dp" />
 
-                        </ScrollView>
+                        </LinearLayout>
 
-                        <View
-                            android:id="@+id/viewTagsLayout"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="17dp" />
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="5dp"
+                            android:weightSum="100">
+
+                            <android.support.design.widget.TextInputLayout
+                                android:id="@+id/textLayoutTags"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="90"
+                                app:hintTextAppearance="@style/edit_text_hint_apperarance">
+
+                                <EditText
+                                    android:id="@+id/editTextTags"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Add Tags"
+                                    android:inputType="text"
+                                    android:textColor="@android:color/black"
+                                    android:textColorHint="#66000000"
+                                    android:textSize="14sp" />
+
+                            </android.support.design.widget.TextInputLayout>
+
+                            <ImageButton
+                                android:id="@+id/imageButtonAddTags"
+                                style="@style/Widget.AppCompat.Button.Borderless"
+                                android:layout_width="40dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="10"
+                                app:srcCompat="@drawable/ic_add_black_24dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linearLayoutScrollTags"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <ScrollView
+                                android:id="@+id/tags_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="6dp"
+                                android:background="@android:color/white"
+                                android:visibility="invisible">
+
+                                <com.cunoraz.tagview.TagView
+                                    android:id="@+id/tag_populate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="10dp" />
+
+                            </ScrollView>
+
+                            <View
+                                android:id="@+id/viewTagsLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="17dp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
 
-        </android.support.v4.widget.NestedScrollView>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <RelativeLayout
             android:id="@+id/layout_buttons"
