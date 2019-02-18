@@ -663,13 +663,8 @@ public class CampusMapView extends SubsamplingScaleImageView {
                     PointF sCoord = viewToSourceCoord(e.getX(),
                             e.getY());
                     Marker marker = getNearestMarker(sCoord);
-                    if (isMarkerInTouchRegion(marker, sCoord)) {
-                        // mMainActivity.resultMarker(marker.name);
-                        mainActivity.editText.setText(marker.getName());
-                        mainActivity.displayMap();
-                    }
-                } else {
-
+                    mainActivity.editText.setText(isMarkerInTouchRegion(marker, sCoord) ? marker.getName() : "");
+                    mainActivity.displayMap();
                 }
                 return true;
             }
