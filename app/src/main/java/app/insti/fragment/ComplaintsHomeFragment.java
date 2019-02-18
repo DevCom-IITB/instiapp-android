@@ -47,8 +47,8 @@ public class ComplaintsHomeFragment extends Fragment {
         swipeContainer.post(new Runnable() {
             @Override
             public void run() {
-                callServerToGetNearbyComplaints();
                 if (complaints == null) {
+                    callServerToGetNearbyComplaints();
                     swipeContainer.setRefreshing(true);
                 } else {
                     initialiseRecyclerView(complaints);
