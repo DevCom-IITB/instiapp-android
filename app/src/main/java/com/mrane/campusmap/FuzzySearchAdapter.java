@@ -230,6 +230,10 @@ public class FuzzySearchAdapter extends BaseAdapter {
             }
             resultlist = sortByScore(map);
         }
+
+        if (resultlist != null && resultlist.size() > 16) {
+            resultlist = resultlist.subList(0, 15);
+        }
         notifyDataSetChanged();
     }
 
