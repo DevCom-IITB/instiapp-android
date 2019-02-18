@@ -120,7 +120,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             textViewVotes.setText(String.valueOf(complaint.getUsersUpVoted().size()));
                                         }
                                         complaintList.get(position).setComplaintUpvoted(true);
-                                        buttonVotes.setColorFilter(ResourcesCompat.getColor(context.getResources(), R.color.colorBlue, null));
+                                        buttonVotes.setColorFilter(ResourcesCompat.getColor(context.getResources(), R.color.colorPrimary, null));
                                     }
                                 }
 
@@ -187,7 +187,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 textViewStatus.setTextColor(context.getResources().getColor(R.color.secondaryTextColor));
             }
             if (complaintList.get(pos).isComplaintUpvoted()){
-                buttonVotes.setColorFilter(ResourcesCompat.getColor(context.getResources(), R.color.colorBlue, null));
+                buttonVotes.setColorFilter(ResourcesCompat.getColor(context.getResources(), R.color.colorPrimary, null));
             } else
                 buttonVotes.clearColorFilter();
             String time = DateTimeUtil.getDate(complaintList.get(pos).getComplaintReportDate());
