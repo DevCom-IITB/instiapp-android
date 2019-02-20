@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/calendar_nsv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -56,7 +56,7 @@
                     android:textColor="@color/secondaryTextColor" />
             </RelativeLayout>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/calendar_event_card_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,9 +66,9 @@
 
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
