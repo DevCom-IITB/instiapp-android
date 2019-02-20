@@ -8,20 +8,20 @@
     tools:context="app.insti.fragment.EventFragment"
     android:background="@android:color/transparent">
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent">
 
-            <android.support.design.widget.CollapsingToolbarLayout
+            <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -41,10 +41,10 @@
                         android:transitionName="sharedAvatar" />
 
                 </RelativeLayout>
-            </android.support.design.widget.CollapsingToolbarLayout>
-        </android.support.design.widget.AppBarLayout>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/event_scrollview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -62,7 +62,7 @@
                     android:background="?attr/themeColor"
                     android:orientation="vertical">
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:cardBackgroundColor="@color/colorPrimary"
@@ -145,7 +145,7 @@
                             </LinearLayout>
 
                         </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
                     <LinearLayout
                         style="?android:attr/buttonBarStyle"
@@ -206,7 +206,7 @@
                         android:textColorLink="?attr/urlColor"
                         android:textSize="16sp" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/body_card_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -214,10 +214,10 @@
                         android:nestedScrollingEnabled="false" />
                 </LinearLayout>
             </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
-    </android.support.design.widget.CoordinatorLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/edit_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

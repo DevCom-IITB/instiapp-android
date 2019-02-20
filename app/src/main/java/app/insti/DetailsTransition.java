@@ -1,9 +1,9 @@
 package app.insti;
 
-import android.support.transition.ChangeBounds;
-import android.support.transition.ChangeImageTransform;
-import android.support.transition.ChangeTransform;
-import android.support.transition.TransitionSet;
+import androidx.transition.ChangeBounds;
+import androidx.transition.ChangeImageTransform;
+import androidx.transition.ChangeTransform;
+import androidx.transition.TransitionSet;
 
 public class DetailsTransition extends TransitionSet {
     public DetailsTransition() {

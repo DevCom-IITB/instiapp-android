@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
  * Created by Shivam Sharma on 13-08-2018.
  */
 
-public class ComplaintDescriptionAutoCompleteTextView extends android.support.v7.widget.AppCompatAutoCompleteTextView {
+public class ComplaintDescriptionAutoCompleteTextView extends androidx.appcompat.widget.AppCompatAutoCompleteTextView {
 
     private static final int MESSAGE_TEXT_CHANGED = 100;
     private static final int DEFAULT_AUTOCOMPLETE_DELAY = 750;

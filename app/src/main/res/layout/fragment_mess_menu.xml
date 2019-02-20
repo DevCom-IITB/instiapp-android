@@ -23,18 +23,18 @@
                 android:theme="@style/AppTheme" />
         </FrameLayout>
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/mess_menu_swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="app.insti.fragment.MessMenuFragment">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mess_menu_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 
     <include layout="@layout/loading_panel" />

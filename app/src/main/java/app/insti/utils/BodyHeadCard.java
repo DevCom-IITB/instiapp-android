@@ -1,6 +1,6 @@
 package app.insti.utils;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import app.insti.Constants;
 import app.insti.api.model.Body;

@@ -3,7 +3,7 @@ package app.insti.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import app.insti.ActivityBuffer;
 
