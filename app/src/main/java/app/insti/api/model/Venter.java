@@ -37,12 +37,14 @@ public class Venter {
         private List<TagUri> tags;
         @SerializedName("users_up_voted")
         private List<User> usersUpVoted;
+        @SerializedName("is_subscribed")
+        private boolean complaintSubscribed;
+        @SerializedName("upvoted")
+        private boolean complaintUpvoted;
         @SerializedName("images")
         private List<String> images;
         @SerializedName("comments")
         private List<Comment> comment;
-        private int voteCount;
-        private int complaintsubscribed;
 
         @NonNull
         public String getComplaintID() {
@@ -157,20 +159,20 @@ public class Venter {
         public void setComment(List<Comment> comment) {
             this.comment = comment;
         }
-
-        public int getVoteCount() {
-            return voteCount;
+        public boolean isComplaintUpvoted() {
+            return complaintUpvoted;
         }
 
-        public void setVoteCount(int voteCount) {
-            this.voteCount = voteCount;
-        }
-        public int getComplaintsubscribed() {
-            return complaintsubscribed;
+        public void setComplaintUpvoted(boolean complaintUpvoted) {
+            this.complaintUpvoted = complaintUpvoted;
         }
 
-        public void setComplaintsubscribed(int complaintsubscribed) {
-            this.complaintsubscribed = complaintsubscribed;
+        public boolean isComplaintSubscribed() {
+            return complaintSubscribed;
+        }
+
+        public void setComplaintSubscribed(boolean complaintSubscribed) {
+            this.complaintSubscribed = complaintSubscribed;
         }
     }
 

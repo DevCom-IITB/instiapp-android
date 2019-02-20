@@ -9,7 +9,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +20,8 @@ import app.insti.Utils;
 import app.insti.adapter.ComplaintDetailsPagerAdapter;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.model.User;
 import app.insti.api.model.Venter;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ComplaintFragment extends Fragment {
@@ -67,13 +64,6 @@ public class ComplaintFragment extends Fragment {
                 if (getActivity() == null || getView() == null) return;
                 if (response.body() != null) {
                     Venter.Complaint complaint = response.body();
-                    for (User currentUser : complaint.getUsersUpVoted()) {
-                        if (currentUser.getUserID().equals(userId)) {
-                            complaint.setVoteCount(1);
-                        } else {
-                            complaint.setVoteCount(0);
-                        }
-                    }
                     initTabViews(complaint);
                     //Make progress circle gone After loading
                     getActivity().findViewById(R.id.loadingPanel).setVisibility(View.GONE);

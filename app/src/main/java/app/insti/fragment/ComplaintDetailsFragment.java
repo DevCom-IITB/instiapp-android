@@ -219,10 +219,10 @@ public class ComplaintDetailsFragment extends Fragment {
             addCommentsToView(detailedComplaint);
             initViewPagerForImages(detailedComplaint);
             addTagsToView(detailedComplaint);
-            if (detailedComplaint.getComplaintsubscribed() == 1){
+            if (detailedComplaint.isComplaintSubscribed()){
                 notificationson.setVisibility(View.VISIBLE);
                 notificationsoff.setVisibility(View.GONE);
-            } else if (detailedComplaint.getComplaintsubscribed() == 0){
+            } else if (!detailedComplaint.isComplaintSubscribed()){
                 notificationson.setVisibility(View.GONE);
                 notificationsoff.setVisibility(View.VISIBLE);
             }
@@ -303,13 +303,13 @@ public class ComplaintDetailsFragment extends Fragment {
 
     private void upVote(final Venter.Complaint detailedComplaint) {
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        if (detailedComplaint.getVoteCount() == 0) {
+        if (!detailedComplaint.isComplaintUpvoted()) {
             retrofitInterface.upVote(Utils.getSessionIDHeader(), cId, 1).enqueue(new Callback<Venter.Complaint>() {
                 @Override
                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                     if (response.isSuccessful()) {
                         Venter.Complaint complaint = response.body();
-                        detailedComplaint.setVoteCount(1);
+                        detailedComplaint.setComplaintUpvoted(true);
                         addVotesToView(complaint);
                     }
                 }
@@ -319,13 +319,13 @@ public class ComplaintDetailsFragment extends Fragment {
                     Log.i(TAG, "failure in up vote: " + t.toString());
                }
             });
-        } else if (detailedComplaint.getVoteCount() ==1){
+        } else if (detailedComplaint.isComplaintUpvoted()){
             retrofitInterface.upVote(Utils.getSessionIDHeader(), cId, 0).enqueue(new Callback<Venter.Complaint>() {
                 @Override
                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                     if (response.isSuccessful()) {
                         Venter.Complaint complaint = response.body();
-                        detailedComplaint.setVoteCount(0);
+                        detailedComplaint.setComplaintUpvoted(false);
                         addVotesToView(complaint);
                     }
                 }
@@ -340,7 +340,7 @@ public class ComplaintDetailsFragment extends Fragment {
 
     private void subscribeToComplaint(final Venter.Complaint detailedComplaint){
         final RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        if (detailedComplaint.getComplaintsubscribed() == 1) {
+        if (detailedComplaint.isComplaintSubscribed()) {
             AlertDialog.Builder unsubscribe = new AlertDialog.Builder(getActivity());
             unsubscribe.setMessage("Are you sure you want to unsubscribe to this complaint?");
             unsubscribe.setCancelable(true);
@@ -353,7 +353,7 @@ public class ComplaintDetailsFragment extends Fragment {
                                 @Override
                                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                                     if (response.isSuccessful()) {
-                                        detailedComplaint.setComplaintsubscribed(0);
+                                        detailedComplaint.setComplaintSubscribed(false);
                                         notificationson.setVisibility(View.GONE);
                                         notificationsoff.setVisibility(View.VISIBLE);
                                     }
@@ -377,12 +377,12 @@ public class ComplaintDetailsFragment extends Fragment {
 
             AlertDialog alert11 = unsubscribe.create();
             alert11.show();
-        } else if (detailedComplaint.getComplaintsubscribed() == 0){
+        } else if (!detailedComplaint.isComplaintSubscribed()){
             retrofitInterface.subscribetoComplaint(Utils.getSessionIDHeader(), detailedComplaint.getComplaintID(), 1).enqueue(new Callback<Venter.Complaint>() {
                 @Override
                 public void onResponse(Call<Venter.Complaint> call, Response<Venter.Complaint> response) {
                     if (response.isSuccessful()) {
-                        detailedComplaint.setComplaintsubscribed(1);
+                        detailedComplaint.setComplaintSubscribed(true);
                         notificationsoff.setVisibility(View.GONE);
                         notificationson.setVisibility(View.VISIBLE);
                         Toast.makeText(getActivity(), "You are subscribed to this complaint!",
