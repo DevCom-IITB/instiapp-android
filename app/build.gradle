@@ -19,13 +19,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility = "8"
+        sourceCompatibility = "8"
+    }
 }
 
 ext {
     androidxVersion = '1.0.0'
     playServicesVersion = '16.0.0'
     retrofitVersion = '2.3.0'
-    okhttpVersion = '3.11.0'
+    okhttpVersion = '3.14.0'
     picassoVersion = '2.71828'
     circleImageViewVersion = '2.2.0'
     markwonVersion = '2.0.1'
@@ -53,7 +57,6 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     implementation "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
     implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
-    implementation "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}"
     implementation "com.squareup.picasso:picasso:${picassoVersion}"
     implementation "de.hdodenhof:circleimageview:${circleImageViewVersion}"
     implementation "ru.noties:markwon:${markwonVersion}"
