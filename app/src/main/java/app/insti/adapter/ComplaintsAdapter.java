@@ -19,8 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +29,6 @@ import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Venter;
 import app.insti.fragment.ComplaintFragment;
 import app.insti.utils.DateTimeUtil;
-import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,13 +64,11 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private ImageButton notificationsoff;
         private TextView textViewVotes;
         private TextView textViewComments;
-        private CircleImageView circleImageViewCreatorImage;
         private int pos;
 
         public ComplaintsViewHolder(View currentView) {
             super(currentView);
             cardView = currentView.findViewById(R.id.cardView);
-            circleImageViewCreatorImage = currentView.findViewById(R.id.circleImageViewCreatorImage);
             textViewUserName = currentView.findViewById(R.id.textViewUserName);
             textViewStatus = currentView.findViewById(R.id.textViewStatus);
             textViewReportDate = currentView.findViewById(R.id.textViewReportDate);
@@ -102,7 +97,7 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
 
             try {
-                populateViews(pos, circleImageViewCreatorImage, notificationson, notificationsoff, textViewVotes, textViewComments, buttonVotes);
+                populateViews(pos, notificationson, notificationsoff, textViewVotes, textViewComments, buttonVotes);
                 buttonComments.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -176,9 +171,8 @@ public class ComplaintsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void populateViews(int pos, CircleImageView circleImageViewCreatorImage, ImageButton notificationson, ImageButton notificationsoff, TextView textViewVotes, TextView textViewComments, ImageButton buttonVotes) {
+    private void populateViews(int pos, ImageButton notificationson, ImageButton notificationsoff, TextView textViewVotes, TextView textViewComments, ImageButton buttonVotes) {
         try {
-            Picasso.get().load(complaintList.get(pos).getComplaintCreatedBy().getUserProfilePictureUrl()).placeholder(R.drawable.user_placeholder).into(circleImageViewCreatorImage);
             textViewLocation.setText(complaintList.get(pos).getLocationDescription());
             textViewUserName.setText(complaintList.get(pos).getComplaintCreatedBy().getUserName());
             textViewStatus.setText(complaintList.get(pos).getStatus().toUpperCase());

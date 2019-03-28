@@ -24,14 +24,6 @@
             android:padding="5dp"
             android:orientation="horizontal">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/circleImageViewCreatorImage"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="top"
-                android:paddingRight="5dp"
-                android:scaleType="centerCrop" />
-
             <LinearLayout
                 android:id="@+id/linearLayoutUser"
                 android:layout_width="match_parent"
