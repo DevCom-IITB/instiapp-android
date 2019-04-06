@@ -11,15 +11,6 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.appbar.AppBarLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.Fragment;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -38,6 +29,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -46,6 +39,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.ShareURLMaker;
@@ -65,10 +65,10 @@ import ru.noties.markwon.Markwon;
  * A simple {@link Fragment} subclass.
  */
 public class EventFragment extends BackHandledFragment implements TransitionTargetFragment {
+    public String TAG = "EventFragment";
     private Event event;
     private Button goingButton;
     private Button interestedButton;
-    public String TAG = "EventFragment";
     private int appBarOffset = 0;
     private boolean creatingView = false;
 
@@ -91,12 +91,6 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         // Required empty public constructor
     }
 
-    @Override
-    public void transitionEnd() {
-        if (getActivity() == null || getView() == null) return;
-        Utils.loadImageWithPlaceholder(eventPicture, event.getEventImageURL());
-    }
-
     /**
      * Get a spannable with a small count badge to set for an element text
      *
@@ -116,6 +110,12 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         spannable.setSpan(new RelativeSizeSpan(0.75f), text.length(), text.length() + 1 + countString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
         return spannable;
+    }
+
+    @Override
+    public void transitionEnd() {
+        if (getActivity() == null || getView() == null) return;
+        Utils.loadImageWithPlaceholder(eventPicture, event.getEventImageURL());
     }
 
     @Override
@@ -159,7 +159,9 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         setupAppBarLayout();
     }
 
-    /** Initialize app bar layout */
+    /**
+     * Initialize app bar layout
+     */
     private void setupAppBarLayout() {
         // Set the behavior
         AppBarLayout mAppBarLayout = getView().findViewById(R.id.appBar);
@@ -182,8 +184,10 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         });
     }
 
-    /** Set appbar to have an offset */
-    private void setAppBarOffset(int offsetPx){
+    /**
+     * Set appbar to have an offset
+     */
+    private void setAppBarOffset(int offsetPx) {
         AppBarLayout mAppBarLayout = getView().findViewById(R.id.appBar);
         CoordinatorLayout mCoordinatorLayour = getView().findViewById(R.id.coordinator);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
@@ -265,11 +269,11 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
             eventDate.setText(TextUtils.concat(timing));
         }
 
-        interestedButton.setOnClickListener(getUESOnClickListener(1));
+        interestedButton.setOnClickListener(getInterestedButtonOnClickListener());
 
-        goingButton.setOnClickListener(getUESOnClickListener(2));
+        goingButton.setOnClickListener(getGoingButtonOnClickListener());
 
-        setFollowButtons(event.getEventUserUes());
+        updateGoingInterestedButtonsAppearance(event.getEventUserUes());
 
         if (!event.getEventVenues().isEmpty()) {
             if (event.getEventVenues().get(0).getVenueLatitude() == 0) {
@@ -348,202 +352,237 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         });
     }
 
-    /** Setup button colors depending on status */
-    private void setFollowButtons(int status) {
-        // Set colors
+    private void updateButtonColors(int status) {
         Utils.setupFollowButton(getContext(), interestedButton, status == Constants.STATUS_INTERESTED);
         Utils.setupFollowButton(getContext(), goingButton, status == Constants.STATUS_GOING);
+    }
 
-        // Show badges
+    private void updateButtonBadges() {
         interestedButton.setText(getCountBadgeSpannable("INTERESTED", event.getEventInterestedCount()));
         goingButton.setText(getCountBadgeSpannable("GOING", event.getEventGoingCount()));
     }
 
-    private View.OnClickListener getUESOnClickListener(final int status) {
+    private void updateGoingInterestedButtonsAppearance(int status) {
+        updateButtonColors(status);
+        updateButtonBadges();
+    }
+
+    private View.OnClickListener getGoingButtonOnClickListener() {
         return new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                final int endStatus = event.getEventUserUes() == status ? 0 : status;
+            public void onClick(View v) {
+                int currentStatus = event.getEventUserUes();
+                final int finalStatus;
+
+                if (currentStatus == Constants.STATUS_GOING) {
+                    event.setEventGoingCount(event.getEventGoingCount() - 1);
+                    finalStatus = Constants.STATUS_NOT_GOING;
+                } else if (currentStatus == Constants.STATUS_INTERESTED) {
+                    event.setEventInterestedCount(event.getEventInterestedCount() - 1);
+                    event.setEventGoingCount(event.getEventGoingCount() + 1);
+                    finalStatus = Constants.STATUS_GOING;
+                } else {
+                    event.setEventGoingCount(event.getEventGoingCount() + 1);
+                    finalStatus = Constants.STATUS_GOING;
+                }
+
                 RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-                retrofitInterface.updateUserEventStatus(Utils.getSessionIDHeader(), event.getEventID(), endStatus).enqueue(new Callback<Void>() {
+                retrofitInterface.updateUserEventStatus(Utils.getSessionIDHeader(), event.getEventID(), finalStatus).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        if (response.isSuccessful()) {
-                            /* TODO: Find a better way to  change counts */
-                            if (endStatus == 0) {
-                                if (event.getEventUserUes() == 1) {
-                                    event.setEventInterestedCount(event.getEventInterestedCount() - 1);
-                                }
-                                if (event.getEventUserUes() == 2) {
-                                    event.setEventGoingCount(event.getEventGoingCount() - 1);
-                                }
-                            } else if (endStatus == 1) {
-                                if (event.getEventUserUes() != 1) {
-                                    event.setEventInterestedCount(event.getEventInterestedCount() + 1);
-                                }
-                                if (event.getEventUserUes() == 2) {
-                                    event.setEventGoingCount(event.getEventGoingCount() - 1);
-                                }
-                            } else if (endStatus == 2) {
-                                if (event.getEventUserUes() != 2) {
-                                    event.setEventGoingCount(event.getEventGoingCount() + 1);
-                                }
-                                if (event.getEventUserUes() == 1) {
-                                    event.setEventInterestedCount(event.getEventInterestedCount() - 1);
-                                }
-                            }
+                        event.setEventUserUes(finalStatus);
+                        updateGoingInterestedButtonsAppearance(finalStatus);
 
-                            event.setEventUserUes(endStatus);
-                            setFollowButtons(endStatus);
-
-                            // Update global memory cache
-                            Utils.eventCache.updateCache(event);
-                        }
+                        // Update global memory cache
+                        Utils.eventCache.updateCache(event);
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         Toast.makeText(getContext(), "Network Error", Toast.LENGTH_LONG).show();
                     }
+
                 });
             }
         };
     }
 
-    private void zoomImageFromThumb(final ImageView thumbView) {
-        // If there's an animation in progress, cancel it
-        // immediately and proceed with this one.
-        if (mCurrentAnimator != null) {
-            mCurrentAnimator.cancel();
+        private View.OnClickListener getInterestedButtonOnClickListener () {
+            return new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int currentStatus = event.getEventUserUes();
+                    final int finalStatus;
+
+                    if (currentStatus == Constants.STATUS_INTERESTED) {
+                        event.setEventInterestedCount(event.getEventInterestedCount() - 1);
+                        finalStatus = Constants.STATUS_NOT_GOING;
+                    } else if (currentStatus == Constants.STATUS_GOING) {
+                        event.setEventInterestedCount(event.getEventInterestedCount() + 1);
+                        event.setEventGoingCount(event.getEventGoingCount() - 1);
+                        finalStatus = Constants.STATUS_INTERESTED;
+                    } else {
+                        event.setEventGoingCount(event.getEventInterestedCount() + 1);
+                        finalStatus = Constants.STATUS_INTERESTED;
+                    }
+
+                    RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+                    retrofitInterface.updateUserEventStatus(Utils.getSessionIDHeader(), event.getEventID(), finalStatus).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            event.setEventUserUes(finalStatus);
+                            updateGoingInterestedButtonsAppearance(finalStatus);
+
+                            // Update global memory cache
+                            Utils.eventCache.updateCache(event);
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(getContext(), "Network Error", Toast.LENGTH_LONG).show();
+                        }
+
+                    });
+                }
+            };
         }
 
-        // Load the high-resolution "zoomed-in" image.
-        expandedImageView = (ImageView) getActivity().findViewById(
-                R.id.expanded_image_event);
-        expandedImageView.setImageDrawable(thumbView.getDrawable());
 
-        // Calculate the starting and ending bounds for the zoomed-in image.
-        // This step involves lots of math. Yay, math.
-        startBounds = new Rect();
-        final Rect finalBounds = new Rect();
-        final Point globalOffset = new Point();
+        private void zoomImageFromThumb ( final ImageView thumbView){
+            // If there's an animation in progress, cancel it
+            // immediately and proceed with this one.
+            if (mCurrentAnimator != null) {
+                mCurrentAnimator.cancel();
+            }
 
-        // The start bounds are the global visible rectangle of the thumbnail,
-        // and the final bounds are the global visible rectangle of the container
-        // view. Also set the container view's offset as the origin for the
-        // bounds, since that's the origin for the positioning animation
-        // properties (X, Y).
-        thumbView.getGlobalVisibleRect(startBounds);
-        getActivity().findViewById(R.id.container_event)
-                .getGlobalVisibleRect(finalBounds, globalOffset);
-        startBounds.offset(-globalOffset.x, -globalOffset.y);
-        finalBounds.offset(-globalOffset.x, -globalOffset.y);
+            // Load the high-resolution "zoomed-in" image.
+            expandedImageView = (ImageView) getActivity().findViewById(
+                    R.id.expanded_image_event);
+            expandedImageView.setImageDrawable(thumbView.getDrawable());
 
-        // Adjust the start bounds to be the same aspect ratio as the final
-        // bounds using the "center crop" technique. This prevents undesirable
-        // stretching during the animation. Also calculate the start scaling
-        // factor (the end scaling factor is always 1.0).
-        float startScale;
-        if ((float) finalBounds.width() / finalBounds.height()
-                > (float) startBounds.width() / startBounds.height()) {
-            // Extend start bounds horizontally
-            startScale = (float) startBounds.height() / finalBounds.height();
-            float startWidth = startScale * finalBounds.width();
-            float deltaWidth = (startWidth - startBounds.width()) / 2;
-            startBounds.left -= deltaWidth;
-            startBounds.right += deltaWidth;
-        } else {
-            // Extend start bounds vertically
-            startScale = (float) startBounds.width() / finalBounds.width();
-            float startHeight = startScale * finalBounds.height();
-            float deltaHeight = (startHeight - startBounds.height()) / 2;
-            startBounds.top -= deltaHeight;
-            startBounds.bottom += deltaHeight;
+            // Calculate the starting and ending bounds for the zoomed-in image.
+            // This step involves lots of math. Yay, math.
+            startBounds = new Rect();
+            final Rect finalBounds = new Rect();
+            final Point globalOffset = new Point();
+
+            // The start bounds are the global visible rectangle of the thumbnail,
+            // and the final bounds are the global visible rectangle of the container
+            // view. Also set the container view's offset as the origin for the
+            // bounds, since that's the origin for the positioning animation
+            // properties (X, Y).
+            thumbView.getGlobalVisibleRect(startBounds);
+            getActivity().findViewById(R.id.container_event)
+                    .getGlobalVisibleRect(finalBounds, globalOffset);
+            startBounds.offset(-globalOffset.x, -globalOffset.y);
+            finalBounds.offset(-globalOffset.x, -globalOffset.y);
+
+            // Adjust the start bounds to be the same aspect ratio as the final
+            // bounds using the "center crop" technique. This prevents undesirable
+            // stretching during the animation. Also calculate the start scaling
+            // factor (the end scaling factor is always 1.0).
+            float startScale;
+            if ((float) finalBounds.width() / finalBounds.height()
+                    > (float) startBounds.width() / startBounds.height()) {
+                // Extend start bounds horizontally
+                startScale = (float) startBounds.height() / finalBounds.height();
+                float startWidth = startScale * finalBounds.width();
+                float deltaWidth = (startWidth - startBounds.width()) / 2;
+                startBounds.left -= deltaWidth;
+                startBounds.right += deltaWidth;
+            } else {
+                // Extend start bounds vertically
+                startScale = (float) startBounds.width() / finalBounds.width();
+                float startHeight = startScale * finalBounds.height();
+                float deltaHeight = (startHeight - startBounds.height()) / 2;
+                startBounds.top -= deltaHeight;
+                startBounds.bottom += deltaHeight;
+            }
+
+            // Hide the thumbnail and show the zoomed-in view. When the animation
+            // begins, it will position the zoomed-in view in the place of the
+            // thumbnail.
+            thumbView.setAlpha(0f);
+            expandedImageView.setVisibility(View.VISIBLE);
+
+            // Set the pivot point for SCALE_X and SCALE_Y transformations
+            // to the top-left corner of the zoomed-in view (the default
+            // is the center of the view).
+            expandedImageView.setPivotX(0f);
+            expandedImageView.setPivotY(0f);
+
+            // Construct and run the parallel animation of the four translation and
+            // scale properties (X, Y, SCALE_X, and SCALE_Y).
+            AnimatorSet set = new AnimatorSet();
+            set
+                    .play(ObjectAnimator.ofFloat(expandedImageView, View.X,
+                            startBounds.left, finalBounds.left))
+                    .with(ObjectAnimator.ofFloat(expandedImageView, View.Y,
+                            startBounds.top, finalBounds.top))
+                    .with(ObjectAnimator.ofFloat(expandedImageView, View.SCALE_X,
+                            startScale, 1f))
+                    .with(ObjectAnimator.ofFloat(expandedImageView, View.SCALE_Y,
+                            startScale, 1f));
+            set.setDuration(mShortAnimationDuration);
+            set.setInterpolator(new DecelerateInterpolator());
+            set.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mCurrentAnimator = null;
+                    expandedImageView.setBackgroundColor(Color.parseColor("#9E9E9E"));
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    mCurrentAnimator = null;
+                }
+            });
+            set.start();
+            mCurrentAnimator = set;
+
+            startScaleFinal = startScale;
+            zoomMode = true;
         }
 
-        // Hide the thumbnail and show the zoomed-in view. When the animation
-        // begins, it will position the zoomed-in view in the place of the
-        // thumbnail.
-        thumbView.setAlpha(0f);
-        expandedImageView.setVisibility(View.VISIBLE);
-
-        // Set the pivot point for SCALE_X and SCALE_Y transformations
-        // to the top-left corner of the zoomed-in view (the default
-        // is the center of the view).
-        expandedImageView.setPivotX(0f);
-        expandedImageView.setPivotY(0f);
-
-        // Construct and run the parallel animation of the four translation and
-        // scale properties (X, Y, SCALE_X, and SCALE_Y).
-        AnimatorSet set = new AnimatorSet();
-        set
-                .play(ObjectAnimator.ofFloat(expandedImageView, View.X,
-                        startBounds.left, finalBounds.left))
-                .with(ObjectAnimator.ofFloat(expandedImageView, View.Y,
-                        startBounds.top, finalBounds.top))
-                .with(ObjectAnimator.ofFloat(expandedImageView, View.SCALE_X,
-                        startScale, 1f))
-                .with(ObjectAnimator.ofFloat(expandedImageView, View.SCALE_Y,
-                        startScale, 1f));
-        set.setDuration(mShortAnimationDuration);
-        set.setInterpolator(new DecelerateInterpolator());
-        set.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mCurrentAnimator = null;
-                expandedImageView.setBackgroundColor(Color.parseColor("#9E9E9E"));
+        private void zoomOut ( final ImageView expandedImageView, Rect startBounds,
+        float startScaleFinal, final View thumbView){
+            expandedImageView.setBackgroundColor(0x00000000);
+            if (mCurrentAnimator != null) {
+                mCurrentAnimator.cancel();
             }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                mCurrentAnimator = null;
-            }
-        });
-        set.start();
-        mCurrentAnimator = set;
+            // Animate the four positioning/sizing properties in parallel,
+            // back to their original values.
+            AnimatorSet set = new AnimatorSet();
+            set.play(ObjectAnimator
+                    .ofFloat(expandedImageView, View.X, startBounds.left))
+                    .with(ObjectAnimator
+                            .ofFloat(expandedImageView,
+                                    View.Y, startBounds.top))
+                    .with(ObjectAnimator
+                            .ofFloat(expandedImageView,
+                                    View.SCALE_X, startScaleFinal))
+                    .with(ObjectAnimator
+                            .ofFloat(expandedImageView,
+                                    View.SCALE_Y, startScaleFinal));
+            set.setDuration(mShortAnimationDuration);
+            set.setInterpolator(new DecelerateInterpolator());
+            set.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    thumbView.setAlpha(1f);
+                    expandedImageView.setVisibility(View.GONE);
+                    mCurrentAnimator = null;
+                }
 
-        startScaleFinal = startScale;
-        zoomMode = true;
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    thumbView.setAlpha(1f);
+                    expandedImageView.setVisibility(View.GONE);
+                    mCurrentAnimator = null;
+                }
+            });
+            set.start();
+            mCurrentAnimator = set;
+        }
     }
-
-    private void zoomOut(final ImageView expandedImageView, Rect startBounds, float startScaleFinal, final View thumbView) {
-        expandedImageView.setBackgroundColor(0x00000000);
-        if (mCurrentAnimator != null) {
-            mCurrentAnimator.cancel();
-        }
-
-        // Animate the four positioning/sizing properties in parallel,
-        // back to their original values.
-        AnimatorSet set = new AnimatorSet();
-        set.play(ObjectAnimator
-                .ofFloat(expandedImageView, View.X, startBounds.left))
-                .with(ObjectAnimator
-                        .ofFloat(expandedImageView,
-                                View.Y, startBounds.top))
-                .with(ObjectAnimator
-                        .ofFloat(expandedImageView,
-                                View.SCALE_X, startScaleFinal))
-                .with(ObjectAnimator
-                        .ofFloat(expandedImageView,
-                                View.SCALE_Y, startScaleFinal));
-        set.setDuration(mShortAnimationDuration);
-        set.setInterpolator(new DecelerateInterpolator());
-        set.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                thumbView.setAlpha(1f);
-                expandedImageView.setVisibility(View.GONE);
-                mCurrentAnimator = null;
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                thumbView.setAlpha(1f);
-                expandedImageView.setVisibility(View.GONE);
-                mCurrentAnimator = null;
-            }
-        });
-        set.start();
-        mCurrentAnimator = set;
-    }
-}
