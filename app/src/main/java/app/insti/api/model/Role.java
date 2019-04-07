@@ -37,7 +37,10 @@ public class Role implements CardInterface {
     @SerializedName("users_detail")
     private List<User> roleUsersDetail;
 
-    public Role(String roleID, String roleName, boolean roleInheritable, String roleBody, Body roleBodyDetails, List<Body> roleBodies, List<String> rolePermissions, List<String> roleUsers, List<User> roleUsersDetail) {
+    @SerializedName("year")
+    private String roleYear;
+
+    public Role(String roleID, String roleName, boolean roleInheritable, String roleBody, Body roleBodyDetails, List<Body> roleBodies, List<String> rolePermissions, List<String> roleUsers, List<User> roleUsersDetail,String roleYear) {
         this.roleID = roleID;
         this.roleName = roleName;
         this.roleInheritable = roleInheritable;
@@ -47,6 +50,20 @@ public class Role implements CardInterface {
         this.rolePermissions = rolePermissions;
         this.roleUsers = roleUsers;
         this.roleUsersDetail = roleUsersDetail;
+        this.roleYear = roleYear;
+    }
+
+    public Role(Role original) {
+        this.roleID = original.roleID;
+        this.roleName = original.roleName;
+        this.roleInheritable = original.roleInheritable;
+        this.roleBody = original.roleBody;
+        this.roleBodyDetails = original.roleBodyDetails;
+        this.roleBodies = original.roleBodies;
+        this.rolePermissions = original.rolePermissions;
+        this.roleUsers = original.roleUsers;
+        this.roleUsersDetail = original.roleUsersDetail;
+        this.roleYear = original.roleYear;
     }
 
     public String getRoleID() {
@@ -64,6 +81,15 @@ public class Role implements CardInterface {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
+
+    public String getRoleYear() {
+        return roleYear;
+    }
+
+    public void setRoleYear(String roleYear) {
+        this.roleYear = roleYear;
+    }
+
 
     public boolean isRoleInheritable() {
         return roleInheritable;
