@@ -274,14 +274,20 @@ public class Event implements CardInterface {
 
             subtitle += simpleDateFormatDate.format(Date) + " | " + simpleDateFormatTime.format(Date);
         }
+
+        String eventVenueName = getEventVenueString();
+        if (!eventVenueName.equals(""))
+            subtitle += " | " + eventVenueName;
+
+        return subtitle;
+    }
+
+    public String getEventVenueString() {
         StringBuilder eventVenueName = new StringBuilder();
         for (Venue venue : getEventVenues()) {
             eventVenueName.append(", ").append(venue.getVenueShortName());
         }
-        if (!eventVenueName.toString().equals(""))
-            subtitle += " | " + eventVenueName.toString().substring(2);
-
-        return subtitle;
+        return eventVenueName.toString().equals("") ? "" : eventVenueName.toString().substring(2);
     }
 
     public String getAvatarUrl() {

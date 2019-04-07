@@ -5,12 +5,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.AsyncQueryHandler;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -25,12 +21,12 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,10 +39,8 @@ import com.squareup.picasso.Picasso;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -55,7 +49,6 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import app.insti.BuildConfig;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.ShareURLMaker;
@@ -178,12 +171,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         ((CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams()).setBehavior(new AppBarLayout.Behavior());
 
         // Set offset on init
-        mAppBarLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                setAppBarOffset(appBarOffset);
-            }
-        });
+        mAppBarLayout.post(() -> setAppBarOffset(appBarOffset));
 
         // Store offset for next init
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -328,37 +316,26 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
             });
         }
 
-        eventPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                zoomImageFromThumb(eventPicture);
-            }
-        });
+        eventPicture.setOnClickListener(v -> zoomImageFromThumb(eventPicture));
         mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        final FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.edit_fab);
+        final FloatingActionButton fab = getView().findViewById(R.id.edit_fab);
 
         if (((MainActivity) getActivity()).editEventAccess(event)) {
             fab.show();
-            NestedScrollView nsv = (NestedScrollView) getView().findViewById(R.id.event_scrollview);
-            nsv.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-                @Override
-                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                    if (scrollY > oldScrollY) fab.hide();
-                    else fab.show();
-                }
+            NestedScrollView nsv = getView().findViewById(R.id.event_scrollview);
+            nsv.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+                if (scrollY > oldScrollY) fab.hide();
+                else fab.show();
             });
         }
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddEventFragment addEventFragment = new AddEventFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("id", event.getEventID());
-                addEventFragment.setArguments(bundle);
-                ((MainActivity) getActivity()).updateFragment(addEventFragment);
-            }
+        fab.setOnClickListener(v -> {
+            AddEventFragment addEventFragment = new AddEventFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("id", event.getEventID());
+            addEventFragment.setArguments(bundle);
+            ((MainActivity) getActivity()).updateFragment(addEventFragment);
         });
     }
 
@@ -377,106 +354,116 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         updateButtonBadges();
     }
 
-    private View.OnClickListener getGoingButtonOnClickListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int currentStatus = event.getEventUserUes();
-                final int finalStatus;
+    private void addEventToCalenderDialog() {
 
-                if (currentStatus == Constants.STATUS_GOING) {
-                    event.setEventGoingCount(event.getEventGoingCount() - 1);
-                    finalStatus = Constants.STATUS_NOT_GOING;
-                } else if (currentStatus == Constants.STATUS_INTERESTED) {
-                    event.setEventInterestedCount(event.getEventInterestedCount() - 1);
-                    event.setEventGoingCount(event.getEventGoingCount() + 1);
-                    finalStatus = Constants.STATUS_GOING;
-                } else {
-                    event.setEventGoingCount(event.getEventGoingCount() + 1);
-                    finalStatus = Constants.STATUS_GOING;
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        View layout = layoutInflater.inflate(R.layout.checkbox, null);
+        dialogBuilder.setView(layout);
+        CheckBox dontShowAgain = (CheckBox) layout.findViewById(R.id.skip);
+
+        dialogBuilder.setTitle("Add to Calendar?")
+                .setMessage("You will be notified about this event by InstiApp. Do you also want to add this event to your calendar?")
+                .setPositiveButton("Yes", (d, m) -> createAddToCalendarIntent())
+                .setNegativeButton("No", (dialog, which) -> dialog.cancel())
+                .create()
+                .show();
+    }
+
+    private void createAddToCalendarIntent() {
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setType("vnd.android.cursor.item/event");
+
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getEventStartTime().getTime());
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getEventEndTime().getTime());
+        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, event.isAllDayEvent());
+
+        intent.putExtra(CalendarContract.Events.TITLE, event.getTitle());
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, event.getEventDescription());
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, event.getEventVenueString());
+
+        startActivity(intent);
+    }
+
+    private View.OnClickListener getGoingButtonOnClickListener() {
+        return v -> {
+            int currentStatus = event.getEventUserUes();
+            final int finalStatus;
+
+            if (currentStatus == Constants.STATUS_GOING) {
+                event.setEventGoingCount(event.getEventGoingCount() - 1);
+                finalStatus = Constants.STATUS_NOT_GOING;
+            } else if (currentStatus == Constants.STATUS_INTERESTED) {
+                event.setEventInterestedCount(event.getEventInterestedCount() - 1);
+                event.setEventGoingCount(event.getEventGoingCount() + 1);
+                finalStatus = Constants.STATUS_GOING;
+            } else {
+                event.setEventGoingCount(event.getEventGoingCount() + 1);
+                finalStatus = Constants.STATUS_GOING;
+            }
+
+            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+            retrofitInterface.updateUserEventStatus(Utils.getSessionIDHeader(), event.getEventID(), finalStatus).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    event.setEventUserUes(finalStatus);
+                    updateGoingInterestedButtonsAppearance(finalStatus);
+
+                    // Update global memory cache
+                    Utils.eventCache.updateCache(event);
+
+                    if (finalStatus == Constants.STATUS_GOING) {
+                        addEventToCalenderDialog();
+                    }
                 }
 
-                RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-                retrofitInterface.updateUserEventStatus(Utils.getSessionIDHeader(), event.getEventID(), finalStatus).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        event.setEventUserUes(finalStatus);
-                        updateGoingInterestedButtonsAppearance(finalStatus);
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Toast.makeText(getContext(), "Network Error", Toast.LENGTH_LONG).show();
+                }
 
-                        // Update global memory cache
-                        Utils.eventCache.updateCache(event);
-
-//                        Intent intent = new Intent(Intent.ACTION_INSERT);
-//                        intent.setType("vnd.android.cursor.item/event");
-//
-//                        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, 1554581286);
-//                        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, 1554581586);
-//                        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
-//
-//                        intent.putExtra(CalendarContract.Events.TITLE, "Title");
-//                        intent.putExtra(CalendarContract.Events.DESCRIPTION, "Description");
-//                        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Location");
-//
-//                        startActivity(intent);
-
-                        Calendar beginTime = Calendar.getInstance();
-                        beginTime.set(2019, 3, 7, 10, 30);
-                        long startMillis = beginTime.getTimeInMillis();
-                        Calendar endTime = Calendar.getInstance();
-                        endTime.set(2019, 3, 7, 11, 45);
-                        long endMillis = endTime.getTimeInMillis();
-
-                        QueryHandler.insertEvent(getContext(), startMillis,
-                                endMillis, "Some Event");
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(getContext(), "Network Error", Toast.LENGTH_LONG).show();
-                    }
-
-                });
-            }
+            });
         };
     }
 
     private View.OnClickListener getInterestedButtonOnClickListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int currentStatus = event.getEventUserUes();
-                final int finalStatus;
+        return v -> {
+            int currentStatus = event.getEventUserUes();
+            final int finalStatus;
 
-                if (currentStatus == Constants.STATUS_INTERESTED) {
-                    event.setEventInterestedCount(event.getEventInterestedCount() - 1);
-                    finalStatus = Constants.STATUS_NOT_GOING;
-                } else if (currentStatus == Constants.STATUS_GOING) {
-                    event.setEventInterestedCount(event.getEventInterestedCount() + 1);
-                    event.setEventGoingCount(event.getEventGoingCount() - 1);
-                    finalStatus = Constants.STATUS_INTERESTED;
-                } else {
-                    event.setEventGoingCount(event.getEventInterestedCount() + 1);
-                    finalStatus = Constants.STATUS_INTERESTED;
+            if (currentStatus == Constants.STATUS_INTERESTED) {
+                event.setEventInterestedCount(event.getEventInterestedCount() - 1);
+                finalStatus = Constants.STATUS_NOT_GOING;
+            } else if (currentStatus == Constants.STATUS_GOING) {
+                event.setEventInterestedCount(event.getEventInterestedCount() + 1);
+                event.setEventGoingCount(event.getEventGoingCount() - 1);
+                finalStatus = Constants.STATUS_INTERESTED;
+            } else {
+                event.setEventGoingCount(event.getEventInterestedCount() + 1);
+                finalStatus = Constants.STATUS_INTERESTED;
+            }
+
+            RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+            retrofitInterface.updateUserEventStatus(Utils.getSessionIDHeader(), event.getEventID(), finalStatus).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    event.setEventUserUes(finalStatus);
+                    updateGoingInterestedButtonsAppearance(finalStatus);
+
+                    // Update global memory cache
+                    Utils.eventCache.updateCache(event);
+
+                    if (finalStatus == Constants.STATUS_INTERESTED) {
+                        addEventToCalenderDialog();
+                    }
                 }
 
-                RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-                retrofitInterface.updateUserEventStatus(Utils.getSessionIDHeader(), event.getEventID(), finalStatus).enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        event.setEventUserUes(finalStatus);
-                        updateGoingInterestedButtonsAppearance(finalStatus);
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Toast.makeText(getContext(), "Network Error", Toast.LENGTH_LONG).show();
+                }
 
-                        // Update global memory cache
-                        Utils.eventCache.updateCache(event);
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(getContext(), "Network Error", Toast.LENGTH_LONG).show();
-                    }
-
-                });
-            }
+            });
         };
     }
 
@@ -489,7 +476,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         }
 
         // Load the high-resolution "zoomed-in" image.
-        expandedImageView = (ImageView) getActivity().findViewById(
+        expandedImageView = getActivity().findViewById(
                 R.id.expanded_image_event);
         expandedImageView.setImageDrawable(thumbView.getDrawable());
 
@@ -617,98 +604,5 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         });
         set.start();
         mCurrentAnimator = set;
-    }
-}
-
-// QueryHandler
-class QueryHandler extends AsyncQueryHandler {
-    private static final String TAG = "QueryHandler";
-
-    // Projection arrays
-    private static final String[] CALENDAR_PROJECTION = new String[]
-            {
-                    CalendarContract.Calendars._ID,
-                    CalendarContract.Calendars.CALENDAR_DISPLAY_NAME
-            };
-
-    // The indices for the projection array above.
-    private static final int CALENDAR_ID_INDEX = 0;
-    private static final int CALENDAR_DISPLAY_NAME_INDEX = 1;
-
-    private static final int CALENDAR = 0;
-    private static final int EVENT = 1;
-    private static final int REMINDER = 2;
-
-    private static QueryHandler queryHandler;
-
-    public QueryHandler(ContentResolver resolver) {
-        super(resolver);
-    }
-
-    public static void insertEvent(Context context, long startTime,
-                                   long endTime, String title) {
-        ContentResolver resolver = context.getContentResolver();
-
-        if (queryHandler == null)
-            queryHandler = new QueryHandler(resolver);
-
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.DTSTART, startTime);
-        values.put(CalendarContract.Events.DTEND, endTime);
-        values.put(CalendarContract.Events.TITLE, title);
-
-        if (BuildConfig.DEBUG)
-            Log.d(TAG, "Calendar query start");
-
-        queryHandler.startQuery(CALENDAR, values, CalendarContract.Calendars.CONTENT_URI,
-                CALENDAR_PROJECTION, null, null, null);
-    }
-
-    @Override
-    public void onQueryComplete(int token, Object object, Cursor cursor)
-    {
-        // Use the cursor to move through the returned records
-        cursor.moveToFirst();
-
-        do {
-
-            // Get the field values
-            long calendarID = cursor.getLong(CALENDAR_ID_INDEX);
-            String calendarDisplayName = cursor.getString(CALENDAR_DISPLAY_NAME_INDEX);
-            Log.d("n111", "ID- " + calendarID);
-            Log.d("n111", "Name- " + calendarDisplayName);
-
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Calendar query complete " + calendarID);
-
-            ContentValues values = (ContentValues) object;
-            values.put(CalendarContract.Events.CALENDAR_ID, calendarID);
-            values.put(CalendarContract.Events.EVENT_TIMEZONE,
-                    TimeZone.getDefault().getDisplayName());
-
-//            startInsert(EVENT, null, CalendarContract.Events.CONTENT_URI, values);
-        } while (cursor.moveToNext());
-    }
-
-    @Override
-    public void onInsertComplete(int token, Object object, Uri uri)
-    {
-        if (uri != null)
-        {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Insert complete " + uri.getLastPathSegment());
-
-            switch (token)
-            {
-                case EVENT:
-                    long eventID = Long.parseLong(uri.getLastPathSegment());
-                    ContentValues values = new ContentValues();
-                    values.put(CalendarContract.Reminders.MINUTES, 10);
-                    values.put(CalendarContract.Reminders.EVENT_ID, eventID);
-                    values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-                    startInsert(REMINDER, null, CalendarContract.Reminders.CONTENT_URI, values);
-                    break;
-            }
-        }
     }
 }
