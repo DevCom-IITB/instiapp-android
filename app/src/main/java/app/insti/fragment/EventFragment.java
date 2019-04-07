@@ -277,15 +277,12 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
             if (event.getEventVenues().get(0).getVenueLatitude() == 0) {
                 navigateButton.setVisibility(View.GONE);
             } else {
-                navigateButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Venue primaryVenue = event.getEventVenues().get(0);
-                        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + primaryVenue.getVenueLatitude() + "," + primaryVenue.getVenueLongitude() + "(" + primaryVenue.getVenueName() + ")");
-                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                        mapIntent.setPackage("com.google.android.apps.maps");
-                        startActivity(mapIntent);
-                    }
+                navigateButton.setOnClickListener(v -> {
+                    Venue primaryVenue = event.getEventVenues().get(0);
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + primaryVenue.getVenueLatitude() + "," + primaryVenue.getVenueLongitude() + "(" + primaryVenue.getVenueName() + ")");
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
                 });
             }
         } else {
