@@ -6,6 +6,10 @@ public class Constants {
     public static final int RESULT_LOAD_IMAGE = 11;
     public static final int REQUEST_CAMERA_INT_ID = 101;
     public static final String DARK_THEME = "dark_theme";
+    public static final String CALENDAR_DIALOG = "calendar_dialog";
+    public static final String CALENDAR_DIALOG_YES = "Yes";
+    public static final String CALENDAR_DIALOG_NO = "No";
+    public static final String CALENDAR_DIALOG_ALWAYS_ASK = "Always ask";
     public static final String NOTIFICATIONS_RESPONSE_JSON = "notifications_json";
     public static final String EVENT_ID = "event_id";
     public static final String EVENT_LATITUDE = "event_latitude";

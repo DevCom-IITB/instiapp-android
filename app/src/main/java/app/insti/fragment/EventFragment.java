@@ -6,7 +6,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -351,18 +353,52 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         updateButtonBadges();
     }
 
-    private void addEventToCalenderDialog() {
+    private void addEventToCalender() {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
+        String savedOption = sharedPref.getString(Constants.CALENDAR_DIALOG, Constants.CALENDAR_DIALOG_ALWAYS_ASK);
 
+        if (savedOption.equals(Constants.CALENDAR_DIALOG_YES)) {
+            createAddToCalendarIntent();
+        } else if (savedOption.equals(Constants.CALENDAR_DIALOG_ALWAYS_ASK)) {
+            showAddEventToCalendarDialog();
+        }
+    }
+
+    private void saveCalendarDialogPreference(boolean dontAskAgain, boolean yes) {
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        if (!dontAskAgain) {
+            editor.putString(Constants.CALENDAR_DIALOG, Constants.CALENDAR_DIALOG_ALWAYS_ASK);
+            editor.commit();
+        } else {
+            if (yes) {
+                editor.putString(Constants.CALENDAR_DIALOG, Constants.CALENDAR_DIALOG_YES);
+                editor.commit();
+            } else {
+                editor.putString(Constants.CALENDAR_DIALOG, Constants.CALENDAR_DIALOG_NO);
+                editor.commit();
+            }
+        }
+    }
+
+    private void showAddEventToCalendarDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View layout = layoutInflater.inflate(R.layout.checkbox, null);
+        View layout = layoutInflater.inflate(R.layout.calendar_dialog_checkbox, null);
         dialogBuilder.setView(layout);
-        CheckBox dontShowAgain = (CheckBox) layout.findViewById(R.id.skip);
+        CheckBox dontShowAgain = layout.findViewById(R.id.skip);
 
-        dialogBuilder.setTitle("Add to Calendar?")
+        dialogBuilder.setTitle("Add to Calendar")
                 .setMessage("You will be notified about this event by InstiApp. Do you also want to add this event to your calendar?")
-                .setPositiveButton("Yes", (d, m) -> createAddToCalendarIntent())
-                .setNegativeButton("No", (dialog, which) -> dialog.cancel())
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    createAddToCalendarIntent();
+                    saveCalendarDialogPreference(dontShowAgain.isChecked(), true);
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    dialog.cancel();
+                    saveCalendarDialogPreference(dontShowAgain.isChecked(), false);
+                })
                 .create()
                 .show();
     }
@@ -410,7 +446,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
                     Utils.eventCache.updateCache(event);
 
                     if (finalStatus == Constants.STATUS_GOING) {
-                        addEventToCalenderDialog();
+                        addEventToCalender();
                     }
                 }
 
@@ -436,7 +472,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
                 event.setEventGoingCount(event.getEventGoingCount() - 1);
                 finalStatus = Constants.STATUS_INTERESTED;
             } else {
-                event.setEventGoingCount(event.getEventInterestedCount() + 1);
+                event.setEventInterestedCount(event.getEventInterestedCount() + 1);
                 finalStatus = Constants.STATUS_INTERESTED;
             }
 
@@ -451,7 +487,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
                     Utils.eventCache.updateCache(event);
 
                     if (finalStatus == Constants.STATUS_INTERESTED) {
-                        addEventToCalenderDialog();
+                        addEventToCalender();
                     }
                 }
 

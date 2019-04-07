@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -37,64 +39,54 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         // Show contact number
         showContactPref = (SwitchPreferenceCompat) findPreference("show_contact");
-        showContactPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                toggleShowContact((SwitchPreferenceCompat) preference, o);
-                return false;
-            }
+        showContactPref.setOnPreferenceChangeListener((preference, option) -> {
+            toggleShowContact((SwitchPreferenceCompat) preference, option);
+            return false;
         });
         showContactPref.setEnabled(false);
 
         // Dark Theme
         SwitchPreferenceCompat darkThemePref = (SwitchPreferenceCompat) findPreference("dark_theme");
-        darkThemePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                toggleDarkTheme((SwitchPreferenceCompat) preference, o);
-                return true;
-            }
+        darkThemePref.setOnPreferenceChangeListener((preference, option) -> {
+            toggleDarkTheme((boolean) option);
+            return true;
         });
         darkThemePref.setChecked(sharedPref.getBoolean(Constants.DARK_THEME, false));
 
+        // Add to Calendar
+        ListPreference calendarPref = (ListPreference) findPreference("add_to_calendar");
+        calendarPref.setOnPreferenceChangeListener((preference, option) -> {
+            toggleCalendarDialog((String) option);
+            return true;
+        });
+        calendarPref.setValue(sharedPref.getString(Constants.CALENDAR_DIALOG, Constants.CALENDAR_DIALOG_ALWAYS_ASK));
+
         // Update Profile
         Preference profilePref = findPreference("profile");
-        profilePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                openWebURL("https://gymkhana.iitb.ac.in/sso/user");
-                return false;
-            }
+        profilePref.setOnPreferenceClickListener(preference -> {
+            openWebURL("https://gymkhana.iitb.ac.in/sso/user");
+            return false;
         });
 
         // Feedback
         Preference feedbackPref = findPreference("feedback");
-        feedbackPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                openWebURL("https://insti.app/feedback");
-                return false;
-            }
+        feedbackPref.setOnPreferenceClickListener(preference -> {
+            openWebURL("https://insti.app/feedback");
+            return false;
         });
 
         // About
         Preference aboutPref = findPreference("about");
-        aboutPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                openAbout();
-                return false;
-            }
+        aboutPref.setOnPreferenceClickListener(preference -> {
+            openAbout();
+            return false;
         });
 
         // Logout
         Preference logoutPref = findPreference("logout");
-        logoutPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                logout();
-                return false;
-            }
+        logoutPref.setOnPreferenceClickListener(preference -> {
+            logout();
+            return false;
         });
 
         // Disable buttons if not logged in
@@ -139,8 +131,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         }
     }
 
-    public void toggleShowContact(final SwitchPreferenceCompat showContactPref, Object o) {
-        final boolean isChecked = (boolean) o;
+    private void toggleShowContact(final SwitchPreferenceCompat showContactPref, Object option) {
+        final boolean isChecked = (boolean) option;
         showContactPref.setEnabled(false);
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.patchUserMe(Utils.getSessionIDHeader(), new UserShowContactPatchRequest(isChecked)).enqueue(new Callback<User>() {
@@ -166,17 +158,29 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
     }
 
-    public void toggleDarkTheme(final SwitchPreferenceCompat showContactPref, Object o) {
-        editor.putBoolean(Constants.DARK_THEME, (boolean) o);
+    private void toggleDarkTheme(boolean option) {
+        editor.putBoolean(Constants.DARK_THEME, option);
         editor.commit();
-        Utils.changeTheme(this, (boolean) o);
+        Utils.changeTheme(this, option);
     }
 
-    public void openAbout() {
+    private void toggleCalendarDialog(String option) {
+        // Using strings.xml values for populating ListPreference. `option` comes from strings.xml
+        // Using Constants for updating SharedPrefs. `choice` comes from Constants.
+        String choice = Constants.CALENDAR_DIALOG_ALWAYS_ASK;
+
+        if (option.equals(getString(R.string.calendar_yes))) choice = Constants.CALENDAR_DIALOG_YES;
+        else if (option.equals(getString(R.string.calendar_no))) choice = Constants.CALENDAR_DIALOG_NO;
+
+        editor.putString(Constants.CALENDAR_DIALOG, choice);
+        editor.commit();
+    }
+
+    private void openAbout() {
         Utils.updateFragment(new AboutFragment(), getActivity());
     }
 
-    public void logout() {
+    private void logout() {
         final SessionManager sessionManager = new SessionManager(getContext());
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.logout(Utils.getSessionIDHeader()).enqueue(new EmptyCallback<Void>() {
