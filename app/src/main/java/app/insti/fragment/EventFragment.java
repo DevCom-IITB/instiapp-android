@@ -353,71 +353,6 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         updateButtonBadges();
     }
 
-    private void addEventToCalender() {
-        SharedPreferences sharedPref = getContext().getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
-        String savedOption = sharedPref.getString(Constants.CALENDAR_DIALOG, Constants.CALENDAR_DIALOG_ALWAYS_ASK);
-
-        if (savedOption.equals(Constants.CALENDAR_DIALOG_YES)) {
-            createAddToCalendarIntent();
-        } else if (savedOption.equals(Constants.CALENDAR_DIALOG_ALWAYS_ASK)) {
-            showAddEventToCalendarDialog();
-        }
-    }
-
-    private void saveCalendarDialogPreference(boolean dontAskAgain, boolean yes) {
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        if (!dontAskAgain) {
-            editor.putString(Constants.CALENDAR_DIALOG, Constants.CALENDAR_DIALOG_ALWAYS_ASK);
-            editor.commit();
-        } else {
-            if (yes) {
-                editor.putString(Constants.CALENDAR_DIALOG, Constants.CALENDAR_DIALOG_YES);
-                editor.commit();
-            } else {
-                editor.putString(Constants.CALENDAR_DIALOG, Constants.CALENDAR_DIALOG_NO);
-                editor.commit();
-            }
-        }
-    }
-
-    private void showAddEventToCalendarDialog() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View layout = layoutInflater.inflate(R.layout.calendar_dialog_checkbox, null);
-        dialogBuilder.setView(layout);
-        CheckBox dontShowAgain = layout.findViewById(R.id.skip);
-
-        dialogBuilder.setTitle("Add to Calendar")
-                .setMessage("You will be notified about this event by InstiApp. Do you also want to add this event to your calendar?")
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    createAddToCalendarIntent();
-                    saveCalendarDialogPreference(dontShowAgain.isChecked(), true);
-                })
-                .setNegativeButton("No", (dialog, which) -> {
-                    dialog.cancel();
-                    saveCalendarDialogPreference(dontShowAgain.isChecked(), false);
-                })
-                .create()
-                .show();
-    }
-
-    private void createAddToCalendarIntent() {
-        Intent intent = new Intent(Intent.ACTION_INSERT);
-        intent.setType("vnd.android.cursor.item/event");
-
-        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getEventStartTime().getTime());
-        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getEventEndTime().getTime());
-        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, event.isAllDayEvent());
-
-        intent.putExtra(CalendarContract.Events.TITLE, event.getTitle());
-        intent.putExtra(CalendarContract.Events.DESCRIPTION, event.getEventDescription());
-        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, event.getEventVenueString());
-
-        startActivity(intent);
-    }
-
     private View.OnClickListener getGoingButtonOnClickListener() {
         return v -> {
             int currentStatus = event.getEventUserUes();
@@ -499,7 +434,69 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
             });
         };
     }
+    
+    private void addEventToCalender() {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
+        String savedOption = sharedPref.getString(Constants.CALENDAR_DIALOG, Constants.CALENDAR_DIALOG_ALWAYS_ASK);
+        if (savedOption.equals(Constants.CALENDAR_DIALOG_YES)) {
+            createAddToCalendarIntent();
+        } else if (savedOption.equals(Constants.CALENDAR_DIALOG_ALWAYS_ASK)) {
+            showAddEventToCalendarDialog();
+        }
+    }
 
+    private void saveCalendarDialogPreference(boolean dontAskAgain, boolean yes) {
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(Constants.PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        if (!dontAskAgain) {
+            editor.putString(Constants.CALENDAR_DIALOG, Constants.CALENDAR_DIALOG_ALWAYS_ASK);
+            editor.commit();
+        } else {
+            if (yes) {
+                editor.putString(Constants.CALENDAR_DIALOG, Constants.CALENDAR_DIALOG_YES);
+                editor.commit();
+            } else {
+                editor.putString(Constants.CALENDAR_DIALOG, Constants.CALENDAR_DIALOG_NO);
+                editor.commit();
+            }
+        }
+    }
+
+    private void showAddEventToCalendarDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        View layout = layoutInflater.inflate(R.layout.calendar_dialog_checkbox, null);
+        dialogBuilder.setView(layout);
+        CheckBox dontShowAgain = layout.findViewById(R.id.skip);
+
+        dialogBuilder.setTitle("Add to Calendar")
+                .setMessage("You will be notified about this event by InstiApp. Do you also want to add this event to your calendar?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    createAddToCalendarIntent();
+                    saveCalendarDialogPreference(dontShowAgain.isChecked(), true);
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    dialog.cancel();
+                    saveCalendarDialogPreference(dontShowAgain.isChecked(), false);
+                })
+                .create()
+                .show();
+    }
+
+    private void createAddToCalendarIntent() {
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setType("vnd.android.cursor.item/event");
+
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getEventStartTime().getTime());
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getEventEndTime().getTime());
+        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, event.isAllDayEvent());
+
+        intent.putExtra(CalendarContract.Events.TITLE, event.getTitle());
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, event.getEventDescription());
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, event.getEventVenueString());
+
+        startActivity(intent);
+    }
 
     private void zoomImageFromThumb(final ImageView thumbView) {
         // If there's an animation in progress, cancel it
