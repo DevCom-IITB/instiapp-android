@@ -15,6 +15,14 @@
         app:summary="Note: this feature is in beta"
         android:icon="@drawable/ic_color_lens_gray_36dp"/>
 
+    <ListPreference
+        app:key="add_to_calendar"
+        app:title="Add to Calendar"
+        app:summary="Add to calendar on Going/Interested press"
+        app:entries="@array/add_to_calendar_options"
+        app:entryValues="@array/add_to_calendar_options"
+        android:icon="@drawable/ic_event_gray_36dp"/>
+
     <Preference
         app:key="profile"
         app:title="Update Profile"

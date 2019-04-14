@@ -27,6 +27,17 @@
         <item>QIP</item>
     </string-array>
 
+    <string-array name="add_to_calendar_options">
+        <item>@string/calendar_yes</item>
+        <item>@string/calendar_no</item>
+        <item>@string/calendar_always_ask</item>
+    </string-array>
+
+    <!-- Add to Calendar Preference options -->
+    <string name="calendar_yes">Yes</string>
+    <string name="calendar_no">No</string>
+    <string name="calendar_always_ask">Always ask</string>
+
     <string name="default_notification_channel_id">INSTIAPP_NOTIFS</string>
 
     <!--NSS side-->
