@@ -377,6 +377,11 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
                     event.setEventUserUes(finalStatus);
                     updateGoingInterestedButtonsAppearance(finalStatus);
 
+                    // Preserve status on going back
+                    if (getArguments() != null) {
+                        getArguments().putString(Constants.EVENT_JSON, Utils.gson.toJson(event));
+                    }
+
                     // Update global memory cache
                     Utils.eventCache.updateCache(event);
 
