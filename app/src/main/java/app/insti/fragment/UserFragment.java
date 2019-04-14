@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import app.insti.Constants;
@@ -178,14 +179,16 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
             final List<Body> bodyList = user.getUserFollowedBodies();
             final List<Event> eventList = user.getUserGoingEvents();
             List<Role> formerRoleList = user.getUserFormerRoles();
+            List<Role> allRoles = new ArrayList<>(roleList);
             for (Role role : formerRoleList) {
-                role.setRoleName("Former " + role.getRoleName());
+                Role temp = new Role(role);
+                temp.setRoleName("Former " + role.getRoleName() + " " + role.getRoleYear());
+                allRoles.add(temp);
             }
-            roleList.addAll(formerRoleList);
             List<Event> eventInterestedList = user.getUserInterestedEvents();
             eventList.removeAll(eventInterestedList);
             eventList.addAll(eventInterestedList);
-            RoleRecyclerViewFragment frag1 = RoleRecyclerViewFragment.newInstance(roleList);
+            RoleRecyclerViewFragment frag1 = RoleRecyclerViewFragment.newInstance(allRoles);
             BodyRecyclerViewFragment frag2 = BodyRecyclerViewFragment.newInstance(bodyList);
             EventRecyclerViewFragment frag3 = EventRecyclerViewFragment.newInstance(eventList);
 
