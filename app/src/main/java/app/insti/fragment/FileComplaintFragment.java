@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -125,7 +124,6 @@ public class FileComplaintFragment extends Fragment {
     private NestedScrollView nestedScrollView;
     private boolean GPSIsSetup = false;
     private ProgressDialog progressDialog;
-    private CollapsingToolbarLayout collapsing_toolbar;
     private LinearLayout linearLayoutAnalyse;
     private LinearLayout linearLayoutScrollTags;
     private boolean userAddedTag = false;
@@ -135,7 +133,9 @@ public class FileComplaintFragment extends Fragment {
     private TextView error_message_me;
     private SwipeRefreshLayout swipeContainer;
     private boolean isCalled = false;
-    private LinearLayout linearLayoutNestedScrollView;
+    private LinearLayout place_holder_image;
+    private LinearLayout image_holder_view;
+    private LinearLayout linearLayoutAll;
 
     @Override
     public void onDestroyView() {
@@ -177,7 +177,9 @@ public class FileComplaintFragment extends Fragment {
         progressDialog = new ProgressDialog(getContext());
         swipeContainer = view.findViewById(R.id.swipeContainer);
         error_message_me = view.findViewById(R.id.error_message_me);
-        linearLayoutNestedScrollView = view.findViewById(R.id.linearLayoutNestedScrollView);
+        linearLayoutAll = view.findViewById(R.id.linearLayoutAll);
+        place_holder_image = view.findViewById(R.id.place_holder_image);
+        image_holder_view = view.findViewById(R.id.image_holder_view);
         final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Add Complaint");
         initviews(view);
@@ -288,15 +290,6 @@ public class FileComplaintFragment extends Fragment {
     }
 
     private void initviews(View view) {
-        LinearLayout imageViewHolder = view.findViewById(R.id.image_holder_view);
-        CollapsingToolbarLayout.LayoutParams layoutParams = new CollapsingToolbarLayout.LayoutParams(
-                CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
-                getResources().getDisplayMetrics().heightPixels / 2
-        );
-        imageViewHolder.setLayoutParams(layoutParams);
-
-        collapsing_toolbar = view.findViewById(R.id.collapsing_toolbar);
-        collapsing_toolbar.setVisibility(View.GONE);
 
         nestedScrollView = view.findViewById(R.id.nested_scrollview);
         linearLayoutAnalyse = view.findViewById(R.id.layoutAnalyse);
@@ -654,14 +647,14 @@ public class FileComplaintFragment extends Fragment {
                             tagList.add(complaintTag);
                         }
                         swipeContainer.setRefreshing(false);
-                        linearLayoutNestedScrollView.setVisibility(View.VISIBLE);
+                        linearLayoutAll.setVisibility(View.VISIBLE);
                         error_message_me.setVisibility(View.GONE);
                         getMapReady();
                     } else {
                         error_message_me.setVisibility(View.VISIBLE);
                         error_message_me.setText(getString(R.string.no_complaints));
                         swipeContainer.setRefreshing(false);
-                        linearLayoutNestedScrollView.setVisibility(View.GONE);
+                        linearLayoutAll.setVisibility(View.GONE);
                     }
                 }
                 @Override
@@ -669,13 +662,13 @@ public class FileComplaintFragment extends Fragment {
                     Log.i(TAG, "failure in getting Tags: " + t.toString());
                     swipeContainer.setRefreshing(false);
                     error_message_me.setVisibility(View.VISIBLE);
-                    linearLayoutNestedScrollView.setVisibility(View.GONE);
+                    linearLayoutAll.setVisibility(View.GONE);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
             swipeContainer.setRefreshing(false);
-            linearLayoutNestedScrollView.setVisibility(View.GONE);
+            linearLayoutAll.setVisibility(View.GONE);
         }
     }
 
@@ -851,7 +844,8 @@ public class FileComplaintFragment extends Fragment {
             Bundle bundle = data.getExtras();
             Bitmap bitmap = (Bitmap) bundle.get("data");
             base64Image = convertImageToString(bitmap);
-            collapsing_toolbar.setVisibility(View.VISIBLE);
+            place_holder_image.setVisibility(View.GONE);
+            image_holder_view.setVisibility(View.VISIBLE);
             sendImage();
 
         } else if (resultCode == Activity.RESULT_OK && requestCode == RESULT_LOAD_IMAGE && data != null) {
@@ -866,7 +860,8 @@ public class FileComplaintFragment extends Fragment {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             base64Image = convertImageToString(getScaledBitmap(picturePath, 800, 800));
-            collapsing_toolbar.setVisibility(View.VISIBLE);
+            place_holder_image.setVisibility(View.GONE);
+            image_holder_view.setVisibility(View.VISIBLE);
             sendImage();
         }
     }
@@ -903,7 +898,8 @@ public class FileComplaintFragment extends Fragment {
         if (viewPager != null) {
             try {
                 imageViewPagerAdapter = new ImageViewPagerAdapter(getActivity(), uploadedImagesUrl);
-                collapsing_toolbar.setVisibility(View.VISIBLE);
+                place_holder_image.setVisibility(View.GONE);
+                image_holder_view.setVisibility(View.VISIBLE);
                 viewPager.setAdapter(imageViewPagerAdapter);
                 indicator.setViewPager(viewPager);
                 imageViewPagerAdapter.registerDataSetObserver(indicator.getDataSetObserver());
