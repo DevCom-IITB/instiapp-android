@@ -48,7 +48,6 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:${firebaseVersion}"
     implementation "com.google.android.material:material:${androidxVersion}"
     implementation "androidx.exifinterface:exifinterface:${androidxVersion}"
-    implementation "androidx.legacy:legacy-support-v4:${androidxVersion}"
     implementation "androidx.preference:preference:${androidxVersion}"
     implementation "androidx.cardview:cardview:${androidxVersion}"
     implementation "com.google.android.gms:play-services-maps:${playServicesVersion}"
