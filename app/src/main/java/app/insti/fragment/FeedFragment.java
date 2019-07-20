@@ -177,6 +177,13 @@ public class FeedFragment extends BaseFragment {
         View view = getActivity().findViewById(R.id.loadingPanel);
         if (view != null)
             view.setVisibility(View.GONE);
+
+        // Check if nothing was found
+        if (events.size() == 0) {
+            view = getActivity().findViewById(R.id.nothingFound);
+            if (view != null)
+                view.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initRecyclerView() {
