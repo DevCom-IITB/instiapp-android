@@ -64,6 +64,9 @@ public class Event implements CardInterface {
     @SerializedName("user_ues")
     private int eventUserUes;
 
+    @SerializedName("offered_achievements")
+    private List<OfferedAchievement> eventOfferedAchievements;
+
     private boolean eventBigImage = false;
 
     public Event(@NonNull String eventID) {
@@ -213,6 +216,14 @@ public class Event implements CardInterface {
 
     public void setEventBigImage(boolean eventBigImage) {
         this.eventBigImage = eventBigImage;
+    }
+
+    public List<OfferedAchievement> getEventOfferedAchievements() {
+        return eventOfferedAchievements;
+    }
+
+    public void setEventOfferedAchievements(List<OfferedAchievement> eventOfferedAchievements) {
+        this.eventOfferedAchievements = eventOfferedAchievements;
     }
 
     @Override

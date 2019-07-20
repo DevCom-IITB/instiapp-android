@@ -49,6 +49,7 @@ import com.squareup.picasso.Picasso;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -58,11 +59,13 @@ import app.insti.ShareURLMaker;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
+import app.insti.adapter.GenericAdapter;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.Venue;
+import app.insti.interfaces.CardInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -212,6 +215,8 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
     }
 
     private void inflateViews(final Event event) {
+        if (getActivity() == null || getView() == null) return;
+
         eventPicture = (ImageView) getActivity().findViewById(R.id.event_picture_2);
         final TextView eventTitle = (TextView) getActivity().findViewById(R.id.event_page_title);
         final TextView eventDate = (TextView) getActivity().findViewById(R.id.event_page_date);
@@ -241,10 +246,11 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         }
 
         Markwon.setMarkdown(eventDescription, event.getEventDescription());
-        final List<Body> bodyList = event.getEventBodies();
+        final List<CardInterface> cardList = new ArrayList<>(event.getEventOfferedAchievements());
+        cardList.addAll(event.getEventBodies());
         final RecyclerView bodyRecyclerView = getActivity().findViewById(R.id.body_card_recycler_view);
-        BodyAdapter bodyAdapter = new BodyAdapter(bodyList, this);
-        bodyRecyclerView.setAdapter(bodyAdapter);
+        GenericAdapter genericAdapter = new GenericAdapter(cardList, this);
+        bodyRecyclerView.setAdapter(genericAdapter);
         bodyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Common

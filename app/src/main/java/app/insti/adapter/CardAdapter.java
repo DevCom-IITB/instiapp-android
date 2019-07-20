@@ -105,7 +105,7 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
 
                     // Build basic request
                     RequestCreator requestCreator;
-                    if (t.getAvatarUrl() != null)
+                    if (t.getAvatarUrl() != null && !t.getAvatarUrl().equals(""))
                         requestCreator = Picasso.get().load(Utils.resizeImageUrl(t.getAvatarUrl()));
                     else if (getAvatarPlaceholder(t) != 0) {
                         requestCreator = Picasso.get().load(getAvatarPlaceholder(t));
