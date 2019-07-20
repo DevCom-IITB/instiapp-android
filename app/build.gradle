@@ -67,5 +67,6 @@ dependencies {
     implementation "me.leolin:ShortcutBadger:$shortcutBadgerVersion"
     implementation "com.github.prolificinteractive:material-calendarview:${materialCalendarViewVersion}"
     implementation "com.jakewharton.threetenabp:threetenabp:${threetenBPVersion}"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

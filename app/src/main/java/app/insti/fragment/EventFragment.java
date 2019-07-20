@@ -58,11 +58,9 @@ import app.insti.R;
 import app.insti.ShareURLMaker;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
-import app.insti.adapter.BodyAdapter;
 import app.insti.adapter.GenericAdapter;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.Venue;
 import app.insti.interfaces.CardInterface;
@@ -357,11 +355,11 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         }
 
         fab.setOnClickListener(v -> {
-            AddEventFragment addEventFragment = new AddEventFragment();
+            WebViewFragment webViewFragment = new WebViewFragment();
             Bundle bundle = new Bundle();
             bundle.putString("id", event.getEventID());
-            addEventFragment.setArguments(bundle);
-            ((MainActivity) getActivity()).updateFragment(addEventFragment);
+            webViewFragment.setArguments(bundle);
+            ((MainActivity) getActivity()).updateFragment(webViewFragment);
         });
     }
 

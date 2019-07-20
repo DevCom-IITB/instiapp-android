@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="app.insti.fragment.AddEventFragment">
+    tools:context="app.insti.fragment.WebViewFragment">
 
     <WebView
         android:id="@+id/add_event_webview"

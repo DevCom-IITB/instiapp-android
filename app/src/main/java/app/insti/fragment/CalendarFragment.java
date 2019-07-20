@@ -139,8 +139,8 @@ public class CalendarFragment extends BaseFragment {
                 public void onClick(View v) {
                     CalendarDay day = ((MaterialCalendarView) view.findViewById(R.id.simpleCalendarView)).getSelectedDate();
                     String date = day.getYear() + "-" + day.getMonth() + "-" + day.getDay();
-                    AddEventFragment addEventFragment = (new AddEventFragment()).withDate(date);
-                    ((MainActivity) getActivity()).updateFragment(addEventFragment);
+                    WebViewFragment webViewFragment = (new WebViewFragment()).withDate(date);
+                    ((MainActivity) getActivity()).updateFragment(webViewFragment);
                 }
             });
         }

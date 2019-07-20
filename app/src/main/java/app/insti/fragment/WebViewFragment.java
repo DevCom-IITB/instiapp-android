@@ -37,16 +37,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class AddEventFragment extends BaseFragment {
+public class WebViewFragment extends BaseFragment {
     public ValueCallback<Uri[]> uploadMessage;
     private ProgressDialog progressDialog;
     private String query = "";
 
-    public AddEventFragment() {
+    public WebViewFragment() {
         // Required empty public constructor
     }
 
-    public AddEventFragment withDate(String date) {
+    public WebViewFragment withDate(String date) {
         query += "&date=" + date;
         return this;
     }
@@ -60,7 +60,7 @@ public class AddEventFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         container.removeAllViews();
-        View view = inflater.inflate(R.layout.fragment_add_event, container, false);
+        View view = inflater.inflate(R.layout.fragment_webview, container, false);
 
         /* Show progress dialog */
         progressDialog = new ProgressDialog(getContext());

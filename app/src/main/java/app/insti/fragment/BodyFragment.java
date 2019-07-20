@@ -249,11 +249,11 @@ public class BodyFragment extends BackHandledFragment implements TransitionTarge
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AddEventFragment addEventFragment = new AddEventFragment();
+                    WebViewFragment webViewFragment = new WebViewFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("bodyId", body.getBodyID());
-                    addEventFragment.setArguments(bundle);
-                    ((MainActivity) getActivity()).updateFragment(addEventFragment);
+                    webViewFragment.setArguments(bundle);
+                    ((MainActivity) getActivity()).updateFragment(webViewFragment);
                 }
             });
         }
