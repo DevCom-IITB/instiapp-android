@@ -11,7 +11,6 @@ import java.util.List;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.Utils;
-import app.insti.activity.MainActivity;
 import app.insti.api.model.Achievement;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
