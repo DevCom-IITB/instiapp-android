@@ -1,7 +1,8 @@
 package app.insti.adapter;
 
-import androidx.fragment.app.Fragment;
 import android.view.View;
+
+import androidx.fragment.app.Fragment;
 
 import java.util.List;
 

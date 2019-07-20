@@ -1,16 +1,20 @@
 package app.insti.fragment;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.widget.Toolbar;
+import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
@@ -22,7 +26,20 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.MultiProcessor;
+import com.google.android.gms.vision.Tracker;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.gson.Gson;
+
+import java.io.IOException;
 
 import app.insti.Constants;
 import app.insti.R;
@@ -36,18 +53,75 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class AddEventFragment extends BaseFragment {
+public class WebViewFragment extends BaseFragment {
     public ValueCallback<Uri[]> uploadMessage;
     private ProgressDialog progressDialog;
     private String query = "";
+    private boolean disableProgress = false;
+    private final String host = "insti.app";
+    private CameraSource mCameraSource;
 
-    public AddEventFragment() {
+    public WebViewFragment() {
         // Required empty public constructor
     }
 
-    public AddEventFragment withDate(String date) {
+    public WebViewFragment withDate(String date) {
         query += "&date=" + date;
         return this;
+    }
+
+    private String chooseUrl(Bundle args) {
+        setTitle("InstiApp");
+
+        // Construct basic URL
+        String url = "https://" + host;
+
+        // Check for type
+        if (!args.containsKey(Constants.WV_TYPE)) {
+            return url;
+        }
+
+        // Check for arguments
+        final String type = args.getString(Constants.WV_TYPE);
+        String ID = args.getString(Constants.WV_ID);
+        if (ID == null) { ID = ""; }
+
+        switch (type) {
+            case Constants.WV_TYPE_ADD_EVENT:
+                url += "/add-event/";
+                setTitle("Add Event");
+                break;
+
+            case Constants.WV_TYPE_UPDATE_EVENT:
+                url += "/edit-event/" + ID;
+                setTitle("Update Event");
+                break;
+
+            case Constants.WV_TYPE_UPDATE_BODY:
+                url += "/edit-body/" + ID;
+                setTitle("Update Organization");
+                break;
+
+            case Constants.WV_TYPE_ACHIEVEMENTS:
+                initQRButton();
+                url += "/achievements";
+                setTitle("Achievements");
+                break;
+
+            case Constants.WV_TYPE_NEW_OFFERED_ACHIEVEMENT:
+                initQRButton();
+                url += "/achievement-new/" + ID;
+                setTitle("Achievements");
+                break;
+
+            case Constants.WV_TYPE_URL:
+                return args.getString(Constants.WV_URL);
+
+            default:
+                break;
+        }
+
+        return url + "?sandbox=true";
     }
 
     @Override
@@ -56,20 +130,35 @@ public class AddEventFragment extends BaseFragment {
     }
 
     @Override
+    public void onPause() {
+        if (mCameraSource != null) {
+            SurfaceView surfaceView = getView().findViewById(R.id.qr_camera_surfaceview);
+            mCameraSource.stop();
+            surfaceView.setVisibility(View.GONE);
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        if (mCameraSource != null) {
+            mCameraSource.release();
+            mCameraSource = null;
+        }
+        super.onStop();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         container.removeAllViews();
-        View view = inflater.inflate(R.layout.fragment_add_event, container, false);
+        View view = inflater.inflate(R.layout.fragment_webview, container, false);
 
         /* Show progress dialog */
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loading");
         progressDialog.setCancelable(false);
         progressDialog.show();
-
-        String host = "insti.app";
-        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(getArguments().containsKey("id") ? "Update Event" : "Add Event");
 
         if (savedInstanceState == null) {
             WebView webView = view.findViewById(R.id.add_event_webview);
@@ -92,17 +181,7 @@ public class AddEventFragment extends BaseFragment {
                 CookieSyncManager.getInstance().sync();
             }
 
-            String url = "https://" + host + "/add-event?sandbox=true";
-            if (getArguments().containsKey("id")) {
-                url = "https://" + host + "/edit-event/" + getArguments().getString("id") + "?sandbox=true";
-            } else if (getArguments().containsKey("bodyId")) {
-                url = "https://" + host + "/edit-body/" + getArguments().getString("bodyId") + "?sandbox=true";
-                toolbar.setTitle("Update Organization");
-            }
-
-            url += query;
-
-            webView.loadUrl(url);
+            webView.loadUrl(chooseUrl(getArguments()) + query);
 
             webView.setOnTouchListener(new View.OnTouchListener() {
                 float m_downX;
@@ -136,6 +215,125 @@ public class AddEventFragment extends BaseFragment {
 
         return view;
     }
+
+    private boolean isValidQR(String code) {
+        return code.startsWith("https://" + host);
+    }
+
+    private void handleQR(String code) {
+        if (getView() == null || getActivity() == null) return;
+
+        WebView webView = getView().findViewById(R.id.add_event_webview);
+        disableProgress = true;
+
+        /* Construct URL */
+        final String url = code + (code.contains("?") ? "&" : "?") + "sandbox=true";
+
+        /* Construct JS function */
+        final String jsfun = String.format("jumpToUrl('%s');", url);
+
+        webView.evaluateJavascript(jsfun, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String s) {
+                if (!s.equals("true")) {
+                    webView.loadUrl(url);
+                }
+            }
+        });
+    }
+
+    private void setTitle(String title) {
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setTitle(title);
+        }
+    }
+
+    private void initQRButton() {
+        setHasOptionsMenu(true);
+    }
+
+    class BarcodeTrackerFactory implements MultiProcessor.Factory<Barcode> {
+        @Override
+        public Tracker<Barcode> create(Barcode barcode) {
+            return new MyBarcodeTracker();
+        }
+    }
+
+    class MyBarcodeTracker extends Tracker<Barcode> {
+        @Override
+        public void onUpdate(Detector.Detections<Barcode> detectionResults, Barcode barcode) {
+            if (isValidQR(barcode.displayValue)) {
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        mCameraSource.stop();
+                        SurfaceView surfaceView = getView().findViewById(R.id.qr_camera_surfaceview);
+                        surfaceView.setVisibility(View.GONE);
+                        handleQR(barcode.displayValue);
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.qr_scan_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_qr_scan);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(getContext())
+                        .setBarcodeFormats(256).build();
+                BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory();
+                barcodeDetector.setProcessor(
+                        new MultiProcessor.Builder<>(barcodeFactory).build());
+
+                mCameraSource = new CameraSource.Builder(getContext(), barcodeDetector)
+                        .setFacing(CameraSource.CAMERA_FACING_BACK)
+                        .setRequestedPreviewSize(720, 1280)
+                        .setAutoFocusEnabled(true)
+                        .build();
+                SurfaceView surfaceView = getView().findViewById(R.id.qr_camera_surfaceview);
+                if (surfaceView == null) {
+                    return false;
+                }
+
+                if (ActivityCompat.checkSelfPermission(
+                        getActivity().getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+                    Toast.makeText(getContext(), "Please grant camera permission!", Toast.LENGTH_SHORT).show();
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.CAMERA}, 787);
+
+                    return false;
+                }
+
+                surfaceView.setVisibility(View.VISIBLE);
+
+                /* Give surface view time to become visible */
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (ActivityCompat.checkSelfPermission(
+                                getActivity().getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+
+                        try {
+                            mCameraSource.start(surfaceView.getHolder());
+                        } catch (IOException ignored) {
+                            surfaceView.setVisibility(View.GONE);
+                        }
+                    }
+                }, 500);
+
+                return false;
+            }
+        });
+    }
+
 
     private void openEvent(Event event) {
         Utils.eventCache.updateCache(event);
@@ -217,11 +415,12 @@ public class AddEventFragment extends BaseFragment {
 
         @Override
         public void onProgressChanged(WebView view, int progress) {
-            if (progress < 100) {
+            if (progress < 100 && !disableProgress) {
                 progressDialog.show();
             }
             if (progress == 100) {
                 progressDialog.dismiss();
+                disableProgress = false;
             }
         }
 

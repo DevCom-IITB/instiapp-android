@@ -11,11 +11,6 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +18,12 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.Role;
 import app.insti.api.model.User;
+import app.insti.interfaces.CardInterface;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -178,17 +180,21 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
             final List<Role> roleList = user.getUserRoles();
             final List<Body> bodyList = user.getUserFollowedBodies();
             final List<Event> eventList = user.getUserGoingEvents();
-            List<Role> formerRoleList = user.getUserFormerRoles();
-            List<Role> allRoles = new ArrayList<>(roleList);
+            final List<Role> formerRoleList = user.getUserFormerRoles();
+
+            /* Construct user profile */
+            final List<CardInterface> profile = new ArrayList<>(roleList);
             for (Role role : formerRoleList) {
                 Role temp = new Role(role);
                 temp.setRoleName("Former " + role.getRoleName() + " " + role.getRoleYear());
-                allRoles.add(temp);
+                profile.add(temp);
             }
+            profile.addAll(user.getUserAchievements());
+
             List<Event> eventInterestedList = user.getUserInterestedEvents();
             eventList.removeAll(eventInterestedList);
             eventList.addAll(eventInterestedList);
-            RoleRecyclerViewFragment frag1 = RoleRecyclerViewFragment.newInstance(allRoles);
+            GenericRecyclerViewFragment frag1 = GenericRecyclerViewFragment.newInstance(profile);
             BodyRecyclerViewFragment frag2 = BodyRecyclerViewFragment.newInstance(bodyList);
             EventRecyclerViewFragment frag3 = EventRecyclerViewFragment.newInstance(eventList);
 
@@ -197,7 +203,7 @@ public class UserFragment extends BackHandledFragment implements TransitionTarge
             frag3.parentFragment = this;
 
             TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
-            tabAdapter.addFragment(frag1, "Associations");
+            tabAdapter.addFragment(frag1, "Profile");
             tabAdapter.addFragment(frag2, "Following");
             tabAdapter.addFragment(frag3, "Events");
 

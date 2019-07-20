@@ -14,17 +14,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +23,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.JsonElement;
@@ -74,6 +75,7 @@ import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.fragment.UserFragment;
+import app.insti.fragment.WebViewFragment;
 import app.insti.notifications.NotificationId;
 import me.leolin.shortcutbadger.ShortcutBadger;
 import retrofit2.Call;
@@ -569,6 +571,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_map:
                 MapFragment mapFragment = new MapFragment();
                 updateFragment(mapFragment);
+                break;
+            case R.id.nav_achievements:
+                WebViewFragment webViewFragment = new WebViewFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.WV_TYPE, Constants.WV_TYPE_ACHIEVEMENTS);
+                webViewFragment.setArguments(bundle);
+                updateFragment(webViewFragment);
                 break;
 
             case R.id.nav_complaint:

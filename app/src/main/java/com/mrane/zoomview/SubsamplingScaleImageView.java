@@ -36,13 +36,14 @@ import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.os.Handler;
 import android.os.Message;
-import androidx.exifinterface.media.ExifInterface;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+
+import androidx.exifinterface.media.ExifInterface;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

@@ -3,11 +3,12 @@ package app.insti.fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
 
 import app.insti.R;
 import app.insti.Utils;

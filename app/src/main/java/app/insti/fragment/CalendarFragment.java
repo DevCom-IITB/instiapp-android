@@ -6,13 +6,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.InsetDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.Fragment;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import app.insti.Constants;
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
@@ -138,8 +140,13 @@ public class CalendarFragment extends BaseFragment {
                 public void onClick(View v) {
                     CalendarDay day = ((MaterialCalendarView) view.findViewById(R.id.simpleCalendarView)).getSelectedDate();
                     String date = day.getYear() + "-" + day.getMonth() + "-" + day.getDay();
-                    AddEventFragment addEventFragment = (new AddEventFragment()).withDate(date);
-                    ((MainActivity) getActivity()).updateFragment(addEventFragment);
+                    WebViewFragment webViewFragment = (new WebViewFragment()).withDate(date);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.WV_TYPE, Constants.WV_TYPE_ADD_EVENT);
+                    webViewFragment.setArguments(bundle);
+
+                    ((MainActivity) getActivity()).updateFragment(webViewFragment);
                 }
             });
         }

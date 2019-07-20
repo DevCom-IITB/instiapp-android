@@ -3,19 +3,22 @@ package app.insti.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.List;
 
 import app.insti.ActivityBuffer;
+import app.insti.Constants;
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
@@ -129,10 +132,11 @@ public class FeedFragment extends BaseFragment {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AddEventFragment addEventFragment = new AddEventFragment();
+                    WebViewFragment webViewFragment = new WebViewFragment();
                     Bundle bundle = new Bundle();
-                    addEventFragment.setArguments(bundle);
-                    ((MainActivity) getActivity()).updateFragment(addEventFragment);
+                    bundle.putString(Constants.WV_TYPE, Constants.WV_TYPE_ADD_EVENT);
+                    webViewFragment.setArguments(bundle);
+                    ((MainActivity) getActivity()).updateFragment(webViewFragment);
                 }
             });
             feedRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

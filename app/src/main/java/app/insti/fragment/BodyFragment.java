@@ -9,19 +9,20 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -248,11 +249,12 @@ public class BodyFragment extends BackHandledFragment implements TransitionTarge
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AddEventFragment addEventFragment = new AddEventFragment();
+                    WebViewFragment webViewFragment = new WebViewFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("bodyId", body.getBodyID());
-                    addEventFragment.setArguments(bundle);
-                    ((MainActivity) getActivity()).updateFragment(addEventFragment);
+                    bundle.putString(Constants.WV_TYPE, Constants.WV_TYPE_UPDATE_BODY);
+                    bundle.putString(Constants.WV_ID, body.getBodyID());
+                    webViewFragment.setArguments(bundle);
+                    ((MainActivity) getActivity()).updateFragment(webViewFragment);
                 }
             });
         }

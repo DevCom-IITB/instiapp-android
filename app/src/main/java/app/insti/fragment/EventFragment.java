@@ -34,16 +34,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -51,16 +41,29 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.ShareURLMaker;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
-import app.insti.adapter.BodyAdapter;
+import app.insti.adapter.GenericAdapter;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
-import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.Venue;
+import app.insti.interfaces.CardInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -188,6 +191,8 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
      * Set appbar to have an offset
      */
     private void setAppBarOffset(int offsetPx) {
+        if (getView() == null || getActivity() == null) return;
+
         AppBarLayout mAppBarLayout = getView().findViewById(R.id.appBar);
         CoordinatorLayout mCoordinatorLayour = getView().findViewById(R.id.coordinator);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
@@ -196,7 +201,24 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         behavior.onNestedPreScroll(mCoordinatorLayour, mAppBarLayout, null, 0, offsetPx, new int[]{0, 0}, 0);
     }
 
+    private void refreshEvent(Event min_event) {
+        if (getView() == null || getActivity() == null) return;
+
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.getEvent(Utils.getSessionIDHeader(), min_event.getEventID()).enqueue(new EmptyCallback<Event>() {
+            @Override
+            public void onResponse(Call<Event> call, Response<Event> response) {
+                if (response.isSuccessful()) {
+                    event = response.body();
+                    inflateViews(event);
+                }
+            }
+        });
+    }
+
     private void inflateViews(final Event event) {
+        if (getActivity() == null || getView() == null) return;
+
         eventPicture = (ImageView) getActivity().findViewById(R.id.event_picture_2);
         final TextView eventTitle = (TextView) getActivity().findViewById(R.id.event_page_title);
         final TextView eventDate = (TextView) getActivity().findViewById(R.id.event_page_date);
@@ -214,16 +236,23 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         }
 
         eventTitle.setText(event.getEventName());
-        Markwon.setMarkdown(eventDescription, event.getEventDescription());
         Timestamp timestamp = event.getEventStartTime();
         Date Date = new Date(timestamp.getTime());
         SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
         SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm");
 
-        final List<Body> bodyList = event.getEventBodies();
+        // Check for minimal event
+        if (event.getEventDescription() == null) {
+            refreshEvent(event);
+            return;
+        }
+
+        Markwon.setMarkdown(eventDescription, event.getEventDescription());
+        final List<CardInterface> cardList = new ArrayList<>(event.getEventOfferedAchievements());
+        cardList.addAll(event.getEventBodies());
         final RecyclerView bodyRecyclerView = getActivity().findViewById(R.id.body_card_recycler_view);
-        BodyAdapter bodyAdapter = new BodyAdapter(bodyList, this);
-        bodyRecyclerView.setAdapter(bodyAdapter);
+        GenericAdapter genericAdapter = new GenericAdapter(cardList, this);
+        bodyRecyclerView.setAdapter(genericAdapter);
         bodyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Common
@@ -330,11 +359,12 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         }
 
         fab.setOnClickListener(v -> {
-            AddEventFragment addEventFragment = new AddEventFragment();
+            WebViewFragment webViewFragment = new WebViewFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("id", event.getEventID());
-            addEventFragment.setArguments(bundle);
-            ((MainActivity) getActivity()).updateFragment(addEventFragment);
+            bundle.putString(Constants.WV_TYPE, Constants.WV_TYPE_UPDATE_EVENT);
+            bundle.putString(Constants.WV_ID, event.getEventID());
+            webViewFragment.setArguments(bundle);
+            ((MainActivity) getActivity()).updateFragment(webViewFragment);
         });
     }
 
