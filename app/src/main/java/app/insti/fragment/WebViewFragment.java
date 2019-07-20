@@ -91,6 +91,11 @@ public class WebViewFragment extends BaseFragment {
                 setTitle("Update Organization");
                 break;
 
+            case Constants.WV_TYPE_ACHIEVEMENTS:
+                url += "/achievements";
+                setTitle("Achievements");
+                break;
+
             case Constants.WV_TYPE_URL:
                 return args.getString(Constants.WV_URL);
         }

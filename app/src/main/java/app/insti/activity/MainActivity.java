@@ -75,6 +75,7 @@ import app.insti.fragment.QuickLinksFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.fragment.UserFragment;
+import app.insti.fragment.WebViewFragment;
 import app.insti.notifications.NotificationId;
 import me.leolin.shortcutbadger.ShortcutBadger;
 import retrofit2.Call;
@@ -570,6 +571,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_map:
                 MapFragment mapFragment = new MapFragment();
                 updateFragment(mapFragment);
+                break;
+            case R.id.nav_achievements:
+                WebViewFragment webViewFragment = new WebViewFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.WV_TYPE, Constants.WV_TYPE_ACHIEVEMENTS);
+                webViewFragment.setArguments(bundle);
+                updateFragment(webViewFragment);
                 break;
 
             case R.id.nav_complaint:
