@@ -6,7 +6,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +23,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -28,6 +33,7 @@ import com.google.gson.Gson;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.Utils;
+import app.insti.activity.MainActivity;
 import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
@@ -51,13 +57,6 @@ public class WebViewFragment extends BaseFragment {
     public WebViewFragment withDate(String date) {
         query += "&date=" + date;
         return this;
-    }
-
-    private void setTitle(String title) {
-        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            toolbar.setTitle(title);
-        }
     }
 
     private String chooseUrl(Bundle args) {
@@ -93,11 +92,13 @@ public class WebViewFragment extends BaseFragment {
                 break;
 
             case Constants.WV_TYPE_ACHIEVEMENTS:
+                initQRButton();
                 url += "/achievements";
                 setTitle("Achievements");
                 break;
 
             case Constants.WV_TYPE_NEW_OFFERED_ACHIEVEMENT:
+                initQRButton();
                 url += "/achievement-new/" + ID;
                 setTitle("Achievements");
                 break;
@@ -181,6 +182,31 @@ public class WebViewFragment extends BaseFragment {
 
         return view;
     }
+
+    private void setTitle(String title) {
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setTitle(title);
+        }
+    }
+
+    private void initQRButton() {
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.qr_scan_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_qr_scan);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Toast.makeText(getContext(), "Scan QRs to get achievements!", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+    }
+
 
     private void openEvent(Event event) {
         Utils.eventCache.updateCache(event);
