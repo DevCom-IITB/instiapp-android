@@ -251,7 +251,8 @@ public class BodyFragment extends BackHandledFragment implements TransitionTarge
                 public void onClick(View v) {
                     WebViewFragment webViewFragment = new WebViewFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("bodyId", body.getBodyID());
+                    bundle.putString(Constants.WV_TYPE, Constants.WV_TYPE_UPDATE_BODY);
+                    bundle.putString(Constants.WV_ID, body.getBodyID());
                     webViewFragment.setArguments(bundle);
                     ((MainActivity) getActivity()).updateFragment(webViewFragment);
                 }

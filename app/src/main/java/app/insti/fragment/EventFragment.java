@@ -357,7 +357,8 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         fab.setOnClickListener(v -> {
             WebViewFragment webViewFragment = new WebViewFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("id", event.getEventID());
+            bundle.putString(Constants.WV_TYPE, Constants.WV_TYPE_UPDATE_EVENT);
+            bundle.putString(Constants.WV_ID, event.getEventID());
             webViewFragment.setArguments(bundle);
             ((MainActivity) getActivity()).updateFragment(webViewFragment);
         });

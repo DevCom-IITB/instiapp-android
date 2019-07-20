@@ -46,9 +46,56 @@ public class WebViewFragment extends BaseFragment {
         // Required empty public constructor
     }
 
+    private final String host = "insti.app";
+
     public WebViewFragment withDate(String date) {
         query += "&date=" + date;
         return this;
+    }
+
+    private void setTitle(String title) {
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setTitle(title);
+        }
+    }
+
+    private String chooseUrl(Bundle args) {
+        setTitle("InstiApp");
+
+        // Construct basic URL
+        String url = "https://" + host;
+
+        // Check for type
+        if (!args.containsKey(Constants.WV_TYPE)) {
+            return url;
+        }
+
+        // Check for arguments
+        final String type = args.getString(Constants.WV_TYPE);
+        final String ID = args.getString(Constants.WV_ID);
+
+        switch (type) {
+            case Constants.WV_TYPE_ADD_EVENT:
+                url += "/add-event/";
+                setTitle("Add Event");
+                break;
+
+            case Constants.WV_TYPE_UPDATE_EVENT:
+                url += "/edit-event/" + ID;
+                setTitle("Update Event");
+                break;
+
+            case Constants.WV_TYPE_UPDATE_BODY:
+                url += "/edit-body/" + ID;
+                setTitle("Update Organization");
+                break;
+
+            case Constants.WV_TYPE_URL:
+                return args.getString(Constants.WV_URL);
+        }
+
+        return url + "?sandbox=true";
     }
 
     @Override
@@ -67,10 +114,6 @@ public class WebViewFragment extends BaseFragment {
         progressDialog.setMessage("Loading");
         progressDialog.setCancelable(false);
         progressDialog.show();
-
-        String host = "insti.app";
-        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(getArguments().containsKey("id") ? "Update Event" : "Add Event");
 
         if (savedInstanceState == null) {
             WebView webView = view.findViewById(R.id.add_event_webview);
@@ -93,17 +136,7 @@ public class WebViewFragment extends BaseFragment {
                 CookieSyncManager.getInstance().sync();
             }
 
-            String url = "https://" + host + "/add-event?sandbox=true";
-            if (getArguments().containsKey("id")) {
-                url = "https://" + host + "/edit-event/" + getArguments().getString("id") + "?sandbox=true";
-            } else if (getArguments().containsKey("bodyId")) {
-                url = "https://" + host + "/edit-body/" + getArguments().getString("bodyId") + "?sandbox=true";
-                toolbar.setTitle("Update Organization");
-            }
-
-            url += query;
-
-            webView.loadUrl(url);
+            webView.loadUrl(chooseUrl(getArguments()) + query);
 
             webView.setOnTouchListener(new View.OnTouchListener() {
                 float m_downX;

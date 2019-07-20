@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import app.insti.Constants;
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
@@ -140,6 +141,11 @@ public class CalendarFragment extends BaseFragment {
                     CalendarDay day = ((MaterialCalendarView) view.findViewById(R.id.simpleCalendarView)).getSelectedDate();
                     String date = day.getYear() + "-" + day.getMonth() + "-" + day.getDay();
                     WebViewFragment webViewFragment = (new WebViewFragment()).withDate(date);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.WV_TYPE, Constants.WV_TYPE_ADD_EVENT);
+                    webViewFragment.setArguments(bundle);
+
                     ((MainActivity) getActivity()).updateFragment(webViewFragment);
                 }
             });

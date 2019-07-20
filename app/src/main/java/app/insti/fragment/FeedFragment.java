@@ -18,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 import app.insti.ActivityBuffer;
+import app.insti.Constants;
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
@@ -133,6 +134,7 @@ public class FeedFragment extends BaseFragment {
                 public void onClick(View v) {
                     WebViewFragment webViewFragment = new WebViewFragment();
                     Bundle bundle = new Bundle();
+                    bundle.putString(Constants.WV_TYPE, Constants.WV_TYPE_ADD_EVENT);
                     webViewFragment.setArguments(bundle);
                     ((MainActivity) getActivity()).updateFragment(webViewFragment);
                 }

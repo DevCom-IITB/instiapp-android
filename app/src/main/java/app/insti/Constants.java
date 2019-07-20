@@ -64,6 +64,16 @@ public class Constants {
     public static final String CARD_TYPE_TITLE = "card_type_title";
     public static final String CARD_TYPE_BODY_HEAD = "card_type_body_head";
 
+    /* Webview */
+    public static final String WV_TYPE = "webview_type";
+    public static final String WV_TYPE_ADD_EVENT = "add_event";
+    public static final String WV_TYPE_UPDATE_EVENT = "update_event";
+    public static final String WV_TYPE_UPDATE_BODY = "update_body";
+    public static final String WV_TYPE_ACHIEVEMENTS = "achievements";
+    public static final String WV_TYPE_URL = "url_type";
+    public static final String WV_ID = "id";
+    public static final String WV_URL = "url";
+
     /* Map */
     public static final double MAP_Xn = 19.133691, MAP_Yn = 72.916984, MAP_Zn = 4189, MAP_Zyn = 1655;
     public static final double[] MAP_WEIGHTS_X = {-7.769917472065843, 159.26978694839946, 244.46989575495544, -6.003894110679995, -0.28864271213341297, 0.010398324019718075, 4.215508849724247, -0.6078830146963545, -7.0400449629241395};
