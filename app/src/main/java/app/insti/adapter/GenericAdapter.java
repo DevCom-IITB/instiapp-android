@@ -1,5 +1,6 @@
 package app.insti.adapter;
 
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.fragment.app.Fragment;
@@ -7,14 +8,17 @@ import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.insti.Constants;
 import app.insti.R;
 import app.insti.Utils;
+import app.insti.activity.MainActivity;
 import app.insti.api.model.Achievement;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
 import app.insti.api.model.OfferedAchievement;
 import app.insti.api.model.Role;
 import app.insti.api.model.User;
+import app.insti.fragment.WebViewFragment;
 import app.insti.interfaces.CardInterface;
 
 public class GenericAdapter extends CardAdapter<CardInterface> {
@@ -41,6 +45,13 @@ public class GenericAdapter extends CardAdapter<CardInterface> {
             } else {
                 Utils.openBodyFragment(a.getAchievementBody(), fragment, view.findViewById(R.id.object_picture));
             }
+        } else if (cardInterface instanceof OfferedAchievement) {
+            WebViewFragment webViewFragment = new WebViewFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.WV_TYPE, Constants.WV_TYPE_NEW_OFFERED_ACHIEVEMENT);
+            bundle.putString(Constants.WV_ID, ((OfferedAchievement) cardInterface).getAchievementID());
+            webViewFragment.setArguments(bundle);
+            Utils.updateFragment(webViewFragment, fragment.getActivity());
         }
     }
 

@@ -73,7 +73,8 @@ public class WebViewFragment extends BaseFragment {
 
         // Check for arguments
         final String type = args.getString(Constants.WV_TYPE);
-        final String ID = args.getString(Constants.WV_ID);
+        String ID = args.getString(Constants.WV_ID);
+        if (ID == null) { ID = ""; }
 
         switch (type) {
             case Constants.WV_TYPE_ADD_EVENT:
@@ -93,6 +94,11 @@ public class WebViewFragment extends BaseFragment {
 
             case Constants.WV_TYPE_ACHIEVEMENTS:
                 url += "/achievements";
+                setTitle("Achievements");
+                break;
+
+            case Constants.WV_TYPE_NEW_OFFERED_ACHIEVEMENT:
+                url += "/achievement-new/" + ID;
                 setTitle("Achievements");
                 break;
 

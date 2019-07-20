@@ -70,6 +70,7 @@ public class Constants {
     public static final String WV_TYPE_UPDATE_EVENT = "update_event";
     public static final String WV_TYPE_UPDATE_BODY = "update_body";
     public static final String WV_TYPE_ACHIEVEMENTS = "achievements";
+    public static final String WV_TYPE_NEW_OFFERED_ACHIEVEMENT = "achievements_new_offered";
     public static final String WV_TYPE_URL = "url_type";
     public static final String WV_ID = "id";
     public static final String WV_URL = "url";
