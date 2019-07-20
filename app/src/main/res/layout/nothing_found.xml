@@ -1,0 +1,18 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nothingFound"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:visibility="gone">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:scaleType="fitCenter"
+        app:lottie_rawRes="@raw/nothing_found_anim"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true" />
+
+</RelativeLayout>
