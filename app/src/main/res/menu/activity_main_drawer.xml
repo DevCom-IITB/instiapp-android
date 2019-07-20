@@ -44,6 +44,11 @@
             android:title="Map" />
 
         <item
+            android:id="@+id/nav_achievements"
+            android:icon="@drawable/ic_done_all_black_256dp"
+            android:title="Achievements" />
+
+        <item
             android:id="@+id/nav_complaint"
             android:icon="@drawable/baseline_feedback_black_48"
             android:title="Complaints/Suggestions" />

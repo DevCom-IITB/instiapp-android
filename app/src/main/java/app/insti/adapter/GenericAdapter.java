@@ -12,6 +12,7 @@ import app.insti.Utils;
 import app.insti.api.model.Achievement;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
+import app.insti.api.model.OfferedAchievement;
 import app.insti.api.model.Role;
 import app.insti.api.model.User;
 import app.insti.interfaces.CardInterface;
@@ -47,6 +48,8 @@ public class GenericAdapter extends CardAdapter<CardInterface> {
     public int getAvatarPlaceholder(CardInterface cardInterface) {
         if (cardInterface instanceof User) {
             return R.drawable.user_placeholder;
+        } else if (cardInterface instanceof OfferedAchievement) {
+            return R.drawable.ic_done_all_black_256dp;
         }
         return Utils.isDarkTheme ? R.drawable.lotus_placeholder_dark : R.drawable.lotus_placeholder;    
     }
