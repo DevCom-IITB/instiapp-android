@@ -1,17 +1,22 @@
 package app.insti.fragment;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
@@ -25,9 +30,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.MultiProcessor;
+import com.google.android.gms.vision.Tracker;
 import com.google.gson.Gson;
 
 import app.insti.Constants;
@@ -42,6 +52,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
+
+import java.io.IOException;
+
 
 public class WebViewFragment extends BaseFragment {
     public ValueCallback<Uri[]> uploadMessage;
@@ -53,6 +69,7 @@ public class WebViewFragment extends BaseFragment {
     }
 
     private final String host = "insti.app";
+    private CameraSource mCameraSource;
 
     public WebViewFragment withDate(String date) {
         query += "&date=" + date;
@@ -113,6 +130,24 @@ public class WebViewFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onPause() {
+        if (mCameraSource != null) {
+            SurfaceView surfaceView = getView().findViewById(R.id.qr_camera_surfaceview);
+            mCameraSource.stop();
+            surfaceView.setVisibility(View.GONE);
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        if (mCameraSource != null) {
+            mCameraSource.release();
+        }
+        super.onStop();
     }
 
     @Override
@@ -183,6 +218,18 @@ public class WebViewFragment extends BaseFragment {
         return view;
     }
 
+    private boolean isValidQR(String code) {
+        return code.startsWith("https://" + host);
+    }
+
+    private void handleQR(String code) {
+        if (getView() == null || getActivity() == null) return;
+
+        WebView webView = getView().findViewById(R.id.add_event_webview);
+        code += code.contains("?") ? "&" : "?";
+        webView.loadUrl(code + "sandbox=true");
+    }
+
     private void setTitle(String title) {
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -194,6 +241,29 @@ public class WebViewFragment extends BaseFragment {
         setHasOptionsMenu(true);
     }
 
+    class BarcodeTrackerFactory implements MultiProcessor.Factory<Barcode> {
+        @Override
+        public Tracker<Barcode> create(Barcode barcode) {
+            return new MyBarcodeTracker();
+        }
+    }
+
+    class MyBarcodeTracker extends Tracker<Barcode> {
+        @Override
+        public void onUpdate(Detector.Detections<Barcode> detectionResults, Barcode barcode) {
+            if (isValidQR(barcode.displayValue)) {
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        mCameraSource.stop();
+                        SurfaceView surfaceView = getView().findViewById(R.id.qr_camera_surfaceview);
+                        surfaceView.setVisibility(View.GONE);
+                        handleQR(barcode.displayValue);
+                    }
+                });
+            }
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.qr_scan_menu, menu);
@@ -201,7 +271,52 @@ public class WebViewFragment extends BaseFragment {
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Toast.makeText(getContext(), "Scan QRs to get achievements!", Toast.LENGTH_LONG).show();
+                BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(getContext())
+                        .setBarcodeFormats(256).build();
+                BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory();
+                barcodeDetector.setProcessor(
+                        new MultiProcessor.Builder<>(barcodeFactory).build());
+
+                mCameraSource = new CameraSource.Builder(getContext(), barcodeDetector)
+                        .setFacing(CameraSource.CAMERA_FACING_BACK)
+                        .setRequestedPreviewSize(720, 1280)
+                        .setAutoFocusEnabled(true)
+                        .build();
+                SurfaceView surfaceView = getView().findViewById(R.id.qr_camera_surfaceview);
+                if (surfaceView == null) {
+                    return false;
+                }
+
+                if (ActivityCompat.checkSelfPermission(
+                        getActivity().getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+                    Toast.makeText(getContext(), "Please grant camera permission!", Toast.LENGTH_SHORT).show();
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.CAMERA}, 787);
+
+                    return false;
+                }
+
+                surfaceView.setVisibility(View.VISIBLE);
+
+                /* Give surface view time to become visible */
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (ActivityCompat.checkSelfPermission(
+                                getActivity().getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+
+                        try {
+                            mCameraSource.start(surfaceView.getHolder());
+                        } catch (IOException ignored) {
+                            surfaceView.setVisibility(View.GONE);
+                        }
+                    }
+                }, 500);
+
                 return false;
             }
         });

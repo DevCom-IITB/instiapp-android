@@ -26,7 +26,8 @@ android {
 
 ext {
     androidxVersion = '1.0.0'
-    playServicesVersion = '16.0.0'
+    playServicesVersion = '17.0.0'
+    playServicesVisionVersion = '18.0.0'
     retrofitVersion = '2.3.0'
     okhttpVersion = '3.14.0'
     picassoVersion = '2.71828'
@@ -53,6 +54,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:${playServicesVersion}"
     implementation "com.google.android.gms:play-services-location:${playServicesVersion}"
     implementation "com.google.android.gms:play-services-places:${playServicesVersion}"
+    implementation "com.google.android.gms:play-services-vision:${playServicesVisionVersion}"
     implementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     implementation "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
     implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
