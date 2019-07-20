@@ -225,8 +225,21 @@ public class WebViewFragment extends BaseFragment {
 
         WebView webView = getView().findViewById(R.id.add_event_webview);
         disableProgress = true;
-        code += code.contains("?") ? "&" : "?";
-        webView.loadUrl(code + "sandbox=true");
+
+        /* Construct URL */
+        final String url = code + (code.contains("?") ? "&" : "?") + "sandbox=true";
+
+        /* Construct JS function */
+        final String jsfun = String.format("jumpToUrl('%s');", url);
+
+        webView.evaluateJavascript(jsfun, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String s) {
+                if (!s.equals("true")) {
+                    webView.loadUrl(url);
+                }
+            }
+        });
     }
 
     private void setTitle(String title) {
