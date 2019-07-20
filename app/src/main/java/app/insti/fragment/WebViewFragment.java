@@ -58,13 +58,12 @@ public class WebViewFragment extends BaseFragment {
     private ProgressDialog progressDialog;
     private String query = "";
     private boolean disableProgress = false;
+    private final String host = "insti.app";
+    private CameraSource mCameraSource;
 
     public WebViewFragment() {
         // Required empty public constructor
     }
-
-    private final String host = "insti.app";
-    private CameraSource mCameraSource;
 
     public WebViewFragment withDate(String date) {
         query += "&date=" + date;
@@ -117,6 +116,9 @@ public class WebViewFragment extends BaseFragment {
 
             case Constants.WV_TYPE_URL:
                 return args.getString(Constants.WV_URL);
+
+            default:
+                break;
         }
 
         return url + "?sandbox=true";
