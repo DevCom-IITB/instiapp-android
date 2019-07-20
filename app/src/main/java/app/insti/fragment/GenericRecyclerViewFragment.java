@@ -10,9 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -23,8 +20,6 @@ import java.util.List;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.adapter.GenericAdapter;
-import app.insti.adapter.RoleAdapter;
-import app.insti.api.model.Role;
 import app.insti.interfaces.CardInterface;
 
 /**
