@@ -63,6 +63,7 @@ public class WebViewFragment extends BaseFragment {
     public ValueCallback<Uri[]> uploadMessage;
     private ProgressDialog progressDialog;
     private String query = "";
+    private boolean disableProgress = false;
 
     public WebViewFragment() {
         // Required empty public constructor
@@ -226,6 +227,7 @@ public class WebViewFragment extends BaseFragment {
         if (getView() == null || getActivity() == null) return;
 
         WebView webView = getView().findViewById(R.id.add_event_webview);
+        disableProgress = true;
         code += code.contains("?") ? "&" : "?";
         webView.loadUrl(code + "sandbox=true");
     }
@@ -403,11 +405,12 @@ public class WebViewFragment extends BaseFragment {
 
         @Override
         public void onProgressChanged(WebView view, int progress) {
-            if (progress < 100) {
+            if (progress < 100 && !disableProgress) {
                 progressDialog.show();
             }
             if (progress == 100) {
                 progressDialog.dismiss();
+                disableProgress = false;
             }
         }
 
