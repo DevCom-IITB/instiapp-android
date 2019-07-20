@@ -143,6 +143,7 @@ public class WebViewFragment extends BaseFragment {
     public void onStop() {
         if (mCameraSource != null) {
             mCameraSource.release();
+            mCameraSource = null;
         }
         super.onStop();
     }

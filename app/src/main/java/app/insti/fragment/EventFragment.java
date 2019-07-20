@@ -191,6 +191,8 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
      * Set appbar to have an offset
      */
     private void setAppBarOffset(int offsetPx) {
+        if (getView() == null || getActivity() == null) return;
+
         AppBarLayout mAppBarLayout = getView().findViewById(R.id.appBar);
         CoordinatorLayout mCoordinatorLayour = getView().findViewById(R.id.coordinator);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mAppBarLayout.getLayoutParams();
@@ -200,6 +202,8 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
     }
 
     private void refreshEvent(Event min_event) {
+        if (getView() == null || getActivity() == null) return;
+
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.getEvent(Utils.getSessionIDHeader(), min_event.getEventID()).enqueue(new EmptyCallback<Event>() {
             @Override

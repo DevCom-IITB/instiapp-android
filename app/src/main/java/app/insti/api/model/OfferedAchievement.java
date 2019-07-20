@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
+import app.insti.Utils;
 import app.insti.interfaces.CardInterface;
 
 public class OfferedAchievement implements CardInterface {
@@ -24,6 +25,9 @@ public class OfferedAchievement implements CardInterface {
 
     @SerializedName("event")
     private String achievementEventId;
+
+    @SerializedName("generic")
+    private String achievementGeneric;
 
     @NonNull
     public String getAchievementID() {
@@ -87,6 +91,7 @@ public class OfferedAchievement implements CardInterface {
     }
 
     public String getAvatarUrl() {
-        return null;
+        return String.format("https://insti.app/assets/achievements/%s%s.png",
+                achievementGeneric, Utils.isDarkTheme ? "_dark" : "");
     }
 }
