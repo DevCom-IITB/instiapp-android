@@ -56,6 +56,9 @@ public class User implements CardInterface {
     @SerializedName("former_roles")
     private List<Role> userFormerRoles;
 
+    @SerializedName("achievements")
+    private List<Achievement> userAchievements;
+
     @SerializedName("website_url")
     private String userWebsiteURL;
 
@@ -218,6 +221,14 @@ public class User implements CardInterface {
 
     public void setShowContactNumber(Boolean showContactNumber) {
         this.showContactNumber = showContactNumber;
+    }
+
+    public List<Achievement> getUserAchievements() {
+        return userAchievements;
+    }
+
+    public void setUserAchievements(List<Achievement> userAchievements) {
+        this.userAchievements = userAchievements;
     }
 
     public String getCurrentRole() {

@@ -1,6 +1,8 @@
 package app.insti.interfaces;
 
-public interface CardInterface {
+import java.io.Serializable;
+
+public interface CardInterface extends Serializable {
     long getId();
     String getTitle();
     String getSubtitle();

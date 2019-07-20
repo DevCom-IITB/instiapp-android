@@ -57,6 +57,7 @@ import app.insti.ShareURLMaker;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.BodyAdapter;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.model.Body;
 import app.insti.api.model.Event;
@@ -196,6 +197,19 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         behavior.onNestedPreScroll(mCoordinatorLayour, mAppBarLayout, null, 0, offsetPx, new int[]{0, 0}, 0);
     }
 
+    private void refreshEvent(Event min_event) {
+        RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
+        retrofitInterface.getEvent(Utils.getSessionIDHeader(), min_event.getEventID()).enqueue(new EmptyCallback<Event>() {
+            @Override
+            public void onResponse(Call<Event> call, Response<Event> response) {
+                if (response.isSuccessful()) {
+                    event = response.body();
+                    inflateViews(event);
+                }
+            }
+        });
+    }
+
     private void inflateViews(final Event event) {
         eventPicture = (ImageView) getActivity().findViewById(R.id.event_picture_2);
         final TextView eventTitle = (TextView) getActivity().findViewById(R.id.event_page_title);
@@ -214,12 +228,18 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
         }
 
         eventTitle.setText(event.getEventName());
-        Markwon.setMarkdown(eventDescription, event.getEventDescription());
         Timestamp timestamp = event.getEventStartTime();
         Date Date = new Date(timestamp.getTime());
         SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd MMM");
         SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm");
 
+        // Check for minimal event
+        if (event.getEventDescription() == null) {
+            refreshEvent(event);
+            return;
+        }
+
+        Markwon.setMarkdown(eventDescription, event.getEventDescription());
         final List<Body> bodyList = event.getEventBodies();
         final RecyclerView bodyRecyclerView = getActivity().findViewById(R.id.body_card_recycler_view);
         BodyAdapter bodyAdapter = new BodyAdapter(bodyList, this);

@@ -104,7 +104,7 @@ public class Event implements CardInterface {
 
     public String getEventImageURL() {
         // Fallback to body image if event has no image
-        if (eventImageURL == null) {
+        if (eventImageURL == null && getEventBodies() != null && getEventBodies().size() > 0) {
             return getEventBodies().get(0).getBodyImageURL();
         }
         return eventImageURL;
