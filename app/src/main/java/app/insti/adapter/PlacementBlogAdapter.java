@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DateFormat;
@@ -24,63 +25,27 @@ import app.insti.interfaces.Readable;
 import app.insti.interfaces.Writable;
 import ru.noties.markwon.Markwon;
 
-public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Readable<PlacementBlogPost>,Writable<PlacementBlogPost> {
-    private final int VIEW_ITEM = 1;
-    private final int VIEW_PROG = 0;
-    private List<PlacementBlogPost> posts;
-    private ItemClickListener itemClickListener;
+public class PlacementBlogAdapter extends RecyclerViewAdapter<PlacementBlogPost> {
+
     public PlacementBlogAdapter(List<PlacementBlogPost> posts, ItemClickListener itemClickListener) {
-        this.posts = posts;
-        this.itemClickListener = itemClickListener;
-        this.setHasStableIds(true);
-    }
-
-    public List<PlacementBlogPost> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<PlacementBlogPost> posts) {
-        this.posts = posts;
+        super(posts, itemClickListener);
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final Context context = parent.getContext();
-        if (viewType == VIEW_ITEM) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View postView = inflater.inflate(R.layout.blog_post_card, parent, false);
+    RecyclerView.ViewHolder getViewHolder(@NonNull ViewGroup parent, Context context) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View postView = inflater.inflate(R.layout.blog_post_card, parent, false);
 
-            final PlacementBlogAdapter.ViewHolder postViewHolder = new PlacementBlogAdapter.ViewHolder(postView);
-            postView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemClickListener.onItemClick(v, postViewHolder.getAdapterPosition());
-                }
-            });
-            return postViewHolder;
-        } else {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View loadView = inflater.inflate(R.layout.blog_load_item, parent, false);
-            return new PlacementBlogAdapter.ProgressViewHolder(loadView);
-        }
+        final PlacementBlogAdapter.ViewHolder postViewHolder = new PlacementBlogAdapter.ViewHolder(postView);
+        postView.setOnClickListener(v -> itemClickListener.onItemClick(v, postViewHolder.getAdapterPosition()));
+        return postViewHolder;
     }
-
-    @Override
-    public int getItemViewType(int position) {
-        return posts.size() > position ? VIEW_ITEM : VIEW_PROG;
-    }
-
-    @Override
-    public int getItemCount() {
-        return PlacementBlogFragment.showLoader ? (posts.size() + 1) : posts.size();
-    }
-
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder recyclerHolder, int position) {
         if (recyclerHolder instanceof ViewHolder) {
             ViewHolder holder = (ViewHolder) recyclerHolder;
-            PlacementBlogPost post = posts.get(position);
+            PlacementBlogPost post = getPosts().get(position);
             Markwon.setMarkdown(holder.postTitle, post.getTitle());
 
             Date publishedDate = post.getPublished();
@@ -100,20 +65,12 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    @Override
-    public long getItemId(int position) {
-        if (position < posts.size()) {
-            return posts.get(position).getPostID().hashCode();
-        }
-        return -1;
-    }
-
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
         public ProgressBar progressBar;
 
         public ProgressViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar) v.findViewById(R.id.blog_load_item);
+            progressBar = v.findViewById(R.id.blog_load_item);
         }
     }
 
@@ -125,9 +82,9 @@ public class PlacementBlogAdapter extends RecyclerView.Adapter<RecyclerView.View
         public ViewHolder(View itemView) {
             super(itemView);
 
-            postTitle = (TextView) itemView.findViewById(R.id.post_title);
-            postPublished = (TextView) itemView.findViewById(R.id.post_published);
-            postContent = (TextView) itemView.findViewById(R.id.post_content);
+            postTitle = itemView.findViewById(R.id.post_title);
+            postPublished = itemView.findViewById(R.id.post_published);
+            postContent = itemView.findViewById(R.id.post_content);
         }
     }
 
