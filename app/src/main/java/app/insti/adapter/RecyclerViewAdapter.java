@@ -54,7 +54,7 @@ public abstract class RecyclerViewAdapter<T extends Clickable> extends RecyclerV
         }
     }
 
-    abstract RecyclerView.ViewHolder getViewHolder(@NonNull ViewGroup parent, Context context);
+    protected abstract RecyclerView.ViewHolder getViewHolder(@NonNull ViewGroup parent, Context context);
 
     @Override
     public int getItemViewType(int position) {
