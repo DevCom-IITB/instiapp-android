@@ -32,7 +32,7 @@ public class TrainingBlogAdapter extends RecyclerViewAdapter<TrainingBlogPost> {
     }
 
     @Override
-    RecyclerView.ViewHolder getViewHolder(@NonNull ViewGroup parent, Context context) {
+    protected RecyclerView.ViewHolder getViewHolder(@NonNull ViewGroup parent, Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View postView = inflater.inflate(R.layout.blog_post_card, parent, false);
 

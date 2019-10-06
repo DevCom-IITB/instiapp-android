@@ -32,7 +32,7 @@ public class NewsAdapter extends RecyclerViewAdapter<NewsArticle> {
     }
 
     @Override
-    RecyclerView.ViewHolder getViewHolder(@NonNull ViewGroup parent, Context context) {
+    protected RecyclerView.ViewHolder getViewHolder(@NonNull ViewGroup parent, Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View postView = inflater.inflate(R.layout.news_article_card, parent, false);
 
