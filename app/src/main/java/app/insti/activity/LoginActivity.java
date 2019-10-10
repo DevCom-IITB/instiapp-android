@@ -6,12 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.browser.customtabs.CustomTabsIntent;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -20,23 +20,23 @@ import com.google.firebase.iid.InstanceIdResult;
 import app.insti.Constants;
 import app.insti.R;
 import app.insti.SessionManager;
+import app.insti.api.EmptyCallback;
 import app.insti.api.RetrofitInterface;
 import app.insti.api.ServiceGenerator;
 import app.insti.api.response.LoginResponse;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    private final String redirectUri = "https://redirecturi";
+    private final String redirectUri = "https://insti.app/login-android.html";
     private final String guestUri = "https://guesturi";
+    private final String loginUri = "https://loginuri";
     public String authCode = null;
     public String fcmId = null;
     private SessionManager session;
     private Context mContext = this;
-    private boolean loggingIn = false;
     private ProgressDialog progressDialog;
 
     private RetrofitInterface retrofitInterface;
@@ -75,14 +75,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        // Initialize
         ServiceGenerator serviceGenerator = new ServiceGenerator(getApplicationContext());
         this.retrofitInterface = serviceGenerator.getRetrofitInterface();
-
-        WebView webview = (WebView) findViewById(R.id.login_webview);
-        webview.getSettings().setJavaScriptEnabled(true);
-        webview.getSettings().setDomStorageEnabled(true);
-        webview.setWebViewClient(new WvClient());
-        webview.loadUrl("file:///android_asset/login.html");
 
         // Get FCM Id
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
@@ -91,6 +86,30 @@ public class LoginActivity extends AppCompatActivity {
                 fcmId = instanceIdResult.getToken();
             }
         });
+
+        // Login if intent is present
+        String action = getIntent().getAction();
+        String data = getIntent().getDataString();
+        if (Intent.ACTION_VIEW.equals(action) && data != null) {
+            Uri query = Uri.parse(data);
+            authCode = query.getQueryParameter("code");
+
+            /* Show progress dialog */
+            progressDialog.setMessage("Logging In");
+            progressDialog.setCancelable(false);
+            progressDialog.setIndeterminate(true);
+            if (!progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+
+            /* Perform the login */
+            login(authCode, redirectUri);
+        }
+
+        // Setup web view placeholder
+        WebView webview = findViewById(R.id.login_webview);
+        webview.setWebViewClient(new WvClient());
+        webview.loadUrl("file:///android_asset/login.html");
     }
 
     private void login(final String authorizationCode, final String redirectURL) {
@@ -103,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
             call = retrofitInterface.login(authorizationCode, redirectURL, fcmId);
         }
 
-        call.enqueue(new Callback<LoginResponse>() {
+        call.enqueue(new EmptyCallback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
@@ -116,75 +135,21 @@ public class LoginActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
             }
-
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                //Network Error
-            }
-        });
-    }
-
-    @Deprecated
-    private void passLogin(final String username, final String password) {
-        if (!progressDialog.isShowing()) {
-            progressDialog.setMessage("Logging In");
-            progressDialog.setCancelable(false);
-            progressDialog.setIndeterminate(true);
-            progressDialog.show();
-        }
-
-        RetrofitInterface retrofitInterface = getRetrofitInterface();
-        Call<LoginResponse> call;
-
-        /* This can be null if play services is hung */
-        if (fcmId == null) {
-            call = retrofitInterface.passwordLogin(username, password);
-        } else {
-            call = retrofitInterface.passwordLogin(username, password, fcmId);
-        }
-
-        /* Log in the user */
-        call.enqueue(new Callback<LoginResponse>() {
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                loggingIn = false;
-                if (response.isSuccessful()) {
-                    Log.d(TAG, "Login request successful");
-                    session.createLoginSession(username, response.body().getUser(), response.body().getSessionID());
-                    progressDialog.dismiss();
-                    openMainActivity();
-                    finish();
-                } else {
-                    Toast.makeText(LoginActivity.this, "Authorization Failed!", Toast.LENGTH_LONG).show();
-                    progressDialog.dismiss();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                loggingIn = false;
-            }
         });
     }
 
     private class WvClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-            /* Capture redirect */
-            if (url.startsWith(redirectUri)) {
-                /* Show progress dialog */
-                progressDialog.setMessage("Logging In");
-                progressDialog.setCancelable(false);
-                progressDialog.setIndeterminate(true);
-                if (!progressDialog.isShowing()) {
-                    progressDialog.show();
-                }
-                loggingIn = true;
-
-                /* Get auth code from query */
-                String query = Uri.parse(url).getQuery();
-                authCode = query.substring(query.lastIndexOf("=") + 1);
-                login(authCode, redirectUri);
+            /* Actual login button */
+            if (url.startsWith(loginUri)) {
+                CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+                        .addDefaultShareMenuItem()
+                        .setToolbarColor(LoginActivity.this.getResources()
+                                .getColor(R.color.colorPrimary))
+                        .setShowTitle(true)
+                        .build();
+                customTabsIntent.launchUrl(LoginActivity.this, Uri.parse("https://gymkhana.iitb.ac.in/sso/account/login/?next=/sso/oauth/authorize/%3Fclient_id%3DvR1pU7wXWyve1rUkg0fMS6StL1Kr6paoSmRIiLXJ%26response_type%3Dcode%26scope%3Dbasic%2520profile%2520picture%2520sex%2520ldap%2520phone%2520insti_address%2520program%2520secondary_emails%26redirect_uri=https://insti.app/login-android.html"));
                 return true;
             }
 
@@ -195,22 +160,9 @@ public class LoginActivity extends AppCompatActivity {
                 return true;
             }
 
-            if (!progressDialog.isShowing()) {
-                progressDialog.setMessage("Loading");
-                progressDialog.setCancelable(false);
-                progressDialog.setIndeterminate(true);
-                progressDialog.show();
-            }
             /* Load URL */
             view.loadUrl(url);
             return false;
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            if (progressDialog.isShowing() && !loggingIn) {
-                progressDialog.dismiss();
-            }
         }
     }
 }
