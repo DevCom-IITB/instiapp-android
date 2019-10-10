@@ -25,64 +25,30 @@ import app.insti.interfaces.Readable;
 import app.insti.interfaces.Writable;
 import ru.noties.markwon.Markwon;
 
-public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Readable<NewsArticle>,Writable<NewsArticle> {
-    private final int VIEW_ITEM = 1;
-    private final int VIEW_PROG = 0;
+public class NewsAdapter extends RecyclerViewAdapter<NewsArticle> {
 
-    private List<NewsArticle> newsArticles;
-    private ItemClickListener itemClickListener;
-
-    public NewsAdapter(List<NewsArticle> newsArticles, ItemClickListener itemClickListener) {
-        this.newsArticles = newsArticles;
-        this.itemClickListener = itemClickListener;
-        this.setHasStableIds(true);
+    public NewsAdapter(List<NewsArticle> posts, ItemClickListener itemClickListener) {
+        super(posts, itemClickListener);
     }
 
     @Override
-    public List<NewsArticle> getPosts() {
-        return newsArticles;
-    }
+    protected RecyclerView.ViewHolder getViewHolder(@NonNull ViewGroup parent, Context context) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View postView = inflater.inflate(R.layout.news_article_card, parent, false);
 
-    @Override
-    public void setPosts(List<NewsArticle> posts) {
-        this.newsArticles = posts;
-    }
+        final NewsAdapter.ViewHolder postViewHolder = new NewsAdapter.ViewHolder(postView);
+        View.OnClickListener clickListener = v -> itemClickListener.onItemClick(v, postViewHolder.getAdapterPosition());
+        postView.setOnClickListener(clickListener);
+        postViewHolder.articleContent.setOnClickListener(clickListener);
 
-    @NonNull
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final Context context = parent.getContext();
-        if (viewType == VIEW_ITEM) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View postView = inflater.inflate(R.layout.news_article_card, parent, false);
-
-            final NewsAdapter.ViewHolder postViewHolder = new NewsAdapter.ViewHolder(postView);
-            postView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemClickListener.onItemClick(v, postViewHolder.getAdapterPosition());
-                }
-            });
-            postViewHolder.articleContent.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemClickListener.onItemClick(v, postViewHolder.getAdapterPosition());
-                }
-            });
-
-            return postViewHolder;
-        } else {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View loadView = inflater.inflate(R.layout.blog_load_item, parent, false);
-            return new NewsAdapter.ProgressViewHolder(loadView);
-        }
+        return postViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder recyclerHolder, int position) {
         if (recyclerHolder instanceof ViewHolder) {
             ViewHolder holder = (ViewHolder) recyclerHolder;
-            NewsArticle article = newsArticles.get(position);
+            NewsArticle article = getPosts().get(position);
             Markwon.setMarkdown(holder.articleTitle, article.getTitle());
             holder.articleBody.setText(article.getBody().getBodyName());
 
@@ -103,30 +69,12 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         }
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return newsArticles.size() > position ? VIEW_ITEM : VIEW_PROG;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        if (position < newsArticles.size()) {
-            return newsArticles.get(position).getArticleID().hashCode();
-        }
-        return -1;
-    }
-
-    @Override
-    public int getItemCount() {
-        return NewsFragment.showLoader ? (newsArticles.size() + 1) : newsArticles.size();
-    }
-
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
         public ProgressBar progressBar;
 
         public ProgressViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar) v.findViewById(R.id.blog_load_item);
+            progressBar = v.findViewById(R.id.blog_load_item);
         }
     }
 
@@ -139,10 +87,10 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         public ViewHolder(View itemView) {
             super(itemView);
 
-            articleTitle = (TextView) itemView.findViewById(R.id.article_title);
-            articleBody = (TextView) itemView.findViewById(R.id.article_body);
-            articlePublished = (TextView) itemView.findViewById(R.id.article_published);
-            articleContent = (TextView) itemView.findViewById(R.id.article_content);
+            articleTitle = itemView.findViewById(R.id.article_title);
+            articleBody = itemView.findViewById(R.id.article_body);
+            articlePublished = itemView.findViewById(R.id.article_published);
+            articleContent = itemView.findViewById(R.id.article_content);
         }
     }
 }
