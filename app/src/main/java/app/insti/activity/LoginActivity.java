@@ -94,16 +94,19 @@ public class LoginActivity extends AppCompatActivity {
             Uri query = Uri.parse(data);
             authCode = query.getQueryParameter("code");
 
-            /* Show progress dialog */
-            progressDialog.setMessage("Logging In");
-            progressDialog.setCancelable(false);
-            progressDialog.setIndeterminate(true);
-            if (!progressDialog.isShowing()) {
-                progressDialog.show();
+            if (authCode != null) {
+                /* Show progress dialog */
+                progressDialog.setMessage("Logging In");
+                progressDialog.setCancelable(false);
+                progressDialog.setIndeterminate(true);
+                if (!progressDialog.isShowing()) {
+                    progressDialog.show();
+                }
+                /* Perform the login */
+                login(authCode, redirectUri);
+            } else {
+                Toast.makeText(this, "Login Failed!", Toast.LENGTH_SHORT).show();
             }
-
-            /* Perform the login */
-            login(authCode, redirectUri);
         }
 
         // Setup web view placeholder
