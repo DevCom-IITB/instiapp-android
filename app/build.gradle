@@ -8,8 +8,8 @@ android {
         manifestPlaceholders 'appAuthRedirectScheme': 'https'
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 39
-        versionName "1.4.1"
+        versionCode 40
+        versionName "1.4.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
