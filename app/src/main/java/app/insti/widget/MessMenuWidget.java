@@ -32,7 +32,7 @@ public class MessMenuWidget extends AppWidgetProvider {
     private RemoteViews views;
     private List<HostelMessMenu> instituteMessMenu;
 
-    void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+    private void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                          int appWidgetId) {
 
         // Construct the RemoteViews object
@@ -55,7 +55,7 @@ public class MessMenuWidget extends AppWidgetProvider {
 
                 @Override
                 public void onFailure(Call<List<HostelMessMenu>> call, Throwable t) {
-
+                    // Network error
                 }
             });
         } else {
