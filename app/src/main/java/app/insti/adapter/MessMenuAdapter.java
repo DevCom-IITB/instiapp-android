@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.api.model.MessMenu;
 
 public class MessMenuAdapter extends RecyclerView.Adapter<MessMenuAdapter.ViewHolder> {
@@ -36,7 +37,7 @@ public class MessMenuAdapter extends RecyclerView.Adapter<MessMenuAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull MessMenuAdapter.ViewHolder holder, int position) {
         MessMenu messMenu = messMenus.get(position);
-        holder.day.setText(generateDayString(messMenu.getDay()));
+        holder.day.setText(Utils.generateDayString(messMenu.getDay()));
         holder.breakfast.setText(messMenu.getBreakfast());
         holder.lunch.setText(messMenu.getLunch());
         holder.snacks.setText(messMenu.getSnacks());
@@ -55,27 +56,6 @@ public class MessMenuAdapter extends RecyclerView.Adapter<MessMenuAdapter.ViewHo
 
     public void setMenu(List<MessMenu> menus) {
         messMenus = menus;
-    }
-
-    private String generateDayString(int day) {
-        switch (day) {
-            case 1:
-                return "Monday";
-            case 2:
-                return "Tuesday";
-            case 3:
-                return "Wednesday";
-            case 4:
-                return "Thursday";
-            case 5:
-                return "Friday";
-            case 6:
-                return "Saturday";
-            case 7:
-                return "Sunday";
-            default:
-                throw new IndexOutOfBoundsException("DayIndexOutOfBounds: " + day);
-        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
