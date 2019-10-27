@@ -1,8 +1,11 @@
 package app.insti.api.model;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -75,7 +78,12 @@ public class User implements CardInterface {
     }
 
     public static User fromString(String json) {
-        return new Gson().fromJson(json, User.class);
+        try {
+            return new Gson().fromJson(json, User.class);
+        } catch (JsonSyntaxException e) {
+            Log.d("User", "fromString: " + json);
+            return null;
+        }
     }
 
     @NonNull
