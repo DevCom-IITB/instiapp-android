@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
         android:textColor="?attr/themeColorInverse"
+        android:textIsSelectable="true"
         android:textSize="24sp" />
 
     <TextView
@@ -24,5 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:textColor="?attr/themeColorInverse"
-        android:textColorLink="?attr/urlColor" />
+        android:textColorLink="?attr/urlColor"
+        android:textIsSelectable="true" />
 </LinearLayout>

@@ -2,16 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
     android:layout_margin="8dp"
     android:background="?attr/newsColor"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/article_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="?attr/themeColorInverse"
+        android:textIsSelectable="true"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -49,5 +50,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textColor="?attr/themeColorInverse"
-        android:textColorLink="?attr/urlColor" />
+        android:textColorLink="?attr/urlColor"
+        android:textIsSelectable="true" />
 </LinearLayout>
