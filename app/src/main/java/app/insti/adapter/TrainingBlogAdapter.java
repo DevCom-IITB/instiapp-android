@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,10 +18,7 @@ import java.util.Locale;
 
 import app.insti.R;
 import app.insti.api.model.TrainingBlogPost;
-import app.insti.fragment.TrainingBlogFragment;
 import app.insti.interfaces.ItemClickListener;
-import app.insti.interfaces.Readable;
-import app.insti.interfaces.Writable;
 import ru.noties.markwon.Markwon;
 
 public class TrainingBlogAdapter extends RecyclerViewAdapter<TrainingBlogPost> {
@@ -62,16 +58,6 @@ public class TrainingBlogAdapter extends RecyclerViewAdapter<TrainingBlogPost> {
             Markwon.setMarkdown(holder.postContent, post.getContent());
         } else {
             ((ProgressViewHolder) recyclerHolder).progressBar.setIndeterminate(true);
-        }
-    }
-
-
-    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
-        public ProgressBar progressBar;
-
-        public ProgressViewHolder(View v) {
-            super(v);
-            progressBar = v.findViewById(R.id.blog_load_item);
         }
     }
 
