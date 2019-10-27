@@ -3,10 +3,10 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
     android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
     android:layout_marginTop="4dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="4dp"
     card_view:cardCornerRadius="1dp"
     card_view:cardElevation="1dp">
 
@@ -36,7 +36,8 @@
             android:id="@+id/breakfast_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/themeColorInverse" />
+            android:textColor="?attr/themeColorInverse"
+            android:textIsSelectable="true" />
 
         <TextView
             android:layout_width="match_parent"
@@ -50,7 +51,8 @@
             android:id="@+id/lunch_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/themeColorInverse" />
+            android:textColor="?attr/themeColorInverse"
+            android:textIsSelectable="true" />
 
         <TextView
             android:layout_width="match_parent"
@@ -64,7 +66,8 @@
             android:id="@+id/snacks_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/themeColorInverse" />
+            android:textColor="?attr/themeColorInverse"
+            android:textIsSelectable="true" />
 
         <TextView
             android:layout_width="match_parent"
@@ -78,6 +81,7 @@
             android:id="@+id/dinner_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/themeColorInverse" />
+            android:textColor="?attr/themeColorInverse"
+            android:textIsSelectable="true" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

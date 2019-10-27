@@ -2,16 +2,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container_event"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="app.insti.fragment.EventFragment"
-    android:background="@android:color/transparent">
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    tools:context="app.insti.fragment.EventFragment">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/coordinator"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -28,8 +27,8 @@
 
                 <!-- HEADER -->
                 <RelativeLayout
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     app:layout_collapseMode="parallax">
 
                     <ImageView
@@ -72,10 +71,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginBottom="12dp"
-                            android:layout_marginEnd="16dp"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="12dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="12dp"
                             android:layout_weight="3"
                             android:orientation="vertical">
 
@@ -91,6 +90,7 @@
                                     android:layout_weight="10"
                                     android:text="Event Title"
                                     android:textColor="@color/colorWhite"
+                                    android:textIsSelectable="true"
                                     android:textSize="21sp"
                                     android:textStyle="bold" />
 
@@ -191,19 +191,19 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#aaa">
-                    </View>
+                        android:background="#aaa" />
 
                     <TextView
                         android:id="@+id/event_page_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginEnd="10dp"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="12dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="16dp"
                         android:textColor="?attr/themeColorInverse"
                         android:textColorLink="?attr/urlColor"
+                        android:textIsSelectable="true"
                         android:textSize="16sp" />
 
                     <androidx.recyclerview.widget.RecyclerView
