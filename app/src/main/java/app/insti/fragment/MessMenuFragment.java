@@ -16,9 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import app.insti.Constants;
 import app.insti.R;
@@ -147,27 +145,7 @@ public class MessMenuFragment extends BaseFragment {
         /* Skip if we're already destroyed */
         if (getActivity() == null || getView() == null) return;
 
-        List<MessMenu> messMenus = hostelMessMenu.getMessMenus();
-
-        /* Sort by day starting today
-         * This could have been done in a much simpler way with Java 8 :(
-         * Don't try to fix this */
-        final List<MessMenu> sortedMenus = new ArrayList<>();
-        final Calendar calendar = Calendar.getInstance(Locale.UK);
-        int today = calendar.get(Calendar.DAY_OF_WEEK) - 2;
-        if (today == -1) {
-            today = 6;
-        }
-
-        /* Sort by day */
-        for (int i = 0; i < 7; i++) {
-            final int day = (today + i) % 7 + 1;
-            for (MessMenu menu : messMenus) {
-                if (menu.getDay() == day) {
-                    sortedMenus.add(menu);
-                }
-            }
-        }
+        final List<MessMenu> sortedMenus = hostelMessMenu.getSortedMessMenus();
 
         /* Display */
         notifyChange(sortedMenus);

@@ -10,4 +10,7 @@
     <dimen name="expanded_card_height">280dp</dimen>
     <dimen name="place_name_text_size">20sp</dimen>
     <dimen name="place_sub_head_text_size">16sp</dimen>
+
+    <!-- Widget -->
+    <dimen name="widget_margin">16dp</dimen>
 </resources>

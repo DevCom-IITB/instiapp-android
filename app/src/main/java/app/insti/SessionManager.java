@@ -47,6 +47,10 @@ public class SessionManager {
         return pref.getString(Constants.USER_ID, "");
     }
 
+    public User getCurrentUser() {
+        return User.fromString(pref.getString(Constants.CURRENT_USER, ""));
+    }
+
     public String getSessionID() {
         return pref.getString(Constants.SESSION_ID, "");
     }

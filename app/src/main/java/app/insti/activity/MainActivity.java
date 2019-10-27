@@ -84,6 +84,7 @@ import retrofit2.Response;
 import static app.insti.Constants.DATA_TYPE_BODY;
 import static app.insti.Constants.DATA_TYPE_EVENT;
 import static app.insti.Constants.DATA_TYPE_MAP;
+import static app.insti.Constants.DATA_TYPE_MESS;
 import static app.insti.Constants.DATA_TYPE_NEWS;
 import static app.insti.Constants.DATA_TYPE_PT;
 import static app.insti.Constants.DATA_TYPE_USER;
@@ -323,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Open the proper fragment from given type and id
      */
     private void chooseIntent(String type, String id) {
-        if (type == null || id == null) {
+        if (type == null || (!type.equals(DATA_TYPE_MESS) && id == null)) {
             return;
         }
         switch (type) {
@@ -341,6 +342,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return;
             case DATA_TYPE_MAP:
                 updateFragment(MapFragment.newInstance(id));
+                return;
+            case DATA_TYPE_MESS:
+                updateFragment(new MessMenuFragment());
                 return;
         }
         Log.e("NOTIFICATIONS", "Server sent invalid notification?");
@@ -407,6 +411,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     return DATA_TYPE_USER;
                 case "map":
                     return DATA_TYPE_MAP;
+                case "mess":
+                    return DATA_TYPE_MESS;
             }
         } catch (MalformedURLException ignored) {}
         return null;
@@ -417,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         initNavigationView();
         if (session.isLoggedIn()) {
-            currentUser = User.fromString(session.pref.getString(Constants.CURRENT_USER, ""));
+            currentUser = session.getCurrentUser();
             updateNavigationView();
             updateFCMId();
         }
@@ -638,6 +644,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Change the active fragment to the supplied one
      */
     public void updateFragment(Fragment fragment) {
+        if (session.isLoggedIn() && currentUser == null) {
+            currentUser = session.getCurrentUser();
+        }
         Bundle bundle = fragment.getArguments();
         if (bundle == null) {
             bundle = new Bundle();

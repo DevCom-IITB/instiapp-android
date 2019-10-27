@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-
     package="app.insti">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -10,29 +9,38 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
 
     <application
+        android:name=".InstiAppApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name="app.insti.InstiAppApplication"
-        android:networkSecurityConfig="@xml/network_security_config">
+        android:theme="@style/AppTheme">
+        <receiver android:name=".widget.MessMenuWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/mess_menu_widget_info" />
+        </receiver>
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_api_key" />
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false" />
-
-        <!-- FCM styling -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" /> <!-- FCM styling -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_lotusgray" />
@@ -89,24 +97,36 @@
                     android:pathPattern="/map/.*"
                     android:scheme="https" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="insti.app"
+                    android:pathPattern="/mess"
+                    android:scheme="https" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="insti.app"
-                    android:scheme="instiapp"/>
+                    android:scheme="instiapp" />
             </intent-filter>
-
         </activity>
 
         <service android:name=".InstiAppFirebaseMessagingService">
@@ -117,18 +137,16 @@
 
         <receiver android:name=".NotificationBroadcastReceiver">
             <intent-filter>
-                <action android:name="notification_cancelled"/>
+                <action android:name="notification_cancelled" />
             </intent-filter>
         </receiver>
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
-
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
-
     </application>
 
 </manifest>
