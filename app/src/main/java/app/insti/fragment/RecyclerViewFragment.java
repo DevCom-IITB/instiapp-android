@@ -21,18 +21,17 @@ import app.insti.ActivityBuffer;
 import app.insti.R;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
+import app.insti.adapter.RecyclerViewAdapter;
 import app.insti.api.RetrofitInterface;
 import app.insti.interfaces.Clickable;
 import app.insti.interfaces.ItemClickListener;
-import app.insti.interfaces.Readable;
-import app.insti.interfaces.Writable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.GONE;
 
-public abstract class RecyclerViewFragment<T extends Clickable, S extends RecyclerView.Adapter<RecyclerView.ViewHolder> & Readable<T> & Writable<T>> extends BaseFragment {
+public abstract class RecyclerViewFragment<T extends Clickable, S extends RecyclerViewAdapter<T>> extends BaseFragment {
     public static boolean showLoader = true;
     protected RecyclerView recyclerView;
     protected Class<T> postType;

@@ -256,7 +256,7 @@ public class CalendarFragment extends BaseFragment {
             @Override
             public void onFailure(Call<NewsFeedResponse> call, Throwable t) {
                 //Network Error
-                Toast.makeText(getContext(), "Failed to fetch events!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Failed to fetch events!", Toast.LENGTH_SHORT).show();
             }
         });
     }
