@@ -71,7 +71,7 @@ public class NotificationsFragment extends BottomSheetDialogFragment {
                     showNotifications(Utils.notificationCache);
 
                     NotificationId.setCurrentCount(Utils.notificationCache.size());
-                    ShortcutBadger.applyCount(getContext().getApplicationContext(), NotificationId.getCurrentCount());
+                    ShortcutBadger.applyCount(getContext(), NotificationId.getCurrentCount());
                 }
             }
         });
