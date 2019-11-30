@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import app.insti.R;
 import app.insti.interfaces.CardInterface;
 
 public class Event implements CardInterface {
@@ -303,5 +304,9 @@ public class Event implements CardInterface {
 
     public String getAvatarUrl() {
         return getEventImageURL();
+    }
+
+    public int getBadge() {
+        return getEventOfferedAchievements().size() > 0 ? R.drawable.badge_medal : 0;
     }
 }

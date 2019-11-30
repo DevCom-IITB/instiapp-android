@@ -29,4 +29,7 @@ public class TitleCard implements CardInterface {
     public String getAvatarUrl() {
         return null;
     }
+
+    @Override
+    public int getBadge() { return 0; }
 }

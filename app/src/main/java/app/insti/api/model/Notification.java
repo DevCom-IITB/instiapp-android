@@ -133,4 +133,6 @@ public class Notification implements CardInterface {
         Gson gson = Utils.gson;
         return gson.fromJson(gson.toJson(getNotificationActor()), PlacementBlogPost.class);
     }
+
+    public int getBadge() { return 0; }
 }

@@ -90,6 +90,14 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
                 // Set transition names
                 viewHolder.avatar.setTransitionName(uid + Integer.toString((int) t.getId()) + "_sharedAvatar");
 
+                // Set badge if wanted
+                if (t.getBadge() != 0) {
+                    Picasso.get().load(t.getBadge()).into(viewHolder.badge);
+                    viewHolder.badge.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.badge.setVisibility(View.GONE);
+                }
+
                 if (getBigImageUrl(t) != null) {
                     // Show big image, hide avatar
                     viewHolder.bigPicture.setVisibility(View.VISIBLE);
@@ -136,6 +144,7 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
 
     public class CardViewHolder extends RecyclerView.ViewHolder {
         private ImageView avatar;
+        private ImageView badge;
         private TextView title;
         private TextView subtitle;
         private ImageView bigPicture;
@@ -144,6 +153,7 @@ public abstract class CardAdapter<T extends CardInterface> extends RecyclerView.
             super(itemView);
 
             avatar = itemView.findViewById(R.id.object_picture);
+            badge = itemView.findViewById(R.id.object_badge);
             title = itemView.findViewById(R.id.object_title);
             subtitle = itemView.findViewById(R.id.object_subtitle);
             bigPicture = itemView.findViewById(R.id.big_object_picture);

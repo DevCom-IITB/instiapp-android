@@ -162,4 +162,6 @@ public class Role implements CardInterface {
     public String getAvatarUrl() {
         return getRoleBodyDetails().getBodyImageURL();
     }
+
+    public int getBadge() { return 0; }
 }

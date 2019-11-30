@@ -167,4 +167,6 @@ public class Achievement implements CardInterface {
         }
         return url;
     }
+
+    public int getBadge() { return 0; }
 }

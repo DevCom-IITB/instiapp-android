@@ -36,4 +36,7 @@ public class BodyHeadCard implements CardInterface {
     public void bindView(BodyHeadViewHolder viewHolder, Fragment fragment) {
         viewHolder.bindView(body, fragment);
     }
+
+    @Override
+    public int getBadge() { return 0; }
 }

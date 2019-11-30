@@ -191,4 +191,6 @@ public class Body implements CardInterface {
         Body body = (Body) o;
         return Objects.equals(bodyID, body.getBodyID());
     }
+
+    public int getBadge() { return 0; }
 }

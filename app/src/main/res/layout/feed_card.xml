@@ -58,7 +58,16 @@
                 android:text="Subtitle"
                 android:textSize="15sp"
                 android:textColor="?attr/themeGray" />
-
         </LinearLayout>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/object_badge"
+            android:visibility="gone"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="0dp"
+            android:padding="0dp"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerCrop" />
     </LinearLayout>
 </LinearLayout>

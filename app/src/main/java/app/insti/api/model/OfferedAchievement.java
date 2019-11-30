@@ -94,4 +94,7 @@ public class OfferedAchievement implements CardInterface {
         return String.format("https://insti.app/assets/achievements/%s%s.png",
                 achievementGeneric, Utils.isDarkTheme ? "_dark" : "");
     }
+
+    @Override
+    public int getBadge() { return 0; }
 }

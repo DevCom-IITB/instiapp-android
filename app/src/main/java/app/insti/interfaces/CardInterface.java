@@ -7,4 +7,5 @@ public interface CardInterface extends Serializable {
     String getTitle();
     String getSubtitle();
     String getAvatarUrl();
+    int getBadge();
 }

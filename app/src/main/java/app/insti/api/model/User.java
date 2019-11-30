@@ -271,4 +271,6 @@ public class User implements CardInterface {
     public String getAvatarUrl() {
         return getUserProfilePictureUrl();
     }
+
+    public int getBadge() { return 0; }
 }
