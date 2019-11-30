@@ -38,6 +38,9 @@ public class MessMenuFragment extends BaseFragment {
     private MessMenuAdapter messMenuAdapter;
     private SwipeRefreshLayout messMenuSwipeRefreshLayout;
     private String hostel;
+    private Boolean initialized = false;
+    List<String> hostels = new ArrayList<>();
+    private ArrayAdapter<String> spinnerAdapter;
 
     public MessMenuFragment() {
         // Required empty public constructor
@@ -69,34 +72,7 @@ public class MessMenuFragment extends BaseFragment {
             }
         });
 
-        Spinner hostelSpinner = getActivity().findViewById(R.id.hostel_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.hostels_array, R.layout.hostel_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        hostelSpinner.setAdapter(adapter);
-        hostelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 16)
-                    hostel = "tansa";
-                else if (i == 17)
-                    hostel = "qip";
-                else
-                    hostel = Integer.toString(i + 1);
-                displayMenu(hostel);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        if (hostel.equals("tansa"))
-            hostelSpinner.setSelection(16);
-        else if (hostel.equals("qip"))
-            hostelSpinner.setSelection(17);
-        else
-            hostelSpinner.setSelection(Integer.parseInt(hostel) - 1);
+        updateMessMenu(null);
     }
 
     private void displayMenu(final String hostel) {
@@ -109,6 +85,35 @@ public class MessMenuFragment extends BaseFragment {
         }
     }
 
+    private void initialize() {
+        initialized = true;
+
+        Spinner hostelSpinner = getActivity().findViewById(R.id.hostel_spinner);
+        for (HostelMessMenu hmm : instituteMessMenu) {
+            hostels.add(hmm.getName());
+        }
+
+        spinnerAdapter = new ArrayAdapter(getContext(), R.layout.hostel_spinner_item, hostels.toArray());
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        hostelSpinner.setAdapter(spinnerAdapter);
+        hostelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                hostel = instituteMessMenu.get(i).getShortName();
+                displayMenu(hostel);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+
+        for (int i = 0; i < instituteMessMenu.size(); i++) {
+            if (instituteMessMenu.get(i).getShortName().equals(hostel)) {
+                hostelSpinner.setSelection(i);
+            }
+        }
+    }
+
     private void updateMessMenu(final String hostel) {
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
         retrofitInterface.getInstituteMessMenu(Utils.getSessionIDHeader()).enqueue(new Callback<List<HostelMessMenu>>() {
@@ -118,7 +123,11 @@ public class MessMenuFragment extends BaseFragment {
                     if (getActivity() == null || getView() == null || response.body() == null) return;
 
                     instituteMessMenu = response.body();
-                    displayMenu(hostel);
+                    if (!initialized) {
+                        initialize();
+                    } else {
+                        displayMenu(hostel);
+                    }
                 }
                 //Server Error
                 messMenuSwipeRefreshLayout.setRefreshing(false);
