@@ -16,9 +16,9 @@ import app.insti.R;
 import app.insti.Utils;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
-import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
+import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 
-public class AboutCategory extends StatelessSection {
+public class AboutCategory extends Section {
     private String name;
     private List<AboutIndividual> individuals;
     private Context context;
