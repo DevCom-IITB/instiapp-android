@@ -32,7 +32,7 @@ ext {
     okhttpVersion = '3.14.0'
     picassoVersion = '2.71828'
     circleImageViewVersion = '2.2.0'
-    markwonVersion = '2.0.1'
+    markwonVersion = '4.2.0'
     tagViewVersion = '1.3'
     circleIndicatorVersion = '1.2.2@aar'
     firebaseVersion = '20.0.0'
@@ -60,7 +60,13 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     implementation "com.squareup.picasso:picasso:${picassoVersion}"
     implementation "de.hdodenhof:circleimageview:${circleImageViewVersion}"
-    implementation "ru.noties:markwon:${markwonVersion}"
+
+    implementation "io.noties.markwon:core:${markwonVersion}"
+    implementation "io.noties.markwon:html:${markwonVersion}"
+    implementation "io.noties.markwon:image-picasso:${markwonVersion}"
+    implementation "io.noties.markwon:linkify:${markwonVersion}"
+    implementation "io.noties.markwon:ext-tables:${markwonVersion}"
+
     implementation "com.github.Cutta:TagView:${tagViewVersion}"
     implementation "me.relex:circleindicator:${circleIndicatorVersion}"
     implementation "com.google.android:flexbox:${flexboxVersion}"
