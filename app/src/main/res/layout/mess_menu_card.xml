@@ -36,8 +36,7 @@
             android:id="@+id/breakfast_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/themeColorInverse"
-            android:textIsSelectable="true" />
+            android:textColor="?attr/themeColorInverse" />
 
         <TextView
             android:layout_width="match_parent"
@@ -51,8 +50,7 @@
             android:id="@+id/lunch_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/themeColorInverse"
-            android:textIsSelectable="true" />
+            android:textColor="?attr/themeColorInverse" />
 
         <TextView
             android:layout_width="match_parent"
@@ -66,8 +64,7 @@
             android:id="@+id/snacks_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/themeColorInverse"
-            android:textIsSelectable="true" />
+            android:textColor="?attr/themeColorInverse" />
 
         <TextView
             android:layout_width="match_parent"
@@ -81,7 +78,6 @@
             android:id="@+id/dinner_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/themeColorInverse"
-            android:textIsSelectable="true" />
+            android:textColor="?attr/themeColorInverse" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Locale;
 
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.api.model.TrainingBlogPost;
 import app.insti.interfaces.ItemClickListener;
-import ru.noties.markwon.Markwon;
 
 public class TrainingBlogAdapter extends RecyclerViewAdapter<TrainingBlogPost> {
 
@@ -42,7 +42,7 @@ public class TrainingBlogAdapter extends RecyclerViewAdapter<TrainingBlogPost> {
         if (recyclerHolder instanceof ViewHolder) {
             ViewHolder holder = (ViewHolder) recyclerHolder;
             TrainingBlogPost post = getPosts().get(position);
-            Markwon.setMarkdown(holder.postTitle, post.getTitle());
+            Utils.getMarkwon(false).setMarkdown(holder.postTitle, post.getTitle());
 
             Date publishedDate = post.getPublished();
             Calendar calendar = Calendar.getInstance();
@@ -55,7 +55,7 @@ public class TrainingBlogAdapter extends RecyclerViewAdapter<TrainingBlogPost> {
             }
             holder.postPublished.setText(displayFormat.format(publishedDate));
 
-            Markwon.setMarkdown(holder.postContent, post.getContent());
+            Utils.getMarkwon(false).setMarkdown(holder.postContent, post.getContent());
         } else {
             ((ProgressViewHolder) recyclerHolder).progressBar.setIndeterminate(true);
         }

@@ -67,7 +67,6 @@ import app.insti.interfaces.CardInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.noties.markwon.Markwon;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -247,7 +246,7 @@ public class EventFragment extends BackHandledFragment implements TransitionTarg
             return;
         }
 
-        Markwon.setMarkdown(eventDescription, event.getEventDescription());
+        Utils.getMarkwon().setMarkdown(eventDescription, event.getEventDescription());
         final List<CardInterface> cardList = new ArrayList<>(event.getEventOfferedAchievements());
         cardList.addAll(event.getEventBodies());
         final RecyclerView bodyRecyclerView = getActivity().findViewById(R.id.body_card_recycler_view);

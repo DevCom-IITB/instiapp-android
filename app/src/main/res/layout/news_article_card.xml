@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="?attr/themeColorInverse"
-        android:textIsSelectable="true"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -50,6 +49,5 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textColor="?attr/themeColorInverse"
-        android:textColorLink="?attr/urlColor"
-        android:textIsSelectable="true" />
+        android:textColorLink="?attr/urlColor" />
 </LinearLayout>

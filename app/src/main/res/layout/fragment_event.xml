@@ -90,7 +90,6 @@
                                     android:layout_weight="10"
                                     android:text="Event Title"
                                     android:textColor="@color/colorWhite"
-                                    android:textIsSelectable="true"
                                     android:textSize="21sp"
                                     android:textStyle="bold" />
 
@@ -203,7 +202,6 @@
                         android:layout_marginBottom="16dp"
                         android:textColor="?attr/themeColorInverse"
                         android:textColorLink="?attr/urlColor"
-                        android:textIsSelectable="true"
                         android:textSize="16sp" />
 
                     <androidx.recyclerview.widget.RecyclerView

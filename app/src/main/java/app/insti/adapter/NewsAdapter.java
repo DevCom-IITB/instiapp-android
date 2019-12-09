@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Locale;
 
 import app.insti.R;
+import app.insti.Utils;
 import app.insti.api.model.NewsArticle;
 import app.insti.interfaces.ItemClickListener;
-import ru.noties.markwon.Markwon;
 
 public class NewsAdapter extends RecyclerViewAdapter<NewsArticle> {
 
@@ -45,7 +45,7 @@ public class NewsAdapter extends RecyclerViewAdapter<NewsArticle> {
         if (recyclerHolder instanceof ViewHolder) {
             ViewHolder holder = (ViewHolder) recyclerHolder;
             NewsArticle article = getPosts().get(position);
-            Markwon.setMarkdown(holder.articleTitle, article.getTitle());
+            Utils.getMarkwon().setMarkdown(holder.articleTitle, article.getTitle());
             holder.articleBody.setText(article.getBody().getBodyName());
 
             Date publishedDate = article.getPublished();
@@ -59,7 +59,7 @@ public class NewsAdapter extends RecyclerViewAdapter<NewsArticle> {
             }
             holder.articlePublished.setText(displayFormat.format(publishedDate));
 
-            Markwon.setMarkdown(holder.articleContent, article.getContent());
+            Utils.getMarkwon().setMarkdown(holder.articleContent, article.getContent());
         } else {
             ((ProgressViewHolder) recyclerHolder).progressBar.setIndeterminate(true);
         }

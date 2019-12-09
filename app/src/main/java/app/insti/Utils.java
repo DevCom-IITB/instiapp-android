@@ -41,6 +41,12 @@ import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TransitionTargetChild;
 import app.insti.fragment.TransitionTargetFragment;
 import app.insti.fragment.UserFragment;
+import io.noties.markwon.Markwon;
+import io.noties.markwon.ext.tables.TablePlugin;
+import io.noties.markwon.ext.tables.TableTheme;
+import io.noties.markwon.html.HtmlPlugin;
+import io.noties.markwon.image.picasso.PicassoImagesPlugin;
+import io.noties.markwon.linkify.LinkifyPlugin;
 
 public final class Utils {
     public static UpdatableList<Event> eventCache = new UpdatableList<>();
@@ -48,10 +54,16 @@ public final class Utils {
     public static UpdatableList<Body> bodyCache = new UpdatableList<>();
     public static User currentUserCache = null;
 
+    public Utils() {
+        super();
+    }
+
     private static String sessionId;
     private static RetrofitInterface retrofitInterface;
     public static Gson gson;
     public static boolean isDarkTheme = false;
+    private static Markwon markwon;
+    private static Markwon markwonLinkify;
 
     public static final void loadImageWithPlaceholder(final ImageView imageView, final String url) {
         Picasso.get()
@@ -81,6 +93,36 @@ public final class Utils {
             return url;
         }
         return url.replace("api.insti.app/static/", "img.insti.app/static/" + dim.toString() + "/");
+    }
+
+    public static Markwon getMarkwon() {
+        return getMarkwon(true);
+    }
+
+    public static Markwon getMarkwon(boolean linkify) {
+        return linkify ? markwonLinkify : markwon;
+    }
+
+    private static Markwon.Builder getMarkwonBuilder(Context context) {
+        final TableTheme tableTheme = TableTheme.create(context).asBuilder()
+                .tableBorderWidth(1)
+                .tableCellPadding(10)
+                .build();
+
+        return Markwon.builder((context))
+                .usePlugin(HtmlPlugin.create())
+                .usePlugin(TablePlugin.create(tableTheme))
+                .usePlugin(PicassoImagesPlugin.create(Picasso.get()));
+    }
+
+    public static void makeMarkwon(Context context) {
+        // Build without linkify
+        markwon = getMarkwonBuilder(context).build();
+
+        // Build with linkify
+        markwonLinkify = getMarkwonBuilder(context)
+                .usePlugin(LinkifyPlugin.create())
+                .build();
     }
 
     /**

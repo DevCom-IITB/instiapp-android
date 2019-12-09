@@ -21,7 +21,6 @@ import app.insti.fragment.EventFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.noties.markwon.Markwon;
 
 public class BodyHeadViewHolder  extends RecyclerView.ViewHolder {
     private TextView bodyName;
@@ -56,7 +55,7 @@ public class BodyHeadViewHolder  extends RecyclerView.ViewHolder {
             return;
         }
 
-        Markwon.setMarkdown(bodyDescription, body.getBodyDescription());
+        Utils.getMarkwon().setMarkdown(bodyDescription, body.getBodyDescription());
 
         /* Check if user is already following
          * Initialize follow button */
