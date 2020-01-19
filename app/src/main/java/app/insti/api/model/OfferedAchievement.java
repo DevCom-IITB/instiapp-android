@@ -91,7 +91,7 @@ public class OfferedAchievement implements CardInterface {
     }
 
     public String getAvatarUrl() {
-        return String.format("https://insti.app/assets/achievements/%s%s.png",
+        return String.format("https://www.insti.app/assets/achievements/%s%s.png",
                 achievementGeneric, Utils.isDarkTheme ? "_dark" : "");
     }
 

@@ -30,7 +30,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    private final String redirectUri = "https://insti.app/login-android.html";
+    private final String redirectUri = "https://www.insti.app/login-android.html";
     private final String guestUri = "https://guesturi";
     private final String loginUri = "https://loginuri";
     public String authCode = null;
@@ -152,7 +152,7 @@ public class LoginActivity extends AppCompatActivity {
                                 .getColor(R.color.colorPrimary))
                         .setShowTitle(true)
                         .build();
-                customTabsIntent.launchUrl(LoginActivity.this, Uri.parse("https://gymkhana.iitb.ac.in/sso/oauth/authorize/?client_id=vR1pU7wXWyve1rUkg0fMS6StL1Kr6paoSmRIiLXJ&response_type=code&scope=basic%20profile%20picture%20sex%20ldap%20phone%20insti_address%20program%20secondary_emails&redirect_uri=https://insti.app/login-android.html&approval_prompt=force"));
+                customTabsIntent.launchUrl(LoginActivity.this, Uri.parse("https://gymkhana.iitb.ac.in/sso/oauth/authorize/?client_id=vR1pU7wXWyve1rUkg0fMS6StL1Kr6paoSmRIiLXJ&response_type=code&scope=basic%20profile%20picture%20sex%20ldap%20phone%20insti_address%20program%20secondary_emails&redirect_uri=https://www.insti.app/login-android.html&approval_prompt=force"));
                 return true;
             }
 

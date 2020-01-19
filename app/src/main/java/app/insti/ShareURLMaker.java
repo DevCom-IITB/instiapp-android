@@ -12,7 +12,7 @@ import app.insti.fragment.MapFragment;
  */
 
 public final class ShareURLMaker {
-    public static final String WEB_HOST = "https://insti.app/";
+    public static final String WEB_HOST = "https://www.insti.app/";
 
     public static String getEventURL(Event event) {
         return WEB_HOST + "event/" + event.getEventStrID();

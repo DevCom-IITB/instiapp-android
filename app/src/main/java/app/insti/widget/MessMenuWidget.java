@@ -132,7 +132,7 @@ public class MessMenuWidget extends AppWidgetProvider {
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.setAction(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("https://insti.app/mess/"));
+        intent.setData(Uri.parse("https://www.insti.app/mess/"));
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         views.setOnClickPendingIntent(R.id.mess_menu_widget, pendingIntent);

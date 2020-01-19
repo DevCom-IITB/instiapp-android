@@ -64,7 +64,7 @@ public class AboutCategory extends Section {
         final AboutIndividual individual = individuals.get(position);
         IndividualViewHolder individualViewHolder = (IndividualViewHolder) holder;
         Picasso.get()
-                .load("https://insti.app/team-pics/" + individual.getImageName())
+                .load("https://www.insti.app/team-pics/" + individual.getImageName())
                 .placeholder(R.drawable.user_placeholder)
                 .resize(0, 300)
                 .into(individualViewHolder.pictureImageView);

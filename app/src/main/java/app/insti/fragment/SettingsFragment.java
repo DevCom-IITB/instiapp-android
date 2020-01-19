@@ -71,7 +71,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         // Feedback
         Preference feedbackPref = findPreference("feedback");
         feedbackPref.setOnPreferenceClickListener(preference -> {
-            openWebURL("https://insti.app/feedback");
+            openWebURL("https://www.insti.app/feedback");
             return false;
         });
 

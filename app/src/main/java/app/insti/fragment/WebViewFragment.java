@@ -58,7 +58,7 @@ public class WebViewFragment extends BaseFragment {
     private ProgressDialog progressDialog;
     private String query = "";
     private boolean disableProgress = false;
-    private final String host = "insti.app";
+    private final String host = "www.insti.app";
     private CameraSource mCameraSource;
 
     public WebViewFragment() {
