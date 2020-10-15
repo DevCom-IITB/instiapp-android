@@ -1,6 +1,7 @@
 package app.insti.adapter;
 
 import android.content.Context;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,8 @@ public class TrainingBlogAdapter extends RecyclerViewAdapter<TrainingBlogPost> {
             postTitle = itemView.findViewById(R.id.post_title);
             postPublished = itemView.findViewById(R.id.post_published);
             postContent = itemView.findViewById(R.id.post_content);
+            postContent.setMovementMethod(LinkMovementMethod.getInstance());
+
         }
     }
 }
