@@ -53,6 +53,9 @@ public class AboutFragment extends BaseFragment {
         final Context context = getContext();
 
         AboutAdapter aboutAdapter = new AboutAdapter(new ArrayList<AboutCategory>() {{
+            add(new AboutCategory("Maintainer", new ArrayList<AboutIndividual>() {{
+                add(new AboutIndividual("e.aakash", "E. Aakash", "aakash.jpg"));
+            }}, context));
             add(new AboutCategory("Core Developers", new ArrayList<AboutIndividual>() {{
                 add(new AboutIndividual("varunpatil", "Varun Patil", "varun.jpg"));
                 add(new AboutIndividual("sajalnarang", "Sajal Narang", "sajal.jpg"));
@@ -86,9 +89,9 @@ public class AboutFragment extends BaseFragment {
                 add(new AboutIndividual(null, "Aman Gour", "amangour.jpg"));
             }}, context));
             add(new AboutCategory("Contribute", new ArrayList<AboutIndividual>() {{
-                add(new AboutIndividual("https://github.com/wncc/IITBapp", "Django API", "python.png", TYPE_LINK));
-                add(new AboutIndividual("https://github.com/wncc/InstiApp", "Android App", "android.png", TYPE_LINK));
-                add(new AboutIndividual("https://github.com/pulsejet/iitb-app-angular", "Angular PWA", "angular.png", TYPE_LINK));
+                add(new AboutIndividual("https://github.com/wncc/instiapp-api", "Django API", "python.png", TYPE_LINK));
+                add(new AboutIndividual("https://github.com/wncc/instiapp-android", "Android App", "android.png", TYPE_LINK));
+                add(new AboutIndividual("https://github.com/wncc/instiapp-angular", "Angular PWA", "angular.png", TYPE_LINK));
             }}, context));
         }});
 
