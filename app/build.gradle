@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "app.insti"
         manifestPlaceholders 'appAuthRedirectScheme': 'https'
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 30
         versionCode 45
         versionName "1.4.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -25,45 +25,30 @@ android {
 }
 
 ext {
-    androidxVersion = '1.0.0'
-    playServicesVersion = '17.0.0'
-    playServicesVisionVersion = '19.0.0'
-    retrofitVersion = '2.6.2'
-    okhttpVersion = '4.2.2'
-    picassoVersion = '2.71828'
-    circleImageViewVersion = '3.0.1'
-    markwonVersion = '4.2.0'
-    tagViewVersion = '1.3'
-    circleIndicatorVersion = '2.1.4'
-    firebaseVersion = '20.0.1'
-    flexboxVersion = '1.0.0'
-    sectionedRecyclerViewVersion = '3.1.0'
-    lottieVersion = '2.7.0'
-    shortcutBadgerVersion = '1.1.22@aar'
-    materialCalendarViewVersion = '2.0.1'
-    threetenBPVersion = '1.2.0'
+    markwonVersion = '4.6.0'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.google.firebase:firebase-messaging:${firebaseVersion}"
-    implementation "com.google.android.material:material:${androidxVersion}"
-    implementation "androidx.exifinterface:exifinterface:${androidxVersion}"
-    implementation "androidx.preference:preference:${androidxVersion}"
-    implementation "androidx.cardview:cardview:${androidxVersion}"
-    implementation "androidx.browser:browser:${androidxVersion}"
-    implementation "androidx.legacy:legacy-support-v4:${androidxVersion}"
+    implementation "com.google.firebase:firebase-messaging:21.0.0"
+    implementation "com.google.android.material:material:1.2.1"
+    implementation "com.google.android:flexbox:1.0.0"
+    implementation "androidx.exifinterface:exifinterface:1.3.1"
+    implementation "androidx.preference:preference:1.1.1"
+    implementation "androidx.cardview:cardview:1.0.0"
+    implementation "androidx.browser:browser:1.2.0"
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
 
-    implementation "com.google.android.gms:play-services-maps:${playServicesVersion}"
-    implementation "com.google.android.gms:play-services-location:${playServicesVersion}"
-    implementation "com.google.android.gms:play-services-places:${playServicesVersion}"
-    implementation "com.google.android.gms:play-services-vision:${playServicesVisionVersion}"
+    implementation "com.google.android.gms:play-services-maps:17.0.0"
+    implementation "com.google.android.gms:play-services-location:17.1.0"
+    implementation "com.google.android.gms:play-services-places:17.0.0"
+    implementation "com.google.android.gms:play-services-vision:20.1.2"
 
-    implementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
-    implementation "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
-    implementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
-    implementation "com.squareup.picasso:picasso:${picassoVersion}"
-    implementation "de.hdodenhof:circleimageview:${circleImageViewVersion}"
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "com.squareup.okhttp3:okhttp:4.9.0"
+    implementation "com.squareup.picasso:picasso:2.8"
+    implementation "de.hdodenhof:circleimageview:3.1.0"
 
     implementation "io.noties.markwon:core:${markwonVersion}"
     implementation "io.noties.markwon:html:${markwonVersion}"
@@ -71,13 +56,12 @@ dependencies {
     implementation "io.noties.markwon:linkify:${markwonVersion}"
     implementation "io.noties.markwon:ext-tables:${markwonVersion}"
 
-    implementation "com.github.Cutta:TagView:${tagViewVersion}"
-    implementation "me.relex:circleindicator:${circleIndicatorVersion}"
-    implementation "com.google.android:flexbox:${flexboxVersion}"
-    implementation "io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:${sectionedRecyclerViewVersion}"
-    implementation "com.airbnb.android:lottie:$lottieVersion"
-    implementation "me.leolin:ShortcutBadger:$shortcutBadgerVersion"
-    implementation "com.github.prolificinteractive:material-calendarview:${materialCalendarViewVersion}"
-    implementation "com.jakewharton.threetenabp:threetenabp:${threetenBPVersion}"
+    implementation "com.github.Cutta:TagView:1.3"
+    implementation "me.relex:circleindicator:2.1.4"
+    implementation "io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:3.2.0"
+    implementation "com.airbnb.android:lottie:3.5.0"
+    implementation "me.leolin:ShortcutBadger:1.1.22@aar"
+    implementation "com.github.prolificinteractive:material-calendarview:2.0.1"
+    implementation "com.jakewharton.threetenabp:threetenabp:1.3.0"
 }
 apply plugin: 'com.google.gms.google-services'
