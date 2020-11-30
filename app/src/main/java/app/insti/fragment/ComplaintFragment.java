@@ -90,12 +90,12 @@ public class ComplaintFragment extends Fragment {
                             int tablLayoutWidth = slidingTabLayout.getWidth();
 
                             DisplayMetrics metrics = new DisplayMetrics();
-                            Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                            requireActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
                             int deviceWidth = metrics.widthPixels;
 
                             if (tablLayoutWidth <= deviceWidth) {
 
-                                final TypedArray styledAttributes = Objects.requireNonNull(ComplaintFragment.this.getActivity()).getTheme().obtainStyledAttributes(
+                                final TypedArray styledAttributes = ComplaintFragment.this.requireActivity().getTheme().obtainStyledAttributes(
                                         new int[]{android.R.attr.actionBarSize});
                                 styledAttributes.recycle();
                                 //Replace second parameter to mActionBarSize = (int) styledAttributes.getDimension(0, 0) after adding "Relevant Complaints"
