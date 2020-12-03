@@ -92,4 +92,8 @@
     <style name="UserTabsTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">12sp</item>
     </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
 </resources>
