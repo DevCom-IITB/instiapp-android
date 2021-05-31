@@ -77,7 +77,7 @@ public class AboutFragment extends BaseFragment {
             }}, context));
             add(new AboutCategory("Ideation", new ArrayList<AboutIndividual>() {{
                 add(new AboutIndividual("nihal111", "Nihal Singh", "nihal.jpg"));
-                add(new AboutIndividual("ydidwania", "Yashwarshan Didwania", "ydidwania.jpg"));
+                add(new AboutIndividual("ydidwania", "Yashwardhan Didwania", "ydidwania.jpg"));
                 add(new AboutIndividual("kumar.ayush", "Kumar Ayush", "cheeku.jpg"));
                 add(new AboutIndividual("16D110006", "Sarthak Khandelwal", "sarthak.jpg"));
             }}, context));
