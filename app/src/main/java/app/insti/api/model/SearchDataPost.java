@@ -9,7 +9,7 @@ import app.insti.interfaces.SearchDataInterface;
 public class SearchDataPost implements SearchDataInterface {
     @NonNull()
     @SerializedName("id")
-    private String eventID;
+    private String questionID;
 
     @SerializedName("title")
     private String title;
@@ -28,7 +28,7 @@ public class SearchDataPost implements SearchDataInterface {
 
 
     public String getId() {
-        return eventID;
+        return questionID;
     }
 
     public void setTitle(String title) {
