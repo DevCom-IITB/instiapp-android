@@ -72,6 +72,7 @@ import app.insti.fragment.NewsFragment;
 import app.insti.fragment.NotificationsFragment;
 import app.insti.fragment.PlacementBlogFragment;
 import app.insti.fragment.QuickLinksFragment;
+import app.insti.fragment.SearchFragment;
 import app.insti.fragment.SettingsFragment;
 import app.insti.fragment.TrainingBlogFragment;
 import app.insti.fragment.UserFragment;
@@ -586,6 +587,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 webViewFragment.setArguments(bundle);
                 updateFragment(webViewFragment);
                 break;
+            case R.id.nav_search:
+                openSearch();
+                break;
 
             case R.id.nav_complaint:
                 if (session.isLoggedIn()) {
@@ -639,6 +643,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
         }
+    }
+    private void openSearch(){
+        openSearch(null);
+    }
+    private void openSearch(String id) {
+//        if (session.isLoggedIn()) {
+            SearchFragment searchFragment = new SearchFragment();
+            if (id != null) searchFragment.withId(id);
+            updateFragment(searchFragment);
+//        } else {
+//            Toast.makeText(this, Constants.LOGIN_MESSAGE, Toast.LENGTH_LONG).show();
+//        }
     }
 
     /**

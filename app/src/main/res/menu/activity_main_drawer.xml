@@ -49,6 +49,11 @@
             android:title="Achievements" />
 
         <item
+            android:id="@+id/nav_search"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="Search" />
+
+        <item
             android:id="@+id/nav_complaint"
             android:icon="@drawable/baseline_feedback_black_48"
             android:title="Complaints/Suggestions" />

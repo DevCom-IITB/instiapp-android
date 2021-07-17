@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/search_data_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:textColor="?attr/themeColorInverse"
+        android:textIsSelectable="true"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/search_data_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="?attr/themeColorInverse"
+        android:textColorLink="?attr/urlColor"
+        android:textIsSelectable="true" />
+</LinearLayout>

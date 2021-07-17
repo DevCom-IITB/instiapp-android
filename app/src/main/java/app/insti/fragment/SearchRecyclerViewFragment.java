@@ -22,16 +22,20 @@ import app.insti.R;
 import app.insti.Utils;
 import app.insti.activity.MainActivity;
 import app.insti.adapter.RecyclerViewAdapter;
+import app.insti.adapter.SearchAdapter;
+import app.insti.adapter.SearchCardAdapter;
 import app.insti.api.RetrofitInterface;
+import app.insti.api.model.SearchDataPost;
 import app.insti.interfaces.Clickable;
 import app.insti.interfaces.ItemClickListener;
+import app.insti.interfaces.SearchDataInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.GONE;
 
-public abstract class RecyclerViewFragment<T extends Clickable, S extends RecyclerViewAdapter<T>> extends BaseFragment {
+public abstract class SearchRecyclerViewFragment<T extends SearchDataInterface, S extends SearchCardAdapter<T>> extends BaseFragment {
     public static boolean showLoader = true;
     protected RecyclerView recyclerView;
     protected Class<T> postType;
@@ -43,12 +47,14 @@ public abstract class RecyclerViewFragment<T extends Clickable, S extends Recycl
     private boolean allLoaded = false;
     private String initId = null;
 
-    public RecyclerViewFragment<T, S> withId(String id) {
+    public SearchRecyclerViewFragment<T, S> withId(String id) {
         initId = id;
         return this;
     }
 
-    /** Update the data clearing existing */
+    /**
+     * Update the data clearing existing
+     */
     protected void updateData() {
         // Skip if we're already destroyed
         if (getActivity() == null || getView() == null) return;
@@ -93,7 +99,7 @@ public abstract class RecyclerViewFragment<T extends Clickable, S extends Recycl
         if (getActivity() == null || getView() == null) return;
 
         if (adapter == null || recyclerView.getAdapter() != adapter) {
-            initAdapter(result);
+//            initAdapter(result);
 
             /* Scroll to current post */
             if (initId != null) {
@@ -107,7 +113,9 @@ public abstract class RecyclerViewFragment<T extends Clickable, S extends Recycl
         getActivity().findViewById(R.id.loadingPanel).setVisibility(GONE);
     }
 
-    /** Set position of id in list of clickables */
+    /**
+     * Set position of id in list of clickables
+     */
     private int getPosition(List<T> result, String id) {
         for (int i = 0; i < result.size(); i++) {
             if (result.get(i).getId().equals(id)) {
@@ -117,12 +125,15 @@ public abstract class RecyclerViewFragment<T extends Clickable, S extends Recycl
         return -1;
     }
 
-    /** Scroll the recyclerview to position */
+    /**
+     * Scroll the recyclerview to position
+     */
     private void scrollToPosition(int i) {
         if (i < 0) return;
 
         RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
-            @Override protected int getVerticalSnapPreference() {
+            @Override
+            protected int getVerticalSnapPreference() {
                 return LinearSmoothScroller.SNAP_TO_START;
             }
         };
@@ -130,23 +141,27 @@ public abstract class RecyclerViewFragment<T extends Clickable, S extends Recycl
         recyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
     }
 
-    /** Initialize the adapter */
-    private void initAdapter(final List<T> result) {
-        try {
-            adapter = adapterType.getDeclaredConstructor(List.class, ItemClickListener.class).newInstance(result, new ItemClickListener() {
-                @Override
-                public void onItemClick(View v, int position) {
-                    result.get(position).getOnClickListener(getContext()).onClick(v);
-                }
-            });
-            initRecyclerView();
+    /**
+     * Initialize the adapter
+     */
+//    private void initAdapter(final List<T> result) {
+//        try {
+//            adapter = adapterType.getDeclaredConstructor(List.class, ItemClickListener.class).newInstance(result, new ItemClickListener() {
+//                @Override
+//                public void onItemClick(View v, int position) {
+//                    result.get(position).getOnClickListener(getContext()).onClick(v);
+//                }
+//            });
+//            initRecyclerView();
+//
+//        } catch (java.lang.InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-        } catch (java.lang.InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /** Initialize scrolling on the adapter */
+    /**
+     * Initialize scrolling on the adapter
+     */
     private void initRecyclerView() {
         getActivityBuffer().safely(new ActivityBuffer.IRunnable() {
             @Override
@@ -194,7 +209,9 @@ public abstract class RecyclerViewFragment<T extends Clickable, S extends Recycl
     }
 
     protected int getPostCount() {
-        if (adapter == null) { return 0; }
+        if (adapter == null) {
+            return 0;
+        }
         return adapter.getPosts().size();
     }
 
