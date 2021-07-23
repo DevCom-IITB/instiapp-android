@@ -11,10 +11,10 @@ public class SearchDataPost implements SearchDataInterface {
     @SerializedName("id")
     private String questionID;
 
-    @SerializedName("title")
+    @SerializedName("question")
     private String title;
 
-    @SerializedName("description")
+    @SerializedName("answer")
     private String description;   
 
     public SearchDataPost(String description, String title) {

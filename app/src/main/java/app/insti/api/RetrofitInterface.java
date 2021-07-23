@@ -154,9 +154,9 @@ public interface RetrofitInterface {
     @GET("venter/tags")
     Call<List<Venter.TagUri>> getTags(@Header("Cookie") String sessionID);
 
-    @POST("search-faq/")
+    @POST("query")
     Call<QuestionCreateResponse> postQuestion(@Header("Cookie") String sessionId, @Body QuestionCreateRequest questionCreateRequest);
 
-    @GET("search-faq")
+    @GET("query")
     Call<List<SearchDataPost>> getSearchFeed(@Header("Cookie") String sessionID, @Query("from") int from, @Query("num") int num, @Query("query") String query);
 }
