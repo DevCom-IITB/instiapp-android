@@ -25,7 +25,7 @@ import app.insti.interfaces.ItemClickListener;
 
 public class PlacementBlogAdapter extends RecyclerViewAdapter<PlacementBlogPost> {
 
-    Context context;
+    private Context context;
     public PlacementBlogAdapter(List<PlacementBlogPost> posts, ItemClickListener itemClickListener) {
         super(posts, itemClickListener);
     }
