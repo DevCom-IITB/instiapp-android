@@ -24,7 +24,7 @@ import app.insti.api.model.TrainingBlogPost;
 import app.insti.interfaces.ItemClickListener;
 
 public class TrainingBlogAdapter extends RecyclerViewAdapter<TrainingBlogPost> {
-    Context context;
+    private Context context;
     public TrainingBlogAdapter(List<TrainingBlogPost> posts, ItemClickListener itemClickListener) {
         super(posts, itemClickListener);
     }
