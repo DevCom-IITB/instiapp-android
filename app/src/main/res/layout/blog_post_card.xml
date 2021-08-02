@@ -13,12 +13,12 @@
             android:id="@+id/post_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
+            android:paddingLeft="4dp"
             android:fontFamily="sans-serif-light"
             android:textColor="?attr/themeColorInverse"
             android:textIsSelectable="true"
             android:textSize="24sp"
-            android:drawablePadding="4dp"/>
+            android:drawablePadding="2.5dp"/>
 
 
     <TextView
