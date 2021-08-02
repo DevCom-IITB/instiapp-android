@@ -30,12 +30,17 @@ public class PlacementBlogPost implements Clickable {
     @SerializedName("published")
     private Timestamp published;
 
-    public PlacementBlogPost(String postID, String link, String title, String content, Timestamp published) {
+    @SerializedName("pinned")
+    private Boolean pinned;
+
+
+    public PlacementBlogPost(String postID, String link, String title, String content, Timestamp published, Boolean pinned) {
         this.postID = postID;
         this.link = link;
         this.title = title;
         this.content = content;
         this.published = published;
+        this.pinned = pinned;
     }
 
     public String getId() { return postID; }
@@ -79,6 +84,10 @@ public class PlacementBlogPost implements Clickable {
     public void setPublished(Timestamp published) {
         this.published = published;
     }
+
+    public Boolean getPinned() { return pinned; }
+
+    public void setPinned(Boolean pinned) { this.pinned  = pinned ; }
 
     @Override
     public View.OnClickListener getOnClickListener(final Context context) {

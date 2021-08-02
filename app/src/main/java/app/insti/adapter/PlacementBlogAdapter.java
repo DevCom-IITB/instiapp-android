@@ -1,6 +1,7 @@
 package app.insti.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import app.insti.interfaces.ItemClickListener;
 
 public class PlacementBlogAdapter extends RecyclerViewAdapter<PlacementBlogPost> {
 
+    private Context context;
     public PlacementBlogAdapter(List<PlacementBlogPost> posts, ItemClickListener itemClickListener) {
         super(posts, itemClickListener);
     }
@@ -32,6 +34,8 @@ public class PlacementBlogAdapter extends RecyclerViewAdapter<PlacementBlogPost>
     protected RecyclerView.ViewHolder getViewHolder(@NonNull ViewGroup parent, Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View postView = inflater.inflate(R.layout.blog_post_card, parent, false);
+
+        this.context = context;
 
         final PlacementBlogAdapter.ViewHolder postViewHolder = new PlacementBlogAdapter.ViewHolder(postView);
         postView.setOnClickListener(v -> itemClickListener.onItemClick(v, postViewHolder.getAdapterPosition()));
@@ -54,6 +58,10 @@ public class PlacementBlogAdapter extends RecyclerViewAdapter<PlacementBlogPost>
             } else {
                 displayFormat = new SimpleDateFormat("EEE, MMM d, ''yy, HH:mm", Locale.US);
             }
+
+            Drawable pin_icon =context.getResources().getDrawable(R.drawable.ic_pin_9);
+
+            holder.postTitle.setCompoundDrawablesWithIntrinsicBounds(  post.getPinned() ? pin_icon:null  , null,  null, null);
             holder.postPublished.setText(displayFormat.format(publishedDate));
 
             Utils.getMarkwon(false).setMarkdown(holder.postContent, post.getContent());

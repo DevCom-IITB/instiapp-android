@@ -1,6 +1,7 @@
 package app.insti.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,7 @@ import app.insti.api.model.TrainingBlogPost;
 import app.insti.interfaces.ItemClickListener;
 
 public class TrainingBlogAdapter extends RecyclerViewAdapter<TrainingBlogPost> {
-
+    private Context context;
     public TrainingBlogAdapter(List<TrainingBlogPost> posts, ItemClickListener itemClickListener) {
         super(posts, itemClickListener);
     }
@@ -33,6 +34,7 @@ public class TrainingBlogAdapter extends RecyclerViewAdapter<TrainingBlogPost> {
         LayoutInflater inflater = LayoutInflater.from(context);
         View postView = inflater.inflate(R.layout.blog_post_card, parent, false);
 
+        this.context = context;
         final TrainingBlogAdapter.ViewHolder postViewHolder = new TrainingBlogAdapter.ViewHolder(postView);
         postView.setOnClickListener(v -> itemClickListener.onItemClick(v, postViewHolder.getAdapterPosition()));
         return postViewHolder;
@@ -54,6 +56,9 @@ public class TrainingBlogAdapter extends RecyclerViewAdapter<TrainingBlogPost> {
             } else {
                 displayFormat = new SimpleDateFormat("EEE, MMM d, ''yy, HH:mm", Locale.US);
             }
+            Drawable image =context.getResources().getDrawable(R.drawable.ic_pin_9);
+
+            holder.postTitle.setCompoundDrawablesWithIntrinsicBounds(  post.getPinned() ? image:null  , null,  null, null);
             holder.postPublished.setText(displayFormat.format(publishedDate));
 
             Utils.getMarkwon(false).setMarkdown(holder.postContent, post.getContent());
