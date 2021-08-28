@@ -1,5 +1,6 @@
 package app.insti.adapter;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.fragment.app.Fragment;
@@ -40,7 +41,7 @@ import app.insti.interfaces.SearchDataInterface;
 import app.insti.utils.BodyHeadCard;
 import app.insti.utils.BodyHeadViewHolder;
 
-public abstract class SearchAdapter extends SearchCardAdapter<SearchDataPost> {
+public class SearchAdapter extends SearchCardAdapter<SearchDataPost> {
 
 
 //    public void onClick(Event event, final Fragment fragment, View view) {
@@ -49,15 +50,15 @@ public abstract class SearchAdapter extends SearchCardAdapter<SearchDataPost> {
 //        Utils.openEventFragment(event, fragment, view.findViewById(picId));
 //    }
 
-    public SearchAdapter(List<SearchDataPost> List, Fragment fragment) {
-        super(List, fragment);
+    public SearchAdapter(List<SearchDataPost> List) {
+        super(List);
     }
 
 
     @Override
     protected RecyclerView.ViewHolder getViewHolder(@NonNull ViewGroup parent, Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View postView = inflater.inflate(R.layout.blog_post_card, parent, false);
+        View postView = inflater.inflate(R.layout.search_post_card, parent, false);
 
         final SearchAdapter.ViewHolder postViewHolder = new SearchAdapter.ViewHolder(postView);
         return postViewHolder;
@@ -65,7 +66,9 @@ public abstract class SearchAdapter extends SearchCardAdapter<SearchDataPost> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder recyclerHolder, int position) {
-        if (recyclerHolder instanceof PlacementBlogAdapter.ViewHolder) {
+        Log.d("tag-position", String.valueOf(position));
+        if (recyclerHolder instanceof ViewHolder) {
+            Log.d("tag-position", String.valueOf(position));
             SearchAdapter.ViewHolder holder = (SearchAdapter.ViewHolder) recyclerHolder;
             SearchDataPost post = getPosts().get(position);
             holder.postTitle.setText(post.getTitle());
@@ -81,7 +84,8 @@ public abstract class SearchAdapter extends SearchCardAdapter<SearchDataPost> {
         public ViewHolder(View itemView) {
             super(itemView);
 
-            postTitle = itemView.findViewById(R.id.search_data_title);
+            Log.d("View", itemView.findViewById(R.id.search_data_title).toString());
+            postTitle = (TextView) itemView.findViewById(R.id.search_data_title);
             postDescription = itemView.findViewById(R.id.search_data_description);
             postDescription.setMovementMethod(LinkMovementMethod.getInstance());
 

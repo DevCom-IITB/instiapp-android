@@ -13,23 +13,29 @@
         android:layout_height="match_parent"
         android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/error_message_me"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:text="@string/error_message"
-            android:textColor="?attr/themeColorInverse"
-            android:visibility="gone" />
-
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+<!--            <Spinner-->
+<!--                android:id="@+id/category_spinner"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="12dp"-->
+<!--                android:backgroundTint="@color/colorWhite"-->
+<!--                android:layout_margin="5dp"-->
+<!--                android:paddingLeft="10dp"-->
+<!--                android:layout_below="@+id/main"-->
+<!--                android:theme="@style/AppTheme" />-->
             <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/main"
                 app:hintTextAppearance="@style/edit_text_hint_apperarance">
 
                 <EditText
                     android:id="@+id/editQ"
-                    android:layout_margin="5dp"
+                    android:layout_margin="10dp"
                     android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -42,7 +48,19 @@
                     android:textSize="14sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
-            <RelativeLayout
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/error_message_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:text="@string/error_message"
+            android:textColor="?attr/themeColorInverse"
+            android:visibility="gone" />
+
+
+        <RelativeLayout
                 android:id="@+id/layout_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,7 +70,7 @@
                 android:weightSum="2"
                 android:layout_gravity="bottom">
 
-                <Button
+            <Button
                     android:id="@+id/buttonSubmitSearch"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -62,6 +80,8 @@
                     android:textColor="@color/secondaryTextColor" />
 
             </RelativeLayout>
+
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

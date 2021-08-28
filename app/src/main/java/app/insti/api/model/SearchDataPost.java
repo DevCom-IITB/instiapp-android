@@ -1,5 +1,7 @@
 package app.insti.api.model;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
@@ -12,18 +14,19 @@ public class SearchDataPost implements SearchDataInterface {
     private String questionID;
 
     @SerializedName("question")
-    private String title;
+    private String question;
 
     @SerializedName("answer")
     private String description;   
 
     public SearchDataPost(String description, String title) {
         this.description = description;
-        this.title = title;
+        this.question = title;
     }
 
     public String getTitle() {
-        return title;
+        Log.d("myTag", question);
+        return question;
     }
 
 
@@ -32,7 +35,7 @@ public class SearchDataPost implements SearchDataInterface {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.question = title;
     }
 
     public String getDescription() {

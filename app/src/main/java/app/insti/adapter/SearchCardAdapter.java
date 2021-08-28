@@ -24,7 +24,7 @@ import app.insti.interfaces.Writable;
 public abstract class SearchCardAdapter <T extends SearchDataInterface> extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Readable<T>, Writable<T>  {
 
     private List<T> posts;
-    private Fragment mFragment;
+//    private Fragment mFragment;
     public String uid = "";
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
@@ -32,9 +32,9 @@ public abstract class SearchCardAdapter <T extends SearchDataInterface> extends 
     public void onClick(T t, FragmentActivity fragmentActivity) {};
     public void onClick(T t, Fragment fragment, View view) {}
 
-    public SearchCardAdapter(List<T> tList, Fragment fragment) {
+    public SearchCardAdapter(List<T> tList) {
         this.posts = tList;
-        mFragment = fragment;
+//        mFragment = fragment;
         this.setHasStableIds(true);
     }
 

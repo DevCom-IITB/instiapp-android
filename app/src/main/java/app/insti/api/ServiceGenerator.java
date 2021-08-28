@@ -20,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceGenerator {
     private static final String HEADER_CACHE_CONTROL = "Cache-Control";
     private static final String HEADER_PRAGMA = "Pragma";
-    private static final String BASE_URL = "https://api.insti.app/api/";
+    private static final String BASE_URL = "http://168.62.49.15/api/";
     public RetrofitInterface retrofitInterface;
 
     private Context context;

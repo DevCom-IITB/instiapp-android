@@ -2,6 +2,7 @@ package app.insti.fragment;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,7 +43,7 @@ public abstract class SearchRecyclerViewFragment<T extends SearchDataInterface, 
     protected Class<S> adapterType;
     protected SwipeRefreshLayout swipeRefreshLayout;
     protected String searchQuery;
-    private S adapter = null;
+    private SearchAdapter adapter = null;
     private boolean loading = false;
     private boolean allLoaded = false;
     private String initId = null;
@@ -68,10 +69,10 @@ public abstract class SearchRecyclerViewFragment<T extends SearchDataInterface, 
         // Make the request
         String sessionIDHeader = Utils.getSessionIDHeader();
         RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-        Call<List<T>> call = getCall(retrofitInterface, sessionIDHeader, 0);
-        call.enqueue(new Callback<List<T>>() {
+        Call<List<SearchDataPost>> call = getCall(retrofitInterface, sessionIDHeader, 0);
+        call.enqueue(new Callback<List<SearchDataPost>>() {
             @Override
-            public void onResponse(Call<List<T>> call, Response<List<T>> response) {
+            public void onResponse(Call<List<SearchDataPost>> call, Response<List<SearchDataPost>> response) {
                 // Check if search query was changed in the meanwhile
                 if (!Objects.equals(requestSearchQuery, searchQuery)) {
                     return;
@@ -79,27 +80,30 @@ public abstract class SearchRecyclerViewFragment<T extends SearchDataInterface, 
 
                 // Update display
                 if (response.isSuccessful()) {
-                    List<T> posts = response.body();
+                    List<SearchDataPost> posts = response.body();
+                    Log.d("tag",posts.toString());
                     displayData(posts);
                 }
+                Log.d("tag",String.valueOf(response.code()));
                 swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
-            public void onFailure(Call<List<T>> call, Throwable t) {
+            public void onFailure(Call<List<SearchDataPost>> call, Throwable t) {
+                Log.d("tag",t.getMessage());
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
 
-    protected abstract Call<List<T>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader, int postCount);
+    protected abstract Call<List<SearchDataPost>> getCall(RetrofitInterface retrofitInterface, String sessionIDHeader, int postCount);
 
-    private void displayData(final List<T> result) {
+    private void displayData(final List<SearchDataPost> result) {
         /* Skip if we're already destroyed */
         if (getActivity() == null || getView() == null) return;
 
         if (adapter == null || recyclerView.getAdapter() != adapter) {
-//            initAdapter(result);
+            initAdapter(result);
 
             /* Scroll to current post */
             if (initId != null) {
@@ -116,7 +120,19 @@ public abstract class SearchRecyclerViewFragment<T extends SearchDataInterface, 
     /**
      * Set position of id in list of clickables
      */
-    private int getPosition(List<T> result, String id) {
+
+    private void initAdapter(final List<SearchDataPost> result) {
+        try {
+            Log.d("Tag-adapter", adapterType.getDeclaredConstructor(List.class).toString());
+            adapter = new SearchAdapter(result);
+            initRecyclerView();
+
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int getPosition(List<SearchDataPost> result, String id) {
         for (int i = 0; i < result.size(); i++) {
             if (result.get(i).getId().equals(id)) {
                 return i;
@@ -177,14 +193,14 @@ public abstract class SearchRecyclerViewFragment<T extends SearchDataInterface, 
                                 loading = true;
                                 String sessionIDHeader = Utils.getSessionIDHeader();
                                 RetrofitInterface retrofitInterface = Utils.getRetrofitInterface();
-                                Call<List<T>> call = getCall(retrofitInterface, sessionIDHeader, getPostCount());
-                                call.enqueue(new Callback<List<T>>() {
+                                Call<List<SearchDataPost>> call = getCall(retrofitInterface, sessionIDHeader, getPostCount());
+                                call.enqueue(new Callback<List<SearchDataPost>>() {
                                     @Override
-                                    public void onResponse(Call<List<T>> call, Response<List<T>> response) {
+                                    public void onResponse(Call<List<SearchDataPost>> call, Response<List<SearchDataPost>> response) {
                                         if (getActivity() == null || getView() == null) return;
                                         loading = false;
                                         if (response.isSuccessful()) {
-                                            List<T> posts = adapter.getPosts();
+                                            List<SearchDataPost> posts = adapter.getPosts();
                                             posts.addAll(response.body());
                                             if (response.body().size() == 0) {
                                                 showLoader = false;
@@ -196,7 +212,7 @@ public abstract class SearchRecyclerViewFragment<T extends SearchDataInterface, 
                                     }
 
                                     @Override
-                                    public void onFailure(Call<List<T>> call, Throwable t) {
+                                    public void onFailure(Call<List<SearchDataPost>> call, Throwable t) {
                                         loading = false;
                                     }
                                 });
