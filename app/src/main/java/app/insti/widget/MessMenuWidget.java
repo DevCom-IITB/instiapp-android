@@ -6,8 +6,12 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.widget.RemoteViews;
 
+import androidx.annotation.RequiresApi;
+
+import java.time.OffsetTime;
 import java.util.Calendar;
 import java.util.List;
 
@@ -70,6 +74,7 @@ public class MessMenuWidget extends AppWidgetProvider {
             displayMessMenu(hostelMessMenu);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void displayMessMenu(HostelMessMenu hostelMessMenu) {
         MessMenu todaysMenu = hostelMessMenu.getSortedMessMenus().get(0);
 
@@ -78,6 +83,9 @@ public class MessMenuWidget extends AppWidgetProvider {
         Calendar calendar = Calendar.getInstance();
         int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        OffsetTime offset = OffsetTime.now();
+
+        hourOfDay = offset.getHour();
 
         // TODO: Consider moving to a separate Meal class
         String mealType;
